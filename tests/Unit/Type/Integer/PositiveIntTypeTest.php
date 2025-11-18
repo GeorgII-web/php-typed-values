@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use GeorgiiWeb\PhpTypedValues\Exception\IntegerTypeException;
-use GeorgiiWeb\PhpTypedValues\Types\Integer\PositiveInt;
+use PhpTypedValues\Exception\IntegerTypeException;
+use PhpTypedValues\Type\Integer\PositiveInt;
 
 it('PositiveInt accepts >0 and rejects 0 or negatives', function (): void {
     expect((new PositiveInt(1))->value())->toBe(1);

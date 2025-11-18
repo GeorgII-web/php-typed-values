@@ -8,20 +8,20 @@
   },
   "autoload": {
     "psr-4": {
-      "GeorgiiWeb\\PhpTypedValues\\": "src/"
+      "PhpTypedValues\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "GeorgiiWeb\\PhpTypedValues\\Tests\\": "tests/"
+      "PhpTypedValues\\Tests\\": "tests/"
     }
   },
   "require-dev": {
-    "friendsofphp/php-cs-fixer": "^3.60",
-    "pestphp/pest": "^2.34",
-    "pestphp/pest-plugin-type-coverage": "^2.8",
-    "phpunit/phpunit": "^10.5",
-    "vimeo/psalm": "^5.25"
+    "friendsofphp/php-cs-fixer": "^v3.89",
+    "pestphp/pest": "^v3.8.4",
+    "pestphp/pest-plugin-type-coverage": "^v3.6",
+    "phpunit/phpunit": "^11.5",
+    "vimeo/psalm": "^6.13.1"
   },
   "scripts": {
     "sca": [
@@ -36,6 +36,7 @@
     "oncheckout": [
       "composer install",
       "composer dump-autoload",
+      "vendor/bin/psalm --clear-cache",
       "echo '\\n\\n\\033[1;32mAfter-checkout preparations done!\\033[0m\\n'"
     ],
     "oncommit": [
@@ -45,6 +46,7 @@
       "@test",
       "@type",
       "@coverage",
+      "@mutate",
       "echo '\\n\\n\\033[1;32mPre-commit checks passed!\\033[0m\\n'"
     ],
     "test": [
@@ -58,11 +60,6 @@
     ],
     "mutate": [
       "./vendor/bin/pest --mutate --parallel --everything --covered-only --min=40"
-    ],
-    "qa": [
-      "@cs",
-      "@sca",
-      "@test"
     ]
   },
   "config": {

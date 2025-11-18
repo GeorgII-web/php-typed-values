@@ -2,18 +2,19 @@
 
 declare(strict_types=1);
 
-namespace GeorgiiWeb\PhpTypedValues\Types\Base;
+namespace PhpTypedValues\BaseType;
 
-use GeorgiiWeb\PhpTypedValues\Contracts\BaseTypeInterface;
-use GeorgiiWeb\PhpTypedValues\Contracts\IntTypeInterface;
-use GeorgiiWeb\PhpTypedValues\Exception\IntegerTypeException;
+use Override;
+use PhpTypedValues\Contract\BaseTypeInterface;
+use PhpTypedValues\Contract\IntTypeInterface;
+use PhpTypedValues\Exception\IntegerTypeException;
 
 /**
  * @psalm-immutable
  */
-abstract class BaseIntType implements BaseTypeInterface, IntTypeInterface
+abstract readonly class BaseIntType implements BaseTypeInterface, IntTypeInterface
 {
-    protected readonly int $value;
+    protected int $value;
 
     public function __construct(int $value)
     {
@@ -21,6 +22,7 @@ abstract class BaseIntType implements BaseTypeInterface, IntTypeInterface
         $this->value = $value;
     }
 
+    #[Override]
     public function value(): int
     {
         return $this->value;
@@ -29,6 +31,7 @@ abstract class BaseIntType implements BaseTypeInterface, IntTypeInterface
     /**
      * @throws IntegerTypeException
      */
+    #[Override]
     public static function fromString(string $value): self
     {
         if (!preg_match('/^-?\d+$/', $value)) {
@@ -38,11 +41,13 @@ abstract class BaseIntType implements BaseTypeInterface, IntTypeInterface
         return new static((int) $value);
     }
 
+    #[Override]
     public static function fromInt(int $value): self
     {
         return new static($value);
     }
 
+    #[Override]
     public function toString(): string
     {
         return (string) $this->value;

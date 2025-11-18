@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use GeorgiiWeb\PhpTypedValues\Exception\IntegerTypeException;
-use GeorgiiWeb\PhpTypedValues\Types\Integer\Integer;
+use PhpTypedValues\Exception\IntegerTypeException;
+use PhpTypedValues\Type\Integer\Integer;
 
 it('fromInt returns exact value and toString matches', function (): void {
     $i1 = Integer::fromInt(-10);

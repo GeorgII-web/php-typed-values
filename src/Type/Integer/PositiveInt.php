@@ -2,19 +2,21 @@
 
 declare(strict_types=1);
 
-namespace GeorgiiWeb\PhpTypedValues\Types\Integer;
+namespace PhpTypedValues\Type\Integer;
 
-use GeorgiiWeb\PhpTypedValues\Exception\IntegerTypeException;
-use GeorgiiWeb\PhpTypedValues\Types\Base\BaseIntType;
+use Override;
+use PhpTypedValues\BaseType\BaseIntType;
+use PhpTypedValues\Exception\IntegerTypeException;
 
 /**
  * @psalm-immutable
  */
-final class PositiveInt extends BaseIntType
+final readonly class PositiveInt extends BaseIntType
 {
     /**
      * @throws IntegerTypeException
      */
+    #[Override]
     public function assert(int $value): void
     {
         if ($value <= 0) {

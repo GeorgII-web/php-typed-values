@@ -2,15 +2,17 @@
 
 declare(strict_types=1);
 
-namespace GeorgiiWeb\PhpTypedValues\Types\Integer;
+namespace PhpTypedValues\Type\Integer;
 
-use GeorgiiWeb\PhpTypedValues\Types\Base\BaseIntType;
+use Override;
+use PhpTypedValues\BaseType\BaseIntType;
 
 /**
  * @psalm-immutable
  */
-final class Integer extends BaseIntType
+final readonly class Integer extends BaseIntType
 {
+    #[Override]
     public function assert(int $value): void
     {
         // Do nothing, $value already int

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace GeorgiiWeb\PhpTypedValues\Contracts;
+namespace PhpTypedValues\Contract;
 
 /**
  * @psalm-immutable

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace GeorgiiWeb\PhpTypedValues\Exception;
+namespace PhpTypedValues\Exception;
 
 use Exception;
 

@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use GeorgiiWeb\PhpTypedValues\Exception\IntegerTypeException;
-use GeorgiiWeb\PhpTypedValues\Types\Integer\NonNegativeInt;
+use PhpTypedValues\Exception\IntegerTypeException;
+use PhpTypedValues\Type\Integer\NonNegativeInt;
 
 it('NonNegativeInt accepts zero and rejects negatives', function (): void {
     expect((new NonNegativeInt(0))->value())->toBe(0);

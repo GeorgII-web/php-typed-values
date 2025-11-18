@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use GeorgiiWeb\PhpTypedValues\Exception\IntegerTypeException;
-use GeorgiiWeb\PhpTypedValues\Types\Integer\Integer;
+use PhpTypedValues\Exception\IntegerTypeException;
+use PhpTypedValues\Type\Integer\Integer;
 
 it('creates Integer from int', function (): void {
     expect(Integer::fromInt(5)->value())->toBe(5);
