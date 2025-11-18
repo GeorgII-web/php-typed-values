@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Exception\IntegerTypeException;
 use PhpTypedValues\Type\Integer\NonNegativeInt;
 
 it('creates NonNegativeInt', function (): void {
@@ -10,5 +9,5 @@ it('creates NonNegativeInt', function (): void {
 });
 
 it('fails on negatives', function (): void {
-    expect(fn() => NonNegativeInt::fromInt(-1))->toThrow(IntegerTypeException::class);
+    expect(fn() => NonNegativeInt::fromInt(-1))->toThrow(InvalidArgumentException::class);
 });

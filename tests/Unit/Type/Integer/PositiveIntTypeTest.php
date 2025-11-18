@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Exception\IntegerTypeException;
 use PhpTypedValues\Type\Integer\PositiveInt;
 
 it('creates PositiveInt', function (): void {
@@ -10,9 +9,9 @@ it('creates PositiveInt', function (): void {
 });
 
 it('fails on 0', function (): void {
-    expect(fn() => PositiveInt::fromInt(0))->toThrow(IntegerTypeException::class);
+    expect(fn() => PositiveInt::fromInt(0))->toThrow(InvalidArgumentException::class);
 });
 
 it('fails on negatives', function (): void {
-    expect(fn() => PositiveInt::fromInt(-1))->toThrow(IntegerTypeException::class);
+    expect(fn() => PositiveInt::fromInt(-1))->toThrow(InvalidArgumentException::class);
 });

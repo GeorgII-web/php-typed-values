@@ -11,13 +11,9 @@ interface IntTypeInterface
 {
     public function value(): int;
 
-    public static function fromString(string $value): self;
-
     public static function fromInt(int $value): self;
 
-    public function assert(int $value): void;
+    public function toString(): string;
 
-    public function assertGreaterThan(int $value, int $limit, bool $inclusive = false): void;
-
-    public function assertLessThan(int $value, int $limit, bool $inclusive = false): void;
+    public static function fromString(string $value): self;
 }

@@ -4,22 +4,42 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Type\Integer;
 
-use Override;
 use PhpTypedValues\BaseType\BaseIntType;
-use PhpTypedValues\Exception\IntegerTypeException;
+use Webmozart\Assert\Assert;
 
 /**
  * @psalm-immutable
  */
 final readonly class WeekDayInt extends BaseIntType
 {
-    /**
-     * @throws IntegerTypeException
-     */
-    #[Override]
-    public function assert(int $value): void
+    /** @var int<1, 7> */
+    protected int $value;
+
+    public function __construct(int $value)
     {
-        $this->assertGreaterThan($value, 1, true);
-        $this->assertLessThan($value, 7, true);
+        Assert::greaterThanEq($value, 1, 'Value must be between 1 and 7');
+        Assert::lessThanEq($value, 7, 'Value must be between 1 and 7');
+
+        $this->value = max(1, min($value, 7));
+    }
+
+    /**
+     * @return int<1, 7>
+     */
+    public function value(): int
+    {
+        return $this->value;
+    }
+
+    public static function fromInt(int $value): self
+    {
+        return new self($value);
+    }
+
+    public static function fromString(string $value): self
+    {
+        parent::assertNumericString($value);
+
+        return new self((int) $value);
     }
 }

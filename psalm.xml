@@ -7,7 +7,9 @@
         xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
         findUnusedBaselineEntry="true"
         findUnusedCode="true"
-    errorBaseline="psalm-baseline.xml"
+        ensureOverrideAttribute="false"
+        errorBaseline="psalm-baseline.xml"
+        phpVersion="8.2"
 >
     <projectFiles>
         <directory name="src" />

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Type\Integer;
 
-use Override;
 use PhpTypedValues\BaseType\BaseIntType;
 
 /**
@@ -12,9 +11,27 @@ use PhpTypedValues\BaseType\BaseIntType;
  */
 final readonly class Integer extends BaseIntType
 {
-    #[Override]
-    public function assert(int $value): void
+    protected int $value;
+
+    public function __construct(int $value)
     {
-        // Do nothing, $value already int
+        $this->value = $value;
+    }
+
+    public static function fromInt(int $value): self
+    {
+        return new self($value);
+    }
+
+    public static function fromString(string $value): self
+    {
+        parent::assertNumericString($value);
+
+        return new self((int) $value);
+    }
+
+    public function value(): int
+    {
+        return $this->value;
     }
 }

@@ -4,23 +4,41 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Type\Integer;
 
-use Override;
 use PhpTypedValues\BaseType\BaseIntType;
-use PhpTypedValues\Exception\IntegerTypeException;
+use Webmozart\Assert\Assert;
 
 /**
  * @psalm-immutable
  */
 final readonly class NonNegativeInt extends BaseIntType
 {
-    /**
-     * @throws IntegerTypeException
-     */
-    #[Override]
-    public function assert(int $value): void
+    /** @var non-negative-int */
+    protected int $value;
+
+    public function __construct(int $value)
     {
-        if ($value < 0) {
-            throw new IntegerTypeException('Value must be a non-negative integer');
-        }
+        Assert::greaterThanEq($value, 0, 'Value must be a non-negative integer');
+
+        $this->value = max(0, $value);
+    }
+
+    public static function fromInt(int $value): self
+    {
+        return new self($value);
+    }
+
+    public static function fromString(string $value): self
+    {
+        parent::assertNumericString($value);
+
+        return new self((int) $value);
+    }
+
+    /**
+     * @return non-negative-int
+     */
+    public function value(): int
+    {
+        return $this->value;
     }
 }

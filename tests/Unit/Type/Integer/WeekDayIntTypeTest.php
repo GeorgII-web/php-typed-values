@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Exception\IntegerTypeException;
 use PhpTypedValues\Type\Integer\WeekDayInt;
 
 it('creates WeekDayInt from int 1', function (): void {
@@ -14,9 +13,9 @@ it('creates WeekDayInt from int 7', function (): void {
 });
 
 it('fails on 8', function (): void {
-    expect(fn() => WeekDayInt::fromInt(8))->toThrow(IntegerTypeException::class);
+    expect(fn() => WeekDayInt::fromInt(8))->toThrow(InvalidArgumentException::class);
 });
 
 it('fails on 0', function (): void {
-    expect(fn() => WeekDayInt::fromInt(0))->toThrow(IntegerTypeException::class);
+    expect(fn() => WeekDayInt::fromInt(0))->toThrow(InvalidArgumentException::class);
 });
