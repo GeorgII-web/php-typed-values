@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace GeorgiiWeb\PhpTypedValues\Types\Integer;
 
-use InvalidArgumentException;
+use GeorgiiWeb\PhpTypedValues\Exception\IntegerTypeException;
+use GeorgiiWeb\PhpTypedValues\Types\Base\BaseIntType;
 
 /**
- * @extends IntType
- *
  * @psalm-immutable
- * @psalm-suppress UnusedClass Public API type that may be used by consumers outside of analyzed paths.
  */
-class NonNegativeInt extends IntType
+final class NonNegativeInt extends BaseIntType
 {
-    protected function assertValid(mixed $value): void
+    /**
+     * @throws IntegerTypeException
+     */
+    public function assert(int $value): void
     {
-        parent::assertValid($value);
         if ($value < 0) {
-            throw new InvalidArgumentException('Value must be a non-negative integer');
+            throw new IntegerTypeException('Value must be a non-negative integer');
         }
     }
 }

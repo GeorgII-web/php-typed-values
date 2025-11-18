@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
+  <file src="src/Contracts/BaseTypeInterface.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[toString]]></code>
+      <code><![CDATA[value]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Contracts/IntOrNullTypeInterface.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[assert]]></code>
+      <code><![CDATA[fromInt]]></code>
+      <code><![CDATA[fromString]]></code>
+      <code><![CDATA[value]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Contracts/IntTypeInterface.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[fromInt]]></code>
+      <code><![CDATA[fromString]]></code>
+      <code><![CDATA[value]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Types/Base/BaseIntType.php">
+    <UnusedMethodCall>
+      <code><![CDATA[assert]]></code>
+    </UnusedMethodCall>
+  </file>
+  <file src="src/Types/Integer/Integer.php">
+    <UnusedClass>
+      <code><![CDATA[Integer]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Types/Integer/NonNegativeInt.php">
+    <UnusedClass>
+      <code><![CDATA[NonNegativeInt]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Types/Integer/PositiveInt.php">
+    <UnusedClass>
+      <code><![CDATA[PositiveInt]]></code>
+    </UnusedClass>
+  </file>
+</files>

@@ -4,20 +4,21 @@ declare(strict_types=1);
 
 namespace GeorgiiWeb\PhpTypedValues\Types\Integer;
 
-use InvalidArgumentException;
+use GeorgiiWeb\PhpTypedValues\Exception\IntegerTypeException;
+use GeorgiiWeb\PhpTypedValues\Types\Base\BaseIntType;
 
 /**
- * @extends IntType
- *
  * @psalm-immutable
  */
-class PositiveInt extends IntType
+final class PositiveInt extends BaseIntType
 {
-    protected function assertValid(mixed $value): void
+    /**
+     * @throws IntegerTypeException
+     */
+    public function assert(int $value): void
     {
-        parent::assertValid($value);
         if ($value <= 0) {
-            throw new InvalidArgumentException('Value must be a positive integer');
+            throw new IntegerTypeException('Value must be a positive integer');
         }
     }
 }
