@@ -1,0 +1,84 @@
+{
+  "name": "georgii-web/php-typed-values",
+  "description": "Typed value objects library for common php data types.",
+  "type": "library",
+  "license": "MIT",
+  "require": {
+    "php": ">=8.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "GeorgiiWeb\\PhpTypedValues\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "GeorgiiWeb\\PhpTypedValues\\Tests\\": "tests/"
+    }
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.60",
+    "pestphp/pest": "^2.34",
+    "pestphp/pest-plugin-type-coverage": "^2.8",
+    "phpunit/phpunit": "^10.5",
+    "vimeo/psalm": "^5.25"
+  },
+  "scripts": {
+    "sca": [
+      "@disable-process-timeout",
+      "vendor/bin/psalm --config=psalm.xml --diff --show-info=false --threads=2 --no-cache"
+    ],
+    "sca-baseline": [
+      "@disable-process-timeout",
+      "vendor/bin/psalm --config=psalm.xml --set-baseline=psalm-baseline.xml --threads=4"
+    ],
+    "cs": [
+      "@disable-process-timeout",
+      "vendor/bin/php-cs-fixer fix --ansi --config=.php-cs-fixer.dist.php --diff --verbose"
+    ],
+    "oncheckout": [
+      "@disable-process-timeout",
+      "composer install",
+      "composer dump-autoload",
+      "echo '\\n\\n\\033[1;32mAfter-checkout preparations done!\\033[0m\\n'"
+    ],
+    "oncommit": [
+      "@disable-process-timeout",
+      "@composer validate --strict",
+      "@composer cs",
+      "@composer sca",
+      "@composer test",
+      "@composer type",
+      "@composer coverage",
+      "echo '\\n\\n\\033[1;32mPre-commit checks passed!\\033[0m\\n'"
+    ],
+    "test": [
+      "@disable-process-timeout",
+      "./vendor/bin/pest"
+    ],
+    "type": [
+      "@disable-process-timeout",
+      "./vendor/bin/pest --type-coverage --min=100"
+    ],
+    "coverage": [
+      "@disable-process-timeout",
+      "./vendor/bin/pest --coverage --min=95"
+    ],
+    "mutate": [
+      "@disable-process-timeout",
+      "./vendor/bin/pest --mutate --parallel --everything --covered-only --min=40"
+    ]
+  },
+  "config": {
+    "sort-packages": true,
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  },
+  "authors": [
+    {
+      "name": "GeorgII",
+      "email": "george.webfullstack@gmail.com"
+    }
+  ]
+}
