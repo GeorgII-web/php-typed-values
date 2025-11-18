@@ -4,7 +4,8 @@
   "type": "library",
   "license": "MIT",
   "require": {
-    "php": ">=8.2"
+    "php": ">=8.2",
+    "symfony/polyfill-php83": "^1.33"
   },
   "autoload": {
     "psr-4": {

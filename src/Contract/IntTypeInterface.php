@@ -16,4 +16,8 @@ interface IntTypeInterface
     public static function fromInt(int $value): self;
 
     public function assert(int $value): void;
+
+    public function assertGreaterThan(int $value, int $limit, bool $inclusive = false): void;
+
+    public function assertLessThan(int $value, int $limit, bool $inclusive = false): void;
 }

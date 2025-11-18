@@ -13,15 +13,19 @@ it('creates Integer from string', function (): void {
     expect(Integer::fromString('5')->value())->toBe(5);
 });
 
-it('creates Integer from string value and fails', function (): void {
+it('fails on "integer-ish" float string', function (): void {
+    expect(fn() => Integer::fromString('5.0'))->toThrow(IntegerTypeException::class);
+});
+
+it('fails on float string', function (): void {
     expect(fn() => Integer::fromString('5.5'))->toThrow(IntegerTypeException::class);
 });
 
-it('creates Integer from invalid string and fail', function (): void {
+it('fails on type mismatch', function (): void {
     expect(function () {
         try {
             // invalid integer string (contains decimal point)
-            Integer::fromString('34.0');
+            Integer::fromInt('34.66');
         } catch (Throwable $e) {
             throw new IntegerTypeException('Failed to create Integer from string', previous: $e);
         }
