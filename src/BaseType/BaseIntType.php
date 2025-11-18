@@ -18,6 +18,9 @@ abstract readonly class BaseIntType implements BaseTypeInterface, IntTypeInterfa
 {
     protected int $value;
 
+    /**
+     * @throws IntegerTypeException
+     */
     public function __construct(int $value)
     {
         $this->assert($value);
@@ -43,6 +46,9 @@ abstract readonly class BaseIntType implements BaseTypeInterface, IntTypeInterfa
         return new static((int) $value);
     }
 
+    /**
+     * @throws IntegerTypeException
+     */
     #[Override]
     public static function fromInt(int $value): self
     {
