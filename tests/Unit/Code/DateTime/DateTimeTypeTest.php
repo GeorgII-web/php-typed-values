@@ -67,6 +67,18 @@ it('rejects strings that createFromFormat parses with warnings (trailing data)',
         ->toThrow(DateTimeTypeException::class);
 });
 
+it('rejects DATE_ATOM with trailing data (warnings from createFromFormat)', function (): void {
+    // Matches DATE_ATOM except for trailing junk which should produce warnings; must be rejected
+    expect(fn() => DateTimeBasic::fromString('2025-01-02T03:04:05+00:00junk'))
+        ->toThrow(DateTimeTypeException::class);
+});
+
+it('rejects Z-format with trailing data (warnings from createFromFormat)', function (): void {
+    // Matches explicit Z format with extra trailing characters; must be rejected
+    expect(fn() => DateTimeBasic::fromString('2025-01-02T03:04:05Zjunk'))
+        ->toThrow(DateTimeTypeException::class);
+});
+
 it('normalizes Zulu input to +00:00 via toString()', function (): void {
     // Parsed by the explicit 'Y-m-d\\TH:i:s\\Z' format, toString should output DATE_ATOM with +00:00
     $vo = DateTimeBasic::fromString('2025-01-02T03:04:05Z');

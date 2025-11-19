@@ -18,12 +18,12 @@
 - keep code clean and readable
 - PSALM v6 static analysis is used
 
-## Folder structure 
+## Folder structure
 
 - `src/Code` folder contains the framework internal code
-- other folders like `src/"type"` contains specific types 
+- other folders like `src/"type"` contains specific types
 - `src/psalmTest.php` contains types usage to avoid Psalm issues like `unused method`
-- `src/Code/Assert/Assert.php` contains `assert` methods, add new methods instead of checking conditions directly in classes. Prefer to use Assert::"methos()". 
+- `src/Code/Assert/Assert.php` contains `assert` methods, add new methods instead of checking conditions directly in classes. Prefer to use Assert::"methos()".
 
 ## Tests
 
@@ -32,7 +32,7 @@
 - use PEST syntax `it` instead of `test`
 - keep the folder structure as tested src files
 - test coverage should be 100%
-- mutation tests used, avoid fails 
+- mutation tests used, avoid fails
 
 ## Documentation
 
