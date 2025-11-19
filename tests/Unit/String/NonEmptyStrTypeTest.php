@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Code\Exception\TypeException;
+use PhpTypedValues\Code\Exception\StringTypeException;
 use PhpTypedValues\String\NonEmptyStr;
 
 it('constructs and preserves non-empty string', function (): void {
@@ -20,10 +20,10 @@ it('allows whitespace and unicode as non-empty', function (): void {
 
 it('throws on empty string via constructor', function (): void {
     expect(fn() => new NonEmptyStr(''))
-        ->toThrow(TypeException::class, 'Value must be a non-empty string');
+        ->toThrow(StringTypeException::class, 'Value must be a non-empty string');
 });
 
 it('throws on empty string via fromString', function (): void {
     expect(fn() => NonEmptyStr::fromString(''))
-        ->toThrow(TypeException::class, 'Value must be a non-empty string');
+        ->toThrow(StringTypeException::class, 'Value must be a non-empty string');
 });

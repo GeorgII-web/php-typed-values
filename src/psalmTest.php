@@ -8,30 +8,50 @@
 
 require_once 'vendor/autoload.php';
 
-use PhpTypedValues\Integer\Integer;
+use PhpTypedValues\DateTime\DateTimeBasic;
+use PhpTypedValues\Float\FloatBasic;
+use PhpTypedValues\Float\NonNegativeFloat;
+use PhpTypedValues\Integer\IntegerBasic;
 use PhpTypedValues\Integer\NonNegativeInt;
 use PhpTypedValues\Integer\PositiveInt;
 use PhpTypedValues\Integer\WeekDayInt;
 use PhpTypedValues\String\NonEmptyStr;
-use PhpTypedValues\String\Str;
+use PhpTypedValues\String\StringBasic;
 
 /**
  * Integer.
  */
-testInteger(Integer::fromInt(10)->value());
+testInteger(IntegerBasic::fromInt(10)->value());
 testPositiveInt(PositiveInt::fromInt(10)->value());
 testNonNegativeInt(NonNegativeInt::fromInt(10)->value());
 testWeekDayInt(WeekDayInt::fromInt(7)->value());
 
-echo Integer::fromString('10')->toString();
+echo IntegerBasic::fromString('10')->toString();
 
 /**
  * String.
  */
-testString(Str::fromString('hi')->value());
+testString(StringBasic::fromString('hi')->value());
 testNonEmptyString(NonEmptyStr::fromString('hi')->value());
 
-echo Str::fromString('hi')->toString();
+echo StringBasic::fromString('hi')->toString();
+
+/**
+ * Float.
+ */
+testFloat(FloatBasic::fromFloat(3.14)->value());
+
+echo FloatBasic::fromString('2.71828')->toString();
+
+// PositiveFloat usage
+testPositiveFloat(NonNegativeFloat::fromFloat(0.5)->value());
+echo NonNegativeFloat::fromString('3.14159')->toString();
+
+/**
+ * DateTime.
+ */
+$dt = DateTimeBasic::fromString('2025-01-02T03:04:05+00:00')->value();
+echo DateTimeBasic::fromDateTime($dt)->toString();
 
 /**
  * Artificial functions.
@@ -76,4 +96,14 @@ function testString(string $i): string
 function testNonEmptyString(string $i): string
 {
     return $i;
+}
+
+function testFloat(float $f): float
+{
+    return $f;
+}
+
+function testPositiveFloat(float $f): float
+{
+    return $f;
 }

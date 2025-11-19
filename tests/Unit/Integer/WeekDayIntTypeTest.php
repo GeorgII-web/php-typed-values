@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Code\Exception\TypeException;
+use PhpTypedValues\Code\Exception\NumericTypeException;
 use PhpTypedValues\Integer\WeekDayInt;
 
 it('creates WeekDayInt from int 1', function (): void {
@@ -14,11 +14,11 @@ it('creates WeekDayInt from int 7', function (): void {
 });
 
 it('fails on 8', function (): void {
-    expect(fn() => WeekDayInt::fromInt(8))->toThrow(TypeException::class);
+    expect(fn() => WeekDayInt::fromInt(8))->toThrow(NumericTypeException::class);
 });
 
 it('fails on 0', function (): void {
-    expect(fn() => WeekDayInt::fromInt(0))->toThrow(TypeException::class);
+    expect(fn() => WeekDayInt::fromInt(0))->toThrow(NumericTypeException::class);
 });
 
 it('creates WeekDayInt from string within range', function (): void {
@@ -31,8 +31,8 @@ it('creates WeekDayInt from integerish string', function (): void {
 });
 
 it('fails creating WeekDayInt from out-of-range strings', function (): void {
-    expect(fn() => WeekDayInt::fromString('0'))->toThrow(TypeException::class);
-    expect(fn() => WeekDayInt::fromString('8'))->toThrow(TypeException::class);
+    expect(fn() => WeekDayInt::fromString('0'))->toThrow(NumericTypeException::class);
+    expect(fn() => WeekDayInt::fromString('8'))->toThrow(NumericTypeException::class);
 });
 
 it('toString returns scalar string for WeekDayInt', function (): void {
@@ -40,5 +40,5 @@ it('toString returns scalar string for WeekDayInt', function (): void {
 });
 
 it('fails creating WeekDayInt from float string', function (): void {
-    expect(fn() => WeekDayInt::fromString('5.5'))->toThrow(TypeException::class);
+    expect(fn() => WeekDayInt::fromString('5.5'))->toThrow(NumericTypeException::class);
 });

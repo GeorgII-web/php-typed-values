@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Integer;
 
-use PhpTypedValues\Code\Exception\TypeException;
+use PhpTypedValues\Code\Exception\NumericTypeException;
 use PhpTypedValues\Code\Integer\IntType;
 
 /**
  * @psalm-immutable
  */
-final readonly class Integer extends IntType
+final readonly class IntegerBasic extends IntType
 {
     protected int $value;
 
@@ -25,7 +25,7 @@ final readonly class Integer extends IntType
     }
 
     /**
-     * @throws TypeException
+     * @throws NumericTypeException
      */
     public static function fromString(string $value): self
     {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Code\Integer;
+namespace PhpTypedValues\Code\Float;
 
 use PhpTypedValues\Code\Assert\Assert;
 use PhpTypedValues\Code\Exception\NumericTypeException;
@@ -10,14 +10,14 @@ use PhpTypedValues\Code\Exception\NumericTypeException;
 /**
  * @psalm-immutable
  */
-abstract readonly class IntType implements IntTypeInterface
+abstract readonly class FloatType implements FloatTypeInterface
 {
     /**
      * @throws NumericTypeException
      */
     protected static function assertNumericString(string $value): void
     {
-        Assert::integerish($value, 'String has no valid integer');
+        Assert::numeric($value, 'String has no valid float');
     }
 
     public function toString(): string

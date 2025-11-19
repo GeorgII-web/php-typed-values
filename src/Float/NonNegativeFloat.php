@@ -2,37 +2,33 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Integer;
+namespace PhpTypedValues\Float;
 
 use PhpTypedValues\Code\Assert\Assert;
 use PhpTypedValues\Code\Exception\NumericTypeException;
-use PhpTypedValues\Code\Integer\IntType;
+use PhpTypedValues\Code\Float\FloatType;
 
 /**
  * @psalm-immutable
  */
-final readonly class NonNegativeInt extends IntType
+final readonly class NonNegativeFloat extends FloatType
 {
-    /** @var non-negative-int */
-    protected int $value;
+    protected float $value;
 
     /**
      * @throws NumericTypeException
      */
-    public function __construct(int $value)
+    public function __construct(float $value)
     {
         Assert::greaterThanEq($value, 0);
 
-        /**
-         * @var non-negative-int $value
-         */
         $this->value = $value;
     }
 
     /**
      * @throws NumericTypeException
      */
-    public static function fromInt(int $value): self
+    public static function fromFloat(float $value): self
     {
         return new self($value);
     }
@@ -44,13 +40,10 @@ final readonly class NonNegativeInt extends IntType
     {
         parent::assertNumericString($value);
 
-        return new self((int) $value);
+        return new self((float) $value);
     }
 
-    /**
-     * @return non-negative-int
-     */
-    public function value(): int
+    public function value(): float
     {
         return $this->value;
     }

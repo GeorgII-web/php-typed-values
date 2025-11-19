@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace PhpTypedValues\Integer;
 
 use PhpTypedValues\Code\Assert\Assert;
-use PhpTypedValues\Code\Exception\TypeException;
+use PhpTypedValues\Code\Exception\NumericTypeException;
 use PhpTypedValues\Code\Integer\IntType;
 
 /**
@@ -17,11 +17,11 @@ final readonly class PositiveInt extends IntType
     protected int $value;
 
     /**
-     * @throws TypeException
+     * @throws NumericTypeException
      */
     public function __construct(int $value)
     {
-        Assert::greaterThanEq($value, 1, 'Value must be a positive integer');
+        Assert::greaterThanEq($value, 1);
 
         /**
          * @var positive-int $value
@@ -30,7 +30,7 @@ final readonly class PositiveInt extends IntType
     }
 
     /**
-     * @throws TypeException
+     * @throws NumericTypeException
      */
     public static function fromInt(int $value): self
     {
@@ -38,7 +38,7 @@ final readonly class PositiveInt extends IntType
     }
 
     /**
-     * @throws TypeException
+     * @throws NumericTypeException
      */
     public static function fromString(string $value): self
     {

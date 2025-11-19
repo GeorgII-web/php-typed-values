@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Code\Exception\TypeException;
+use PhpTypedValues\Code\Exception\NumericTypeException;
 use PhpTypedValues\Integer\PositiveInt;
 
 it('creates PositiveInt', function (): void {
@@ -10,11 +10,11 @@ it('creates PositiveInt', function (): void {
 });
 
 it('fails on 0', function (): void {
-    expect(fn() => PositiveInt::fromInt(0))->toThrow(TypeException::class);
+    expect(fn() => PositiveInt::fromInt(0))->toThrow(NumericTypeException::class);
 });
 
 it('fails on negatives', function (): void {
-    expect(fn() => PositiveInt::fromInt(-1))->toThrow(TypeException::class);
+    expect(fn() => PositiveInt::fromInt(-1))->toThrow(NumericTypeException::class);
 });
 
 it('creates PositiveInt from string', function (): void {
@@ -26,11 +26,11 @@ it('creates PositiveInt from integerish string', function (): void {
 });
 
 it('fails creating PositiveInt from string 0', function (): void {
-    expect(fn() => PositiveInt::fromString('0'))->toThrow(TypeException::class);
+    expect(fn() => PositiveInt::fromString('0'))->toThrow(NumericTypeException::class);
 });
 
 it('fails creating PositiveInt from negative string', function (): void {
-    expect(fn() => PositiveInt::fromString('-3'))->toThrow(TypeException::class);
+    expect(fn() => PositiveInt::fromString('-3'))->toThrow(NumericTypeException::class);
 });
 
 it('toString returns scalar string for PositiveInt', function (): void {
@@ -38,5 +38,5 @@ it('toString returns scalar string for PositiveInt', function (): void {
 });
 
 it('fails creating PositiveInt from float string', function (): void {
-    expect(fn() => PositiveInt::fromString('5.5'))->toThrow(TypeException::class);
+    expect(fn() => PositiveInt::fromString('5.5'))->toThrow(NumericTypeException::class);
 });

@@ -24,35 +24,57 @@ composer require georgii-web/php-typed-values
 Usage
 -----
 
-Create and use typed integers with validation built in.
+Create and use typed values with validation built in.
 
 ```php
-use PhpTypedValues\\Integer\\PositiveInt;
-use PhpTypedValues\\Integer\\NonNegativeInt;
-use PhpTypedValues\\Integer\\WeekDayInt;
-use PhpTypedValues\\Integer\\Integer;
+// Integers
+use PhpTypedValues\Integer\IntegerBasic;
+use PhpTypedValues\Integer\PositiveInt;
+use PhpTypedValues\Integer\NonNegativeInt;
+use PhpTypedValues\Integer\WeekDayInt;
 
-$age = new PositiveInt(27);          // ok (positive-int)
-$retries = new NonNegativeInt(0);    // ok (0 or positive)
-$weekday = new WeekDayInt(5);        // ok (1..7)
-$any = new Integer(-42);             // ok (any integer)
+$age      = new PositiveInt(27);       // ok (positive-int)
+$retries  = new NonNegativeInt(0);     // ok (0 or positive)
+$weekday  = new WeekDayInt(5);         // ok (1..7)
+$anyInt   = new IntegerBasic(-42);     // ok (any integer)
 
-// Construct from string
 $fromString = PositiveInt::fromString('123');
 
-// Access the underlying scalar value
-$ageValue = $age->value(); // 27
-echo $weekday->toString(); // "5"
+// Strings
+use PhpTypedValues\String\StringBasic;
+use PhpTypedValues\String\NonEmptyStr;
+
+$greeting = StringBasic::fromString('hello');
+$name     = new NonEmptyStr('Alice');  // throws if empty
+
+// Floats
+use PhpTypedValues\Float\FloatBasic;
+use PhpTypedValues\Float\NonNegativeFloat;
+
+$price    = FloatBasic::fromString('19.99');
+$ratio    = new NonNegativeFloat(0.5);    // > 0 required
+
+// Access the underlying scalar value / string form
+$ageValue = $age->value();        // 27
+echo $weekday->toString();        // "5"
+echo $price->toString();          // "19.99"
 ```
 
 All value objects are immutable; invalid input throws an exception with a helpful message.
 
-Provided integer types (so far):
+Provided types (so far):
 
-- Integer — any PHP integer
-- PositiveInt — positive integer (> 0)
-- NonNegativeInt — zero or positive integer (>= 0)
-- WeekDayInt — integer in range 1..7
+- Integers
+  - IntegerBasic — any PHP integer
+  - PositiveInt — positive integer (> 0)
+  - NonNegativeInt — zero or positive integer (>= 0)
+  - WeekDayInt — integer in range 1..7
+- Strings
+  - StringBasic — any PHP string
+  - NonEmptyStr — non-empty string
+- Floats
+  - FloatBasic — any PHP float
+  - PositiveFloat — positive float (> 0)
 
 Why
 ---

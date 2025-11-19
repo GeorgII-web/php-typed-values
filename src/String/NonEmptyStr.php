@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace PhpTypedValues\String;
 
 use PhpTypedValues\Code\Assert\Assert;
-use PhpTypedValues\Code\Exception\TypeException;
+use PhpTypedValues\Code\Exception\StringTypeException;
 use PhpTypedValues\Code\String\StrType;
 
 /**
@@ -17,18 +17,18 @@ final readonly class NonEmptyStr extends StrType
     protected string $value;
 
     /**
-     * @throws TypeException
+     * @throws StringTypeException
      */
     public function __construct(string $value)
     {
-        Assert::nonEmptyString($value, 'Value must be a non-empty string');
+        Assert::nonEmptyString($value);
 
         /** @var non-empty-string $value */
         $this->value = $value;
     }
 
     /**
-     * @throws TypeException
+     * @throws StringTypeException
      */
     public static function fromString(string $value): self
     {
