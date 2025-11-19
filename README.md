@@ -52,7 +52,7 @@ use PhpTypedValues\Float\FloatBasic;
 use PhpTypedValues\Float\NonNegativeFloat;
 
 $price    = FloatBasic::fromString('19.99');
-$ratio    = new NonNegativeFloat(0.5);    // > 0 required
+$ratio    = new NonNegativeFloat(0.5);    // >= 0 allowed
 
 // Access the underlying scalar value / string form
 $ageValue = $age->value();        // 27
@@ -74,7 +74,10 @@ Provided types (so far):
   - NonEmptyStr — non-empty string
 - Floats
   - FloatBasic — any PHP float
-  - PositiveFloat — positive float (> 0)
+  - NonNegativeFloat — zero or positive float (>= 0)
+
+- DateTime
+  - DateTimeBasic — immutable DateTime value (parses common ISO-8601 formats)
 
 Why
 ---

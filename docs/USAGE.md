@@ -30,7 +30,12 @@ Available float types
 ---------------------
 
 - PhpTypedValues\Float\FloatBasic — any PHP float
-- PhpTypedValues\Float\PositiveFloat — positive float (> 0)
+- PhpTypedValues\Float\NonNegativeFloat — zero or positive float (>= 0)
+
+Available DateTime types
+------------------------
+
+- PhpTypedValues\DateTime\DateTimeBasic — immutable DateTime value; parses common ISO-8601 formats
 
 Quick start
 -----------
@@ -62,7 +67,13 @@ use PhpTypedValues\Float\FloatBasic;
 use PhpTypedValues\Float\NonNegativeFloat;
 
 $price = FloatBasic::fromString('19.99');
-$ratio = new NonNegativeFloat(0.5);  // > 0
+$ratio = new NonNegativeFloat(0.5);  // >= 0 allowed
+
+// DateTime
+use PhpTypedValues\DateTime\DateTimeBasic;
+
+$dt = DateTimeBasic::fromString('2025-01-02T03:04:05+00:00');
+echo $dt->toString(); // "2025-01-02T03:04:05+00:00"
 
 // Accessing the raw value and string form
 echo $pos->value();     // 1
@@ -79,14 +90,16 @@ Invalid input throws an exception with a helpful message.
 use PhpTypedValues\Integer\PositiveInt;
 use PhpTypedValues\String\NonEmptyStr;
 use PhpTypedValues\Float\NonNegativeFloat;
+use PhpTypedValues\DateTime\DateTimeBasic;
 
 new PositiveInt(0);              // throws: Value must be a positive integer
 PositiveInt::fromString('12.3'); // throws: String has no valid integer
 
 new NonEmptyStr('');             // throws: Value must be a non-empty string
 
-new NonNegativeFloat(0.0);          // throws: Value must be a positive float
 NonNegativeFloat::fromString('abc'); // throws: String has no valid float
+
+DateTimeBasic::fromString('not-a-date'); // throws: String has no valid datetime
 ```
 
 Notes
