@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace PhpTypedValues\Integer;
 
 use PhpTypedValues\Code\Assert\Assert;
-use PhpTypedValues\Code\BaseType\BaseIntType;
 use PhpTypedValues\Code\Exception\TypeException;
+use PhpTypedValues\Code\Integer\IntType;
 
 /**
  * @psalm-immutable
  */
-final readonly class WeekDayInt extends BaseIntType
+final readonly class WeekDayInt extends IntType
 {
     /** @var int<1, 7> */
     protected int $value;

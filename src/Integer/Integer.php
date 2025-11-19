@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Integer;
 
-use PhpTypedValues\Code\BaseType\BaseIntType;
 use PhpTypedValues\Code\Exception\TypeException;
+use PhpTypedValues\Code\Integer\IntType;
 
 /**
  * @psalm-immutable
  */
-final readonly class Integer extends BaseIntType
+final readonly class Integer extends IntType
 {
     protected int $value;
 

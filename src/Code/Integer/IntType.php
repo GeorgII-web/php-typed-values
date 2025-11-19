@@ -2,16 +2,15 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Code\BaseType;
+namespace PhpTypedValues\Code\Integer;
 
 use PhpTypedValues\Code\Assert\Assert;
-use PhpTypedValues\Code\Contract\IntTypeInterface;
 use PhpTypedValues\Code\Exception\TypeException;
 
 /**
  * @psalm-immutable
  */
-abstract readonly class BaseIntType implements IntTypeInterface
+abstract readonly class IntType implements IntTypeInterface
 {
     /**
      * @throws TypeException

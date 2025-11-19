@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Code\Contract;
+namespace PhpTypedValues\Code\Integer;
 
 /**
  * @psalm-immutable

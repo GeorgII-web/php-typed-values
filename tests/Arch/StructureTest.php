@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Code\BaseType\BaseIntType;
+use PhpTypedValues\Code\Integer\IntType;
 
 arch('Base classes')
     ->expect('PhpTypedValues\Code\BaseType')
@@ -12,7 +12,7 @@ arch('Base classes')
 
 arch('Integer classes are final and read-only')
     ->expect('PhpTypedValues\Integer')
-    ->toExtend(BaseIntType::class)
+    ->toExtend(IntType::class)
     ->toBeClasses()
     ->toBeFinal()
     ->toBeReadonly();

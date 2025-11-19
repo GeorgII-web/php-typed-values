@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace PhpTypedValues\Integer;
 
 use PhpTypedValues\Code\Assert\Assert;
-use PhpTypedValues\Code\BaseType\BaseIntType;
 use PhpTypedValues\Code\Exception\TypeException;
+use PhpTypedValues\Code\Integer\IntType;
 
 /**
  * @psalm-immutable
  */
-final readonly class NonNegativeInt extends BaseIntType
+final readonly class NonNegativeInt extends IntType
 {
     /** @var non-negative-int */
     protected int $value;
