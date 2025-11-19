@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Type\Integer\Integer;
-use Webmozart\Assert\InvalidArgumentException;
+use PhpTypedValues\Code\Exception\TypeException;
+use PhpTypedValues\Integer\Integer;
 
 it('fromInt returns exact value and toString matches', function (): void {
     $i1 = Integer::fromInt(-10);
@@ -27,6 +27,6 @@ it('fromString parses valid integer strings including negatives and leading zero
 it('fromString rejects non-integer strings', function (): void {
     $invalid = ['5a', 'a5', '', 'abc', '--5', '3.14'];
     foreach ($invalid as $str) {
-        expect(fn() => Integer::fromString($str))->toThrow(InvalidArgumentException::class);
+        expect(fn() => Integer::fromString($str))->toThrow(TypeException::class);
     }
 });

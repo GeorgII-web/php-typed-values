@@ -2,19 +2,22 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\BaseType;
+namespace PhpTypedValues\Code\BaseType;
 
-use PhpTypedValues\Contract\IntTypeInterface;
-use Webmozart\Assert\Assert;
+use PhpTypedValues\Code\Assert\Assert;
+use PhpTypedValues\Code\Contract\IntTypeInterface;
+use PhpTypedValues\Code\Exception\TypeException;
 
 /**
  * @psalm-immutable
  */
 abstract readonly class BaseIntType implements IntTypeInterface
 {
+    /**
+     * @throws TypeException
+     */
     protected static function assertNumericString(string $value): void
     {
-        //        Assert::numeric($value, 'String has no valid integer');
         Assert::integerish($value, 'String has no valid integer');
     }
 

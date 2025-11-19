@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Type\Integer;
+namespace PhpTypedValues\Integer;
 
-use PhpTypedValues\BaseType\BaseIntType;
+use PhpTypedValues\Code\BaseType\BaseIntType;
+use PhpTypedValues\Code\Exception\TypeException;
 
 /**
  * @psalm-immutable
@@ -23,6 +24,9 @@ final readonly class Integer extends BaseIntType
         return new self($value);
     }
 
+    /**
+     * @throws TypeException
+     */
     public static function fromString(string $value): self
     {
         parent::assertNumericString($value);

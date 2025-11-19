@@ -8,10 +8,10 @@
 
 require_once 'vendor/autoload.php';
 
-use PhpTypedValues\Type\Integer\Integer;
-use PhpTypedValues\Type\Integer\NonNegativeInt;
-use PhpTypedValues\Type\Integer\PositiveInt;
-use PhpTypedValues\Type\Integer\WeekDayInt;
+use PhpTypedValues\Integer\Integer;
+use PhpTypedValues\Integer\NonNegativeInt;
+use PhpTypedValues\Integer\PositiveInt;
+use PhpTypedValues\Integer\WeekDayInt;
 
 /**
  * Integer.

@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Type\Integer;
+namespace PhpTypedValues\Integer;
 
-use PhpTypedValues\BaseType\BaseIntType;
-use Webmozart\Assert\Assert;
+use PhpTypedValues\Code\Assert\Assert;
+use PhpTypedValues\Code\BaseType\BaseIntType;
+use PhpTypedValues\Code\Exception\TypeException;
 
 /**
  * @psalm-immutable
@@ -15,18 +16,30 @@ final readonly class PositiveInt extends BaseIntType
     /** @var positive-int */
     protected int $value;
 
+    /**
+     * @throws TypeException
+     */
     public function __construct(int $value)
     {
-        Assert::positiveInteger($value, 'Value must be a positive integer');
+        Assert::greaterThanEq($value, 1, 'Value must be a positive integer');
 
-        $this->value = max(1, $value);
+        /**
+         * @var positive-int $value
+         */
+        $this->value = $value;
     }
 
+    /**
+     * @throws TypeException
+     */
     public static function fromInt(int $value): self
     {
         return new self($value);
     }
 
+    /**
+     * @throws TypeException
+     */
     public static function fromString(string $value): self
     {
         parent::assertNumericString($value);

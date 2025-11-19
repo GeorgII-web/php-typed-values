@@ -9,6 +9,7 @@ Typed value objects for common PHP data types. Make primitives explicit, safe, a
 
 Quick links:
 - Install: docs/INSTALL.md
+- Usage: docs/USAGE.md
 - Development: docs/DEVELOP.md
 
 Install
@@ -26,22 +27,32 @@ Usage
 Create and use typed integers with validation built in.
 
 ```php
-use GeorgiiWeb\\PhpTypedValues\\Types\\Integer\\PositiveInt;
-use GeorgiiWeb\\PhpTypedValues\\Types\\Integer\\NonNegativeInt;
-use GeorgiiWeb\\PhpTypedValues\\Types\\Integer\\Nullable\\PositiveIntOrNull;
+use PhpTypedValues\\Integer\\PositiveInt;
+use PhpTypedValues\\Integer\\NonNegativeInt;
+use PhpTypedValues\\Integer\\WeekDayInt;
+use PhpTypedValues\\Integer\\Integer;
 
-$age = new PositiveInt(27);          // ok
-$retries = new NonNegativeInt(0);    // ok
+$age = new PositiveInt(27);          // ok (positive-int)
+$retries = new NonNegativeInt(0);    // ok (0 or positive)
+$weekday = new WeekDayInt(5);        // ok (1..7)
+$any = new Integer(-42);             // ok (any integer)
 
-// Nullable wrapper: accepts PositiveInt or null semantics
-$maybeCount = new PositiveIntOrNull(null);  // ok
-$maybeCount = new PositiveIntOrNull(5);     // ok
+// Construct from string
+$fromString = PositiveInt::fromString('123');
 
 // Access the underlying scalar value
 $ageValue = $age->value(); // 27
+echo $weekday->toString(); // "5"
 ```
 
-All value objects are immutable; invalid input throws an InvalidArgumentException.
+All value objects are immutable; invalid input throws an exception with a helpful message.
+
+Provided integer types (so far):
+
+- Integer — any PHP integer
+- PositiveInt — positive integer (> 0)
+- NonNegativeInt — zero or positive integer (>= 0)
+- WeekDayInt — integer in range 1..7
 
 Why
 ---

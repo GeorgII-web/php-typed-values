@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Type\Integer;
+namespace PhpTypedValues\Integer;
 
-use PhpTypedValues\BaseType\BaseIntType;
-use Webmozart\Assert\Assert;
+use PhpTypedValues\Code\Assert\Assert;
+use PhpTypedValues\Code\BaseType\BaseIntType;
+use PhpTypedValues\Code\Exception\TypeException;
 
 /**
  * @psalm-immutable
@@ -15,12 +16,18 @@ final readonly class WeekDayInt extends BaseIntType
     /** @var int<1, 7> */
     protected int $value;
 
+    /**
+     * @throws TypeException
+     */
     public function __construct(int $value)
     {
         Assert::greaterThanEq($value, 1, 'Value must be between 1 and 7');
         Assert::lessThanEq($value, 7, 'Value must be between 1 and 7');
 
-        $this->value = max(1, min($value, 7));
+        /**
+         * @var int<1, 7> $value
+         */
+        $this->value = $value;
     }
 
     /**
@@ -31,11 +38,17 @@ final readonly class WeekDayInt extends BaseIntType
         return $this->value;
     }
 
+    /**
+     * @throws TypeException
+     */
     public static function fromInt(int $value): self
     {
         return new self($value);
     }
 
+    /**
+     * @throws TypeException
+     */
     public static function fromString(string $value): self
     {
         parent::assertNumericString($value);

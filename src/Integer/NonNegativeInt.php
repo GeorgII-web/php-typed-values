@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Type\Integer;
+namespace PhpTypedValues\Integer;
 
-use PhpTypedValues\BaseType\BaseIntType;
-use Webmozart\Assert\Assert;
+use PhpTypedValues\Code\Assert\Assert;
+use PhpTypedValues\Code\BaseType\BaseIntType;
+use PhpTypedValues\Code\Exception\TypeException;
 
 /**
  * @psalm-immutable
@@ -15,18 +16,30 @@ final readonly class NonNegativeInt extends BaseIntType
     /** @var non-negative-int */
     protected int $value;
 
+    /**
+     * @throws TypeException
+     */
     public function __construct(int $value)
     {
         Assert::greaterThanEq($value, 0, 'Value must be a non-negative integer');
 
-        $this->value = max(0, $value);
+        /**
+         * @var non-negative-int $value
+         */
+        $this->value = $value;
     }
 
+    /**
+     * @throws TypeException
+     */
     public static function fromInt(int $value): self
     {
         return new self($value);
     }
 
+    /**
+     * @throws TypeException
+     */
     public static function fromString(string $value): self
     {
         parent::assertNumericString($value);

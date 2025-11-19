@@ -4,8 +4,14 @@
   "type": "library",
   "license": "MIT",
   "require": {
-    "php": ">=8.2",
-    "webmozart/assert": "^1.12"
+    "php": ">=8.2"
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^v3.89",
+    "pestphp/pest": "^v3.8.4",
+    "pestphp/pest-plugin-type-coverage": "^v3.6",
+    "phpunit/phpunit": "^11.5",
+    "vimeo/psalm": "^6.13.1"
   },
   "autoload": {
     "psr-4": {
@@ -16,13 +22,6 @@
     "psr-4": {
       "PhpTypedValues\\Tests\\": "tests/"
     }
-  },
-  "require-dev": {
-    "friendsofphp/php-cs-fixer": "^v3.89",
-    "pestphp/pest": "^v3.8.4",
-    "pestphp/pest-plugin-type-coverage": "^v3.6",
-    "phpunit/phpunit": "^11.5",
-    "vimeo/psalm": "^6.13.1"
   },
   "scripts": {
     "sca": [
