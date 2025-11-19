@@ -53,3 +53,20 @@ it('integerish does not throw for integerish values', function (): void {
     Assert::integerish(5, '');
     expect(true)->toBeTrue();
 });
+
+it('nonEmptyString throws with default message when empty', function (): void {
+    expect(fn() => Assert::nonEmptyString('', ''))
+        ->toThrow(TypeException::class, 'Value must be a non-empty string');
+});
+
+it('nonEmptyString throws with custom message when provided', function (): void {
+    expect(fn() => Assert::nonEmptyString('', 'custom non-empty message'))
+        ->toThrow(TypeException::class, 'custom non-empty message');
+});
+
+it('nonEmptyString does not throw for non-empty strings', function (): void {
+    Assert::nonEmptyString('a', '');
+    Assert::nonEmptyString('  ', '');
+    Assert::nonEmptyString("\u{1F600}", '');
+    expect(true)->toBeTrue();
+});

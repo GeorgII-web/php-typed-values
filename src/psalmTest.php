@@ -12,6 +12,8 @@ use PhpTypedValues\Integer\Integer;
 use PhpTypedValues\Integer\NonNegativeInt;
 use PhpTypedValues\Integer\PositiveInt;
 use PhpTypedValues\Integer\WeekDayInt;
+use PhpTypedValues\String\NonEmptyStr;
+use PhpTypedValues\String\Str;
 
 /**
  * Integer.
@@ -22,6 +24,14 @@ testNonNegativeInt(NonNegativeInt::fromInt(10)->value());
 testWeekDayInt(WeekDayInt::fromInt(7)->value());
 
 echo Integer::fromString('10')->toString();
+
+/**
+ * String.
+ */
+testString(Str::fromString('hi')->value());
+testNonEmptyString(NonEmptyStr::fromString('hi')->value());
+
+echo Str::fromString('hi')->toString();
 
 /**
  * Artificial functions.
@@ -51,6 +61,19 @@ function testNonNegativeInt(int $i): int
  * @param int<1, 7> $i
  */
 function testWeekDayInt(int $i): int
+{
+    return $i;
+}
+
+function testString(string $i): string
+{
+    return $i;
+}
+
+/**
+ * @param non-empty-string $i
+ */
+function testNonEmptyString(string $i): string
 {
     return $i;
 }

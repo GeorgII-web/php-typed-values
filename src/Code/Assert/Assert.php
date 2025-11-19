@@ -63,4 +63,16 @@ final class Assert
             throw new TypeException($message !== '' ? $message : 'Expected an "integerish" value');
         }
     }
+
+    /**
+     * Assert that the given string is non-empty.
+     *
+     * @throws TypeException
+     */
+    public static function nonEmptyString(string $value, string $message = ''): void
+    {
+        if ($value === '') {
+            throw new TypeException($message !== '' ? $message : 'Value must be a non-empty string');
+        }
+    }
 }
