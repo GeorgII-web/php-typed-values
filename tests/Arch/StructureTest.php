@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use PhpTypedValues\Code\DateTime\DateTimeType;
 use PhpTypedValues\Code\Float\FloatType;
 use PhpTypedValues\Code\Integer\IntType;
 use PhpTypedValues\Code\String\StrType;
@@ -29,6 +30,13 @@ arch('Float classes are final and read-only')
 arch('String classes are final and read-only')
     ->expect('PhpTypedValues\String')
     ->toExtend(StrType::class)
+    ->toBeClasses()
+    ->toBeFinal()
+    ->toBeReadonly();
+
+arch('Datetime classes are final and read-only')
+    ->expect('PhpTypedValues\DateTime')
+    ->toExtend(DateTimeType::class)
     ->toBeClasses()
     ->toBeFinal()
     ->toBeReadonly();
