@@ -33,8 +33,7 @@ require __DIR__ . '/vendor/autoload.php';
 
 use PhpTypedValues\Integer\PositiveInt;
 
-$age = new PositiveInt(21);
-echo $age->value(); // 21
+echo PositiveInt::fromString('21')->value(); // 21
 ```
 
 Run it:
@@ -43,4 +42,4 @@ Run it:
 php demo.php
 ```
 
-If you see 21 printed, the library is installed correctly.
+If you see '21' printed, the library is installed correctly.

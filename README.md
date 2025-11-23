@@ -1,20 +1,19 @@
 PHP Typed Values
 ================
 
-Typed value objects for common PHP data types. Make primitives explicit, safe, and self-documenting with tiny immutable value objects.
+PHP 8.2 typed value objects for common PHP data types.
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/georgii-web/php-typed-values.svg?style=flat-square)](https://packagist.org/packages/georgii-web/php-typed-values)
 [![Tests](https://github.com/georgii-web/php-typed-values/actions/workflows/php.yml/badge.svg)](https://github.com/georgii-web/php-typed-values/actions/workflows/php.yml)
 [![Total Downloads](https://img.shields.io/packagist/dt/georgii-web/php-typed-values.svg?style=flat-square)](https://packagist.org/packages/georgii-web/php-typed-values)
 
-- Requires PHP 8.2+
-- Zero runtime dependencies
-- Tooling: Pest, PHPUnit, Psalm, PHP-CS-Fixer
+## Why Use This Library?
 
-Quick links:
-- Install: docs/INSTALL.md
-- Usage: docs/USAGE.md
-- Development: docs/DEVELOP.md
+- Make data safer through strong typing and validation.
+- Improve readability with self-documenting types.
+- Use tiny immutable objects as building blocks for larger value objects.
+- Fit naturally into DDD (Domain-Driven Design) shared domain models.
+- Work well with CQRS by expressing clear intent in commands and queries.
 
 Install
 -------
@@ -28,80 +27,36 @@ composer require georgii-web/php-typed-values
 Usage
 -----
 
-Create and use typed values with validation built in.
+Create and use typed values with validation built in:
 
 ```php
-// Integers
-use PhpTypedValues\Integer\IntegerBasic;
-use PhpTypedValues\Integer\PositiveInt;
-use PhpTypedValues\Integer\NonNegativeInt;
-use PhpTypedValues\Integer\WeekDayInt;
-
-$age      = new PositiveInt(27);       // ok (positive-int)
-$retries  = new NonNegativeInt(0);     // ok (0 or positive)
-$weekday  = new WeekDayInt(5);         // ok (1..7)
-$anyInt   = new IntegerBasic(-42);     // ok (any integer)
-
-$fromString = PositiveInt::fromString('123');
-
-// Strings
-use PhpTypedValues\String\StringBasic;
-use PhpTypedValues\String\NonEmptyStr;
-
-$greeting = StringBasic::fromString('hello');
-$name     = new NonEmptyStr('Alice');  // throws if empty
-
-// Floats
-use PhpTypedValues\Float\FloatBasic;
-use PhpTypedValues\Float\NonNegativeFloat;
-
-$price    = FloatBasic::fromString('19.99');
-$ratio    = new NonNegativeFloat(0.5);    // >= 0 allowed
-
-// Access the underlying scalar value / string form
-$ageValue = $age->value();        // 27
-echo $weekday->toString();        // "5"
-echo $price->toString();          // "19.99"
+$id = PositiveInt::fromString('123');
 ```
 
-All value objects are immutable; invalid input throws an exception with a helpful message.
+instead of duplicating this logic across your application like:
 
-Provided types (so far):
+```php
+$id = (int) '123';
+if ($id <= 0) {
+    throw new InvalidArgumentException('Invalid ID');
+}
+```
 
-- Integers
-  - IntegerBasic — any PHP integer
-  - PositiveInt — positive integer (> 0)
-  - NonNegativeInt — zero or positive integer (>= 0)
-  - WeekDayInt — integer in range 1..7
-- Strings
-  - StringBasic — any PHP string
-  - NonEmptyStr — non-empty string
-- Floats
-  - FloatBasic — any PHP float
-  - NonNegativeFloat — zero or positive float (>= 0)
+## Key Features
 
-- DateTime
-  - DateTimeBasic — immutable DateTime value (parses common ISO-8601 formats)
+- **Static analysis** – Designed for tools like Psalm and PHPStan with precise type annotations.
+- **Strict types** – Uses `declare(strict_types=1);` and strict type hints throughout.
+- **Validation** – Validates input on construction so objects can’t be created in an invalid state.
+- **Immutable** – Value objects are read‑only and never change after creation.
+- **No external dependencies** – Pure PHP implementation without requiring third‑party packages.
 
-Why
----
-
-- Replace loose primitives with explicit, intention-revealing types
-- Centralize validation in one place
-- Improve static analysis and readability
-
-Scripts
+More information
 -------
 
-Helpful Composer scripts are included:
+See [docs/INSTALL.md](docs/INSTALL.md) for installation instructions.  
+See [docs/USAGE.md](docs/USAGE.md) for usage examples.  
+See [docs/DEVELOP.md](docs/DEVELOP.md) for development details.
 
-- composer test - run tests (Pest)
-- composer type - 100% type coverage gate
-- composer coverage - code coverage gate
-- composer sca - static analysis (Psalm)
-- composer cs - coding standards (PHP-CS-Fixer)
-
-See docs/DEVELOP.md for details.
 
 License
 -------
