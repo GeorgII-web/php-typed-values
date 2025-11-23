@@ -35,6 +35,7 @@ Floats (PhpTypedValues\Float):
 DateTime (PhpTypedValues\DateTime):
 
 - DateTimeAtom — immutable DateTime in RFC3339 (ATOM) format
+- DateTimeTimestamp — immutable DateTime represented as Unix timestamp (seconds since epoch, UTC)
 
 Static usage examples
 ---------------------
@@ -49,6 +50,7 @@ use PhpTypedValues\String\NonEmptyStr;
 use PhpTypedValues\Float\FloatBasic;
 use PhpTypedValues\Float\NonNegativeFloat;
 use PhpTypedValues\DateTime\DateTimeAtom;
+use PhpTypedValues\DateTime\DateTimeTimestamp;
 
 // Integers
 $any = IntegerBasic::fromInt(-10);
@@ -71,11 +73,15 @@ $ratio = NonNegativeFloat::fromFloat(0.5);  // >= 0
 // DateTime (RFC 3339 / ATOM)
 $dt = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
 
+// DateTime (Unix timestamp, seconds)
+$unix = DateTimeTimestamp::fromString('1735787045');
+
 // Accessing value and string form
 $posValue = $pos->value();        // 1 (int)
 $wdText   = $wd->toString();      // "7"
 $priceStr = $price->toString();   // "19.99"
 $isoText  = $dt->toString();      // "2025-01-02T03:04:05+00:00"
+$unixText = $unix->toString();    // e.g. "1735787045"
 ```
 
 Validation errors (static constructors)

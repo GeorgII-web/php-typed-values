@@ -10,6 +10,7 @@ require_once 'vendor/autoload.php';
 
 use PhpTypedValues\DateTime\DateTimeAtom;
 use PhpTypedValues\DateTime\DateTimeRFC3339;
+use PhpTypedValues\DateTime\DateTimeTimestamp;
 use PhpTypedValues\Float\FloatBasic;
 use PhpTypedValues\Float\NonNegativeFloat;
 use PhpTypedValues\Integer\IntegerBasic;
@@ -58,6 +59,10 @@ echo DateTimeAtom::fromDateTime($dt)->toString() . \PHP_EOL;
 
 $dt = DateTimeRFC3339::fromString('2025-01-02T03:04:05+00:00')->value();
 echo DateTimeRFC3339::fromDateTime($dt)->toString() . \PHP_EOL;
+
+// Timestamp
+$tsVo = DateTimeTimestamp::fromString('1735787045');
+echo DateTimeTimestamp::fromDateTime($tsVo->value())->toString() . \PHP_EOL;
 
 /**
  * Artificial functions.
