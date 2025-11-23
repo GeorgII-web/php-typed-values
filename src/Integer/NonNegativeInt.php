@@ -11,7 +11,7 @@ use PhpTypedValues\Code\Integer\IntType;
 /**
  * @psalm-immutable
  */
-final readonly class NonNegativeInt extends IntType
+readonly class NonNegativeInt extends IntType
 {
     /** @var non-negative-int */
     protected int $value;

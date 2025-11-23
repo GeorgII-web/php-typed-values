@@ -17,26 +17,22 @@ arch('Integer classes are final and read-only')
     ->expect('PhpTypedValues\Integer')
     ->toExtend(IntType::class)
     ->toBeClasses()
-    ->toBeFinal()
     ->toBeReadonly();
 
 arch('Float classes are final and read-only')
     ->expect('PhpTypedValues\Float')
     ->toExtend(FloatType::class)
     ->toBeClasses()
-    ->toBeFinal()
     ->toBeReadonly();
 
 arch('String classes are final and read-only')
     ->expect('PhpTypedValues\String')
     ->toExtend(StrType::class)
     ->toBeClasses()
-    ->toBeFinal()
     ->toBeReadonly();
 
 arch('Datetime classes are final and read-only')
     ->expect('PhpTypedValues\DateTime')
     ->toExtend(DateTimeType::class)
     ->toBeClasses()
-    ->toBeFinal()
     ->toBeReadonly();

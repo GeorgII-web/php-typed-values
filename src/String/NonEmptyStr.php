@@ -11,7 +11,7 @@ use PhpTypedValues\Code\String\StrType;
 /**
  * @psalm-immutable
  */
-final readonly class NonEmptyStr extends StrType
+readonly class NonEmptyStr extends StrType
 {
     /** @var non-empty-string */
     protected string $value;

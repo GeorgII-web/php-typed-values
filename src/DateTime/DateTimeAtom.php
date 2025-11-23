@@ -16,7 +16,7 @@ use PhpTypedValues\Code\Exception\DateTimeTypeException;
  *
  * @psalm-immutable
  */
-final readonly class DateTimeAtom extends DateTimeType
+readonly class DateTimeAtom extends DateTimeType
 {
     protected const FORMAT = DATE_ATOM;
 

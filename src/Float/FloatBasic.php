@@ -12,7 +12,7 @@ use PhpTypedValues\Code\Float\FloatType;
  *
  * @psalm-immutable
  */
-final readonly class FloatBasic extends FloatType
+readonly class FloatBasic extends FloatType
 {
     protected float $value;
 

@@ -11,7 +11,7 @@ use PhpTypedValues\Code\Float\FloatType;
 /**
  * @psalm-immutable
  */
-final readonly class NonNegativeFloat extends FloatType
+readonly class NonNegativeFloat extends FloatType
 {
     protected float $value;
 

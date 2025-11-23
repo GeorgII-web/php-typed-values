@@ -11,7 +11,7 @@ use PhpTypedValues\Code\Integer\IntType;
 /**
  * @psalm-immutable
  */
-final readonly class WeekDayInt extends IntType
+readonly class WeekDayInt extends IntType
 {
     /** @var int<1, 7> */
     protected int $value;
