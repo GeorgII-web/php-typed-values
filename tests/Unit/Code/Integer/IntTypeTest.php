@@ -17,15 +17,12 @@ it('fromInt returns exact value and toString matches', function (): void {
 
 it('fromString parses valid integer strings including negatives and leading zeros', function (): void {
     expect(IntegerBasic::fromString('-15')->value())->toBe(-15)
-        ->and(IntegerBasic::fromString('0007')->value())->toBe(7)
-        ->and(IntegerBasic::fromString('+5')->value())->toBe(5)
-        ->and(IntegerBasic::fromString(' 5')->value())->toBe(5)
-        ->and(IntegerBasic::fromString('5 ')->value())->toBe(5)
+        ->and(IntegerBasic::fromString('0')->toString())->toBe('0')
         ->and(IntegerBasic::fromString('42')->toString())->toBe('42');
 });
 
 it('fromString rejects non-integer strings', function (): void {
-    $invalid = ['5a', 'a5', '', 'abc', '--5', '3.14'];
+    $invalid = ['5a', 'a5', '', 'abc', ' 5', '5 ', '+5', '05', '--5', '3.14'];
     foreach ($invalid as $str) {
         expect(fn() => IntegerBasic::fromString($str))->toThrow(NumericTypeException::class);
     }

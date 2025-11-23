@@ -14,7 +14,7 @@ it('creates Integer from string', function (): void {
 });
 
 it('fails on "integer-ish" float string', function (): void {
-    expect(IntegerBasic::fromString('5.0')->value())->toBe(5);
+    expect(fn() => IntegerBasic::fromString('5.'))->toThrow(NumericTypeException::class);
 });
 
 it('fails on float string', function (): void {

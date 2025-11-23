@@ -27,7 +27,7 @@ it('creates WeekDayInt from string within range', function (): void {
 });
 
 it('creates WeekDayInt from integerish string', function (): void {
-    expect(WeekDayInt::fromString('5.0')->value())->toBe(5);
+    expect(fn() => WeekDayInt::fromString('5.0'))->toThrow(NumericTypeException::class);
 });
 
 it('fails creating WeekDayInt from out-of-range strings', function (): void {

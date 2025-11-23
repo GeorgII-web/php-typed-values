@@ -38,20 +38,20 @@ it('lessThanEq does not throw when valid', function (): void {
     expect(true)->toBeTrue();
 });
 
-it('integerish throws with default message when empty', function (): void {
-    expect(fn() => Assert::integerish('5.5', ''))
-        ->toThrow(NumericTypeException::class, 'Expected an "integerish" value');
+it('integer throws with default message when empty', function (): void {
+    expect(fn() => Assert::integer('5.5', ''))
+        ->toThrow(NumericTypeException::class, 'Unexpected conversions possible, "5.5" !== "5"');
 });
 
 it('integerish throws with custom message when provided', function (): void {
-    expect(fn() => Assert::integerish('foo', 'custom integerish message'))
+    expect(fn() => Assert::integer('foo', 'custom integerish message'))
         ->toThrow(NumericTypeException::class, 'custom integerish message');
 });
 
-it('integerish does not throw for integerish values', function (): void {
-    Assert::integerish('5', '');
-    Assert::integerish('5.0', '');
-    Assert::integerish(5, '');
+it('integer does not throw for integer values', function (): void {
+    Assert::integer('5', '');
+    Assert::integer('-5', '');
+    Assert::integer(5, '');
     expect(true)->toBeTrue();
 });
 

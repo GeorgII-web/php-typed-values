@@ -17,8 +17,8 @@ it('creates NonNegativeInt from string 0', function (): void {
     expect(NonNegativeInt::fromString('0')->value())->toBe(0);
 });
 
-it('creates NonNegativeInt from integerish string', function (): void {
-    expect(NonNegativeInt::fromString('5.0')->value())->toBe(5);
+it('fails NonNegativeInt from integerish string', function (): void {
+    expect(fn() => NonNegativeInt::fromString('5.0'))->toThrow(NumericTypeException::class);
 });
 
 it('fails creating NonNegativeInt from negative string', function (): void {

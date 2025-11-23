@@ -8,6 +8,7 @@ use PhpTypedValues\Code\Exception\NumericTypeException;
 use PhpTypedValues\Code\Exception\StringTypeException;
 
 use function is_numeric;
+use function sprintf;
 
 final class Assert
 {
@@ -32,16 +33,19 @@ final class Assert
     }
 
     /**
-     * Assert that the given value looks like an integer ("integerish").
-     * Accepts numeric strings that represent an integer value (e.g., '5', '5.0'),
-     * but rejects non-numeric strings and floats with a fractional part (e.g., '5.5').
+     * Assert that the given value looks like an integer.
+     * Accepts numeric strings that represent an integer value (e.g., '5', '-5'),
+     * but rejects non-numeric strings and floats with a fractional part (e.g., '5.5', '05').
      *
      * @throws NumericTypeException
      */
-    public static function integerish(mixed $value, string $message = ''): void
+    public static function integer(mixed $value, string $message = ''): void
     {
-        if (!is_numeric($value) || $value != (int) $value) {
-            throw new NumericTypeException($message !== '' ? $message : 'Expected an "integerish" value');
+        // Strict check, avoid unexpected string conversion
+        $value = (string) $value;
+        $convertedValue = (string) ((int) $value);
+        if ($value !== $convertedValue) {
+            throw new NumericTypeException($message !== '' ? $message : sprintf('Unexpected conversions possible, "%s" !== "%s"', $value, $convertedValue));
         }
     }
 

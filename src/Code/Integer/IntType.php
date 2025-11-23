@@ -17,7 +17,7 @@ abstract readonly class IntType implements IntTypeInterface
      */
     protected static function assertNumericString(string $value): void
     {
-        Assert::integerish($value, 'String has no valid integer');
+        Assert::integer($value, 'String has no valid integer');
     }
 
     public function toString(): string

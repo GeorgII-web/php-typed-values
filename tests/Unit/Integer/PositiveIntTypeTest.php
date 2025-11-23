@@ -21,8 +21,8 @@ it('creates PositiveInt from string', function (): void {
     expect(PositiveInt::fromString('1')->value())->toBe(1);
 });
 
-it('creates PositiveInt from integerish string', function (): void {
-    expect(PositiveInt::fromString('5.0')->value())->toBe(5);
+it('fails PositiveInt from integerish string', function (): void {
+    expect(fn() => PositiveInt::fromString('5.0'))->toThrow(NumericTypeException::class);
 });
 
 it('fails creating PositiveInt from string 0', function (): void {

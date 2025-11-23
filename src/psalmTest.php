@@ -55,13 +55,6 @@ echo DateTimeAtom::getFormat() . \PHP_EOL;
 $dt = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00')->value();
 echo DateTimeAtom::fromDateTime($dt)->toString() . \PHP_EOL;
 
-try {
-    $dt = DateTimeAtom::fromString('2025-12-02T03:04:05+ 00:00')->value();
-    echo DateTimeAtom::fromDateTime($dt)->toString() . \PHP_EOL;
-} catch (Throwable $e) {
-    var_export($e);
-}
-
 /**
  * Artificial functions.
  */
