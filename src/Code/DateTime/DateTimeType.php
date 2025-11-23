@@ -55,7 +55,7 @@ abstract readonly class DateTimeType implements DateTimeTypeInterface
                 $errorMessages .= sprintf('Warning at %d: %s' . PHP_EOL, $pos, $message);
             }
 
-            throw new DateTimeTypeException(sprintf('Invalid date time value "%s", use ATOM format "%s"', $value, static::FORMAT) . PHP_EOL . $errorMessages);
+            throw new DateTimeTypeException(sprintf('Invalid date time value "%s", use format "%s"', $value, static::FORMAT) . PHP_EOL . $errorMessages);
         }
 
         /**

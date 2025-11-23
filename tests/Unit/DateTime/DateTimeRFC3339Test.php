@@ -2,33 +2,33 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\DateTime\DateTimeAtom;
+use PhpTypedValues\DateTime\DateTimeRFC3339;
 
 it('fromDateTime returns same instant and toString is ISO 8601', function (): void {
     $dt = new DateTimeImmutable('2025-01-02T03:04:05+00:00');
-    $vo = DateTimeAtom::fromDateTime($dt);
+    $vo = DateTimeRFC3339::fromDateTime($dt);
 
-    expect($vo->value()->format(\DATE_ATOM))->toBe('2025-01-02T03:04:05+00:00')
+    expect($vo->value()->format(\DATE_RFC3339))->toBe('2025-01-02T03:04:05+00:00')
         ->and($vo->toString())->toBe('2025-01-02T03:04:05+00:00');
 });
 
-it('fromString parses valid ATOM and preserves timezone offset', function (): void {
-    $vo = DateTimeAtom::fromString('2030-12-31T23:59:59+03:00');
+it('fromString parses valid RFC3339 and preserves timezone offset', function (): void {
+    $vo = DateTimeRFC3339::fromString('2030-12-31T23:59:59+03:00');
 
     expect($vo->toString())->toBe('2030-12-31T23:59:59+03:00')
-        ->and($vo->value()->format(\DATE_ATOM))->toBe('2030-12-31T23:59:59+03:00');
+        ->and($vo->value()->format(\DATE_RFC3339))->toBe('2030-12-31T23:59:59+03:00');
 });
 
 it('fromString throws on invalid date parts (errors path)', function (): void {
     // invalid month 13 produces errors
-    $call = fn() => DateTimeAtom::fromString('2025-13-02T03:04:05+00:00');
+    $call = fn() => DateTimeRFC3339::fromString('2025-13-02T03:04:05+00:00');
     expect($call)->toThrow(PhpTypedValues\Code\Exception\DateTimeTypeException::class);
 });
 
 it('fromString throws on trailing data (warnings path)', function (): void {
     // trailing space should trigger a warning from DateTime::getLastErrors()
     try {
-        DateTimeAtom::fromString('2025-01-02T03:04:05+00:00 ');
+        DateTimeRFC3339::fromString('2025-01-02T03:04:05+00:00 ');
         expect()->fail('Exception was not thrown');
     } catch (Throwable $e) {
         expect($e)->toBeInstanceOf(PhpTypedValues\Code\Exception\DateTimeTypeException::class)
@@ -36,15 +36,15 @@ it('fromString throws on trailing data (warnings path)', function (): void {
     }
 });
 
-it('getFormat returns DATE_ATOM format', function (): void {
-    expect(DateTimeAtom::getFormat())->toBe(\DATE_ATOM);
+it('getFormat returns RFC3339 format', function (): void {
+    expect(DateTimeRFC3339::getFormat())->toBe(\DATE_RFC3339);
 });
 
 it('fromString with both parse error and warning includes both details in the exception message', function (): void {
     // invalid month (error) + trailing space (warning)
     $input = '2025-13-02T03:04:05+00:00 ';
     try {
-        DateTimeAtom::fromString($input);
+        DateTimeRFC3339::fromString($input);
         expect()->fail('Exception was not thrown');
     } catch (Throwable $e) {
         expect($e)->toBeInstanceOf(PhpTypedValues\Code\Exception\DateTimeTypeException::class)
@@ -58,7 +58,7 @@ it('fromString aggregates multiple parse warnings with proper concatenation and 
     // Multiple invalid components to force several distinct parse errors
     $input = '2025-13-40T25:61:61+00:00';
     try {
-        DateTimeAtom::fromString($input);
+        DateTimeRFC3339::fromString($input);
         expect()->fail('Exception was not thrown');
     } catch (Throwable $e) {
         $msg = $e->getMessage();
@@ -66,7 +66,7 @@ it('fromString aggregates multiple parse warnings with proper concatenation and 
         $expectedHeader = \sprintf(
             'Invalid date time value "%s", use format "%s"',
             $input,
-            \DATE_ATOM
+            \DATE_RFC3339
         ) . \PHP_EOL;
 
         expect($e)->toBeInstanceOf(PhpTypedValues\Code\Exception\DateTimeTypeException::class)
@@ -82,7 +82,7 @@ Warning at 25: The parsed date was invalid
 it('errors-only path keeps newline after header and after error line', function (): void {
     $input = '2025-01-02T03:04:05+00:00 ';
     try {
-        DateTimeAtom::fromString($input);
+        DateTimeRFC3339::fromString($input);
         expect()->fail('Exception was not thrown');
     } catch (Throwable $e) {
         $msg = $e->getMessage();
@@ -100,7 +100,7 @@ Error at 25: Trailing data
 it('double error message', function (): void {
     $input = '2025-12-02T03:04:05+ 00:00';
     try {
-        DateTimeAtom::fromString($input);
+        DateTimeRFC3339::fromString($input);
         expect()->fail('Exception was not thrown');
     } catch (Throwable $e) {
         $msg = $e->getMessage();

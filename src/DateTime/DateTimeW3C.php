@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\DateTime;
 
-use const DATE_ATOM;
+use const DATE_W3C;
 
 use DateTimeImmutable;
 use DateTimeZone;
@@ -12,13 +12,13 @@ use PhpTypedValues\Code\DateTime\DateTimeType;
 use PhpTypedValues\Code\Exception\DateTimeTypeException;
 
 /**
- * ATOM RFC 3339 format based on ISO 8601.
+ * W3C RFC 3339 format based on ISO 8601.
  *
  * @psalm-immutable
  */
-readonly class DateTimeAtom extends DateTimeType
+readonly class DateTimeW3C extends DateTimeType
 {
-    protected const FORMAT = DATE_ATOM;
+    protected const FORMAT = DATE_W3C;
 
     /**
      * @throws DateTimeTypeException
