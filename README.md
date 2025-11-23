@@ -3,6 +3,10 @@ PHP Typed Values
 
 Typed value objects for common PHP data types. Make primitives explicit, safe, and self-documenting with tiny immutable value objects.
 
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/georgii-web/php-typed-values.svg?style=flat-square)](https://packagist.org/packages/georgii-web/php-typed-values)
+[![Tests](https://github.com/georgii-web/php-typed-values/actions/workflows/php.yml/badge.svg)](https://github.com/georgii-web/php-typed-values/actions/workflows/php.yml)
+[![Total Downloads](https://img.shields.io/packagist/dt/georgii-web/php-typed-values.svg?style=flat-square)](https://packagist.org/packages/georgii-web/php-typed-values)
+
 - Requires PHP 8.2+
 - Zero runtime dependencies
 - Tooling: Pest, PHPUnit, Psalm, PHP-CS-Fixer

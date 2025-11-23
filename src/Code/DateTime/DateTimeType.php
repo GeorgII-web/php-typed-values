@@ -4,61 +4,91 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Code\DateTime;
 
-use const DATE_ATOM;
+use const PHP_EOL;
 
 use DateTimeImmutable;
-use Exception;
+use DateTimeZone;
 use PhpTypedValues\Code\Exception\DateTimeTypeException;
+
+use function count;
+use function sprintf;
 
 /**
  * @psalm-immutable
  */
 abstract readonly class DateTimeType implements DateTimeTypeInterface
 {
+    protected const FORMAT = '';
+    protected const ZONE = 'UTC';
+
+    protected DateTimeImmutable $value;
+
     /**
      * @throws DateTimeTypeException
      */
-    protected static function parseString(string $value): DateTimeImmutable
-    {
-        // Accept a small, explicit set of formats to avoid accidentally parsing invalid strings as "now".
-        $formats = [
-            DATE_ATOM,            // e.g., 2025-01-02T03:04:05+00:00
-            'Y-m-d\TH:i:s\Z',    // e.g., 2025-01-02T03:04:05Z
-            'Y-m-d H:i:s',        // e.g., 2025-01-02 03:04:05
-            '!Y-m-d',             // e.g., 2025-01-02 (force midnight by resetting unspecified fields)
+    protected static function createFromFormat(
+        string $value,
+        string $format,
+        ?DateTimeZone $timezone = null,
+    ): DateTimeImmutable {
+        /**
+         * Collect errors and throw exception with all of them.
+         */
+        $dt = DateTimeImmutable::createFromFormat($format, $value, $timezone);
+        /**
+         * Normalize getLastErrors result to an array with counters.
+         * Some PHP versions return an array with zero counts instead of false.
+         */
+        $errors = DateTimeImmutable::getLastErrors() ?: [
+            'errors' => [],
+            'warnings' => [],
         ];
 
-        foreach ($formats as $format) {
-            $dt = DateTimeImmutable::createFromFormat($format, $value);
-            if ($dt instanceof DateTimeImmutable) {
-                $errors = DateTimeImmutable::getLastErrors();
-                $hasIssues = $errors !== false && (($errors['warning_count'] ?? 0) > 0 || ($errors['error_count'] ?? 0) > 0);
-                if (!$hasIssues) {
-                    return $dt;
-                }
+        if (count($errors['errors']) > 0 || count($errors['warnings']) > 0) {
+            $errorMessages = '';
+
+            foreach ($errors['errors'] as $pos => $message) {
+                $errorMessages .= sprintf('Error at %d: %s' . PHP_EOL, $pos, $message);
             }
-        }
 
-        // Fallback: try the engine parser for strict ISO-8601 only using DateTimeImmutable constructor
-        try {
-            $fallback = new DateTimeImmutable($value);
-        } catch (Exception) {
-            $fallback = null;
-        }
-
-        if ($fallback instanceof DateTimeImmutable) {
-            // Heuristic: if input clearly looks like an ISO 8601 (contains 'T' and either 'Z' or timezone offset), accept it
-            if (preg_match('/T\d{2}:\d{2}:\d{2}(?:Z|[+\-]\d{2}:?\d{2})$/', $value) === 1) {
-                return $fallback;
+            foreach ($errors['warnings'] as $pos => $message) {
+                $errorMessages .= sprintf('Warning at %d: %s' . PHP_EOL, $pos, $message);
             }
+
+            throw new DateTimeTypeException(sprintf('Invalid date time value "%s", use ATOM format "%s"', $value, static::FORMAT) . PHP_EOL . $errorMessages);
         }
 
-        throw new DateTimeTypeException('String has no valid datetime');
+        /**
+         * Strict “round-trip” check.
+         *
+         * @psalm-suppress PossiblyFalseReference
+         */
+        if ($value !== $dt->format(static::FORMAT)) {
+            throw new DateTimeTypeException(sprintf('Unexpected conversion, source string %s is not equal to formatted one %s', $value, $dt->format(static::FORMAT)));
+        }
+
+        /**
+         * $dt is not FALSE here, it will fail before on error checking.
+         *
+         * @psalm-suppress FalsableReturnStatement
+         */
+        return $dt;
     }
 
-    public function toString(): string
+    public function __construct(DateTimeImmutable $value)
     {
-        // ISO 8601 string representation
-        return $this->value()->format(DATE_ATOM);
+        $this->value = $value;
+    }
+
+    abstract public static function fromDateTime(DateTimeImmutable $value): self;
+
+    public function value(): DateTimeImmutable
+    {
+        return $this->value;
+    }
+
+    public static function getFormat(): string
+    {
+        return static::FORMAT;
     }
 }

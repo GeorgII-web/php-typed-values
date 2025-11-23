@@ -8,7 +8,7 @@
 
 require_once 'vendor/autoload.php';
 
-use PhpTypedValues\DateTime\DateTimeBasic;
+use PhpTypedValues\DateTime\DateTimeAtom;
 use PhpTypedValues\Float\FloatBasic;
 use PhpTypedValues\Float\NonNegativeFloat;
 use PhpTypedValues\Integer\IntegerBasic;
@@ -26,7 +26,7 @@ testPositiveInt(PositiveInt::fromInt(10)->value());
 testNonNegativeInt(NonNegativeInt::fromInt(10)->value());
 testWeekDayInt(WeekDayInt::fromInt(7)->value());
 
-echo IntegerBasic::fromString('10')->toString();
+echo IntegerBasic::fromString('10')->toString() . \PHP_EOL;
 
 /**
  * String.
@@ -34,24 +34,33 @@ echo IntegerBasic::fromString('10')->toString();
 testString(StringBasic::fromString('hi')->value());
 testNonEmptyString(NonEmptyStr::fromString('hi')->value());
 
-echo StringBasic::fromString('hi')->toString();
+echo StringBasic::fromString('hi')->toString() . \PHP_EOL;
 
 /**
  * Float.
  */
 testFloat(FloatBasic::fromFloat(3.14)->value());
 
-echo FloatBasic::fromString('2.71828')->toString();
+echo FloatBasic::fromString('2.71828')->toString() . \PHP_EOL;
 
 // PositiveFloat usage
 testPositiveFloat(NonNegativeFloat::fromFloat(0.5)->value());
-echo NonNegativeFloat::fromString('3.14159')->toString();
+echo NonNegativeFloat::fromString('3.14159')->toString() . \PHP_EOL;
 
 /**
  * DateTime.
  */
-$dt = DateTimeBasic::fromString('2025-01-02T03:04:05+00:00')->value();
-echo DateTimeBasic::fromDateTime($dt)->toString();
+echo DateTimeAtom::getFormat() . \PHP_EOL;
+
+$dt = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00')->value();
+echo DateTimeAtom::fromDateTime($dt)->toString() . \PHP_EOL;
+
+try {
+    $dt = DateTimeAtom::fromString('2025-12-02T03:04:05+ 00:00')->value();
+    echo DateTimeAtom::fromDateTime($dt)->toString() . \PHP_EOL;
+} catch (Throwable $e) {
+    var_export($e);
+}
 
 /**
  * Artificial functions.

@@ -70,9 +70,9 @@ $price = FloatBasic::fromString('19.99');
 $ratio = new NonNegativeFloat(0.5);  // >= 0 allowed
 
 // DateTime
-use PhpTypedValues\DateTime\DateTimeBasic;
+use PhpTypedValues\DateTime\DateTimeAtom;
 
-$dt = DateTimeBasic::fromString('2025-01-02T03:04:05+00:00');
+$dt = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
 echo $dt->toString(); // "2025-01-02T03:04:05+00:00"
 
 // Accessing the raw value and string form
@@ -90,7 +90,7 @@ Invalid input throws an exception with a helpful message.
 use PhpTypedValues\Integer\PositiveInt;
 use PhpTypedValues\String\NonEmptyStr;
 use PhpTypedValues\Float\NonNegativeFloat;
-use PhpTypedValues\DateTime\DateTimeBasic;
+use PhpTypedValues\DateTime\DateTimeAtom;
 
 new PositiveInt(0);              // throws: Value must be a positive integer
 PositiveInt::fromString('12.3'); // throws: String has no valid integer
@@ -99,7 +99,7 @@ new NonEmptyStr('');             // throws: Value must be a non-empty string
 
 NonNegativeFloat::fromString('abc'); // throws: String has no valid float
 
-DateTimeBasic::fromString('not-a-date'); // throws: String has no valid datetime
+DateTimeAtom::fromString('not-a-date'); // throws: String has no valid datetime
 ```
 
 Notes
