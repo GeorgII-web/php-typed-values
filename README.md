@@ -14,6 +14,7 @@ PHP 8.2 typed value objects for common PHP data types.
 - Use tiny immutable objects as building blocks for larger value objects.
 - Fit naturally into DDD (Domain-Driven Design) shared domain models.
 - Work well with CQRS by expressing clear intent in commands and queries.
+- Extendable with custom-typed values.
 
 Install
 -------
@@ -27,7 +28,7 @@ composer require georgii-web/php-typed-values
 Usage
 -----
 
-Create and use typed values with validation built in:
+1. Use existing typed values with validation built in:
 
 ```php
 $id = PositiveInt::fromString('123');
@@ -42,6 +43,44 @@ if ($id <= 0) {
 }
 ```
 
+2. Create aliases:
+
+```php
+readonly class Id extends PositiveInt {}
+
+Id::fromString('123');
+```
+
+3. Create a composite value object from other typed values (nullable values example):
+
+```php
+final class Profile
+{
+    public function __construct(
+        public readonly PositiveInt $id,
+        public readonly NonEmptyStr $firstName,
+        public readonly ?NonEmptyStr $lastName,
+    ) {}
+
+    public static function fromScalars(
+        int $id,
+        string $firstName,
+        string $lastName,
+    ): self {
+        return new self(
+            PositiveInt::fromInt($id),
+            NonEmptyStr::fromString($firstName),
+            $lastName !== null ? NonEmptyStr::fromString($lastName) : null,
+        );
+    }
+}
+
+// Usage
+Profile::fromScalars(id: 101, firstName: 'Alice', lastName: 'Smith');
+Profile::fromScalars(id: 157, firstName: 'Tom', lastName: null);
+```
+
+
 ## Key Features
 
 - **Static analysis** – Designed for tools like Psalm and PHPStan with precise type annotations.
@@ -49,6 +88,7 @@ if ($id <= 0) {
 - **Validation** – Validates input on construction so objects can’t be created in an invalid state.
 - **Immutable** – Value objects are read‑only and never change after creation.
 - **No external dependencies** – Pure PHP implementation without requiring third‑party packages.
+- **Extendable** – Extendable with custom-typed values and composite value objects.
 
 More information
 -------

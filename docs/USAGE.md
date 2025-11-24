@@ -35,7 +35,7 @@ Floats (PhpTypedValues\Float):
 DateTime (PhpTypedValues\DateTime):
 
 - DateTimeAtom — immutable DateTime in RFC3339 (ATOM) format
-- DateTimeTimestamp — immutable DateTime represented as Unix timestamp (seconds since epoch, UTC)
+- DateTimeTimestamp — immutable DateTime represented as a Unix timestamp (seconds since epoch, UTC)
 
 Static usage examples
 ---------------------
@@ -111,7 +111,7 @@ DateTimeAtom::fromString('not-a-date'); // throws: String has no valid datetime
 Create your own type: alias of PositiveInt
 ------------------------------------------
 
-If you want a domain-specific alias (e.g., UserId) that behaves like PositiveInt, extend PositiveInt and override static factories so they return the subclass instance (because the base uses `new self(...)`).
+If you want a domain-specific alias (e.g., UserId) that behaves like PositiveInt, extend PositiveInt.
 
 ```php
 <?php
@@ -121,22 +121,7 @@ namespace App\Domain;
 
 use PhpTypedValues\Integer\PositiveInt;
 
-final class UserId extends PositiveInt
-{
-    public static function fromInt(int $value): self
-    {
-        // PositiveInt's constructor validates (> 0)
-        return new self($value);
-    }
-
-    public static function fromString(string $value): self
-    {
-        // Reuse the core numeric-string assertion
-        parent::assertNumericString($value);
-        // PositiveInt's constructor (inherited) validates (> 0)
-        return new self((int) $value);
-    }
-}
+final class UserId extends PositiveInt {}
 
 // Usage
 $userId = UserId::fromInt(42);
@@ -154,7 +139,7 @@ declare(strict_types=1);
 namespace App\Domain;
 
 use PhpTypedValues\Code\Assert\Assert;
-use PhpTypedValues\Code\Exception\NumericTypeException;
+use PhpTypedValues\Code\Exception\FloatTypeException;
 use PhpTypedValues\Code\Integer\IntType;
 
 final class EvenPositiveInt extends IntType
@@ -163,14 +148,18 @@ final class EvenPositiveInt extends IntType
     protected int $value;
 
     /**
-     * @throws NumericTypeException
+     * @throws FloatTypeException
      */
     public function __construct(int $value)
     {
-        Assert::greaterThanEq($value, 1);
-        Assert::true($value % 2 === 0, 'Value must be even');
+        if ($value <= 0) {
+            throw new IntegerTypeException(sprintf('Expected positive integer, got "%d"', $value));
+        }
 
-        /** @var positive-int $value */
+        if ($value % 2 !== 0) {
+            throw new IntegerTypeException(sprintf('Expected even integer, got "%d"', $value));
+        }
+
         $this->value = $value;
     }
 
@@ -180,22 +169,95 @@ final class EvenPositiveInt extends IntType
         return $this->value;
     }
 
-    /** @throws NumericTypeException */
+    /** @throws IntegerTypeException */
     public static function fromInt(int $value): self
     {
         return new self($value);
     }
 
-    /** @throws NumericTypeException */
+    /** @throws IntegerTypeException */
     public static function fromString(string $value): self
     {
-        parent::assertNumericString($value);
+        parent::assertIntegerString($value);
+        
         return new self((int) $value);
     }
 }
 
 // Usage
 $v = EvenPositiveInt::fromInt(6);
+```
+
+Composite value object (with nullable fields)
+--------------------------------------------
+
+You can compose several primitive value objects into a richer domain object. The example below shows a simple Profile value object that uses multiple primitives and also supports nullable fields.
+
+```php
+<?php
+declare(strict_types=1);
+
+namespace App\Domain;
+
+use PhpTypedValues\Integer\PositiveInt;
+use PhpTypedValues\String\NonEmptyStr;
+use PhpTypedValues\Float\NonNegativeFloat;
+use PhpTypedValues\DateTime\DateTimeAtom;
+
+final class Profile
+{
+    public function __construct(
+        public readonly PositiveInt $id,
+        public readonly NonEmptyStr $firstName,
+        public readonly NonEmptyStr $lastName,
+        public readonly ?NonEmptyStr $middleName,     // nullable field
+        public readonly ?DateTimeAtom $birthDate,      // nullable field
+        public readonly ?NonNegativeFloat $heightM     // nullable field
+    ) {}
+
+    // Convenience named constructor that accepts raw scalars and builds primitives internally
+    public static function fromScalars(
+        int $id,
+        string $firstName,
+        string $lastName,
+        ?string $middleName,
+        ?string $birthDateAtom,   // e.g. "2025-01-02T03:04:05+00:00"
+        int|float|string|null $heightM
+    ): self {
+        return new self(
+            PositiveInt::fromInt($id),
+            NonEmptyStr::fromString($firstName),
+            NonEmptyStr::fromString($lastName),
+            $middleName !== null ? NonEmptyStr::fromString($middleName) : null,
+            $birthDateAtom !== null ? DateTimeAtom::fromString($birthDateAtom) : null,
+            $heightM !== null ? NonNegativeFloat::fromString((string)$heightM) : null,
+        );
+    }
+}
+
+// Usage
+$p1 = Profile::fromScalars(
+    id: 101,
+    firstName: 'Alice',
+    lastName: 'Smith',
+    middleName: null,                                  // nullable
+    birthDateAtom: '1990-05-10T00:00:00+00:00',        // optional, can be null
+    heightM: '1.70',                                   // string, int or float supported
+);
+
+$p2 = new Profile(
+    id: PositiveInt::fromInt(202),
+    firstName: NonEmptyStr::fromString('Bob'),
+    lastName: NonEmptyStr::fromString('Johnson'),
+    middleName: NonEmptyStr::fromString('A.'),
+    birthDate: null,
+    heightM: null,
+);
+
+// Accessing wrapped values
+$first = $p1->firstName->toString();           // "Alice"
+$height = $p1->heightM?->toString();           // "1.70" or null
+$birthIso = $p1->birthDate?->toString();       // RFC3339 string or null
 ```
 
 Notes
