@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Float;
 
-use PhpTypedValues\Code\Assert\Assert;
-use PhpTypedValues\Code\Exception\NumericTypeException;
+use PhpTypedValues\Code\Exception\FloatTypeException;
 use PhpTypedValues\Code\Float\FloatType;
+
+use function sprintf;
 
 /**
  * @psalm-immutable
@@ -16,31 +17,33 @@ readonly class NonNegativeFloat extends FloatType
     protected float $value;
 
     /**
-     * @throws NumericTypeException
+     * @throws FloatTypeException
      */
     public function __construct(float $value)
     {
-        Assert::greaterThanEq($value, 0);
+        if ($value < 0) {
+            throw new FloatTypeException(sprintf('Expected non-negative float, got "%d"', $value));
+        }
 
         $this->value = $value;
     }
 
     /**
-     * @throws NumericTypeException
+     * @throws FloatTypeException
      */
-    public static function fromFloat(float $value): self
+    public static function fromFloat(float $value): static
     {
-        return new self($value);
+        return new static($value);
     }
 
     /**
-     * @throws NumericTypeException
+     * @throws FloatTypeException
      */
-    public static function fromString(string $value): self
+    public static function fromString(string $value): static
     {
-        parent::assertNumericString($value);
+        parent::assertFloatString($value);
 
-        return new self((float) $value);
+        return new static((float) $value);
     }
 
     public function value(): float

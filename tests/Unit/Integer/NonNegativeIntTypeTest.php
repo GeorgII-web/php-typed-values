@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Code\Exception\NumericTypeException;
+use PhpTypedValues\Code\Exception\IntegerTypeException;
 use PhpTypedValues\Integer\NonNegativeInt;
 
 it('creates NonNegativeInt', function (): void {
@@ -10,7 +10,7 @@ it('creates NonNegativeInt', function (): void {
 });
 
 it('fails on negatives', function (): void {
-    expect(fn() => NonNegativeInt::fromInt(-1))->toThrow(NumericTypeException::class);
+    expect(fn() => NonNegativeInt::fromInt(-1))->toThrow(IntegerTypeException::class);
 });
 
 it('creates NonNegativeInt from string 0', function (): void {
@@ -18,11 +18,11 @@ it('creates NonNegativeInt from string 0', function (): void {
 });
 
 it('fails NonNegativeInt from integerish string', function (): void {
-    expect(fn() => NonNegativeInt::fromString('5.0'))->toThrow(NumericTypeException::class);
+    expect(fn() => NonNegativeInt::fromString('5.0'))->toThrow(IntegerTypeException::class);
 });
 
 it('fails creating NonNegativeInt from negative string', function (): void {
-    expect(fn() => NonNegativeInt::fromString('-1'))->toThrow(NumericTypeException::class);
+    expect(fn() => NonNegativeInt::fromString('-1'))->toThrow(IntegerTypeException::class);
 });
 
 it('toString returns scalar string for NonNegativeInt', function (): void {
@@ -30,5 +30,5 @@ it('toString returns scalar string for NonNegativeInt', function (): void {
 });
 
 it('fails creating NonNegativeInt from float string', function (): void {
-    expect(fn() => NonNegativeInt::fromString('5.5'))->toThrow(NumericTypeException::class);
+    expect(fn() => NonNegativeInt::fromString('5.5'))->toThrow(IntegerTypeException::class);
 });

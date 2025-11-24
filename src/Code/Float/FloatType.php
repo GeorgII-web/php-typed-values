@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Code\Float;
 
-use PhpTypedValues\Code\Assert\Assert;
-use PhpTypedValues\Code\Exception\NumericTypeException;
+use PhpTypedValues\Code\Exception\FloatTypeException;
+
+use function sprintf;
 
 /**
  * @psalm-immutable
@@ -13,11 +14,13 @@ use PhpTypedValues\Code\Exception\NumericTypeException;
 abstract readonly class FloatType implements FloatTypeInterface
 {
     /**
-     * @throws NumericTypeException
+     * @throws FloatTypeException
      */
-    protected static function assertNumericString(string $value): void
+    protected static function assertFloatString(string $value): void
     {
-        Assert::numeric($value, 'String has no valid float');
+        if (!is_numeric($value)) {
+            throw new FloatTypeException(sprintf('String "%s" has no valid float value', $value));
+        }
     }
 
     public function toString(): string

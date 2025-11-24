@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\String;
 
-use PhpTypedValues\Code\Assert\Assert;
 use PhpTypedValues\Code\Exception\StringTypeException;
 use PhpTypedValues\Code\String\StrType;
+
+use function sprintf;
 
 /**
  * @psalm-immutable
@@ -21,18 +22,19 @@ readonly class NonEmptyStr extends StrType
      */
     public function __construct(string $value)
     {
-        Assert::nonEmptyString($value);
+        if ($value === '') {
+            throw new StringTypeException(sprintf('Expected non-empty string, got "%s"', $value));
+        }
 
-        /** @var non-empty-string $value */
         $this->value = $value;
     }
 
     /**
      * @throws StringTypeException
      */
-    public static function fromString(string $value): self
+    public static function fromString(string $value): static
     {
-        return new self($value);
+        return new static($value);
     }
 
     /** @return non-empty-string */

@@ -20,9 +20,9 @@ readonly class StringBasic extends StrType
         $this->value = $value;
     }
 
-    public static function fromString(string $value): self
+    public static function fromString(string $value): static
     {
-        return new self($value);
+        return new static($value);
     }
 
     public function value(): string

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Code\Exception\NumericTypeException;
+use PhpTypedValues\Code\Exception\FloatTypeException;
 use PhpTypedValues\Float\FloatBasic;
 
 it('fromFloat returns exact value and toString matches', function (): void {
@@ -26,6 +26,6 @@ it('fromString parses valid float strings including negatives, decimals, and sci
 it('fromString rejects non-numeric strings', function (): void {
     $invalid = ['5a', 'a5', '', 'abc', '--5', '5,5'];
     foreach ($invalid as $str) {
-        expect(fn() => FloatBasic::fromString($str))->toThrow(NumericTypeException::class);
+        expect(fn() => FloatBasic::fromString($str))->toThrow(FloatTypeException::class);
     }
 });

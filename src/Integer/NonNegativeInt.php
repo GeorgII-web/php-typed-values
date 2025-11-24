@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Integer;
 
-use PhpTypedValues\Code\Assert\Assert;
-use PhpTypedValues\Code\Exception\NumericTypeException;
+use PhpTypedValues\Code\Exception\IntegerTypeException;
 use PhpTypedValues\Code\Integer\IntType;
+
+use function sprintf;
 
 /**
  * @psalm-immutable
@@ -17,34 +18,33 @@ readonly class NonNegativeInt extends IntType
     protected int $value;
 
     /**
-     * @throws NumericTypeException
+     * @throws IntegerTypeException
      */
     public function __construct(int $value)
     {
-        Assert::greaterThanEq($value, 0);
+        if ($value < 0) {
+            throw new IntegerTypeException(sprintf('Expected non-negative integer, got "%d"', $value));
+        }
 
-        /**
-         * @var non-negative-int $value
-         */
         $this->value = $value;
     }
 
     /**
-     * @throws NumericTypeException
+     * @throws IntegerTypeException
      */
-    public static function fromInt(int $value): self
+    public static function fromInt(int $value): static
     {
-        return new self($value);
+        return new static($value);
     }
 
     /**
-     * @throws NumericTypeException
+     * @throws IntegerTypeException
      */
-    public static function fromString(string $value): self
+    public static function fromString(string $value): static
     {
-        parent::assertNumericString($value);
+        parent::assertIntegerString($value);
 
-        return new self((int) $value);
+        return new static((int) $value);
     }
 
     /**

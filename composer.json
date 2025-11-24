@@ -61,7 +61,7 @@
       "./vendor/bin/pest --coverage --min=100"
     ],
     "mutate": [
-      "./vendor/bin/pest --mutate --parallel --everything --covered-only --min=40"
+      "./vendor/bin/pest --mutate --parallel --everything --covered-only --min=100"
     ]
   },
   "config": {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Code\Exception\NumericTypeException;
+use PhpTypedValues\Code\Exception\IntegerTypeException;
 use PhpTypedValues\Integer\IntegerBasic;
 
 it('fromInt returns exact value and toString matches', function (): void {
@@ -24,6 +24,6 @@ it('fromString parses valid integer strings including negatives and leading zero
 it('fromString rejects non-integer strings', function (): void {
     $invalid = ['5a', 'a5', '', 'abc', ' 5', '5 ', '+5', '05', '--5', '3.14'];
     foreach ($invalid as $str) {
-        expect(fn() => IntegerBasic::fromString($str))->toThrow(NumericTypeException::class);
+        expect(fn() => IntegerBasic::fromString($str))->toThrow(IntegerTypeException::class);
     }
 });

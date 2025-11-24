@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Integer;
 
-use PhpTypedValues\Code\Assert\Assert;
-use PhpTypedValues\Code\Exception\NumericTypeException;
+use PhpTypedValues\Code\Exception\IntegerTypeException;
 use PhpTypedValues\Code\Integer\IntType;
+
+use function sprintf;
 
 /**
  * @psalm-immutable
@@ -17,16 +18,18 @@ readonly class WeekDayInt extends IntType
     protected int $value;
 
     /**
-     * @throws NumericTypeException
+     * @throws IntegerTypeException
      */
     public function __construct(int $value)
     {
-        Assert::greaterThanEq($value, 1, 'Value must be between 1 and 7');
-        Assert::lessThanEq($value, 7, 'Value must be between 1 and 7');
+        if ($value < 1) {
+            throw new IntegerTypeException(sprintf('Expected value between 1-7, got "%d"', $value));
+        }
 
-        /**
-         * @var int<1, 7> $value
-         */
+        if ($value > 7) {
+            throw new IntegerTypeException(sprintf('Expected value between 1-7, got "%d"', $value));
+        }
+
         $this->value = $value;
     }
 
@@ -39,20 +42,20 @@ readonly class WeekDayInt extends IntType
     }
 
     /**
-     * @throws NumericTypeException
+     * @throws IntegerTypeException
      */
-    public static function fromInt(int $value): self
+    public static function fromInt(int $value): static
     {
-        return new self($value);
+        return new static($value);
     }
 
     /**
-     * @throws NumericTypeException
+     * @throws IntegerTypeException
      */
-    public static function fromString(string $value): self
+    public static function fromString(string $value): static
     {
-        parent::assertNumericString($value);
+        parent::assertIntegerString($value);
 
-        return new self((int) $value);
+        return new static((int) $value);
     }
 }

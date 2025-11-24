@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Code\Integer;
 
-use PhpTypedValues\Code\Assert\Assert;
-use PhpTypedValues\Code\Exception\NumericTypeException;
+use PhpTypedValues\Code\Exception\IntegerTypeException;
+
+use function sprintf;
 
 /**
  * @psalm-immutable
@@ -13,11 +14,15 @@ use PhpTypedValues\Code\Exception\NumericTypeException;
 abstract readonly class IntType implements IntTypeInterface
 {
     /**
-     * @throws NumericTypeException
+     * @throws IntegerTypeException
      */
-    protected static function assertNumericString(string $value): void
+    protected static function assertIntegerString(string $value): void
     {
-        Assert::integer($value, 'String has no valid integer');
+        // Strict check, avoid unexpected string conversion
+        $convertedValue = (string) ((int) $value);
+        if ($value !== $convertedValue) {
+            throw new IntegerTypeException(sprintf('String "%s" has no valid integer value', $value));
+        }
     }
 
     public function toString(): string

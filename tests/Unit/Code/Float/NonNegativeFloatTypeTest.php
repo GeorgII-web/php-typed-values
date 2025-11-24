@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Code\Exception\NumericTypeException;
+use PhpTypedValues\Code\Exception\FloatTypeException;
 use PhpTypedValues\Float\NonNegativeFloat;
 
 it('accepts non-negative floats via fromFloat and toString matches', function (): void {
@@ -25,21 +25,21 @@ it('parses non-negative numeric strings via fromString', function (): void {
 
 it('rejects negative values', function (): void {
     expect(fn() => new NonNegativeFloat(-0.001))
-        ->toThrow(NumericTypeException::class);
+        ->toThrow(FloatTypeException::class);
     expect(fn() => NonNegativeFloat::fromFloat(-0.001))
-        ->toThrow(NumericTypeException::class);
+        ->toThrow(FloatTypeException::class);
 });
 
 it('rejects non-numeric or negative strings', function (): void {
     // Non-numeric
     foreach (['', 'abc', '5,5'] as $str) {
         expect(fn() => NonNegativeFloat::fromString($str))
-            ->toThrow(NumericTypeException::class);
+            ->toThrow(FloatTypeException::class);
     }
 
     // Numeric but negative
     foreach (['-1', '-0.1'] as $str) {
         expect(fn() => NonNegativeFloat::fromString($str))
-            ->toThrow(NumericTypeException::class);
+            ->toThrow(FloatTypeException::class);
     }
 });

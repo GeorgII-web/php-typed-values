@@ -20,10 +20,10 @@ it('allows whitespace and unicode as non-empty', function (): void {
 
 it('throws on empty string via constructor', function (): void {
     expect(fn() => new NonEmptyStr(''))
-        ->toThrow(StringTypeException::class, 'Value must be a non-empty string');
+        ->toThrow(StringTypeException::class, 'Expected non-empty string, got ""');
 });
 
 it('throws on empty string via fromString', function (): void {
     expect(fn() => NonEmptyStr::fromString(''))
-        ->toThrow(StringTypeException::class, 'Value must be a non-empty string');
+        ->toThrow(StringTypeException::class, 'Expected non-empty string, got ""');
 });

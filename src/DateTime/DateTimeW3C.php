@@ -23,24 +23,24 @@ readonly class DateTimeW3C extends DateTimeType
     /**
      * @throws DateTimeTypeException
      */
-    public static function fromString(string $value): self
+    public static function fromString(string $value): static
     {
-        return new self(
+        return new static(
             self::createFromFormat(
                 $value,
                 static::FORMAT,
-                new DateTimeZone(self::ZONE)
+                new DateTimeZone(static::ZONE)
             )
         );
     }
 
     public function toString(): string
     {
-        return $this->value()->format(self::FORMAT);
+        return $this->value()->format(static::FORMAT);
     }
 
-    public static function fromDateTime(DateTimeImmutable $value): self
+    public static function fromDateTime(DateTimeImmutable $value): static
     {
-        return new self($value);
+        return new static($value);
     }
 }

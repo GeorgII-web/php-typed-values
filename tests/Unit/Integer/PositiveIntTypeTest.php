@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Code\Exception\NumericTypeException;
+use PhpTypedValues\Code\Exception\IntegerTypeException;
 use PhpTypedValues\Integer\PositiveInt;
 
 it('creates PositiveInt', function (): void {
@@ -10,11 +10,11 @@ it('creates PositiveInt', function (): void {
 });
 
 it('fails on 0', function (): void {
-    expect(fn() => PositiveInt::fromInt(0))->toThrow(NumericTypeException::class);
+    expect(fn() => PositiveInt::fromInt(0))->toThrow(IntegerTypeException::class);
 });
 
 it('fails on negatives', function (): void {
-    expect(fn() => PositiveInt::fromInt(-1))->toThrow(NumericTypeException::class);
+    expect(fn() => PositiveInt::fromInt(-1))->toThrow(IntegerTypeException::class);
 });
 
 it('creates PositiveInt from string', function (): void {
@@ -22,15 +22,15 @@ it('creates PositiveInt from string', function (): void {
 });
 
 it('fails PositiveInt from integerish string', function (): void {
-    expect(fn() => PositiveInt::fromString('5.0'))->toThrow(NumericTypeException::class);
+    expect(fn() => PositiveInt::fromString('5.0'))->toThrow(IntegerTypeException::class);
 });
 
 it('fails creating PositiveInt from string 0', function (): void {
-    expect(fn() => PositiveInt::fromString('0'))->toThrow(NumericTypeException::class);
+    expect(fn() => PositiveInt::fromString('0'))->toThrow(IntegerTypeException::class);
 });
 
 it('fails creating PositiveInt from negative string', function (): void {
-    expect(fn() => PositiveInt::fromString('-3'))->toThrow(NumericTypeException::class);
+    expect(fn() => PositiveInt::fromString('-3'))->toThrow(IntegerTypeException::class);
 });
 
 it('toString returns scalar string for PositiveInt', function (): void {
@@ -38,5 +38,5 @@ it('toString returns scalar string for PositiveInt', function (): void {
 });
 
 it('fails creating PositiveInt from float string', function (): void {
-    expect(fn() => PositiveInt::fromString('5.5'))->toThrow(NumericTypeException::class);
+    expect(fn() => PositiveInt::fromString('5.5'))->toThrow(IntegerTypeException::class);
 });

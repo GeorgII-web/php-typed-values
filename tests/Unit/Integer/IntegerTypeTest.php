@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Code\Exception\NumericTypeException;
+use PhpTypedValues\Code\Exception\IntegerTypeException;
 use PhpTypedValues\Integer\IntegerBasic;
 
 it('creates Integer from int', function (): void {
@@ -14,11 +14,11 @@ it('creates Integer from string', function (): void {
 });
 
 it('fails on "integer-ish" float string', function (): void {
-    expect(fn() => IntegerBasic::fromString('5.'))->toThrow(NumericTypeException::class);
+    expect(fn() => IntegerBasic::fromString('5.'))->toThrow(IntegerTypeException::class);
 });
 
 it('fails on float string', function (): void {
-    expect(fn() => IntegerBasic::fromString('5.5'))->toThrow(NumericTypeException::class);
+    expect(fn() => IntegerBasic::fromString('5.5'))->toThrow(IntegerTypeException::class);
 });
 
 it('fails on type mismatch', function (): void {
@@ -27,7 +27,7 @@ it('fails on type mismatch', function (): void {
             // invalid integer string (contains decimal point)
             IntegerBasic::fromInt('34.66');
         } catch (Throwable $e) {
-            throw new NumericTypeException('Failed to create Integer from string', previous: $e);
+            throw new IntegerTypeException('Failed to create Integer from string', previous: $e);
         }
-    })->toThrow(NumericTypeException::class);
+    })->toThrow(IntegerTypeException::class);
 });

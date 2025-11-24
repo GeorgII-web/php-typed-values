@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Integer;
 
-use PhpTypedValues\Code\Exception\NumericTypeException;
+use PhpTypedValues\Code\Exception\IntegerTypeException;
 use PhpTypedValues\Code\Integer\IntType;
 
 /**
@@ -19,19 +19,19 @@ readonly class IntegerBasic extends IntType
         $this->value = $value;
     }
 
-    public static function fromInt(int $value): self
+    public static function fromInt(int $value): static
     {
-        return new self($value);
+        return new static($value);
     }
 
     /**
-     * @throws NumericTypeException
+     * @throws IntegerTypeException
      */
-    public static function fromString(string $value): self
+    public static function fromString(string $value): static
     {
-        parent::assertNumericString($value);
+        parent::assertIntegerString($value);
 
-        return new self((int) $value);
+        return new static((int) $value);
     }
 
     public function value(): int
