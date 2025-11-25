@@ -41,16 +41,7 @@ Static usage examples
 ---------------------
 
 ```php
-use PhpTypedValues\Integer\IntegerBasic;
-use PhpTypedValues\Integer\PositiveInt;
-use PhpTypedValues\Integer\NonNegativeInt;
-use PhpTypedValues\Integer\WeekDayInt;
-use PhpTypedValues\String\StringBasic;
-use PhpTypedValues\String\NonEmptyStr;
-use PhpTypedValues\Float\FloatBasic;
-use PhpTypedValues\Float\NonNegativeFloat;
-use PhpTypedValues\DateTime\DateTimeAtom;
-use PhpTypedValues\DateTime\DateTimeTimestamp;
+use PhpTypedValues\DateTime\DateTimeAtom;use PhpTypedValues\DateTime\Timestamp\TimestampSeconds;use PhpTypedValues\Float\FloatBasic;use PhpTypedValues\Float\NonNegativeFloat;use PhpTypedValues\Integer\IntegerBasic;use PhpTypedValues\Integer\NonNegativeInt;use PhpTypedValues\Integer\PositiveInt;use PhpTypedValues\Integer\WeekDayInt;use PhpTypedValues\String\NonEmptyStr;use PhpTypedValues\String\StringBasic;
 
 // Integers
 $any = IntegerBasic::fromInt(-10);
@@ -74,7 +65,7 @@ $ratio = NonNegativeFloat::fromFloat(0.5);  // >= 0
 $dt = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
 
 // DateTime (Unix timestamp, seconds)
-$unix = DateTimeTimestamp::fromString('1735787045');
+$unix = TimestampSeconds::fromString('1735787045');
 
 // Accessing value and string form
 $posValue = $pos->value();        // 1 (int)

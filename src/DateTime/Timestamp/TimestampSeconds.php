@@ -2,19 +2,18 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\DateTime;
+namespace PhpTypedValues\DateTime\Timestamp;
 
-use DateTimeImmutable;
 use DateTimeZone;
 use PhpTypedValues\Code\DateTime\DateTimeType;
 use PhpTypedValues\Code\Exception\DateTimeTypeException;
 
 /**
- * Unix timestamp (seconds since Unix epoch, UTC).
+ * Unix timestamp (seconds since Unix epoch, UTC), e.g. "1732445696".
  *
  * @psalm-immutable
  */
-readonly class DateTimeTimestamp extends DateTimeType
+readonly class TimestampSeconds extends DateTimeType
 {
     /**
      * DateTime::format() pattern for Unix timestamp.
@@ -42,10 +41,5 @@ readonly class DateTimeTimestamp extends DateTimeType
     public function toString(): string
     {
         return $this->value()->format(static::FORMAT);
-    }
-
-    public static function fromDateTime(DateTimeImmutable $value): static
-    {
-        return new static($value);
     }
 }

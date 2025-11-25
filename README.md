@@ -65,7 +65,7 @@ final class Profile
     public static function fromScalars(
         int $id,
         string $firstName,
-        string $lastName,
+        ?string $lastName,
     ): self {
         return new self(
             PositiveInt::fromInt($id),
@@ -78,6 +78,8 @@ final class Profile
 // Usage
 Profile::fromScalars(id: 101, firstName: 'Alice', lastName: 'Smith');
 Profile::fromScalars(id: 157, firstName: 'Tom', lastName: null);
+// From array
+$profile = Profile::fromScalars(...[157, 'Tom', null]);
 ```
 
 

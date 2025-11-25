@@ -9,6 +9,7 @@ use const PHP_EOL;
 use DateTimeImmutable;
 use DateTimeZone;
 use PhpTypedValues\Code\Exception\DateTimeTypeException;
+use PhpTypedValues\Code\Exception\ReasonableRangeDateTimeTypeException;
 
 use function count;
 use function sprintf;
@@ -20,11 +21,14 @@ abstract readonly class DateTimeType implements DateTimeTypeInterface
 {
     protected const FORMAT = '';
     protected const ZONE = 'UTC';
+    protected const MIN_TIMESTAMP_SECONDS = -62135596800; // 0001-01-01
+    protected const MAX_TIMESTAMP_SECONDS = 253402300799; // 9999-12-31 23:59:59
 
     protected DateTimeImmutable $value;
 
     /**
      * @throws DateTimeTypeException
+     * @throws ReasonableRangeDateTimeTypeException
      */
     protected static function createFromFormat(
         string $value,
@@ -68,6 +72,16 @@ abstract readonly class DateTimeType implements DateTimeTypeInterface
         }
 
         /**
+         * Assert that timestamp in a reasonable range.
+         *
+         * @psalm-suppress PossiblyFalseReference
+         */
+        $ts = $dt->format('U');
+        if ($ts < static::MIN_TIMESTAMP_SECONDS || $ts > static::MAX_TIMESTAMP_SECONDS) {
+            throw new ReasonableRangeDateTimeTypeException(sprintf('Timestamp "%s" out of supported range "%d"-"%d".', $ts, static::MIN_TIMESTAMP_SECONDS, static::MAX_TIMESTAMP_SECONDS));
+        }
+
+        /**
          * $dt is not FALSE here, it will fail before on error checking.
          *
          * @psalm-suppress FalsableReturnStatement
@@ -80,7 +94,13 @@ abstract readonly class DateTimeType implements DateTimeTypeInterface
         $this->value = $value;
     }
 
-    abstract public static function fromDateTime(DateTimeImmutable $value): self;
+    public static function fromDateTime(DateTimeImmutable $value): static
+    {
+        // normalized timezone
+        return new static(
+            $value->setTimezone(new DateTimeZone(static::ZONE))
+        );
+    }
 
     public function value(): DateTimeImmutable
     {

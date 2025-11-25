@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\DateTime\DateTimeTimestamp;
+use PhpTypedValues\DateTime\Timestamp\TimestampSeconds;
 
 it('fromDateTime returns same instant and toString is unix timestamp', function (): void {
     $dt = new DateTimeImmutable('2001-09-09 01:46:40');
-    $vo = DateTimeTimestamp::fromString('1000000000');
+    $vo = TimestampSeconds::fromString('1000000000');
 
     expect($vo->value()->format('U'))->toBe($dt->format('U'))
         ->and($vo->toString())->toBe($dt->format('U'));
@@ -14,19 +14,29 @@ it('fromDateTime returns same instant and toString is unix timestamp', function 
 
 it('fromDateTime returns same instant and toString is ISO 8601', function (): void {
     $dt = new DateTimeImmutable('2025-01-02T03:04:05+00:00');
-    $vo = DateTimeTimestamp::fromDateTime($dt);
+    $vo = TimestampSeconds::fromDateTime($dt);
 
     expect($vo->value()->format('U'))->toBe('1735787045')
         ->and($vo->toString())->toBe('1735787045');
 });
 
 it('getFormat returns unix timestamp format U', function (): void {
-    expect(DateTimeTimestamp::getFormat())->toBe('U');
+    expect(TimestampSeconds::getFormat())->toBe('U');
+});
+
+it('fromDateTime normalizes timezone to UTC while preserving the instant', function (): void {
+    // Source datetime has +03:00 offset, should be normalized to UTC internally
+    $dt = new DateTimeImmutable('2025-01-02T03:04:05+03:00');
+    $vo = TimestampSeconds::fromDateTime($dt);
+
+    expect($vo->value()->format('U'))->toBe($dt->format('U'))
+        ->and($vo->toString())->toBe($dt->format('U'))
+        ->and($vo->value()->getTimezone()->getName())->toBe('UTC');
 });
 
 it('fromString throws on non-numeric input and reports details', function (): void {
     try {
-        DateTimeTimestamp::fromString('not-a-number');
+        TimestampSeconds::fromString('not-a-number');
         expect()->fail('Exception was not thrown');
     } catch (Throwable $e) {
         $msg = $e->getMessage();
@@ -38,7 +48,7 @@ it('fromString throws on non-numeric input and reports details', function (): vo
 
 it('fromString throws on trailing data (warnings/errors path)', function (): void {
     try {
-        DateTimeTimestamp::fromString('1000000000 ');
+        TimestampSeconds::fromString('1000000000 ');
         expect()->fail('Exception was not thrown');
     } catch (Throwable $e) {
         $msg = $e->getMessage();
@@ -50,7 +60,7 @@ it('fromString throws on trailing data (warnings/errors path)', function (): voi
 
 it('round-trip mismatch produces Unexpected conversion error for leading zeros', function (): void {
     try {
-        DateTimeTimestamp::fromString('0000000005');
+        TimestampSeconds::fromString('0000000005');
         expect()->fail('Exception was not thrown');
     } catch (Throwable $e) {
         expect($e)->toBeInstanceOf(PhpTypedValues\Code\Exception\DateTimeTypeException::class)
