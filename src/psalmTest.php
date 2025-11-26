@@ -25,8 +25,6 @@ use PhpTypedValues\Integer\IntegerWeekDay;
 use PhpTypedValues\String\Alias\NonEmptyStr;
 use PhpTypedValues\String\StringNonEmpty;
 use PhpTypedValues\String\StringStandard;
-use PhpTypedValues\String\StringUuidV4;
-use PhpTypedValues\String\StringUuidV7;
 
 /**
  * Integer.
@@ -49,8 +47,6 @@ testNonEmptyString(StringNonEmpty::fromString('hi')->value());
 
 echo StringStandard::fromString('hi')->toString() . \PHP_EOL;
 echo NonEmptyStr::fromString('hi')->toString() . \PHP_EOL;
-echo StringUuidV7::generate()->toString() . \PHP_EOL;
-echo StringUuidV4::generate()->toString() . \PHP_EOL;
 
 /**
  * Float.
