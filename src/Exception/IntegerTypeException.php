@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Code\Exception;
+namespace PhpTypedValues\Exception;
 
 class IntegerTypeException extends TypeException
 {

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\String;
 
-use PhpTypedValues\Code\Exception\StringTypeException;
-use PhpTypedValues\Code\String\StrType;
+use PhpTypedValues\Abstract\String\StrType;
+use PhpTypedValues\Exception\StringTypeException;
 
 use function preg_match;
 use function sprintf;
@@ -13,6 +13,8 @@ use function strtolower;
 
 /**
  * RFC 4122 version 4 (random).
+ *
+ * Example "550e8400-e29b-41d4-a716-446655440000"
  *
  * @psalm-immutable
  */

@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Integer;
 
-use PhpTypedValues\Code\Exception\IntegerTypeException;
-use PhpTypedValues\Code\Integer\IntType;
+use PhpTypedValues\Abstract\Integer\IntType;
+use PhpTypedValues\Exception\IntegerTypeException;
 
 use function sprintf;
 
 /**
+ * Week day number between 1 and 7.
+ *
+ * Example "5"
+ *
  * @psalm-immutable
  */
 readonly class IntegerWeekDay extends IntType

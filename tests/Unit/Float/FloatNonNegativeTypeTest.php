@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Code\Exception\FloatTypeException;
+use PhpTypedValues\Exception\FloatTypeException;
 use PhpTypedValues\Float\FloatNonNegative;
 
 it('accepts non-negative floats via fromFloat and toString matches', function (): void {

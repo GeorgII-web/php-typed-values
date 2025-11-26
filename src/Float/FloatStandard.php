@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Float;
 
-use PhpTypedValues\Code\Exception\FloatTypeException;
-use PhpTypedValues\Code\Float\FloatType;
+use PhpTypedValues\Abstract\Float\FloatType;
+use PhpTypedValues\Exception\FloatTypeException;
 
 /**
  * Represents any PHP float (double).
+ *
+ * Example "3.14"
  *
  * @psalm-immutable
  */

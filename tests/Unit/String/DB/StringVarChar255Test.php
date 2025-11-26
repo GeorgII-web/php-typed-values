@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Code\Exception\StringTypeException;
+use PhpTypedValues\Exception\StringTypeException;
 use PhpTypedValues\String\DB\StringVarChar255;
 
 it('accepts empty string and preserves value', function (): void {

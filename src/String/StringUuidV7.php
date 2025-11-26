@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\String;
 
-use PhpTypedValues\Code\Exception\StringTypeException;
-use PhpTypedValues\Code\String\StrType;
+use PhpTypedValues\Abstract\String\StrType;
+use PhpTypedValues\Exception\StringTypeException;
 
 use function preg_match;
 use function sprintf;
@@ -13,6 +13,8 @@ use function strtolower;
 
 /**
  * UUID version 7 (time-ordered, Unix time-based).
+ *
+ * Example "01890f2a-5bcd-7def-8abc-1234567890ab"
  *
  * @psalm-immutable
  */

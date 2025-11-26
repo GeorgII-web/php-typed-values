@@ -129,9 +129,9 @@ declare(strict_types=1);
 
 namespace App\Domain;
 
-use PhpTypedValues\Code\Assert\Assert;
-use PhpTypedValues\Code\Exception\FloatTypeException;
-use PhpTypedValues\Code\Integer\IntType;
+use PhpTypedValues\Abstract\Assert\Assert;
+use PhpTypedValues\Exception\FloatTypeException;
+use PhpTypedValues\Abstract\Integer\IntType;
 
 final class EvenPositiveInt extends IntType
 {

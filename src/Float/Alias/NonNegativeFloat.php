@@ -7,6 +7,10 @@ namespace PhpTypedValues\Float\Alias;
 use PhpTypedValues\Float\FloatNonNegative;
 
 /**
+ * Alias of Non-negative float (>= 0.0).
+ *
+ * Example "0.0"
+ *
  * @psalm-immutable
  */
 readonly class NonNegativeFloat extends FloatNonNegative

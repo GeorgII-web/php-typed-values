@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Integer;
 
-use PhpTypedValues\Code\Exception\IntegerTypeException;
-use PhpTypedValues\Code\Integer\IntType;
+use PhpTypedValues\Abstract\Integer\IntType;
+use PhpTypedValues\Exception\IntegerTypeException;
 
 /**
+ * Represents any PHP integer.
+ *
+ * Example "-10"
+ *
  * @psalm-immutable
  */
 readonly class IntegerStandard extends IntType

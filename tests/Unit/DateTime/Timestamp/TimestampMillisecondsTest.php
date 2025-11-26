@@ -69,7 +69,7 @@ it('fromString throws on non-digit input', function (): void {
         TimestampMilliseconds::fromString('not-a-number');
         expect()->fail('Exception was not thrown');
     } catch (Throwable $e) {
-        expect($e)->toBeInstanceOf(PhpTypedValues\Code\Exception\DateTimeTypeException::class)
+        expect($e)->toBeInstanceOf(PhpTypedValues\Exception\DateTimeTypeException::class)
             ->and($e->getMessage())->toContain('Expected milliseconds timestamp as digits');
     }
 });
@@ -79,7 +79,7 @@ it('fromString throws on trailing data (non-digits)', function (): void {
         TimestampMilliseconds::fromString('1000000000000 ');
         expect()->fail('Exception was not thrown');
     } catch (Throwable $e) {
-        expect($e)->toBeInstanceOf(PhpTypedValues\Code\Exception\DateTimeTypeException::class)
+        expect($e)->toBeInstanceOf(PhpTypedValues\Exception\DateTimeTypeException::class)
             ->and($e->getMessage())->toContain('Expected milliseconds timestamp as digits');
     }
 });
@@ -94,7 +94,7 @@ it('fromString throws when value is out of supported range (createFromFormat ret
         TimestampMilliseconds::fromString($tooLargeMs);
         expect()->fail('Exception was not thrown');
     } catch (Throwable $e) {
-        expect($e)->toBeInstanceOf(PhpTypedValues\Code\Exception\ReasonableRangeDateTimeTypeException::class)
+        expect($e)->toBeInstanceOf(PhpTypedValues\Exception\ReasonableRangeDateTimeTypeException::class)
             ->and($e->getMessage())->toContain('Timestamp "253402300800" out of supported range "-62135596800"-"253402300799"')
             ->and($e->getMessage())->toContain('253402300800');
     }

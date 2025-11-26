@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Float;
 
-use PhpTypedValues\Code\Exception\FloatTypeException;
-use PhpTypedValues\Code\Float\FloatType;
+use PhpTypedValues\Abstract\Float\FloatType;
+use PhpTypedValues\Exception\FloatTypeException;
 
 use function sprintf;
 
 /**
+ * Non-negative float (>= 0.0).
+ *
+ * Example "0.0"
+ *
  * @psalm-immutable
  */
 readonly class FloatNonNegative extends FloatType

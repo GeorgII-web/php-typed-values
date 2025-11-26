@@ -5,14 +5,16 @@ declare(strict_types=1);
 namespace PhpTypedValues\DateTime\Timestamp;
 
 use DateTimeZone;
-use PhpTypedValues\Code\DateTime\DateTimeType;
-use PhpTypedValues\Code\Exception\DateTimeTypeException;
+use PhpTypedValues\Abstract\DateTime\DateTimeType;
+use PhpTypedValues\Exception\DateTimeTypeException;
 
 use function intdiv;
 use function sprintf;
 
 /**
- * Unix timestamp in milliseconds since Unix epoch (UTC), e.g. "1732445696123".
+ * Unix timestamp in milliseconds since Unix epoch (UTC).
+ *
+ * Example "1732445696123"
  *
  * @psalm-immutable
  */

@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\String;
 
-use PhpTypedValues\Code\Exception\StringTypeException;
-use PhpTypedValues\Code\String\StrType;
+use PhpTypedValues\Abstract\String\StrType;
+use PhpTypedValues\Exception\StringTypeException;
 
 use function sprintf;
 
 /**
+ * Non-empty string value.
+ *
+ * Example "hello"
+ *
  * @psalm-immutable
  */
 readonly class StringNonEmpty extends StrType

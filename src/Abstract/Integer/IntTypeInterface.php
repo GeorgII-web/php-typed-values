@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Code\Float;
+namespace PhpTypedValues\Abstract\Integer;
 
 /**
  * @psalm-immutable
  */
-interface FloatTypeInterface
+interface IntTypeInterface
 {
-    public function value(): float;
+    public function value(): int;
 
-    public static function fromFloat(float $value): self;
+    public static function fromInt(int $value): self;
 
     public function toString(): string;
 

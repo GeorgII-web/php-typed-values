@@ -40,7 +40,7 @@ it('fromString throws on non-numeric input and reports details', function (): vo
         expect()->fail('Exception was not thrown');
     } catch (Throwable $e) {
         $msg = $e->getMessage();
-        expect($e)->toBeInstanceOf(PhpTypedValues\Code\Exception\DateTimeTypeException::class)
+        expect($e)->toBeInstanceOf(PhpTypedValues\Exception\DateTimeTypeException::class)
             ->and($msg)->toContain('Invalid date time value')
             ->and((bool) preg_match('/(Error at|Warning at)/', $msg))->toBeTrue();
     }
@@ -52,7 +52,7 @@ it('fromString throws on trailing data (warnings/errors path)', function (): voi
         expect()->fail('Exception was not thrown');
     } catch (Throwable $e) {
         $msg = $e->getMessage();
-        expect($e)->toBeInstanceOf(PhpTypedValues\Code\Exception\DateTimeTypeException::class)
+        expect($e)->toBeInstanceOf(PhpTypedValues\Exception\DateTimeTypeException::class)
             ->and($msg)->toContain('Invalid date time value')
             ->and((bool) preg_match('/(Error at|Warning at)/', $msg))->toBeTrue();
     }
@@ -63,7 +63,7 @@ it('round-trip mismatch produces Unexpected conversion error for leading zeros',
         TimestampSeconds::fromString('0000000005');
         expect()->fail('Exception was not thrown');
     } catch (Throwable $e) {
-        expect($e)->toBeInstanceOf(PhpTypedValues\Code\Exception\DateTimeTypeException::class)
+        expect($e)->toBeInstanceOf(PhpTypedValues\Exception\DateTimeTypeException::class)
             ->and($e->getMessage())->toContain('Unexpected conversion')
             ->and($e->getMessage())->toContain('0000000005')
             ->and($e->getMessage())->toContain('5');
@@ -76,7 +76,7 @@ it('fromString throws when seconds are above supported range (max + 1)', functio
         TimestampSeconds::fromString('253402300800');
         expect()->fail('Exception was not thrown');
     } catch (Throwable $e) {
-        expect($e)->toBeInstanceOf(PhpTypedValues\Code\Exception\ReasonableRangeDateTimeTypeException::class)
+        expect($e)->toBeInstanceOf(PhpTypedValues\Exception\ReasonableRangeDateTimeTypeException::class)
             ->and($e->getMessage())->toContain('Timestamp "253402300800" out of supported range "-62135596800"-"253402300799"')
             ->and($e->getMessage())->toContain('253402300800');
     }
@@ -88,7 +88,7 @@ it('fromString throws when seconds are below supported range (min - 1)', functio
         TimestampSeconds::fromString('-62135596801');
         expect()->fail('Exception was not thrown');
     } catch (Throwable $e) {
-        expect($e)->toBeInstanceOf(PhpTypedValues\Code\Exception\ReasonableRangeDateTimeTypeException::class)
+        expect($e)->toBeInstanceOf(PhpTypedValues\Exception\ReasonableRangeDateTimeTypeException::class)
             ->and($e->getMessage())->toContain('Timestamp "-62135596801" out of supported range "-62135596800"-"253402300799"')
             ->and($e->getMessage())->toContain('-62135596801');
     }

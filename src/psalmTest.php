@@ -12,10 +12,12 @@ use PhpTypedValues\DateTime\DateTimeAtom;
 use PhpTypedValues\DateTime\DateTimeRFC3339;
 use PhpTypedValues\DateTime\Timestamp\TimestampMilliseconds;
 use PhpTypedValues\DateTime\Timestamp\TimestampSeconds;
+use PhpTypedValues\Float\Alias\FloatType;
 use PhpTypedValues\Float\Alias\NonNegativeFloat;
 use PhpTypedValues\Float\FloatNonNegative;
 use PhpTypedValues\Float\FloatStandard;
 use PhpTypedValues\Integer\Alias\Id;
+use PhpTypedValues\Integer\Alias\IntType;
 use PhpTypedValues\Integer\Alias\NonNegativeInt;
 use PhpTypedValues\Integer\Alias\PositiveInt;
 use PhpTypedValues\Integer\IntegerNonNegative;
@@ -23,6 +25,7 @@ use PhpTypedValues\Integer\IntegerPositive;
 use PhpTypedValues\Integer\IntegerStandard;
 use PhpTypedValues\Integer\IntegerWeekDay;
 use PhpTypedValues\String\Alias\NonEmptyStr;
+use PhpTypedValues\String\Alias\StrType;
 use PhpTypedValues\String\StringNonEmpty;
 use PhpTypedValues\String\StringStandard;
 
@@ -38,6 +41,7 @@ echo NonNegativeInt::fromString('10')->toString() . \PHP_EOL;
 echo PositiveInt::fromString('10')->toString() . \PHP_EOL;
 echo IntegerStandard::fromString('10')->toString() . \PHP_EOL;
 echo Id::fromString('10')->toString() . \PHP_EOL;
+echo IntType::fromString('10')->toString() . \PHP_EOL;
 
 /**
  * String.
@@ -47,6 +51,7 @@ testNonEmptyString(StringNonEmpty::fromString('hi')->value());
 
 echo StringStandard::fromString('hi')->toString() . \PHP_EOL;
 echo NonEmptyStr::fromString('hi')->toString() . \PHP_EOL;
+echo StrType::fromString('hi')->toString() . \PHP_EOL;
 
 /**
  * Float.
@@ -55,6 +60,7 @@ testFloat(FloatStandard::fromFloat(3.14)->value());
 
 echo FloatStandard::fromString('2.71828')->toString() . \PHP_EOL;
 echo NonNegativeFloat::fromString('2.71828')->toString() . \PHP_EOL;
+echo FloatType::fromString('2.71828')->toString() . \PHP_EOL;
 
 // PositiveFloat usage
 testPositiveFloat(FloatNonNegative::fromFloat(0.5)->value());
