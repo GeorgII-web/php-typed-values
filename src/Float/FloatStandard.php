@@ -7,30 +7,20 @@ namespace PhpTypedValues\Float;
 use PhpTypedValues\Code\Exception\FloatTypeException;
 use PhpTypedValues\Code\Float\FloatType;
 
-use function sprintf;
-
 /**
+ * Represents any PHP float (double).
+ *
  * @psalm-immutable
  */
-readonly class NonNegativeFloat extends FloatType
+readonly class FloatStandard extends FloatType
 {
     protected float $value;
 
-    /**
-     * @throws FloatTypeException
-     */
     public function __construct(float $value)
     {
-        if ($value < 0) {
-            throw new FloatTypeException(sprintf('Expected non-negative float, got "%d"', $value));
-        }
-
         $this->value = $value;
     }
 
-    /**
-     * @throws FloatTypeException
-     */
     public static function fromFloat(float $value): static
     {
         return new static($value);

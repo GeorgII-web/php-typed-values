@@ -10,7 +10,7 @@ use PhpTypedValues\Code\Integer\IntType;
 /**
  * @psalm-immutable
  */
-readonly class IntegerStandart extends IntType
+readonly class IntegerStandard extends IntType
 {
     protected int $value;
 

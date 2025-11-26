@@ -41,10 +41,10 @@ Static usage examples
 ---------------------
 
 ```php
-use PhpTypedValues\DateTime\DateTimeAtom;use PhpTypedValues\DateTime\Timestamp\TimestampSeconds;use PhpTypedValues\Float\FloatBasic;use PhpTypedValues\Float\NonNegativeFloat;use PhpTypedValues\Integer\IntegerStandart;use PhpTypedValues\Integer\IntegerNonNegative;use PhpTypedValues\Integer\IntegerPositive;use PhpTypedValues\Integer\IntegerWeekDay;use PhpTypedValues\String\NonEmptyStr;use PhpTypedValues\String\StringBasic;
+use PhpTypedValues\DateTime\DateTimeAtom;use PhpTypedValues\DateTime\Timestamp\TimestampSeconds;use PhpTypedValues\Float\FloatStandard;use PhpTypedValues\Float\FloatNonNegative;use PhpTypedValues\Integer\IntegerStandard;use PhpTypedValues\Integer\IntegerNonNegative;use PhpTypedValues\Integer\IntegerPositive;use PhpTypedValues\Integer\IntegerWeekDay;use PhpTypedValues\String\StringNonEmpty;use PhpTypedValues\String\StringStandard;
 
 // Integers
-$any = IntegerStandart::fromInt(-10);
+$any = IntegerStandard::fromInt(-10);
 $pos = IntegerPositive::fromInt(1);
 $nn  = IntegerNonNegative::fromInt(0);
 $wd  = IntegerWeekDay::fromInt(7);        // 1..7
@@ -54,12 +54,12 @@ $posFromString = IntegerPositive::fromString('123');
 $wdFromString  = IntegerWeekDay::fromString('5');
 
 // Strings
-$greeting = StringBasic::fromString('hello');
-$name     = NonEmptyStr::fromString('Alice');
+$greeting = StringStandard::fromString('hello');
+$name     = StringNonEmpty::fromString('Alice');
 
 // Floats
-$price = FloatBasic::fromString('19.99');
-$ratio = NonNegativeFloat::fromFloat(0.5);  // >= 0
+$price = FloatStandard::fromString('19.99');
+$ratio = FloatNonNegative::fromFloat(0.5);  // >= 0
 
 // DateTime (RFC 3339 / ATOM)
 $dt = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
@@ -83,8 +83,8 @@ Invalid input throws an exception with a helpful message.
 ```php
 use PhpTypedValues\Integer\IntegerPositive;
 use PhpTypedValues\Integer\IntegerWeekDay;
-use PhpTypedValues\String\NonEmptyStr;
-use PhpTypedValues\Float\NonNegativeFloat;
+use PhpTypedValues\String\StringNonEmpty;
+use PhpTypedValues\Float\FloatNonNegative;
 use PhpTypedValues\DateTime\DateTimeAtom;
 
 IntegerPositive::fromInt(0);              // throws: must be > 0
@@ -92,9 +92,9 @@ IntegerPositive::fromString('12.3');      // throws: String has no valid integer
 
 IntegerWeekDay::fromInt(0);               // throws: Value must be between 1 and 7
 
-NonEmptyStr::fromString('');          // throws: Value must be a non-empty string
+StringNonEmpty::fromString('');          // throws: Value must be a non-empty string
 
-NonNegativeFloat::fromString('abc');  // throws: String has no valid float
+FloatNonNegative::fromString('abc');  // throws: String has no valid float
 
 DateTimeAtom::fromString('not-a-date'); // throws: String has no valid datetime
 ```
@@ -191,19 +191,19 @@ declare(strict_types=1);
 namespace App\Domain;
 
 use PhpTypedValues\Integer\IntegerPositive;
-use PhpTypedValues\String\NonEmptyStr;
-use PhpTypedValues\Float\NonNegativeFloat;
+use PhpTypedValues\String\StringNonEmpty;
+use PhpTypedValues\Float\FloatNonNegative;
 use PhpTypedValues\DateTime\DateTimeAtom;
 
 final class Profile
 {
     public function __construct(
         public readonly IntegerPositive $id,
-        public readonly NonEmptyStr $firstName,
-        public readonly NonEmptyStr $lastName,
-        public readonly ?NonEmptyStr $middleName,     // nullable field
+        public readonly StringNonEmpty $firstName,
+        public readonly StringNonEmpty $lastName,
+        public readonly ?StringNonEmpty $middleName,     // nullable field
         public readonly ?DateTimeAtom $birthDate,      // nullable field
-        public readonly ?NonNegativeFloat $heightM     // nullable field
+        public readonly ?FloatNonNegative $heightM     // nullable field
     ) {}
 
     // Convenience named constructor that accepts raw scalars and builds primitives internally
@@ -217,11 +217,11 @@ final class Profile
     ): self {
         return new self(
             IntegerPositive::fromInt($id),
-            NonEmptyStr::fromString($firstName),
-            NonEmptyStr::fromString($lastName),
-            $middleName !== null ? NonEmptyStr::fromString($middleName) : null,
+            StringNonEmpty::fromString($firstName),
+            StringNonEmpty::fromString($lastName),
+            $middleName !== null ? StringNonEmpty::fromString($middleName) : null,
             $birthDateAtom !== null ? DateTimeAtom::fromString($birthDateAtom) : null,
-            $heightM !== null ? NonNegativeFloat::fromString((string)$heightM) : null,
+            $heightM !== null ? FloatNonNegative::fromString((string)$heightM) : null,
         );
     }
 }
@@ -238,9 +238,9 @@ $p1 = Profile::fromScalars(
 
 $p2 = new Profile(
     id: IntegerPositive::fromInt(202),
-    firstName: NonEmptyStr::fromString('Bob'),
-    lastName: NonEmptyStr::fromString('Johnson'),
-    middleName: NonEmptyStr::fromString('A.'),
+    firstName: StringNonEmpty::fromString('Bob'),
+    lastName: StringNonEmpty::fromString('Johnson'),
+    middleName: StringNonEmpty::fromString('A.'),
     birthDate: null,
     heightM: null,
 );
