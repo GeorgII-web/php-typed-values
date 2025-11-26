@@ -69,3 +69,43 @@ it('round-trip mismatch produces Unexpected conversion error for leading zeros',
             ->and($e->getMessage())->toContain('5');
     }
 });
+
+it('fromString throws when seconds are above supported range (max + 1)', function (): void {
+    try {
+        // One second beyond 9999-12-31T23:59:59Z
+        TimestampSeconds::fromString('253402300800');
+        expect()->fail('Exception was not thrown');
+    } catch (Throwable $e) {
+        expect($e)->toBeInstanceOf(PhpTypedValues\Code\Exception\ReasonableRangeDateTimeTypeException::class)
+            ->and($e->getMessage())->toContain('Timestamp "253402300800" out of supported range "-62135596800"-"253402300799"')
+            ->and($e->getMessage())->toContain('253402300800');
+    }
+});
+
+it('fromString throws when seconds are below supported range (min - 1)', function (): void {
+    try {
+        // One second before 0001-01-01T00:00:00Z
+        TimestampSeconds::fromString('-62135596801');
+        expect()->fail('Exception was not thrown');
+    } catch (Throwable $e) {
+        expect($e)->toBeInstanceOf(PhpTypedValues\Code\Exception\ReasonableRangeDateTimeTypeException::class)
+            ->and($e->getMessage())->toContain('Timestamp "-62135596801" out of supported range "-62135596800"-"253402300799"')
+            ->and($e->getMessage())->toContain('-62135596801');
+    }
+});
+
+it('fromString accepts maximum supported seconds (max boundary)', function (): void {
+    // Exactly 9999-12-31T23:59:59Z
+    $vo = TimestampSeconds::fromString('253402300799');
+
+    expect($vo->toString())->toBe('253402300799')
+        ->and($vo->value()->format('U'))->toBe('253402300799');
+});
+
+it('fromString accepts minimum supported seconds (min boundary)', function (): void {
+    // Exactly 0001-01-01T00:00:00Z
+    $vo = TimestampSeconds::fromString('-62135596800');
+
+    expect($vo->toString())->toBe('-62135596800')
+        ->and($vo->value()->format('U'))->toBe('-62135596800');
+});

@@ -7,43 +7,18 @@ namespace PhpTypedValues\Integer;
 use PhpTypedValues\Code\Exception\IntegerTypeException;
 use PhpTypedValues\Code\Integer\IntType;
 
-use function sprintf;
-
 /**
  * @psalm-immutable
  */
-readonly class WeekDayInt extends IntType
+readonly class IntegerStandard extends IntType
 {
-    /** @var int<1, 7> */
     protected int $value;
 
-    /**
-     * @throws IntegerTypeException
-     */
     public function __construct(int $value)
     {
-        if ($value < 1) {
-            throw new IntegerTypeException(sprintf('Expected value between 1-7, got "%d"', $value));
-        }
-
-        if ($value > 7) {
-            throw new IntegerTypeException(sprintf('Expected value between 1-7, got "%d"', $value));
-        }
-
         $this->value = $value;
     }
 
-    /**
-     * @return int<1, 7>
-     */
-    public function value(): int
-    {
-        return $this->value;
-    }
-
-    /**
-     * @throws IntegerTypeException
-     */
     public static function fromInt(int $value): static
     {
         return new static($value);
@@ -57,5 +32,10 @@ readonly class WeekDayInt extends IntType
         parent::assertIntegerString($value);
 
         return new static((int) $value);
+    }
+
+    public function value(): int
+    {
+        return $this->value;
     }
 }

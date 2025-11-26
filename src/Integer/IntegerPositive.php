@@ -12,9 +12,9 @@ use function sprintf;
 /**
  * @psalm-immutable
  */
-readonly class NonNegativeInt extends IntType
+readonly class IntegerPositive extends IntType
 {
-    /** @var non-negative-int */
+    /** @var positive-int */
     protected int $value;
 
     /**
@@ -22,8 +22,8 @@ readonly class NonNegativeInt extends IntType
      */
     public function __construct(int $value)
     {
-        if ($value < 0) {
-            throw new IntegerTypeException(sprintf('Expected non-negative integer, got "%d"', $value));
+        if ($value <= 0) {
+            throw new IntegerTypeException(sprintf('Expected positive integer, got "%d"', $value));
         }
 
         $this->value = $value;
@@ -48,7 +48,7 @@ readonly class NonNegativeInt extends IntType
     }
 
     /**
-     * @return non-negative-int
+     * @return positive-int
      */
     public function value(): int
     {

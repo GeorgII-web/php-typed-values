@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use PhpTypedValues\Code\Exception\IntegerTypeException;
-use PhpTypedValues\Integer\NonNegativeInt;
+use PhpTypedValues\Integer\Alias\NonNegativeInt;
 
 it('creates NonNegativeInt', function (): void {
     expect((new NonNegativeInt(0))->value())->toBe(0);

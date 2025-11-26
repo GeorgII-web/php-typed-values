@@ -66,7 +66,8 @@ readonly class TimestampMilliseconds extends DateTimeType
         $seconds = (int) $dt->format('U');
         $micros = (int) $dt->format('u');
 
-        $milliseconds = ($seconds * 1000) + intdiv($micros, 1000);
+        // Using intdiv will throw a TypeError if $seconds is not an int, ensuring the cast is meaningful
+        $milliseconds = (intdiv($seconds, 1) * 1000) + intdiv($micros, 1000);
 
         return (string) $milliseconds;
     }

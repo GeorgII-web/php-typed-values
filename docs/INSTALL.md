@@ -31,9 +31,9 @@ Create a quick test script (e.g., demo.php):
 <?php
 require __DIR__ . '/vendor/autoload.php';
 
-use PhpTypedValues\Integer\PositiveInt;
+use PhpTypedValues\Integer\IntegerPositive;
 
-echo PositiveInt::fromString('21')->value(); // 21
+echo IntegerPositive::fromString('21')->value(); // 21
 ```
 
 Run it:

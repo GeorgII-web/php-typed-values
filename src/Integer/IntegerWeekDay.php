@@ -12,9 +12,9 @@ use function sprintf;
 /**
  * @psalm-immutable
  */
-readonly class PositiveInt extends IntType
+readonly class IntegerWeekDay extends IntType
 {
-    /** @var positive-int */
+    /** @var int<1, 7> */
     protected int $value;
 
     /**
@@ -22,11 +22,23 @@ readonly class PositiveInt extends IntType
      */
     public function __construct(int $value)
     {
-        if ($value <= 0) {
-            throw new IntegerTypeException(sprintf('Expected positive integer, got "%d"', $value));
+        if ($value < 1) {
+            throw new IntegerTypeException(sprintf('Expected value between 1-7, got "%d"', $value));
+        }
+
+        if ($value > 7) {
+            throw new IntegerTypeException(sprintf('Expected value between 1-7, got "%d"', $value));
         }
 
         $this->value = $value;
+    }
+
+    /**
+     * @return int<1, 7>
+     */
+    public function value(): int
+    {
+        return $this->value;
     }
 
     /**
@@ -45,13 +57,5 @@ readonly class PositiveInt extends IntType
         parent::assertIntegerString($value);
 
         return new static((int) $value);
-    }
-
-    /**
-     * @return positive-int
-     */
-    public function value(): int
-    {
-        return $this->value;
     }
 }
