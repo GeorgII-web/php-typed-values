@@ -8,6 +8,10 @@ use PhpTypedValues\Code\Exception\StringTypeException;
 use PhpTypedValues\Code\String\StrType;
 
 /**
+ * Database VARCHAR(255) string.
+ *
+ * Example "Hello world"
+ *
  * @psalm-immutable
  */
 readonly class StringVarChar255 extends StrType

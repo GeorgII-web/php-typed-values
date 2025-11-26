@@ -14,6 +14,8 @@ use PhpTypedValues\Code\Exception\DateTimeTypeException;
 /**
  * ATOM RFC 3339 format based on ISO 8601.
  *
+ * Example "2025-01-02T03:04:05+00:00"
+ *
  * @psalm-immutable
  */
 readonly class DateTimeAtom extends DateTimeType

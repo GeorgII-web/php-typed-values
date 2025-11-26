@@ -10,6 +10,10 @@ use PhpTypedValues\Code\Integer\IntType;
 use function sprintf;
 
 /**
+ * Week day number between 1 and 7.
+ *
+ * Example "5"
+ *
  * @psalm-immutable
  */
 readonly class IntegerWeekDay extends IntType

@@ -10,6 +10,8 @@ use PhpTypedValues\Code\Float\FloatType;
 /**
  * Represents any PHP float (double).
  *
+ * Example "3.14"
+ *
  * @psalm-immutable
  */
 readonly class FloatStandard extends FloatType

@@ -14,6 +14,8 @@ use function strtolower;
 /**
  * RFC 4122 version 4 (random).
  *
+ * Example "550e8400-e29b-41d4-a716-446655440000"
+ *
  * @psalm-immutable
  */
 readonly class StringUuidV4 extends StrType

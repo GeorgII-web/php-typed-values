@@ -9,6 +9,8 @@ use PhpTypedValues\Code\String\StrType;
 /**
  * Represents any PHP string.
  *
+ * Example "hello"
+ *
  * @psalm-immutable
  */
 readonly class StringStandard extends StrType

@@ -10,6 +10,10 @@ use PhpTypedValues\Code\Integer\IntType;
 use function sprintf;
 
 /**
+ * Non-negative integer (>= 0).
+ *
+ * Example "0"
+ *
  * @psalm-immutable
  */
 readonly class IntegerNonNegative extends IntType

@@ -14,6 +14,8 @@ use function strtolower;
 /**
  * UUID version 7 (time-ordered, Unix time-based).
  *
+ * Example "01890f2a-5bcd-7def-8abc-1234567890ab"
+ *
  * @psalm-immutable
  */
 readonly class StringUuidV7 extends StrType

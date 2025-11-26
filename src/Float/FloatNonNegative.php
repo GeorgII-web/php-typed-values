@@ -10,6 +10,10 @@ use PhpTypedValues\Code\Float\FloatType;
 use function sprintf;
 
 /**
+ * Non-negative float (>= 0.0).
+ *
+ * Example "0.0"
+ *
  * @psalm-immutable
  */
 readonly class FloatNonNegative extends FloatType

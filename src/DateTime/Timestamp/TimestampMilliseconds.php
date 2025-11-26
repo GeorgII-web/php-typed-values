@@ -12,7 +12,9 @@ use function intdiv;
 use function sprintf;
 
 /**
- * Unix timestamp in milliseconds since Unix epoch (UTC), e.g. "1732445696123".
+ * Unix timestamp in milliseconds since Unix epoch (UTC).
+ *
+ * Example "1732445696123"
  *
  * @psalm-immutable
  */

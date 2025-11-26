@@ -8,6 +8,10 @@ use PhpTypedValues\Code\Exception\IntegerTypeException;
 use PhpTypedValues\Code\Integer\IntType;
 
 /**
+ * Represents any PHP integer.
+ *
+ * Example "-10"
+ *
  * @psalm-immutable
  */
 readonly class IntegerStandard extends IntType

@@ -10,6 +10,10 @@ use PhpTypedValues\Code\String\StrType;
 use function sprintf;
 
 /**
+ * Non-empty string value.
+ *
+ * Example "hello"
+ *
  * @psalm-immutable
  */
 readonly class StringNonEmpty extends StrType

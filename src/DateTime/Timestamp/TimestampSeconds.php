@@ -9,7 +9,9 @@ use PhpTypedValues\Code\DateTime\DateTimeType;
 use PhpTypedValues\Code\Exception\DateTimeTypeException;
 
 /**
- * Unix timestamp (seconds since Unix epoch, UTC), e.g. "1732445696".
+ * Unix timestamp (seconds since Unix epoch, UTC).
+ *
+ * Example "1732445696"
  *
  * @psalm-immutable
  */
