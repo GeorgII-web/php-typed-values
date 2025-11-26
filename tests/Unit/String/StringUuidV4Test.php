@@ -43,3 +43,18 @@ it('throws on invalid characters or format (non-hex character)', function (): vo
     expect(fn() => StringUuidV4::fromString($badChar))
         ->toThrow(StringTypeException::class, 'Expected UUID v4 (xxxxxxxx-xxxx-4xxx-[89ab]xxx-xxxxxxxxxxxx), got "' . $badChar . '"');
 });
+
+it('generate produces a valid lowercase UUID v4 and different values across calls', function (): void {
+    $a = StringUuidV4::generate();
+    $b = StringUuidV4::generate();
+
+    $regex = '/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/';
+
+    expect($a->toString())->toMatch($regex)
+        ->and($a->value())->toBe($a->toString())
+        ->and($a->toString())->toBe(strtolower($a->toString()))
+        // Two subsequently generated UUIDs should not be equal with overwhelmingly high probability
+        ->and($a->toString())->not->toBe($b->toString())
+        ->and($b->toString())->toMatch($regex)
+        ->and($b->toString())->toBe(strtolower($b->toString()));
+});

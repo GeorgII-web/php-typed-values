@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\String;
 
+use PhpTypedValues\Code\Contract\GenerateInterface;
 use PhpTypedValues\Code\Exception\StringTypeException;
 use PhpTypedValues\Code\String\StrType;
+use Random\RandomException;
 
+use function chr;
+use function ord;
 use function preg_match;
 use function sprintf;
 use function strtolower;
@@ -16,7 +20,7 @@ use function strtolower;
  *
  * @psalm-immutable
  */
-readonly class StringUuidV4 extends StrType
+readonly class StringUuidV4 extends StrType implements GenerateInterface
 {
     /** @var non-empty-string */
     protected string $value;
@@ -55,5 +59,34 @@ readonly class StringUuidV4 extends StrType
     public function value(): string
     {
         return $this->value;
+    }
+
+    /**
+     * @throws RandomException
+     * @throws StringTypeException
+     */
+    public static function generate(): static
+    {
+        // UUID v4: 16 random bytes, with version and variant bits set as per RFC 4122
+        $bytes = random_bytes(16);
+
+        // Set version to 4 (0100xxxx)
+        $bytes[6] = chr((ord($bytes[6]) & 0x0F) | 0x40);
+
+        // Set variant to RFC 4122 (10xxxxxx)
+        $bytes[8] = chr((ord($bytes[8]) & 0x3F) | 0x80);
+
+        $hex = bin2hex($bytes);
+
+        $uuid = sprintf(
+            '%s-%s-%s-%s-%s',
+            substr($hex, 0, 8),
+            substr($hex, 8, 4),
+            substr($hex, 12, 4),
+            substr($hex, 16, 4),
+            substr($hex, 20, 12)
+        );
+
+        return new static($uuid);
     }
 }
