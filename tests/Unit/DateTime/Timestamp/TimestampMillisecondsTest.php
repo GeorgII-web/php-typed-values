@@ -14,6 +14,22 @@ it('fromString returns same instant and toString is milliseconds', function (): 
         ->and($vo->value()->getTimezone()->getName())->toBe('+00:00');
 });
 
+it('fromString maps remainder milliseconds to microseconds exactly (123 -> 123000)', function (): void {
+    // 1732445696123 ms -> seconds=1732445696, remainder=123 ms => microseconds=123000
+    $vo = TimestampMilliseconds::fromString('1732445696123');
+
+    expect($vo->value()->format('U.u'))->toBe('1732445696.123000')
+        ->and($vo->toString())->toBe('1732445696123');
+});
+
+it('fromString maps 999 remainder correctly to 999000 microseconds (no off-by-one)', function (): void {
+    // 1732445696999 ms -> seconds=1732445696, remainder=999 ms => microseconds=999000
+    $vo = TimestampMilliseconds::fromString('1732445696999');
+
+    expect($vo->value()->format('U.u'))->toBe('1732445696.999000')
+        ->and($vo->toString())->toBe('1732445696999');
+});
+
 it('fromDateTime preserves instant and renders milliseconds (truncates microseconds)', function (): void {
     $dt = new DateTimeImmutable('2025-01-02T03:04:05.678+00:00');
     $vo = TimestampMilliseconds::fromDateTime($dt);
@@ -22,6 +38,18 @@ it('fromDateTime preserves instant and renders milliseconds (truncates microseco
     expect($vo->value()->format('U'))->toBe('1735787045')
         ->and($vo->toString())->toBe('1735787045678')
         ->and($vo->value()->getTimezone()->getName())->toBe('UTC');
+});
+
+it('toString truncates microseconds using divisor 1000, not 999 or 1001', function (): void {
+    // Use a datetime with 999999 microseconds at a known second.
+    // Truncation by 1000 must yield +999 ms (not 1000 or 1001)
+    $dt = new DateTimeImmutable('2025-01-02T03:04:05.999999+00:00');
+    $vo = TimestampMilliseconds::fromDateTime($dt);
+
+    // Seconds part for this instant
+    expect($vo->value()->format('U'))->toBe('1735787045')
+        // Milliseconds should be 1735787045*1000 + 999
+        ->and($vo->toString())->toBe('1735787045999');
 });
 
 it('fromDateTime normalizes timezone to UTC while preserving the instant', function (): void {
