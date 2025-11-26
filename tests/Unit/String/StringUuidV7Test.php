@@ -45,3 +45,28 @@ it('throws on invalid characters or format (non-hex character)', function (): vo
     expect(fn() => StringUuidV7::fromString($badChar))
         ->toThrow(StringTypeException::class, 'Expected UUID v7 (xxxxxxxx-xxxx-7xxx-[89ab]xxx-xxxxxxxxxxxx), got "' . $badChar . '"');
 });
+
+it('generate produces a valid lowercase UUID v7 and different values across calls', function (): void {
+    $a = StringUuidV7::generate();
+    $b = StringUuidV7::generate();
+
+    $regex = '/^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/';
+
+    expect($a->toString())->toMatch($regex)
+        ->and($a->value())->toBe($a->toString())
+        ->and($a->toString())->toBe(strtolower($a->toString()))
+        ->and($b->toString())->toMatch($regex)
+        ->and($b->toString())->toBe(strtolower($b->toString()))
+        // Two generated UUIDs should almost certainly differ
+        ->and($a->toString())->not->toBe($b->toString());
+});
+
+it('generate produces time-ordered UUID v7 (lexicographic order increases over time)', function (): void {
+    $first = StringUuidV7::generate();
+    // Sleep a little to ensure the next millisecond is different on most systems
+    usleep(2000); // 2 ms
+    $second = StringUuidV7::generate();
+
+    // For UUID v7, the canonical string representation is time-ordered; later values should compare greater
+    expect(strcmp($first->toString(), $second->toString()))->toBeLessThan(0);
+});
