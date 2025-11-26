@@ -41,17 +41,17 @@ Static usage examples
 ---------------------
 
 ```php
-use PhpTypedValues\DateTime\DateTimeAtom;use PhpTypedValues\DateTime\Timestamp\TimestampSeconds;use PhpTypedValues\Float\FloatBasic;use PhpTypedValues\Float\NonNegativeFloat;use PhpTypedValues\Integer\IntegerBasic;use PhpTypedValues\Integer\NonNegativeInt;use PhpTypedValues\Integer\PositiveInt;use PhpTypedValues\Integer\WeekDayInt;use PhpTypedValues\String\NonEmptyStr;use PhpTypedValues\String\StringBasic;
+use PhpTypedValues\DateTime\DateTimeAtom;use PhpTypedValues\DateTime\Timestamp\TimestampSeconds;use PhpTypedValues\Float\FloatBasic;use PhpTypedValues\Float\NonNegativeFloat;use PhpTypedValues\Integer\IntegerStandart;use PhpTypedValues\Integer\IntegerNonNegative;use PhpTypedValues\Integer\IntegerPositive;use PhpTypedValues\Integer\IntegerWeekDay;use PhpTypedValues\String\NonEmptyStr;use PhpTypedValues\String\StringBasic;
 
 // Integers
-$any = IntegerBasic::fromInt(-10);
-$pos = PositiveInt::fromInt(1);
-$nn  = NonNegativeInt::fromInt(0);
-$wd  = WeekDayInt::fromInt(7);        // 1..7
+$any = IntegerStandart::fromInt(-10);
+$pos = IntegerPositive::fromInt(1);
+$nn  = IntegerNonNegative::fromInt(0);
+$wd  = IntegerWeekDay::fromInt(7);        // 1..7
 
 // From string (integers)
-$posFromString = PositiveInt::fromString('123');
-$wdFromString  = WeekDayInt::fromString('5');
+$posFromString = IntegerPositive::fromString('123');
+$wdFromString  = IntegerWeekDay::fromString('5');
 
 // Strings
 $greeting = StringBasic::fromString('hello');
@@ -81,16 +81,16 @@ Validation errors (static constructors)
 Invalid input throws an exception with a helpful message.
 
 ```php
-use PhpTypedValues\Integer\PositiveInt;
-use PhpTypedValues\Integer\WeekDayInt;
+use PhpTypedValues\Integer\IntegerPositive;
+use PhpTypedValues\Integer\IntegerWeekDay;
 use PhpTypedValues\String\NonEmptyStr;
 use PhpTypedValues\Float\NonNegativeFloat;
 use PhpTypedValues\DateTime\DateTimeAtom;
 
-PositiveInt::fromInt(0);              // throws: must be > 0
-PositiveInt::fromString('12.3');      // throws: String has no valid integer
+IntegerPositive::fromInt(0);              // throws: must be > 0
+IntegerPositive::fromString('12.3');      // throws: String has no valid integer
 
-WeekDayInt::fromInt(0);               // throws: Value must be between 1 and 7
+IntegerWeekDay::fromInt(0);               // throws: Value must be between 1 and 7
 
 NonEmptyStr::fromString('');          // throws: Value must be a non-empty string
 
@@ -110,9 +110,9 @@ declare(strict_types=1);
 
 namespace App\Domain;
 
-use PhpTypedValues\Integer\PositiveInt;
+use PhpTypedValues\Integer\IntegerPositive;
 
-final class UserId extends PositiveInt {}
+final class UserId extends IntegerPositive {}
 
 // Usage
 $userId = UserId::fromInt(42);
@@ -190,7 +190,7 @@ declare(strict_types=1);
 
 namespace App\Domain;
 
-use PhpTypedValues\Integer\PositiveInt;
+use PhpTypedValues\Integer\IntegerPositive;
 use PhpTypedValues\String\NonEmptyStr;
 use PhpTypedValues\Float\NonNegativeFloat;
 use PhpTypedValues\DateTime\DateTimeAtom;
@@ -198,7 +198,7 @@ use PhpTypedValues\DateTime\DateTimeAtom;
 final class Profile
 {
     public function __construct(
-        public readonly PositiveInt $id,
+        public readonly IntegerPositive $id,
         public readonly NonEmptyStr $firstName,
         public readonly NonEmptyStr $lastName,
         public readonly ?NonEmptyStr $middleName,     // nullable field
@@ -216,7 +216,7 @@ final class Profile
         int|float|string|null $heightM
     ): self {
         return new self(
-            PositiveInt::fromInt($id),
+            IntegerPositive::fromInt($id),
             NonEmptyStr::fromString($firstName),
             NonEmptyStr::fromString($lastName),
             $middleName !== null ? NonEmptyStr::fromString($middleName) : null,
@@ -237,7 +237,7 @@ $p1 = Profile::fromScalars(
 );
 
 $p2 = new Profile(
-    id: PositiveInt::fromInt(202),
+    id: IntegerPositive::fromInt(202),
     firstName: NonEmptyStr::fromString('Bob'),
     lastName: NonEmptyStr::fromString('Johnson'),
     middleName: NonEmptyStr::fromString('A.'),

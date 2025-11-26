@@ -14,37 +14,28 @@ use PhpTypedValues\DateTime\Timestamp\TimestampMilliseconds;
 use PhpTypedValues\DateTime\Timestamp\TimestampSeconds;
 use PhpTypedValues\Float\FloatBasic;
 use PhpTypedValues\Float\NonNegativeFloat;
-use PhpTypedValues\Integer\IntegerBasic;
-use PhpTypedValues\Integer\NonNegativeInt;
-use PhpTypedValues\Integer\PositiveInt;
-use PhpTypedValues\Integer\WeekDayInt;
+use PhpTypedValues\Integer\Alias\Id;
+use PhpTypedValues\Integer\Alias\NonNegativeInt;
+use PhpTypedValues\Integer\Alias\PositiveInt;
+use PhpTypedValues\Integer\IntegerNonNegative;
+use PhpTypedValues\Integer\IntegerPositive;
+use PhpTypedValues\Integer\IntegerStandart;
+use PhpTypedValues\Integer\IntegerWeekDay;
 use PhpTypedValues\String\NonEmptyStr;
 use PhpTypedValues\String\StringBasic;
-
-// try {
-//    echo DateTimeImmutable::createFromFormat('U.u', '953402300800.000000')->format('U.u');
-// } catch (Throwable $e) {
-//    var_dump('error');
-//    var_dump($e);
-// }
-//
-// try {
-//    echo TimestampMilliseconds::fromString('953402300800000')->toString(); // '253402300800000'
-// } catch (Throwable $e) {
-//    var_dump('error');
-//    var_dump($e);
-// }
-// exit('ssssssssss');
 
 /**
  * Integer.
  */
-testInteger(IntegerBasic::fromInt(10)->value());
-testPositiveInt(PositiveInt::fromInt(10)->value());
-testNonNegativeInt(NonNegativeInt::fromInt(10)->value());
-testWeekDayInt(WeekDayInt::fromInt(7)->value());
+testInteger(IntegerStandart::fromInt(10)->value());
+testPositiveInt(IntegerPositive::fromInt(10)->value());
+testNonNegativeInt(IntegerNonNegative::fromInt(10)->value());
+testWeekDayInt(IntegerWeekDay::fromInt(7)->value());
 
-echo IntegerBasic::fromString('10')->toString() . \PHP_EOL;
+echo NonNegativeInt::fromString('10')->toString() . \PHP_EOL;
+echo PositiveInt::fromString('10')->toString() . \PHP_EOL;
+echo IntegerStandart::fromString('10')->toString() . \PHP_EOL;
+echo Id::fromString('10')->toString() . \PHP_EOL;
 
 /**
  * String.

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use PhpTypedValues\Code\Exception\IntegerTypeException;
-use PhpTypedValues\Integer\PositiveInt;
+use PhpTypedValues\Integer\Alias\PositiveInt;
 
 it('creates PositiveInt', function (): void {
     expect(PositiveInt::fromInt(1)->value())->toBe(1);
