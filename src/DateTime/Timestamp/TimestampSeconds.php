@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace PhpTypedValues\DateTime\Timestamp;
 
 use DateTimeZone;
-use PhpTypedValues\Code\DateTime\DateTimeType;
-use PhpTypedValues\Code\Exception\DateTimeTypeException;
+use PhpTypedValues\Abstract\DateTime\DateTimeType;
+use PhpTypedValues\Exception\DateTimeTypeException;
 
 /**
  * Unix timestamp (seconds since Unix epoch, UTC).

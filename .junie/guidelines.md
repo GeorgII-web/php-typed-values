@@ -20,10 +20,9 @@
 
 ## Folder structure
 
-- `src/Code` folder contains the framework internal code
+- `src/Abstract` folder contains the framework internal code
 - other folders like `src/"type"` contains specific types
 - `src/psalmTest.php` contains types usage to avoid Psalm issues like `unused method`
-- `src/Code/Assert/Assert.php` contains `assert` methods, add new methods instead of checking conditions directly in classes. Prefer to use Assert::"methos()".
 
 ## Tests
 

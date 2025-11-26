@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Code\DateTime;
+namespace PhpTypedValues\Abstract\DateTime;
 
 use const PHP_EOL;
 
 use DateTimeImmutable;
 use DateTimeZone;
-use PhpTypedValues\Code\Exception\DateTimeTypeException;
-use PhpTypedValues\Code\Exception\ReasonableRangeDateTimeTypeException;
+use PhpTypedValues\Exception\DateTimeTypeException;
+use PhpTypedValues\Exception\ReasonableRangeDateTimeTypeException;
 
 use function count;
 use function sprintf;

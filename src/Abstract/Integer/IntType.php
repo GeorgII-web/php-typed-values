@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Code\Integer;
+namespace PhpTypedValues\Abstract\Integer;
 
-use PhpTypedValues\Code\Exception\IntegerTypeException;
+use PhpTypedValues\Exception\IntegerTypeException;
 
 use function sprintf;
 

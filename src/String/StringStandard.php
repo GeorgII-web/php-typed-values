@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\String;
 
-use PhpTypedValues\Code\String\StrType;
+use PhpTypedValues\Abstract\String\StrType;
 
 /**
  * Represents any PHP string.

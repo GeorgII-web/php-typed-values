@@ -15,10 +15,10 @@ it('fromDateTime returns same instant and toString is ISO 8601', function (): vo
 it('DateTimeImmutable has false and throws an exception', function (): void {
     expect(
         fn() => DateTimeAtom::fromString('')
-    )->toThrow(PhpTypedValues\Code\Exception\DateTimeTypeException::class);
+    )->toThrow(PhpTypedValues\Exception\DateTimeTypeException::class);
 });
 
 it('throws DateTimeTypeException on unexpected conversion when input uses Z instead of +00:00', function (): void {
     $call = fn() => DateTimeAtom::fromString('2025-01-02T03:04:05Z');
-    expect($call)->toThrow(PhpTypedValues\Code\Exception\DateTimeTypeException::class);
+    expect($call)->toThrow(PhpTypedValues\Exception\DateTimeTypeException::class);
 });

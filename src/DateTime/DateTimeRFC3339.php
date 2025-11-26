@@ -8,8 +8,8 @@ use const DATE_RFC3339;
 
 use DateTimeImmutable;
 use DateTimeZone;
-use PhpTypedValues\Code\DateTime\DateTimeType;
-use PhpTypedValues\Code\Exception\DateTimeTypeException;
+use PhpTypedValues\Abstract\DateTime\DateTimeType;
+use PhpTypedValues\Exception\DateTimeTypeException;
 
 /**
  * RFC 3339 format based on ISO 8601.

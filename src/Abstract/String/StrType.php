@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Code\String;
+namespace PhpTypedValues\Abstract\String;
 
 /**
  * @psalm-immutable

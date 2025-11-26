@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\String\DB;
 
-use PhpTypedValues\Code\Exception\StringTypeException;
-use PhpTypedValues\Code\String\StrType;
+use PhpTypedValues\Abstract\String\StrType;
+use PhpTypedValues\Exception\StringTypeException;
 
 /**
  * Database VARCHAR(255) string.

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Code\DateTime\DateTimeType;
-use PhpTypedValues\Code\Float\FloatType;
-use PhpTypedValues\Code\Integer\IntType;
-use PhpTypedValues\Code\String\StrType;
+use PhpTypedValues\Abstract\DateTime\DateTimeType;
+use PhpTypedValues\Abstract\Float\FloatType;
+use PhpTypedValues\Abstract\Integer\IntType;
+use PhpTypedValues\Abstract\String\StrType;
 
 arch('Base classes')
-    ->expect('PhpTypedValues\Code\BaseType')
+    ->expect('PhpTypedValues\Abstract\BaseType')
     ->toBeClasses()
     ->toBeAbstract()
     ->toOnlyBeUsedIn('PhpTypedValues');

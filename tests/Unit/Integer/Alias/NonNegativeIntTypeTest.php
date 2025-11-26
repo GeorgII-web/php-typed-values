@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Code\Exception\IntegerTypeException;
+use PhpTypedValues\Exception\IntegerTypeException;
 use PhpTypedValues\Integer\Alias\NonNegativeInt;
 
 it('creates NonNegativeInt', function (): void {

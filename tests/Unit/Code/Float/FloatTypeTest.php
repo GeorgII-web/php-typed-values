@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Code\Exception\FloatTypeException;
+use PhpTypedValues\Exception\FloatTypeException;
 use PhpTypedValues\Float\FloatStandard;
 
 it('fromFloat returns exact value and toString matches', function (): void {

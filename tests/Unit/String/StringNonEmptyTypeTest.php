@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Code\Exception\StringTypeException;
+use PhpTypedValues\Exception\StringTypeException;
 use PhpTypedValues\String\StringNonEmpty;
 
 it('constructs and preserves non-empty string', function (): void {

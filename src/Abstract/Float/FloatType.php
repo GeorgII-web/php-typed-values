@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Code\Float;
+namespace PhpTypedValues\Abstract\Float;
 
-use PhpTypedValues\Code\Exception\FloatTypeException;
+use PhpTypedValues\Exception\FloatTypeException;
 
 use function sprintf;
 
