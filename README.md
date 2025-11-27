@@ -1,20 +1,11 @@
 PHP Typed Values
 ================
 
-PHP 8.2 typed value objects for common PHP data types.
+A PHP 8.2 library of typed value objects for common PHP data types.
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/georgii-web/php-typed-values.svg?style=flat-square)](https://packagist.org/packages/georgii-web/php-typed-values)
 [![Tests](https://github.com/georgii-web/php-typed-values/actions/workflows/php.yml/badge.svg)](https://github.com/georgii-web/php-typed-values/actions/workflows/php.yml)
 [![Total Downloads](https://img.shields.io/packagist/dt/georgii-web/php-typed-values.svg?style=flat-square)](https://packagist.org/packages/georgii-web/php-typed-values)
-
-## Why Use This Library?
-
-- Make data safer through strong typing and validation.
-- Improve readability with self-documenting types.
-- Use tiny immutable objects as building blocks for larger value objects.
-- Fit naturally into DDD (Domain-Driven Design) shared domain models.
-- Work well with CQRS by expressing clear intent in commands and queries.
-- Extendable with custom-typed values.
 
 Install
 -------
