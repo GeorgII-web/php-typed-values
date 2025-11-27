@@ -8,15 +8,20 @@
 
 require_once 'vendor/autoload.php';
 
+use PhpTypedValues\Abstract\Bool\BoolTypeInterface;
+use PhpTypedValues\Bool\Alias\Boolean;
+use PhpTypedValues\Bool\BoolStandard;
 use PhpTypedValues\DateTime\DateTimeAtom;
 use PhpTypedValues\DateTime\DateTimeRFC3339;
 use PhpTypedValues\DateTime\Timestamp\TimestampMilliseconds;
 use PhpTypedValues\DateTime\Timestamp\TimestampSeconds;
+use PhpTypedValues\Float\Alias\Double;
 use PhpTypedValues\Float\Alias\FloatType;
 use PhpTypedValues\Float\Alias\NonNegativeFloat;
 use PhpTypedValues\Float\FloatNonNegative;
 use PhpTypedValues\Float\FloatStandard;
 use PhpTypedValues\Integer\Alias\Id;
+use PhpTypedValues\Integer\Alias\Integer;
 use PhpTypedValues\Integer\Alias\IntType;
 use PhpTypedValues\Integer\Alias\NonNegativeInt;
 use PhpTypedValues\Integer\Alias\PositiveInt;
@@ -27,6 +32,7 @@ use PhpTypedValues\Integer\IntegerPositive;
 use PhpTypedValues\Integer\IntegerStandard;
 use PhpTypedValues\Integer\IntegerWeekDay;
 use PhpTypedValues\String\Alias\NonEmptyStr;
+use PhpTypedValues\String\Alias\Str;
 use PhpTypedValues\String\Alias\StrType;
 use PhpTypedValues\String\StringNonEmpty;
 use PhpTypedValues\String\StringStandard;
@@ -49,6 +55,7 @@ echo PositiveInt::fromString('10')->toString() . \PHP_EOL;
 echo IntegerStandard::fromString('10')->toString() . \PHP_EOL;
 echo Id::fromString('10')->toString() . \PHP_EOL;
 echo IntType::fromString('10')->toString() . \PHP_EOL;
+echo Integer::fromString('10')->toString() . \PHP_EOL;
 
 /**
  * String.
@@ -59,6 +66,7 @@ testNonEmptyString(StringNonEmpty::fromString('hi')->value());
 echo StringStandard::fromString('hi')->toString() . \PHP_EOL;
 echo NonEmptyStr::fromString('hi')->toString() . \PHP_EOL;
 echo StrType::fromString('hi')->toString() . \PHP_EOL;
+echo Str::fromString('hi')->toString() . \PHP_EOL;
 
 /**
  * Float.
@@ -68,10 +76,21 @@ testFloat(FloatStandard::fromFloat(3.14)->value());
 echo FloatStandard::fromString('2.71828')->toString() . \PHP_EOL;
 echo NonNegativeFloat::fromString('2.71828')->toString() . \PHP_EOL;
 echo FloatType::fromString('2.71828')->toString() . \PHP_EOL;
+echo Double::fromString('2.71828')->toString() . \PHP_EOL;
 
 // PositiveFloat usage
 testPositiveFloat(FloatNonNegative::fromFloat(0.5)->value());
 echo FloatNonNegative::fromString('3.14159')->toString() . \PHP_EOL;
+
+/**
+ * Boolean.
+ */
+echo BoolStandard::fromString('true')->toString() . \PHP_EOL;
+echo BoolStandard::fromInt(1)->toString() . \PHP_EOL;
+echo BoolStandard::fromBool(true)->toString() . \PHP_EOL;
+echo Boolean::fromBool(Boolean::fromBool(true)->value())->toString() . \PHP_EOL;
+// Ensure interface method usage is visible to Psalm
+echo (testBool(BoolStandard::fromBool(true)) ? 'true' : 'false') . \PHP_EOL;
 
 /**
  * DateTime.
@@ -144,4 +163,12 @@ function testFloat(float $f): float
 function testPositiveFloat(float $f): float
 {
     return $f;
+}
+
+/**
+ * Exercise BoolTypeInterface::value() for Psalm.
+ */
+function testBool(BoolTypeInterface $b): bool
+{
+    return $b->value();
 }
