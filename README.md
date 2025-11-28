@@ -1,5 +1,4 @@
-PHP Typed Values
-================
+# PHP Typed Values
 
 A PHP 8.2 library of typed value objects for common PHP data types.
 
@@ -7,8 +6,7 @@ A PHP 8.2 library of typed value objects for common PHP data types.
 [![Tests](https://github.com/georgii-web/php-typed-values/actions/workflows/php.yml/badge.svg)](https://github.com/georgii-web/php-typed-values/actions/workflows/php.yml)
 [![Total Downloads](https://img.shields.io/packagist/dt/georgii-web/php-typed-values.svg?style=flat-square)](https://packagist.org/packages/georgii-web/php-typed-values)
 
-Install
--------
+## Install
 
 Using Composer:
 
@@ -16,10 +14,10 @@ Using Composer:
 composer require georgii-web/php-typed-values
 ```
 
-Usage
------
+## Usage
 
-1. Use existing typed values with validation built in:
+
+#### 1. Use existing typed values with validation built in:
 
 ```php
 $id = PositiveInt::fromString('123');
@@ -34,7 +32,7 @@ if ($id <= 0) {
 }
 ```
 
-2. Create aliases:
+#### 2. Create aliases:
 
 ```php
 readonly class Id extends PositiveInt {}
@@ -42,7 +40,7 @@ readonly class Id extends PositiveInt {}
 Id::fromString('123');
 ```
 
-3. Create a composite value object from other typed values (nullable values example):
+#### 3. Create a composite value object from other typed values (nullable values example):
 
 ```php
 final class Profile
@@ -83,15 +81,13 @@ $profile = Profile::fromScalars(...[157, 'Tom', null]);
 - **No external dependencies** – Pure PHP implementation without requiring third‑party packages.
 - **Extendable** – Extendable with custom-typed values and composite value objects.
 
-More information
--------
+## More information
 
 See [docs/INSTALL.md](docs/INSTALL.md) for installation instructions.  
 See [docs/USAGE.md](docs/USAGE.md) for usage examples.  
 See [docs/DEVELOP.md](docs/DEVELOP.md) for development details.
 
 
-License
--------
+## License
 
 MIT
