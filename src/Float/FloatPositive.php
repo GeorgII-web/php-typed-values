@@ -1,0 +1,57 @@
+<?php
+
+declare(strict_types=1);
+
+namespace PhpTypedValues\Float;
+
+use PhpTypedValues\Abstract\Float\FloatType;
+use PhpTypedValues\Exception\FloatTypeException;
+
+use function sprintf;
+
+/**
+ * Positive float (> 0.0).
+ *
+ * Example "0.1"
+ *
+ * @psalm-immutable
+ */
+readonly class FloatPositive extends FloatType
+{
+    protected float $value;
+
+    /**
+     * @throws FloatTypeException
+     */
+    public function __construct(float $value)
+    {
+        if ($value <= 0.0) {
+            throw new FloatTypeException(sprintf('Expected positive float, got "%s"', $value));
+        }
+
+        $this->value = $value;
+    }
+
+    /**
+     * @throws FloatTypeException
+     */
+    public static function fromFloat(float $value): static
+    {
+        return new static($value);
+    }
+
+    /**
+     * @throws FloatTypeException
+     */
+    public static function fromString(string $value): static
+    {
+        parent::assertFloatString($value);
+
+        return new static((float) $value);
+    }
+
+    public function value(): float
+    {
+        return $this->value;
+    }
+}
