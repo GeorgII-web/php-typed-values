@@ -9,6 +9,6 @@ use PhpTypedValues\String\Json;
 /**
  * @psalm-immutable
  */
-readonly class JsonStr extends Json
+class JsonStr extends Json
 {
 }

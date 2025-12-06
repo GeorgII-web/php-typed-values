@@ -11,9 +11,15 @@ interface BoolTypeInterface
 {
     public function value(): bool;
 
-    public static function fromString(string $value): static;
+    /**
+     * @return static
+     */
+    public static function fromString(string $value);
 
-    public static function fromBool(bool $value): static;
+    /**
+     * @return static
+     */
+    public static function fromBool(bool $value);
 
     public function toString(): string;
 }

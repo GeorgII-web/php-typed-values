@@ -11,7 +11,7 @@ use function sprintf;
 /**
  * @psalm-immutable
  */
-abstract readonly class IntType implements IntTypeInterface
+abstract class IntType implements IntTypeInterface
 {
     /**
      * @throws IntegerTypeException

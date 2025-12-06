@@ -9,6 +9,6 @@ use PhpTypedValues\Float\FloatStandard;
 /**
  * @psalm-immutable
  */
-readonly class FloatType extends FloatStandard
+class FloatType extends FloatStandard
 {
 }

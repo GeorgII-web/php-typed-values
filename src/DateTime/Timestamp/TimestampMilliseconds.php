@@ -18,7 +18,7 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class TimestampMilliseconds extends DateTimeType
+class TimestampMilliseconds extends DateTimeType
 {
     /**
      * Internal formatting pattern for seconds + microseconds.
@@ -31,8 +31,9 @@ readonly class TimestampMilliseconds extends DateTimeType
      * Parse from a numeric Unix timestamp string (milliseconds).
      *
      * @throws DateTimeTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         if (!ctype_digit($value)) {
             throw new DateTimeTypeException(sprintf('Expected milliseconds timestamp as digits, got "%s"', $value));

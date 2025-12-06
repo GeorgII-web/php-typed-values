@@ -7,7 +7,7 @@ namespace PhpTypedValues\Abstract\String;
 /**
  * @psalm-immutable
  */
-abstract readonly class StrType implements StrTypeInterface
+abstract class StrType implements StrTypeInterface
 {
     public function toString(): string
     {

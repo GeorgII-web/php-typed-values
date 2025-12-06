@@ -7,7 +7,7 @@ namespace PhpTypedValues\Abstract\Bool;
 /**
  * @psalm-immutable
  */
-abstract readonly class BoolType implements BoolTypeInterface
+abstract class BoolType implements BoolTypeInterface
 {
     abstract protected function __construct(bool $value);
 
@@ -16,7 +16,10 @@ abstract readonly class BoolType implements BoolTypeInterface
         return $this->value() ? 'true' : 'false';
     }
 
-    public static function fromBool(bool $value): static
+    /**
+     * @return static
+     */
+    public static function fromBool(bool $value)
     {
         return new static($value);
     }

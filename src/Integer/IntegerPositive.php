@@ -16,9 +16,10 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class IntegerPositive extends IntType
+class IntegerPositive extends IntType
 {
-    /** @var positive-int */
+    /** @var positive-int
+     * @readonly */
     protected int $value;
 
     /**
@@ -35,16 +36,18 @@ readonly class IntegerPositive extends IntType
 
     /**
      * @throws IntegerTypeException
+     * @return static
      */
-    public static function fromInt(int $value): static
+    public static function fromInt(int $value)
     {
         return new static($value);
     }
 
     /**
      * @throws IntegerTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         parent::assertIntegerString($value);
 
