@@ -21,7 +21,7 @@ abstract readonly class IntType implements IntTypeInterface
         // Strict check, avoid unexpected string conversion
         $convertedValue = (string) ((int) $value);
         if ($value !== $convertedValue) {
-            throw new IntegerTypeException(sprintf('String "%s" has no valid integer value', $value));
+            throw new IntegerTypeException(sprintf('String "%s" has no valid strict integer value', $value));
         }
     }
 

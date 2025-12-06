@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Exception;
 
-class JsonTypeException extends TypeException
+class UuidStringTypeException extends StringTypeException
 {
 }

@@ -15,7 +15,7 @@ use PhpTypedValues\Exception\UndefinedTypeException;
  */
 abstract readonly class UndefinedType implements UndefinedTypeInterface
 {
-    public static function create(): self
+    public static function create(): static
     {
         return new static();
     }

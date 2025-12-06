@@ -6,6 +6,8 @@ namespace PhpTypedValues\Bool;
 
 use PhpTypedValues\Abstract\Bool\BoolType;
 use PhpTypedValues\Exception\BoolTypeException;
+use PhpTypedValues\Exception\TypeException;
+use PhpTypedValues\Undefined\UndefinedStandard;
 
 use function sprintf;
 
@@ -25,19 +27,37 @@ readonly class BoolStandard extends BoolType
         $this->value = $value;
     }
 
+    public static function tryFromString(string $value): self|UndefinedStandard
+    {
+        try {
+            return static::fromString($value);
+        } catch (TypeException) {
+            return UndefinedStandard::create();
+        }
+    }
+
+    public static function tryFromInt(int $value): self|UndefinedStandard
+    {
+        try {
+            return static::fromInt($value);
+        } catch (TypeException) {
+            return UndefinedStandard::create();
+        }
+    }
+
     /**
      * @throws BoolTypeException
      */
     public static function fromString(string $value): static
     {
-        $lowerCaseValue = strtolower($value);
+        $lowerCaseValue = strtolower(trim($value));
 
-        if ($lowerCaseValue === 'true' || $lowerCaseValue === '1') {
+        if ($lowerCaseValue === 'true' || $lowerCaseValue === '1' || $lowerCaseValue === 'yes' || $lowerCaseValue === 'on' || $lowerCaseValue === 'y') {
             $boolValue = true;
-        } elseif ($lowerCaseValue === 'false' || $lowerCaseValue === '0') {
+        } elseif ($lowerCaseValue === 'false' || $lowerCaseValue === '0' || $lowerCaseValue === 'no' || $lowerCaseValue === 'off' || $lowerCaseValue === 'n') {
             $boolValue = false;
         } else {
-            throw new BoolTypeException(sprintf('Expected string "true"\"1" or "false"\"0", got "%s"', $value));
+            throw new BoolTypeException(sprintf('Expected string "true" or "false", got "%s"', $value));
         }
 
         return new static($boolValue);

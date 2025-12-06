@@ -36,5 +36,5 @@ it('throws when value is above 127', function (): void {
 
 it('fromString throws on non-integer strings (strict check)', function (): void {
     expect(fn() => IntTiny::fromString('12.3'))
-        ->toThrow(IntegerTypeException::class, 'String "12.3" has no valid integer value');
+        ->toThrow(IntegerTypeException::class, 'String "12.3" has no valid strict integer value');
 });

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Exception\JsonTypeException;
+use PhpTypedValues\Exception\JsonStringTypeException;
 use PhpTypedValues\String\Json;
 
 it('constructs valid JSON via constructor', function (): void {
@@ -27,17 +27,17 @@ it('accepts top-level number/boolean/null JSON', function (): void {
 
 it('throws on empty string', function (): void {
     expect(fn() => new Json(''))
-        ->toThrow(JsonTypeException::class, 'String "" has no valid JSON value');
+        ->toThrow(JsonStringTypeException::class, 'String "" has no valid JSON value');
 });
 
 it('throws on invalid JSON string via constructor', function (): void {
     expect(fn() => new Json('{a:1}'))
-        ->toThrow(JsonTypeException::class, 'String "{a:1}" has no valid JSON value');
+        ->toThrow(JsonStringTypeException::class, 'String "{a:1}" has no valid JSON value');
 });
 
 it('throws on invalid JSON string via fromString', function (): void {
     expect(fn() => Json::fromString('{"a": }'))
-        ->toThrow(JsonTypeException::class, 'String "{"a": }" has no valid JSON value');
+        ->toThrow(JsonStringTypeException::class, 'String "{"a": }" has no valid JSON value');
 });
 
 it('decodes to stdClass via toObject', function (): void {
@@ -66,7 +66,7 @@ it('exception code is 0 for invalid JSON via constructor', function (): void {
     try {
         new Json('{a:1}');
         expect()->fail('Expected exception not thrown');
-    } catch (JsonTypeException $e) {
+    } catch (JsonStringTypeException $e) {
         expect($e->getCode())->toBe(0);
     }
 });
@@ -75,7 +75,7 @@ it('exception code is 0 for invalid JSON via fromString', function (): void {
     try {
         Json::fromString('{"a": }');
         expect()->fail('Expected exception not thrown');
-    } catch (JsonTypeException $e) {
+    } catch (JsonStringTypeException $e) {
         expect($e->getCode())->toBe(0);
     }
 });

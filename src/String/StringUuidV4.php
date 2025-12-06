@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace PhpTypedValues\String;
 
 use PhpTypedValues\Abstract\String\StrType;
-use PhpTypedValues\Exception\StringTypeException;
+use PhpTypedValues\Exception\UuidStringTypeException;
 
 use function preg_match;
 use function sprintf;
@@ -24,7 +24,7 @@ readonly class StringUuidV4 extends StrType
     protected string $value;
 
     /**
-     * @throws StringTypeException
+     * @throws UuidStringTypeException
      */
     public function __construct(string $value)
     {
@@ -35,18 +35,18 @@ readonly class StringUuidV4 extends StrType
         // Format: xxxxxxxx-xxxx-4xxx-[89ab]xxx-xxxxxxxxxxxx (hex, case-insensitive)
         if ($normalized === '') {
             // Provide a distinct message for empty input to ensure mutation testing can distinguish the branch
-            throw new StringTypeException(sprintf('Expected non-empty UUID v4 (xxxxxxxx-xxxx-4xxx-[89ab]xxx-xxxxxxxxxxxx), got "%s"', $value));
+            throw new UuidStringTypeException(sprintf('Expected non-empty UUID v4 (xxxxxxxx-xxxx-4xxx-[89ab]xxx-xxxxxxxxxxxx), got "%s"', $value));
         }
 
         if (preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/', $normalized) !== 1) {
-            throw new StringTypeException(sprintf('Expected UUID v4 (xxxxxxxx-xxxx-4xxx-[89ab]xxx-xxxxxxxxxxxx), got "%s"', $value));
+            throw new UuidStringTypeException(sprintf('Expected UUID v4 (xxxxxxxx-xxxx-4xxx-[89ab]xxx-xxxxxxxxxxxx), got "%s"', $value));
         }
 
         $this->value = $normalized;
     }
 
     /**
-     * @throws StringTypeException
+     * @throws UuidStringTypeException
      */
     public static function fromString(string $value): static
     {

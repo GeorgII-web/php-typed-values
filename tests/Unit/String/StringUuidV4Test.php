@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Exception\StringTypeException;
+use PhpTypedValues\Exception\UuidStringTypeException;
 use PhpTypedValues\String\StringUuidV4;
 
 it('accepts a valid lowercase UUID v4 and preserves value', function (): void {
@@ -23,23 +23,23 @@ it('normalizes uppercase input to lowercase while preserving the UUID semantics'
 
 it('throws on empty string', function (): void {
     expect(fn() => new StringUuidV4(''))
-        ->toThrow(StringTypeException::class, 'Expected non-empty UUID v4 (xxxxxxxx-xxxx-4xxx-[89ab]xxx-xxxxxxxxxxxx), got ""');
+        ->toThrow(UuidStringTypeException::class, 'Expected non-empty UUID v4 (xxxxxxxx-xxxx-4xxx-[89ab]xxx-xxxxxxxxxxxx), got ""');
 });
 
 it('throws when UUID version is not 4 (e.g., version 1)', function (): void {
     $v1 = '550e8400-e29b-11d4-a716-446655440000';
     expect(fn() => StringUuidV4::fromString($v1))
-        ->toThrow(StringTypeException::class, 'Expected UUID v4 (xxxxxxxx-xxxx-4xxx-[89ab]xxx-xxxxxxxxxxxx), got "' . $v1 . '"');
+        ->toThrow(UuidStringTypeException::class, 'Expected UUID v4 (xxxxxxxx-xxxx-4xxx-[89ab]xxx-xxxxxxxxxxxx), got "' . $v1 . '"');
 });
 
 it('throws when UUID variant nibble is invalid (must be 8,9,a,b)', function (): void {
     $badVariant = '550e8400-e29b-41d4-7716-446655440000';
     expect(fn() => new StringUuidV4($badVariant))
-        ->toThrow(StringTypeException::class, 'Expected UUID v4 (xxxxxxxx-xxxx-4xxx-[89ab]xxx-xxxxxxxxxxxx), got "' . $badVariant . '"');
+        ->toThrow(UuidStringTypeException::class, 'Expected UUID v4 (xxxxxxxx-xxxx-4xxx-[89ab]xxx-xxxxxxxxxxxx), got "' . $badVariant . '"');
 });
 
 it('throws on invalid characters or format (non-hex character)', function (): void {
     $badChar = '550e8400-e29b-41d4-a716-44665544000g';
     expect(fn() => StringUuidV4::fromString($badChar))
-        ->toThrow(StringTypeException::class, 'Expected UUID v4 (xxxxxxxx-xxxx-4xxx-[89ab]xxx-xxxxxxxxxxxx), got "' . $badChar . '"');
+        ->toThrow(UuidStringTypeException::class, 'Expected UUID v4 (xxxxxxxx-xxxx-4xxx-[89ab]xxx-xxxxxxxxxxxx), got "' . $badChar . '"');
 });

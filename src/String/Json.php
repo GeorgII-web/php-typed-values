@@ -8,7 +8,7 @@ use const JSON_THROW_ON_ERROR;
 
 use JsonException;
 use PhpTypedValues\Abstract\String\StrType;
-use PhpTypedValues\Exception\JsonTypeException;
+use PhpTypedValues\Exception\JsonStringTypeException;
 
 use function json_decode;
 use function sprintf;
@@ -25,7 +25,7 @@ readonly class Json extends StrType
     protected string $value;
 
     /**
-     * @throws JsonTypeException
+     * @throws JsonStringTypeException
      */
     public function __construct(string $value)
     {
@@ -35,7 +35,7 @@ readonly class Json extends StrType
     }
 
     /**
-     * @throws JsonTypeException
+     * @throws JsonStringTypeException
      */
     public static function fromString(string $value): static
     {
@@ -66,7 +66,7 @@ readonly class Json extends StrType
     }
 
     /**
-     * @throws JsonTypeException
+     * @throws JsonStringTypeException
      */
     protected static function assertJsonString(string $value): void
     {
@@ -78,7 +78,7 @@ readonly class Json extends StrType
              */
             json_decode(json: $value, flags: JSON_THROW_ON_ERROR);
         } catch (JsonException $e) {
-            throw new JsonTypeException(sprintf('String "%s" has no valid JSON value', $value), 0, $e);
+            throw new JsonStringTypeException(sprintf('String "%s" has no valid JSON value', $value), 0, $e);
         }
     }
 }
