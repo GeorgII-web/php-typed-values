@@ -18,14 +18,15 @@ use PhpTypedValues\Exception\DateTimeTypeException;
  *
  * @psalm-immutable
  */
-readonly class DateTimeRFC3339 extends DateTimeType
+class DateTimeRFC3339 extends DateTimeType
 {
     protected const FORMAT = DATE_RFC3339;
 
     /**
      * @throws DateTimeTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         return new static(
             static::createFromFormat(
@@ -41,7 +42,10 @@ readonly class DateTimeRFC3339 extends DateTimeType
         return $this->value()->format(static::FORMAT);
     }
 
-    public static function fromDateTime(DateTimeImmutable $value): static
+    /**
+     * @return static
+     */
+    public static function fromDateTime(DateTimeImmutable $value)
     {
         return new static($value);
     }

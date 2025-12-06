@@ -18,8 +18,11 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class BoolStandard extends BoolType
+class BoolStandard extends BoolType
 {
+    /**
+     * @readonly
+     */
     protected bool $value;
 
     public function __construct(bool $value)
@@ -27,28 +30,35 @@ readonly class BoolStandard extends BoolType
         $this->value = $value;
     }
 
-    public static function tryFromString(string $value): static|UndefinedStandard
+    /**
+     * @return static|\PhpTypedValues\Undefined\UndefinedStandard
+     */
+    public static function tryFromString(string $value)
     {
         try {
             return static::fromString($value);
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return UndefinedStandard::create();
         }
     }
 
-    public static function tryFromInt(int $value): static|UndefinedStandard
+    /**
+     * @return static|\PhpTypedValues\Undefined\UndefinedStandard
+     */
+    public static function tryFromInt(int $value)
     {
         try {
             return static::fromInt($value);
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return UndefinedStandard::create();
         }
     }
 
     /**
      * @throws BoolTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         $lowerCaseValue = strtolower(trim($value));
 
@@ -65,8 +75,9 @@ readonly class BoolStandard extends BoolType
 
     /**
      * @throws BoolTypeException
+     * @return static
      */
-    public static function fromInt(int $value): static
+    public static function fromInt(int $value)
     {
         if ($value === 1) {
             $boolValue = true;

@@ -16,8 +16,11 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class FloatPositive extends FloatType
+class FloatPositive extends FloatType
 {
+    /**
+     * @readonly
+     */
     protected float $value;
 
     /**
@@ -34,16 +37,18 @@ readonly class FloatPositive extends FloatType
 
     /**
      * @throws FloatTypeException
+     * @return static
      */
-    public static function fromFloat(float $value): static
+    public static function fromFloat(float $value)
     {
         return new static($value);
     }
 
     /**
      * @throws FloatTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         parent::assertFloatString($value);
 
