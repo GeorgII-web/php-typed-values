@@ -4,7 +4,7 @@
   "type": "library",
   "license": "MIT",
   "require": {
-    "php": ">=8.2"
+    "php": ">=7.4,<8.0 || >=8.2"
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^v3.89",
@@ -52,8 +52,8 @@
       "@mutate",
       "echo '\\n\\n\\033[1;32mPre-commit checks passed!\\033[0m\\n'"
     ],
-    "rector": [
-      "./vendor/bin/rector process --config rector/toPhp7.4.php"
+    "rector-dry-run": [
+      "./vendor/bin/rector process --config rector/toPhp7.4.php --dry-run"
     ],
     "test": [
       "./vendor/bin/pest"

@@ -1,6 +1,6 @@
 # PHP Typed Values
 
-A PHP 8.2 library of typed value objects for common PHP data types.
+A PHP 7.4 || 8.2 library of typed value objects for common PHP data types.
 
 Building blocks for a DTO's, ValueObjects, Entities, etc.
 
