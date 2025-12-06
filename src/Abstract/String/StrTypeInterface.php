@@ -11,7 +11,7 @@ interface StrTypeInterface
 {
     public function value(): string;
 
-    public static function fromString(string $value): self;
+    public static function fromString(string $value): static;
 
     public function toString(): string;
 }

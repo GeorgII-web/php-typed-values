@@ -54,8 +54,8 @@ final class Profile
         int $id,
         string $firstName,
         string|float|int|null $height,
-    ): self {
-        return new self(
+    ): static {
+        return new static(
             PositiveInt::fromInt($id),
             NonEmptyStr::fromString($firstName),
             $height !== null ? FloatNonNegative::fromString((string) $height) : null,

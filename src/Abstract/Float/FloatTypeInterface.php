@@ -11,9 +11,9 @@ interface FloatTypeInterface
 {
     public function value(): float;
 
-    public static function fromFloat(float $value): self;
+    public static function fromFloat(float $value): static;
 
     public function toString(): string;
 
-    public static function fromString(string $value): self;
+    public static function fromString(string $value): static;
 }

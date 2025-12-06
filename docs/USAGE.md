@@ -98,17 +98,17 @@ readonly class EvenPositiveInt extends IntType
     }
 
     /** @throws IntegerTypeException */
-    public static function fromInt(int $value): self
+    public static function fromInt(int $value): static
     {
-        return new self($value);
+        return new static($value);
     }
 
     /** @throws IntegerTypeException */
-    public static function fromString(string $value): self
+    public static function fromString(string $value): static
     {
         parent::assertIntegerString($value);
         
-        return new self((int) $value);
+        return new static((int) $value);
     }
 }
 
@@ -151,8 +151,8 @@ final class Profile
         ?string $middleName,
         ?string $birthDateAtom,   // e.g. "2025-01-02T03:04:05+00:00"
         int|float|string|null $heightM
-    ): self {
-        return new self(
+    ): static {
+        return new static(
             IntegerPositive::fromInt($id),
             StringNonEmpty::fromString($firstName),
             StringNonEmpty::fromString($lastName),

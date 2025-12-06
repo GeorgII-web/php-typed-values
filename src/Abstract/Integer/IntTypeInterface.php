@@ -11,9 +11,9 @@ interface IntTypeInterface
 {
     public function value(): int;
 
-    public static function fromInt(int $value): self;
+    public static function fromInt(int $value): static;
 
     public function toString(): string;
 
-    public static function fromString(string $value): self;
+    public static function fromString(string $value): static;
 }

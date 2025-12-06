@@ -9,7 +9,7 @@ namespace PhpTypedValues\Abstract\Undefined;
  */
 interface UndefinedTypeInterface
 {
-    public static function create(): self;
+    public static function create(): static;
 
     public function value(): void;
 

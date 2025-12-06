@@ -27,7 +27,7 @@ readonly class BoolStandard extends BoolType
         $this->value = $value;
     }
 
-    public static function tryFromString(string $value): self|UndefinedStandard
+    public static function tryFromString(string $value): static|UndefinedStandard
     {
         try {
             return static::fromString($value);
@@ -36,7 +36,7 @@ readonly class BoolStandard extends BoolType
         }
     }
 
-    public static function tryFromInt(int $value): self|UndefinedStandard
+    public static function tryFromInt(int $value): static|UndefinedStandard
     {
         try {
             return static::fromInt($value);

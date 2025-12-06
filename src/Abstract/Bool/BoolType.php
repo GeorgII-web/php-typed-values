@@ -16,7 +16,7 @@ abstract readonly class BoolType implements BoolTypeInterface
         return $this->value() ? 'true' : 'false';
     }
 
-    public static function fromBool(bool $value): self
+    public static function fromBool(bool $value): static
     {
         return new static($value);
     }
