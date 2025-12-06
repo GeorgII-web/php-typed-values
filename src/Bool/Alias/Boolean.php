@@ -9,6 +9,6 @@ use PhpTypedValues\Bool\BoolStandard;
 /**
  * @psalm-immutable
  */
-readonly class Boolean extends BoolStandard
+class Boolean extends BoolStandard
 {
 }

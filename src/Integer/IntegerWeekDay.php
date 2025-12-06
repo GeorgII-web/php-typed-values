@@ -16,9 +16,10 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class IntegerWeekDay extends IntType
+class IntegerWeekDay extends IntType
 {
-    /** @var int<1, 7> */
+    /** @var int<1, 7>
+     * @readonly */
     protected int $value;
 
     /**
@@ -47,16 +48,18 @@ readonly class IntegerWeekDay extends IntType
 
     /**
      * @throws IntegerTypeException
+     * @return static
      */
-    public static function fromInt(int $value): static
+    public static function fromInt(int $value)
     {
         return new static($value);
     }
 
     /**
      * @throws IntegerTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         parent::assertIntegerString($value);
 
