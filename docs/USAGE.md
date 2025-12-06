@@ -1,71 +1,24 @@
 Usage
 =====
 
-This page shows concise examples for all available value objects and how to create your own.
-
-Namespace
----------
-
-All classes live under the base namespace:
-
-```
-PhpTypedValues
-```
-
-Available types
----------------
-
-Integers (PhpTypedValues\Integer):
-
-- IntegerBasic — any PHP integer
-- PositiveInt — positive integer (> 0)
-- NonNegativeInt — zero or positive integer (>= 0)
-- WeekDayInt — integer in range 1..7
-
-Strings (PhpTypedValues\String):
-
-- StringBasic — any PHP string
-- NonEmptyStr — non-empty string
-
-Floats (PhpTypedValues\Float):
-
-- FloatBasic — any PHP float
-- NonNegativeFloat — zero or positive float (>= 0)
-
-DateTime (PhpTypedValues\DateTime):
-
-- DateTimeAtom — immutable DateTime in RFC3339 (ATOM) format
-- DateTimeTimestamp — immutable DateTime represented as a Unix timestamp (seconds since epoch, UTC)
+This page shows concise examples for available value objects and how to create your own.
 
 Static usage examples
 ---------------------
 
 ```php
-use PhpTypedValues\DateTime\DateTimeAtom;use PhpTypedValues\DateTime\Timestamp\TimestampSeconds;use PhpTypedValues\Float\FloatStandard;use PhpTypedValues\Float\FloatNonNegative;use PhpTypedValues\Integer\IntegerStandard;use PhpTypedValues\Integer\IntegerNonNegative;use PhpTypedValues\Integer\IntegerPositive;use PhpTypedValues\Integer\IntegerWeekDay;use PhpTypedValues\String\StringNonEmpty;use PhpTypedValues\String\StringStandard;
-
-// Integers
 $any = IntegerStandard::fromInt(-10);
 $pos = IntegerPositive::fromInt(1);
 $nn  = IntegerNonNegative::fromInt(0);
 $wd  = IntegerWeekDay::fromInt(7);        // 1..7
-
-// From string (integers)
 $posFromString = IntegerPositive::fromString('123');
 $wdFromString  = IntegerWeekDay::fromString('5');
-
-// Strings
 $greeting = StringStandard::fromString('hello');
 $name     = StringNonEmpty::fromString('Alice');
-
-// Floats
 $price = FloatStandard::fromString('19.99');
 $ratio = FloatNonNegative::fromFloat(0.5);  // >= 0
-
-// DateTime (RFC 3339 / ATOM)
-$dt = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
-
-// DateTime (Unix timestamp, seconds)
-$unix = TimestampSeconds::fromString('1735787045');
+$dt = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00'); // DateTime (RFC 3339 / ATOM)
+$unix = TimestampSeconds::fromString('1735787045'); // DateTime (Unix timestamp, seconds)
 
 // Accessing value and string form
 $posValue = $pos->value();        // 1 (int)
@@ -81,21 +34,11 @@ Validation errors (static constructors)
 Invalid input throws an exception with a helpful message.
 
 ```php
-use PhpTypedValues\Integer\IntegerPositive;
-use PhpTypedValues\Integer\IntegerWeekDay;
-use PhpTypedValues\String\StringNonEmpty;
-use PhpTypedValues\Float\FloatNonNegative;
-use PhpTypedValues\DateTime\DateTimeAtom;
-
 IntegerPositive::fromInt(0);              // throws: must be > 0
 IntegerPositive::fromString('12.3');      // throws: String has no valid integer
-
 IntegerWeekDay::fromInt(0);               // throws: Value must be between 1 and 7
-
 StringNonEmpty::fromString('');          // throws: Value must be a non-empty string
-
 FloatNonNegative::fromString('abc');  // throws: String has no valid float
-
 DateTimeAtom::fromString('not-a-date'); // throws: String has no valid datetime
 ```
 
@@ -106,12 +49,6 @@ If you want a domain-specific alias (e.g., UserId) that behaves like PositiveInt
 
 ```php
 <?php
-declare(strict_types=1);
-
-namespace App\Domain;
-
-use PhpTypedValues\Integer\IntegerPositive;
-
 final class UserId extends IntegerPositive {}
 
 // Usage
@@ -130,16 +67,16 @@ declare(strict_types=1);
 namespace App\Domain;
 
 use PhpTypedValues\Abstract\Assert\Assert;
-use PhpTypedValues\Exception\FloatTypeException;
+use PhpTypedValues\Exception\IntegerTypeException;
 use PhpTypedValues\Abstract\Integer\IntType;
 
-final class EvenPositiveInt extends IntType
+readonly class EvenPositiveInt extends IntType
 {
     /** @var positive-int */
     protected int $value;
 
     /**
-     * @throws FloatTypeException
+     * @throws IntegerTypeException
      */
     public function __construct(int $value)
     {

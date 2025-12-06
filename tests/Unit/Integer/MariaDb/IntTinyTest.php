@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use PhpTypedValues\Exception\IntegerTypeException;
-use PhpTypedValues\Integer\DB\IntTiny;
+use PhpTypedValues\Integer\MariaDb\IntTiny;
 
 it('accepts values within signed tinyint range and preserves value', function (): void {
     $a = new IntTiny(-128);

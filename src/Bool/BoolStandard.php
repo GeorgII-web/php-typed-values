@@ -32,12 +32,12 @@ readonly class BoolStandard extends BoolType
     {
         $lowerCaseValue = strtolower($value);
 
-        if ($lowerCaseValue === 'true') {
+        if ($lowerCaseValue === 'true' || $lowerCaseValue === '1') {
             $boolValue = true;
-        } elseif ($lowerCaseValue === 'false') {
+        } elseif ($lowerCaseValue === 'false' || $lowerCaseValue === '0') {
             $boolValue = false;
         } else {
-            throw new BoolTypeException(sprintf('Expected string "true" or "false", got "%s"', $value));
+            throw new BoolTypeException(sprintf('Expected string "true"\"1" or "false"\"0", got "%s"', $value));
         }
 
         return new static($boolValue);

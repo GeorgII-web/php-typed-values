@@ -28,7 +28,7 @@ it('parses valid string values case-insensitively', function (): void {
 
 it('throws on invalid string values', function (): void {
     expect(fn() => BoolStandard::fromString('yes'))
-        ->toThrow(BoolTypeException::class, 'Expected string "true" or "false", got "yes"');
+        ->toThrow(BoolTypeException::class, 'Expected string "true"\"1" or "false"\"0", got "yes"');
 });
 
 it('parses valid integer values 1/0', function (): void {

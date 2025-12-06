@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use PhpTypedValues\Exception\StringTypeException;
-use PhpTypedValues\String\DB\StringVarChar255;
+use PhpTypedValues\String\MariaDb\StringVarChar255;
 
 it('accepts empty string and preserves value', function (): void {
     $s = new StringVarChar255('');

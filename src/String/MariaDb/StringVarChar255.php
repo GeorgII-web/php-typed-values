@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\String\DB;
+namespace PhpTypedValues\String\MariaDb;
 
 use PhpTypedValues\Abstract\String\StrType;
 use PhpTypedValues\Exception\StringTypeException;

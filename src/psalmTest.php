@@ -15,6 +15,7 @@ use PhpTypedValues\DateTime\DateTimeAtom;
 use PhpTypedValues\DateTime\DateTimeRFC3339;
 use PhpTypedValues\DateTime\Timestamp\TimestampMilliseconds;
 use PhpTypedValues\DateTime\Timestamp\TimestampSeconds;
+use PhpTypedValues\Exception\UndefinedTypeException;
 use PhpTypedValues\Float\Alias\Double;
 use PhpTypedValues\Float\Alias\FloatType;
 use PhpTypedValues\Float\Alias\NonNegativeFloat;
@@ -26,16 +27,22 @@ use PhpTypedValues\Integer\Alias\IntType;
 use PhpTypedValues\Integer\Alias\NonNegativeInt;
 use PhpTypedValues\Integer\Alias\PositiveInt;
 use PhpTypedValues\Integer\Alias\TinyInt;
-use PhpTypedValues\Integer\DB\IntTiny;
 use PhpTypedValues\Integer\IntegerNonNegative;
 use PhpTypedValues\Integer\IntegerPositive;
 use PhpTypedValues\Integer\IntegerStandard;
 use PhpTypedValues\Integer\IntegerWeekDay;
+use PhpTypedValues\Integer\MariaDb\IntTiny;
 use PhpTypedValues\String\Alias\NonEmptyStr;
 use PhpTypedValues\String\Alias\Str;
 use PhpTypedValues\String\Alias\StrType;
 use PhpTypedValues\String\StringNonEmpty;
 use PhpTypedValues\String\StringStandard;
+use PhpTypedValues\Undefined\Alias\NotExist;
+use PhpTypedValues\Undefined\Alias\NotFound;
+use PhpTypedValues\Undefined\Alias\NotSet;
+use PhpTypedValues\Undefined\Alias\Undefined;
+use PhpTypedValues\Undefined\Alias\Unknown;
+use PhpTypedValues\Undefined\UndefinedStandard;
 
 /**
  * Integer.
@@ -109,6 +116,22 @@ echo TimestampSeconds::fromDateTime($tsVo->value())->toString() . \PHP_EOL;
 
 $tsVo = TimestampMilliseconds::fromString('1735787045123');
 echo TimestampMilliseconds::fromDateTime($tsVo->value())->toString() . \PHP_EOL;
+
+// Undefined
+try {
+    UndefinedStandard::create()->toString();
+} catch (UndefinedTypeException $e) {
+    // suppress
+}
+try {
+    NotExist::create()->value();
+} catch (UndefinedTypeException $e) {
+    // suppress
+}
+NotFound::create();
+NotSet::create();
+Undefined::create();
+Unknown::create();
 
 /**
  * Artificial functions.

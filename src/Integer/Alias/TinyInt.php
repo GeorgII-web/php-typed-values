@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Integer\Alias;
 
-use PhpTypedValues\Integer\DB\IntTiny;
+use PhpTypedValues\Integer\MariaDb\IntTiny;
 
 /**
  * Alias of IntTiny.

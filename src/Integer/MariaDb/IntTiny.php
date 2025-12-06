@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Integer\DB;
+namespace PhpTypedValues\Integer\MariaDb;
 
 use PhpTypedValues\Abstract\Integer\IntType;
 use PhpTypedValues\Exception\IntegerTypeException;

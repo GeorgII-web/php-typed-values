@@ -2,13 +2,13 @@
 
 A PHP 8.2 library of typed value objects for common PHP data types.
 
+Building blocks for a DTO's, ValueObjects, Entities, etc.
+
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/georgii-web/php-typed-values.svg?style=flat-square)](https://packagist.org/packages/georgii-web/php-typed-values)
 [![Tests](https://github.com/georgii-web/php-typed-values/actions/workflows/php.yml/badge.svg)](https://github.com/georgii-web/php-typed-values/actions/workflows/php.yml)
 [![Total Downloads](https://img.shields.io/packagist/dt/georgii-web/php-typed-values.svg?style=flat-square)](https://packagist.org/packages/georgii-web/php-typed-values)
 
 ## Install
-
-Using Composer:
 
 ```
 composer require georgii-web/php-typed-values
@@ -37,7 +37,7 @@ if ($id <= 0) {
 ```php
 readonly class Id extends PositiveInt {}
 
-Id::fromString('123');
+Id::fromInt(123);
 ```
 
 #### 3. Create a composite value object from other typed values (nullable values example):
@@ -48,27 +48,33 @@ final class Profile
     public function __construct(
         public readonly PositiveInt $id,
         public readonly NonEmptyStr $firstName,
-        public readonly ?NonEmptyStr $lastName,
+        public readonly ?FloatNonNegative $height,
     ) {}
 
     public static function fromScalars(
         int $id,
         string $firstName,
-        ?string $lastName,
+        string|float|int|null $height,
     ): self {
         return new self(
             PositiveInt::fromInt($id),
             NonEmptyStr::fromString($firstName),
-            $lastName !== null ? NonEmptyStr::fromString($lastName) : null,
+            $height !== null ? FloatNonNegative::fromString((string) $height) : null,
         );
+    }
+    
+    public function getHeight(): FloatNonNegative|Undefined { // avoid using NULL, which could mean anything
+        return $this->height ?? Undefined::create();
     }
 }
 
 // Usage
-Profile::fromScalars(id: 101, firstName: 'Alice', lastName: 'Smith');
-Profile::fromScalars(id: 157, firstName: 'Tom', lastName: null);
+Profile::fromScalars(id: 101, firstName: 'Alice', height: '172.5');
+Profile::fromScalars(id: 157, firstName: 'Tom', height: null);
 // From array
 $profile = Profile::fromScalars(...[157, 'Tom', null]);
+// Accessing values
+$profile->getHeight(); // "172.5 \ Undefined" type class
 ```
 
 
@@ -83,7 +89,6 @@ $profile = Profile::fromScalars(...[157, 'Tom', null]);
 
 ## More information
 
-See [docs/INSTALL.md](docs/INSTALL.md) for installation instructions.  
 See [docs/USAGE.md](docs/USAGE.md) for usage examples.  
 See [docs/DEVELOP.md](docs/DEVELOP.md) for development details.
 
