@@ -10,8 +10,16 @@ Building blocks for a DTO's, ValueObjects, Entities, etc.
 
 ## Install
 
+Use `v2.*` for PHP 8.2 support:
+
 ```
-composer require georgii-web/php-typed-values
+composer require georgii-web/php-typed-values:^2.0
+```
+
+Use `v1.*` for PHP 7.4 support:
+
+```
+composer require georgii-web/php-typed-values:^1.0
 ```
 
 ## Usage

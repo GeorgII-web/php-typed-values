@@ -1,6 +1,6 @@
 {
   "name": "georgii-web/php-typed-values",
-  "description": "Typed value objects library for common php 8.2 data types.",
+  "description": "Typed value objects library for common php data types.",
   "type": "library",
   "license": "MIT",
   "require": {
