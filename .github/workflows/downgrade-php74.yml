@@ -53,11 +53,19 @@ jobs:
     needs: verify-php82
     runs-on: ubuntu-latest
     steps:
-      - name: Check out php7.4 branch
+      - name: Check out repository
         uses: actions/checkout@v4
         with:
-          ref: php7.4
           fetch-depth: 0
+
+      - name: Create/Switch to php7.4 branch from release tag
+        run: |
+          SRC_TAG="${{ github.event.release.tag_name }}"
+          echo "Source tag: $SRC_TAG"
+          # Ensure the tag exists locally (should be fetched by checkout with fetch-depth:0)
+          git fetch --tags
+          # Create or reset local branch php7.4 to the release tag commit
+          git checkout -B php7.4 "$SRC_TAG"
 
       - name: Setup PHP 8.2
         uses: shivammathur/setup-php@v2
@@ -106,7 +114,8 @@ jobs:
         env:
           NEW_TAG: ${{ steps.tag.outputs.new_tag }}
         run: |
-          git push origin php7.4
+          # Push the php7.4 branch (create or update). Use force-with-lease to update if it already exists.
+          git push --force-with-lease origin php7.4
           # Create or move tag to latest commit on php7.4
           if git rev-parse "$NEW_TAG" >/dev/null 2>&1; then
             git tag -d "$NEW_TAG"
