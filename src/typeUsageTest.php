@@ -33,9 +33,11 @@ use PhpTypedValues\Integer\IntegerPositive;
 use PhpTypedValues\Integer\IntegerStandard;
 use PhpTypedValues\Integer\IntegerWeekDay;
 use PhpTypedValues\Integer\MariaDb\IntTiny;
+use PhpTypedValues\String\Alias\JsonStr;
 use PhpTypedValues\String\Alias\NonEmptyStr;
 use PhpTypedValues\String\Alias\Str;
 use PhpTypedValues\String\Alias\StrType;
+use PhpTypedValues\String\Json;
 use PhpTypedValues\String\StringNonEmpty;
 use PhpTypedValues\String\StringStandard;
 use PhpTypedValues\Undefined\Alias\NotExist;
@@ -118,6 +120,10 @@ echo TimestampSeconds::fromDateTime($tsVo->value())->toString() . \PHP_EOL;
 
 $tsVo = TimestampMilliseconds::fromString('1735787045123');
 echo TimestampMilliseconds::fromDateTime($tsVo->value())->toString() . \PHP_EOL;
+
+// JSON
+echo json_encode(JsonStr::fromString('{"a": 1, "b": "hi"}')->toArray(), \JSON_THROW_ON_ERROR);
+echo json_encode(Json::fromString('{"a": 1, "b": "hi"}')->toObject(), \JSON_THROW_ON_ERROR);
 
 // Undefined
 try {

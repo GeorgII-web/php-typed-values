@@ -1,0 +1,81 @@
+<?php
+
+declare(strict_types=1);
+
+use PhpTypedValues\Exception\JsonTypeException;
+use PhpTypedValues\String\Json;
+
+it('constructs valid JSON via constructor', function (): void {
+    $json = new Json('{"a":1,"b":[true,null,3.14]}');
+    expect($json->value())->toBe('{"a":1,"b":[true,null,3.14]}')
+        ->and($json->toString())->toBe('{"a":1,"b":[true,null,3.14]}');
+});
+
+it('creates from string factory with valid JSON', function (): void {
+    $json = Json::fromString('"hello"');
+    expect($json->value())->toBe('"hello"');
+});
+
+it('accepts top-level number/boolean/null JSON', function (): void {
+    $n = Json::fromString('123');
+    $t = Json::fromString('true');
+    $nul = Json::fromString('null');
+    expect($n->toString())->toBe('123')
+        ->and($t->value())->toBe('true')
+        ->and($nul->toString())->toBe('null');
+});
+
+it('throws on empty string', function (): void {
+    expect(fn() => new Json(''))
+        ->toThrow(JsonTypeException::class, 'String "" has no valid JSON value');
+});
+
+it('throws on invalid JSON string via constructor', function (): void {
+    expect(fn() => new Json('{a:1}'))
+        ->toThrow(JsonTypeException::class, 'String "{a:1}" has no valid JSON value');
+});
+
+it('throws on invalid JSON string via fromString', function (): void {
+    expect(fn() => Json::fromString('{"a": }'))
+        ->toThrow(JsonTypeException::class, 'String "{"a": }" has no valid JSON value');
+});
+
+it('decodes to stdClass via toObject', function (): void {
+    $json = Json::fromString('{"name":"Alice","age":30,"flags":[true,false]}');
+    $obj = $json->toObject();
+
+    expect($obj)->toBeObject()
+        ->and($obj->name)->toBe('Alice')
+        ->and($obj->age)->toBe(30)
+        ->and($obj->flags)->toBeArray()
+        ->and($obj->flags)->toEqual([true, false]);
+});
+
+it('decodes to associative array via toArray', function (): void {
+    $json = Json::fromString('{"a":1,"b":{"c":[1,2,3]},"d":null}');
+    $arr = $json->toArray();
+
+    expect($arr)->toBeArray()
+        ->and($arr['a'])->toBe(1)
+        ->and($arr['b'])->toBeArray()
+        ->and($arr['b']['c'])->toEqual([1, 2, 3])
+        ->and($arr['d'])->toBeNull();
+});
+
+it('exception code is 0 for invalid JSON via constructor', function (): void {
+    try {
+        new Json('{a:1}');
+        expect()->fail('Expected exception not thrown');
+    } catch (JsonTypeException $e) {
+        expect($e->getCode())->toBe(0);
+    }
+});
+
+it('exception code is 0 for invalid JSON via fromString', function (): void {
+    try {
+        Json::fromString('{"a": }');
+        expect()->fail('Expected exception not thrown');
+    } catch (JsonTypeException $e) {
+        expect($e->getCode())->toBe(0);
+    }
+});

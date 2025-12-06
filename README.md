@@ -16,7 +16,6 @@ composer require georgii-web/php-typed-values
 
 ## Usage
 
-
 #### 1. Use existing typed values with validation built in:
 
 ```php
@@ -40,7 +39,7 @@ readonly class Id extends PositiveInt {}
 Id::fromInt(123);
 ```
 
-#### 3. Create a composite value object from other typed values (nullable values example):
+#### 3. Create a composite value object:
 
 ```php
 final class Profile
@@ -77,7 +76,6 @@ $profile = Profile::fromScalars(...[157, 'Tom', null]);
 $profile->getHeight(); // "172.5 \ Undefined" type class
 ```
 
-
 ## Key Features
 
 - **Static analysis** – Designed for tools like Psalm and PHPStan with precise type annotations.
@@ -91,7 +89,6 @@ $profile->getHeight(); // "172.5 \ Undefined" type class
 
 See [docs/USAGE.md](docs/USAGE.md) for usage examples.  
 See [docs/DEVELOP.md](docs/DEVELOP.md) for development details.
-
 
 ## License
 
