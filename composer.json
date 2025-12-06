@@ -11,6 +11,7 @@
     "pestphp/pest": "^v3.8.4",
     "pestphp/pest-plugin-type-coverage": "^v3.6",
     "phpunit/phpunit": "^11.5",
+    "rector/rector": "^2.2",
     "vimeo/psalm": "^6.13.1"
   },
   "autoload": {
@@ -50,6 +51,9 @@
       "@coverage",
       "@mutate",
       "echo '\\n\\n\\033[1;32mPre-commit checks passed!\\033[0m\\n'"
+    ],
+    "rector": [
+      "./vendor/bin/rector process --config rector/toPhp7.php"
     ],
     "test": [
       "./vendor/bin/pest"
