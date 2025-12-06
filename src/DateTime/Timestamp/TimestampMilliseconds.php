@@ -52,7 +52,7 @@ readonly class TimestampMilliseconds extends DateTimeType
         return new static(
             static::createFromFormat(
                 $secondsWithMicro,
-                self::FORMAT,
+                static::FORMAT,
                 new DateTimeZone(static::ZONE)
             )
         );

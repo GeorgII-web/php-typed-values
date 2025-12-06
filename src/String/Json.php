@@ -29,7 +29,7 @@ readonly class Json extends StrType
      */
     public function __construct(string $value)
     {
-        self::assertJsonString($value);
+        static::assertJsonString($value);
 
         $this->value = $value;
     }

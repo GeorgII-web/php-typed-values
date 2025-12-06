@@ -28,7 +28,7 @@ readonly class DateTimeW3C extends DateTimeType
     public static function fromString(string $value): static
     {
         return new static(
-            self::createFromFormat(
+            static::createFromFormat(
                 $value,
                 static::FORMAT,
                 new DateTimeZone(static::ZONE)
