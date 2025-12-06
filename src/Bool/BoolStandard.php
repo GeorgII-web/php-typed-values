@@ -7,7 +7,7 @@ namespace PhpTypedValues\Bool;
 use PhpTypedValues\Abstract\Bool\BoolType;
 use PhpTypedValues\Exception\BoolTypeException;
 use PhpTypedValues\Exception\TypeException;
-use PhpTypedValues\Undefined\UndefinedStandard;
+use PhpTypedValues\Undefined\Alias\Undefined;
 
 use function sprintf;
 
@@ -27,21 +27,21 @@ readonly class BoolStandard extends BoolType
         $this->value = $value;
     }
 
-    public static function tryFromString(string $value): static|UndefinedStandard
+    public static function tryFromString(string $value): static|Undefined
     {
         try {
             return static::fromString($value);
         } catch (TypeException) {
-            return UndefinedStandard::create();
+            return Undefined::create();
         }
     }
 
-    public static function tryFromInt(int $value): static|UndefinedStandard
+    public static function tryFromInt(int $value): static|Undefined
     {
         try {
             return static::fromInt($value);
         } catch (TypeException) {
-            return UndefinedStandard::create();
+            return Undefined::create();
         }
     }
 

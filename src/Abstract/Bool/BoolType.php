@@ -20,4 +20,9 @@ abstract readonly class BoolType implements BoolTypeInterface
     {
         return new static($value);
     }
+
+    public function __toString(): string
+    {
+        return $this->toString();
+    }
 }

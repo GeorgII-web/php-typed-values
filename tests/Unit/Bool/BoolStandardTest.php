@@ -64,7 +64,7 @@ it('tryFromString returns Undefined on invalid input and BoolStandard on valid',
         ->and($ok->value())->toBeTrue();
 
     // Undefined type instance indicates failure without throwing
-    expect($fail::class)->toBe(PhpTypedValues\Undefined\UndefinedStandard::class);
+    expect($fail::class)->toBe(PhpTypedValues\Undefined\Alias\Undefined::class);
 });
 
 it('tryFromInt returns Undefined on invalid input and BoolStandard on valid', function (): void {
@@ -76,7 +76,7 @@ it('tryFromInt returns Undefined on invalid input and BoolStandard on valid', fu
         ->and($one->value())->toBeTrue()
         ->and($zero)->toBeInstanceOf(BoolStandard::class)
         ->and($zero->value())->toBeFalse()
-        ->and($bad::class)->toBe(PhpTypedValues\Undefined\UndefinedStandard::class);
+        ->and($bad::class)->toBe(PhpTypedValues\Undefined\Alias\Undefined::class);
 });
 
 it('parses string values with surrounding whitespace', function (): void {
@@ -84,4 +84,12 @@ it('parses string values with surrounding whitespace', function (): void {
         ->and(BoolStandard::fromString("\tFALSE \n")->value())->toBeFalse()
         ->and(BoolStandard::fromString('  on ')->value())->toBeTrue()
         ->and(BoolStandard::fromString(' off  ')->value())->toBeFalse();
+});
+
+it('casts to string via __toString magic method', function (): void {
+    $t = new BoolStandard(true);
+    $f = BoolStandard::fromBool(false);
+
+    expect((string) $t)->toBe('true')
+        ->and((string) $f)->toBe('false');
 });
