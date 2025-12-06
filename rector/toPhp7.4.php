@@ -8,7 +8,7 @@ use Rector\Set\ValueObject\DowngradeLevelSetList;
 return static function (RectorConfig $rectorConfig): void {
     // We will process code in this specific directory during CI
     $rectorConfig->paths([
-        __DIR__,
+        __DIR__ . '/../',
     ]);
 
     // Downgrade rules to make code compatible with PHP 7.2
