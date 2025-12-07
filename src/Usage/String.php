@@ -1,5 +1,6 @@
 <?php
 
+use PhpTypedValues\String\Alias\Email;
 use PhpTypedValues\String\Alias\JsonStr;
 use PhpTypedValues\String\Alias\NonBlankStr;
 use PhpTypedValues\String\Alias\NonEmptyStr;
@@ -44,6 +45,7 @@ echo json_encode(Json::fromString('{"a": 1}')->toObject(), \JSON_THROW_ON_ERROR)
 echo Json::tryFromString('{}')->toString() . \PHP_EOL;
 
 // Email (usage and try* for Psalm visibility)
+echo Email::fromString('User@Example.COM')->toString() . \PHP_EOL; // normalized to lowercase
 echo StringEmail::fromString('User@Example.COM')->toString() . \PHP_EOL; // normalized to lowercase
 $em = StringEmail::tryFromString('not-an-email');
 if (!($em instanceof Undefined)) {
