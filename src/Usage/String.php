@@ -8,9 +8,11 @@ use PhpTypedValues\String\Alias\NonBlankStr;
 use PhpTypedValues\String\Alias\NonEmptyStr;
 use PhpTypedValues\String\Alias\Str;
 use PhpTypedValues\String\Alias\StrType;
+use PhpTypedValues\String\Alias\Text;
 use PhpTypedValues\String\Alias\Url;
 use PhpTypedValues\String\Json;
 use PhpTypedValues\String\MariaDb\StringDecimal;
+use PhpTypedValues\String\MariaDb\StringText;
 use PhpTypedValues\String\MariaDb\StringVarChar255;
 use PhpTypedValues\String\StringCountryCode;
 use PhpTypedValues\String\StringEmail;
@@ -44,6 +46,14 @@ if (!($nb instanceof Undefined)) {
 echo StringUuidV4::tryFromString('550e8400-e29b-41d4-a716-446655440000')->toString() . \PHP_EOL;
 echo StringUuidV7::tryFromString('01890f2a-5bcd-7def-8abc-1234567890ab')->toString() . \PHP_EOL;
 echo StringVarChar255::tryFromString('hi')->toString() . \PHP_EOL;
+
+// MariaDb TEXT
+echo Text::fromString('lorem ipsum')->toString() . \PHP_EOL;
+echo StringText::fromString('lorem ipsum')->toString() . \PHP_EOL;
+$text = StringText::tryFromString(str_repeat('a', 10));
+if (!($text instanceof Undefined)) {
+    echo $text->toString() . \PHP_EOL;
+}
 
 // JSON
 echo json_encode(JsonStr::fromString('{"a": 1, "b": "hi"}')->toArray(), \JSON_THROW_ON_ERROR) . \PHP_EOL;
