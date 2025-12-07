@@ -8,6 +8,7 @@ use const PHP_EOL;
 
 use DateTimeImmutable;
 use DateTimeZone;
+use PhpTypedValues\Abstract\TypeInterface;
 use PhpTypedValues\Exception\DateTimeTypeException;
 use PhpTypedValues\Exception\ReasonableRangeDateTimeTypeException;
 
@@ -17,7 +18,7 @@ use function sprintf;
 /**
  * @psalm-immutable
  */
-abstract readonly class DateTimeType implements DateTimeTypeInterface
+abstract readonly class DateTimeType implements TypeInterface, DateTimeTypeInterface
 {
     protected const FORMAT = '';
     protected const ZONE = 'UTC';

@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Abstract\String;
 
+use PhpTypedValues\Abstract\TypeInterface;
+
 /**
  * @psalm-immutable
  */
-abstract readonly class StrType implements StrTypeInterface
+abstract readonly class StrType implements TypeInterface, StrTypeInterface
 {
     public function toString(): string
     {

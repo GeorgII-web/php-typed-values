@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Abstract\Undefined;
 
+use PhpTypedValues\Abstract\TypeInterface;
 use PhpTypedValues\Exception\UndefinedTypeException;
 
 /**
@@ -13,7 +14,7 @@ use PhpTypedValues\Exception\UndefinedTypeException;
  *
  * @psalm-immutable
  */
-abstract readonly class UndefinedType implements UndefinedTypeInterface
+abstract readonly class UndefinedType implements TypeInterface, UndefinedTypeInterface
 {
     public static function create(): static
     {

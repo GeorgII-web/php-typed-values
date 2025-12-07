@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Abstract\Float;
 
+use PhpTypedValues\Abstract\TypeInterface;
 use PhpTypedValues\Exception\FloatTypeException;
 
 use function sprintf;
@@ -11,7 +12,7 @@ use function sprintf;
 /**
  * @psalm-immutable
  */
-abstract readonly class FloatType implements FloatTypeInterface
+abstract readonly class FloatType implements TypeInterface, FloatTypeInterface
 {
     /**
      * @throws FloatTypeException

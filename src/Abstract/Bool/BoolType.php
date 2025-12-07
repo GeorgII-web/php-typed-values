@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Abstract\Bool;
 
+use PhpTypedValues\Abstract\TypeInterface;
+
 /**
  * @psalm-immutable
  */
-abstract readonly class BoolType implements BoolTypeInterface
+abstract readonly class BoolType implements TypeInterface, BoolTypeInterface
 {
     abstract protected function __construct(bool $value);
 
