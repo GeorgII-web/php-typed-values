@@ -13,6 +13,6 @@ use PhpTypedValues\Integer\IntegerNonNegative;
  *
  * @psalm-immutable
  */
-readonly class NonNegativeInt extends IntegerNonNegative
+readonly class NonNegative extends IntegerNonNegative
 {
 }

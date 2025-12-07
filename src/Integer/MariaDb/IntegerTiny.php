@@ -18,7 +18,7 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class IntTiny extends IntType
+readonly class IntegerTiny extends IntType
 {
     /** @var int<-128, 127> */
     protected int $value;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\String\StringUuidV7;
+use PhpTypedValues\String\Uuid\StringUuidV7;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 it('StringUuidV7::tryFromString returns value for valid UUID v7 (case-insensitive) and normalizes to lowercase', function (): void {

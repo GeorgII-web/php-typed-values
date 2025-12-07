@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Integer\Alias\NonNegativeInt;
+use PhpTypedValues\Integer\Alias\NonNegative;
 
 it('NonNegativeInt alias factories return NonNegativeInt instance', function (): void {
-    $a = NonNegativeInt::fromInt(0);
-    $b = NonNegativeInt::fromString('12');
+    $a = NonNegative::fromInt(0);
+    $b = NonNegative::fromString('12');
 
-    expect($a)->toBeInstanceOf(NonNegativeInt::class)
-        ->and($a::class)->toBe(NonNegativeInt::class)
+    expect($a)->toBeInstanceOf(NonNegative::class)
+        ->and($a::class)->toBe(NonNegative::class)
         ->and($a->value())->toBe(0)
-        ->and($b)->toBeInstanceOf(NonNegativeInt::class)
+        ->and($b)->toBeInstanceOf(NonNegative::class)
         ->and($b->value())->toBe(12);
 });

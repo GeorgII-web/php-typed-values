@@ -13,6 +13,6 @@ use PhpTypedValues\Integer\IntegerPositive;
  *
  * @psalm-immutable
  */
-readonly class PositiveInt extends IntegerPositive
+readonly class Positive extends IntegerPositive
 {
 }

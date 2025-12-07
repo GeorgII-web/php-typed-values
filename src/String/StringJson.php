@@ -22,7 +22,7 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class Json extends StrType
+readonly class StringJson extends StrType
 {
     protected string $value;
 

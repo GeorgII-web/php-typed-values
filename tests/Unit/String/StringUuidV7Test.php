@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use PhpTypedValues\Exception\UuidStringTypeException;
-use PhpTypedValues\String\StringUuidV7;
+use PhpTypedValues\String\Uuid\StringUuidV7;
 
 it('accepts a valid lowercase UUID v7 and preserves value', function (): void {
     // Matches: xxxxxxxx-xxxx-7xxx-[89ab]xxx-xxxxxxxxxxxx

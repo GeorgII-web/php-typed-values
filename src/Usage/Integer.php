@@ -3,14 +3,14 @@
 use PhpTypedValues\Integer\Alias\Id;
 use PhpTypedValues\Integer\Alias\Integer;
 use PhpTypedValues\Integer\Alias\IntType;
-use PhpTypedValues\Integer\Alias\NonNegativeInt;
-use PhpTypedValues\Integer\Alias\PositiveInt;
-use PhpTypedValues\Integer\Alias\TinyInt;
+use PhpTypedValues\Integer\Alias\MariaDb\Tiny;
+use PhpTypedValues\Integer\Alias\NonNegative;
+use PhpTypedValues\Integer\Alias\Positive;
 use PhpTypedValues\Integer\IntegerNonNegative;
 use PhpTypedValues\Integer\IntegerPositive;
 use PhpTypedValues\Integer\IntegerStandard;
 use PhpTypedValues\Integer\IntegerWeekDay;
-use PhpTypedValues\Integer\MariaDb\IntTiny;
+use PhpTypedValues\Integer\MariaDb\IntegerTiny;
 
 /**
  * Integer.
@@ -21,11 +21,11 @@ testNonNegativeInt(IntegerNonNegative::fromInt(10)->value());
 testWeekDayInt(IntegerWeekDay::fromInt(7)->value());
 
 // DB tinyint usage
-echo TinyInt::fromInt(-5)->toString() . \PHP_EOL;
-echo IntTiny::fromInt(-5)->toString() . \PHP_EOL;
-echo IntTiny::fromString('127')->toString() . \PHP_EOL;
-echo NonNegativeInt::fromString('10')->toString() . \PHP_EOL;
-echo PositiveInt::fromString('10')->toString() . \PHP_EOL;
+echo Tiny::fromInt(-5)->toString() . \PHP_EOL;
+echo IntegerTiny::fromInt(-5)->toString() . \PHP_EOL;
+echo IntegerTiny::fromString('127')->toString() . \PHP_EOL;
+echo NonNegative::fromString('10')->toString() . \PHP_EOL;
+echo Positive::fromString('10')->toString() . \PHP_EOL;
 echo IntegerStandard::fromString('10')->toString() . \PHP_EOL;
 echo Id::fromString('10')->toString() . \PHP_EOL;
 echo IntType::fromString('10')->toString() . \PHP_EOL;
