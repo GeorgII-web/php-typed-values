@@ -7,9 +7,16 @@ namespace PhpTypedValues\Integer\Alias;
 use PhpTypedValues\Integer\IntegerPositive;
 
 /**
- * Alias of Positive integer (> 0).
+ * Alias for positive integer (> 0).
  *
- * Example "1"
+ * Provides the same behavior as IntegerPositive while exposing a concise
+ * name suitable for APIs that prefer "Positive".
+ *
+ * Example
+ *  - $v = Positive::fromString('1');
+ *    $v->value(); // 1
+ *  - $v = Positive::fromInt(5);
+ *    (string) $v; // "5"
  *
  * @psalm-immutable
  */

@@ -14,7 +14,14 @@ use function sprintf;
 /**
  * Positive integer (> 0).
  *
- * Example "1"
+ * Ensures the wrapped value is strictly greater than zero. Provides factories
+ * from strictly validated string and native int, plus convenient formatting.
+ *
+ * Example
+ *  - $v = IntegerPositive::fromString('1');
+ *    $v->value(); // 1 (int)
+ *  - $v = IntegerPositive::fromInt(5);
+ *    (string) $v; // "5"
  *
  * @psalm-immutable
  */

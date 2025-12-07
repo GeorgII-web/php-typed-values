@@ -10,9 +10,16 @@ use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
- * Represents any PHP integer.
+ * Generic integer-typed value.
  *
- * Example "-10"
+ * Wraps any PHP integer and provides factories from a strictly validated
+ * string or a native int, along with convenient string formatting.
+ *
+ * Example
+ *  - $v = IntegerStandard::fromString('-10');
+ *    $v->value(); // -10 (int)
+ *  - $v = IntegerStandard::fromInt(42);
+ *    (string) $v; // "42"
  *
  * @psalm-immutable
  */

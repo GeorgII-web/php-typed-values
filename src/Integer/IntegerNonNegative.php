@@ -12,9 +12,16 @@ use PhpTypedValues\Undefined\Alias\Undefined;
 use function sprintf;
 
 /**
- * Non-negative integer (>= 0).
+ * Non‑negative integer (>= 0).
  *
- * Example "0"
+ * Guarantees the wrapped integer is zero or positive. Provides factories from
+ * strictly validated string and native int, along with standard formatting.
+ *
+ * Example
+ *  - $v = IntegerNonNegative::fromString('0');
+ *    $v->value(); // 0 (int)
+ *  - $v = IntegerNonNegative::fromInt(10);
+ *    (string) $v; // "10"
  *
  * @psalm-immutable
  */

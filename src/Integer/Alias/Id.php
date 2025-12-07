@@ -7,9 +7,17 @@ namespace PhpTypedValues\Integer\Alias;
 use PhpTypedValues\Integer\IntegerPositive;
 
 /**
- * Alias of Positive integer used as identifier.
+ * Alias for positive integer used as identifier.
  *
- * Example "42"
+ * Provides the same behavior as IntegerPositive but conveys the semantic
+ * meaning of an application-level identifier. Useful where IDs are strictly
+ * positive integers.
+ *
+ * Example
+ *  - $id = Id::fromString('42');
+ *    $id->value(); // 42
+ *  - $id = Id::fromInt(7);
+ *    (string) $id; // "7"
  *
  * @psalm-immutable
  */

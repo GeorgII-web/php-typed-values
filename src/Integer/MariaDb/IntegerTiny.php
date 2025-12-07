@@ -14,7 +14,15 @@ use function sprintf;
 /**
  * Database tiny integer (TINYINT signed: -128..127).
  *
- * Example "-5"
+ * Represents a tinyint value in the signed range -128..127, matching common
+ * MariaDB/MySQL semantics. Factories accept strictly validated strings and
+ * native ints and enforce the bounds.
+ *
+ * Example
+ *  - $v = IntegerTiny::fromString('-5');
+ *    $v->value(); // -5
+ *  - $v = IntegerTiny::fromInt(127);
+ *    (string) $v; // "127"
  *
  * @psalm-immutable
  */

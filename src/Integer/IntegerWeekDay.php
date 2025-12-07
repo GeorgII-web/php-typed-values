@@ -14,7 +14,15 @@ use function sprintf;
 /**
  * Week day number between 1 and 7.
  *
- * Example "5"
+ * Represents an integer constrained to the inclusive range 1..7 where
+ * 1 = Monday and 7 = Sunday (or any convention your domain applies).
+ * Factories accept strictly validated strings and native ints.
+ *
+ * Example
+ *  - $v = IntegerWeekDay::fromString('5');
+ *    $v->value(); // 5
+ *  - $v = IntegerWeekDay::fromInt(1);
+ *    (string) $v; // "1"
  *
  * @psalm-immutable
  */
