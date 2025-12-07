@@ -9,6 +9,6 @@ use PhpTypedValues\Abstract\Undefined\UndefinedType;
 /**
  * @psalm-immutable
  */
-readonly class UndefinedStandard extends UndefinedType
+class UndefinedStandard extends UndefinedType
 {
 }

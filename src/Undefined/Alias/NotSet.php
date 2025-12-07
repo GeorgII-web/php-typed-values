@@ -9,6 +9,6 @@ use PhpTypedValues\Undefined\UndefinedStandard;
 /**
  * @psalm-immutable
  */
-readonly class NotSet extends UndefinedStandard
+class NotSet extends UndefinedStandard
 {
 }
