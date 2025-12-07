@@ -12,9 +12,16 @@ use PhpTypedValues\Undefined\Alias\Undefined;
 use function sprintf;
 
 /**
- * Boolean value.
+ * Generic boolean typed value.
  *
- * Example "true"
+ * Wraps a native bool and provides factories from strings/ints with common
+ * true/false synonyms (case-insensitive) and convenient formatting helpers.
+ *
+ * Example
+ *  - $v = BoolStandard::fromString('yes');
+ *    $v->value(); // true
+ *  - $v = BoolStandard::fromInt(0);
+ *    $v->toString(); // "false"
  *
  * @psalm-immutable
  */

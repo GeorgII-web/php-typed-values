@@ -14,11 +14,17 @@ use function strtolower;
 use function trim;
 
 /**
- * Represents a literal boolean false value.
+ * Literal boolean false typed value.
  *
  * Accepts common false-like representations in factories:
  *  - Strings: "false", "0", "no", "off", "n" (case-insensitive)
  *  - Ints: 0
+ *
+ * Example
+ *  - $f = FalseStandard::fromString('Off');
+ *    $f->value(); // false
+ *  - $f = FalseStandard::fromInt(0);
+ *    $f->toString(); // "false"
  *
  * @psalm-immutable
  */

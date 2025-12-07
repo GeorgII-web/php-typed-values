@@ -14,11 +14,17 @@ use function strtolower;
 use function trim;
 
 /**
- * Represents a literal boolean true value.
+ * Literal boolean true typed value.
  *
  * Accepts common true-like representations in factories:
  *  - Strings: "true", "1", "yes", "on", "y" (case-insensitive)
  *  - Ints: 1
+ *
+ * Example
+ *  - $t = TrueStandard::fromString('YES');
+ *    $t->value(); // true
+ *  - $t = TrueStandard::fromInt(1);
+ *    (string) $t; // "true"
  *
  * @psalm-immutable
  */
