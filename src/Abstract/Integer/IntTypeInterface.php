@@ -11,11 +11,17 @@ interface IntTypeInterface
 {
     public function value(): int;
 
-    public static function fromInt(int $value): static;
+    /**
+     * @return static
+     */
+    public static function fromInt(int $value);
 
     public function toString(): string;
 
-    public static function fromString(string $value): static;
+    /**
+     * @return static
+     */
+    public static function fromString(string $value);
 
     public function __toString(): string;
 }

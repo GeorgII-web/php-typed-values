@@ -11,7 +11,7 @@ use function sprintf;
 /**
  * @psalm-immutable
  */
-abstract readonly class FloatType implements FloatTypeInterface
+abstract class FloatType implements FloatTypeInterface
 {
     /**
      * @throws FloatTypeException
