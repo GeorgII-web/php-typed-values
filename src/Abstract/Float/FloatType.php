@@ -22,7 +22,7 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-abstract readonly class FloatType implements TypeInterface, FloatTypeInterface
+abstract class FloatType implements TypeInterface, FloatTypeInterface
 {
     /**
      * @throws FloatTypeException

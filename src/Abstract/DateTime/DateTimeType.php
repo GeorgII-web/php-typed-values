@@ -28,13 +28,15 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-abstract readonly class DateTimeType implements TypeInterface, DateTimeTypeInterface
+abstract class DateTimeType implements TypeInterface, DateTimeTypeInterface
 {
     protected const FORMAT = '';
     protected const ZONE = 'UTC';
     protected const MIN_TIMESTAMP_SECONDS = -62135596800; // 0001-01-01
     protected const MAX_TIMESTAMP_SECONDS = 253402300799; // 9999-12-31 23:59:59
-
+    /**
+     * @readonly
+     */
     protected DateTimeImmutable $value;
 
     /**
@@ -44,7 +46,7 @@ abstract readonly class DateTimeType implements TypeInterface, DateTimeTypeInter
     protected static function createFromFormat(
         string $value,
         string $format,
-        ?DateTimeZone $timezone = null,
+        ?DateTimeZone $timezone = null
     ): DateTimeImmutable {
         /**
          * Collect errors and throw exception with all of them.
@@ -105,7 +107,10 @@ abstract readonly class DateTimeType implements TypeInterface, DateTimeTypeInter
         $this->value = $value;
     }
 
-    public static function fromDateTime(DateTimeImmutable $value): static
+    /**
+     * @return static
+     */
+    public static function fromDateTime(DateTimeImmutable $value)
     {
         // normalized timezone
         return new static(

@@ -19,9 +19,12 @@ use PhpTypedValues\Exception\UndefinedTypeException;
  *
  * @psalm-immutable
  */
-abstract readonly class UndefinedType implements TypeInterface, UndefinedTypeInterface
+abstract class UndefinedType implements TypeInterface, UndefinedTypeInterface
 {
-    public static function create(): static
+    /**
+     * @return static
+     */
+    public static function create()
     {
         return new static();
     }

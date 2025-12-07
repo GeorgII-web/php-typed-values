@@ -18,6 +18,6 @@ use PhpTypedValues\String\MariaDb\StringVarChar255;
  *
  * @psalm-immutable
  */
-readonly class VarChar255 extends StringVarChar255
+class VarChar255 extends StringVarChar255
 {
 }

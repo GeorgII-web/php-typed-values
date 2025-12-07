@@ -25,9 +25,10 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class IntegerNonNegative extends IntType
+class IntegerNonNegative extends IntType
 {
-    /** @var non-negative-int */
+    /** @var non-negative-int
+     * @readonly */
     protected int $value;
 
     /**
@@ -42,36 +43,44 @@ readonly class IntegerNonNegative extends IntType
         $this->value = $value;
     }
 
-    public static function tryFromString(string $value): static|Undefined
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    public static function tryFromString(string $value)
     {
         try {
             return static::fromString($value);
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return Undefined::create();
         }
     }
 
-    public static function tryFromInt(int $value): static|Undefined
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    public static function tryFromInt(int $value)
     {
         try {
             return static::fromInt($value);
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return Undefined::create();
         }
     }
 
     /**
      * @throws IntegerTypeException
+     * @return static
      */
-    public static function fromInt(int $value): static
+    public static function fromInt(int $value)
     {
         return new static($value);
     }
 
     /**
      * @throws IntegerTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         parent::assertIntegerString($value);
 
