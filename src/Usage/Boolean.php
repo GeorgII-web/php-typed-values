@@ -3,7 +3,10 @@
 use PhpTypedValues\Abstract\Bool\BoolTypeInterface;
 use PhpTypedValues\Bool\Alias\Boolean;
 use PhpTypedValues\Bool\BoolStandard;
+use PhpTypedValues\Bool\FalseStandard;
+use PhpTypedValues\Bool\TrueStandard;
 use PhpTypedValues\Exception\UndefinedTypeException;
+use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
  * Boolean.
@@ -22,6 +25,27 @@ echo BoolStandard::fromBool(true)->toString() . \PHP_EOL;
 echo Boolean::fromBool(Boolean::fromBool(true)->value())->toString() . \PHP_EOL;
 // Ensure interface method usage is visible to Psalm
 echo (testBool(BoolStandard::fromBool(true)) ? 'true' : 'false') . \PHP_EOL;
+
+// true/false literal usages (and try* to reference both branches for Psalm)
+$t1 = TrueStandard::tryFromString('yes');
+if (!($t1 instanceof Undefined)) {
+    echo $t1->toString() . \PHP_EOL;
+}
+
+$t2 = TrueStandard::tryFromInt(1);
+if (!($t2 instanceof Undefined)) {
+    echo $t2->toString() . \PHP_EOL;
+}
+
+$f1 = FalseStandard::tryFromString('off');
+if (!($f1 instanceof Undefined)) {
+    echo $f1->toString() . \PHP_EOL;
+}
+
+$f2 = FalseStandard::tryFromInt(0);
+if (!($f2 instanceof Undefined)) {
+    echo $f2->toString() . \PHP_EOL;
+}
 
 /**
  * Exercise BoolTypeInterface::value() for Psalm.

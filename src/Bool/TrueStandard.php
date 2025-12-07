@@ -1,0 +1,88 @@
+<?php
+
+declare(strict_types=1);
+
+namespace PhpTypedValues\Bool;
+
+use PhpTypedValues\Abstract\Bool\BoolType;
+use PhpTypedValues\Exception\BoolTypeException;
+use PhpTypedValues\Exception\TypeException;
+use PhpTypedValues\Undefined\Alias\Undefined;
+
+use function sprintf;
+use function strtolower;
+use function trim;
+
+/**
+ * Represents a literal boolean true value.
+ *
+ * Accepts common true-like representations in factories:
+ *  - Strings: "true", "1", "yes", "on", "y" (case-insensitive)
+ *  - Ints: 1
+ *
+ * @psalm-immutable
+ */
+readonly class TrueStandard extends BoolType
+{
+    protected bool $value;
+
+    /**
+     * @throws BoolTypeException
+     */
+    public function __construct(bool $value)
+    {
+        if ($value !== true) {
+            throw new BoolTypeException('Expected true literal, got "false"');
+        }
+
+        $this->value = true;
+    }
+
+    public static function tryFromString(string $value): static|Undefined
+    {
+        try {
+            return static::fromString($value);
+        } catch (TypeException) {
+            return Undefined::create();
+        }
+    }
+
+    public static function tryFromInt(int $value): static|Undefined
+    {
+        try {
+            return static::fromInt($value);
+        } catch (TypeException) {
+            return Undefined::create();
+        }
+    }
+
+    /**
+     * @throws BoolTypeException
+     */
+    public static function fromString(string $value): static
+    {
+        $v = strtolower(trim($value));
+        if ($v === 'true' || $v === '1' || $v === 'yes' || $v === 'on' || $v === 'y') {
+            return new static(true);
+        }
+
+        throw new BoolTypeException(sprintf('Expected string representing true, got "%s"', $value));
+    }
+
+    /**
+     * @throws BoolTypeException
+     */
+    public static function fromInt(int $value): static
+    {
+        if ($value === 1) {
+            return new static(true);
+        }
+
+        throw new BoolTypeException(sprintf('Expected int "1" for true, got "%s"', $value));
+    }
+
+    public function value(): bool
+    {
+        return $this->value;
+    }
+}
