@@ -13,6 +13,6 @@ use PhpTypedValues\Integer\MariaDb\IntTiny;
  *
  * @psalm-immutable
  */
-readonly class TinyInt extends IntTiny
+class TinyInt extends IntTiny
 {
 }
