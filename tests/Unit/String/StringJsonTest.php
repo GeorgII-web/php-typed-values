@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use PhpTypedValues\Exception\JsonStringTypeException;
 use PhpTypedValues\String\StringJson;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -43,4 +44,22 @@ it('Json::toArray decodes valid JSON object as array and throws on invalid inter
     expect($arr)->toBeArray()
         ->and($arr['x'])->toBe(10)
         ->and($arr['y'])->toBe(20);
+});
+
+it('constructor throws with code 0 and previous JsonException on invalid JSON', function (): void {
+    $invalid = '{invalid}';
+
+    try {
+        new StringJson($invalid);
+        expect()->fail('Exception was not thrown');
+    } catch (Throwable $e) {
+        expect($e)
+            ->toBeInstanceOf(JsonStringTypeException::class)
+            ->and($e->getMessage())
+            ->toBe(\sprintf('String "%s" has no valid JSON value', $invalid))
+            ->and($e->getCode())
+            ->toBe(0)
+            ->and($e->getPrevious())
+            ->toBeInstanceOf(JsonException::class);
+    }
 });
