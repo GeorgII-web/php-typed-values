@@ -6,6 +6,8 @@ namespace PhpTypedValues\Integer;
 
 use PhpTypedValues\Abstract\Integer\IntType;
 use PhpTypedValues\Exception\IntegerTypeException;
+use PhpTypedValues\Exception\TypeException;
+use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
  * Represents any PHP integer.
@@ -21,6 +23,21 @@ readonly class IntegerStandard extends IntType
     public function __construct(int $value)
     {
         $this->value = $value;
+    }
+
+    public static function tryFromString(string $value): static|Undefined
+    {
+        try {
+            return static::fromString($value);
+        } catch (TypeException) {
+            return Undefined::create();
+        }
+    }
+
+    public static function tryFromInt(int $value): static|Undefined
+    {
+        // IntegerStandard accepts any PHP int, so construction cannot fail.
+        return new static($value);
     }
 
     public static function fromInt(int $value): static
