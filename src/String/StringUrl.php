@@ -15,9 +15,15 @@ use function filter_var;
 use function sprintf;
 
 /**
- * Absolute URL string (http/https recommended; uses FILTER_VALIDATE_URL for pragmatic validation).
+ * Absolute URL string.
  *
- * Example "https://example.com/path?x=1"
+ * Uses PHP's FILTER_VALIDATE_URL for pragmatic validation. The original
+ * string is preserved on success and must be non-empty.
+ *
+ * Example
+ *  - $u = StringUrl::fromString('https://example.com/path?x=1');
+ *    (string) $u; // "https://example.com/path?x=1"
+ *  - StringUrl::fromString('not a url'); // throws UrlStringTypeException
  *
  * @psalm-immutable
  */

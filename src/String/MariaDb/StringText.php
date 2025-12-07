@@ -12,11 +12,15 @@ use PhpTypedValues\Undefined\Alias\Undefined;
 use function mb_strlen;
 
 /**
- * Database TEXT string.
+ * MariaDB TEXT string (up to 65,535 characters).
  *
- * MySQL/MariaDB TEXT: up to 65,535 characters.
+ * Accepts any string including empty, as long as its length measured by
+ * mb_strlen() is not greater than 65,535 characters.
  *
- * Example "Lorem ipsum ..." (any string, including empty, length <= 65,535)
+ * Example
+ *  - $t = StringText::fromString('lorem ipsum');
+ *    $t->toString(); // 'lorem ipsum'
+ *  - StringText::fromString(str_repeat('x', 65536)); // throws StringTypeException
  *
  * @psalm-immutable
  */

@@ -14,11 +14,16 @@ use function preg_match;
 use function sprintf;
 
 /**
- * ISO 3166-1 alpha-2 country code.
+ * ISO 3166-1 alpha‑2 country code.
  *
- * Example "US", "GB".
+ * Accepts a two‑letter uppercase country code and verifies it against a
+ * curated allow‑list. The value is stored as provided; callers must supply
+ * uppercase input (no implicit normalization).
  *
- * Normalizes input to uppercase.
+ * Example
+ *  - $c = StringCountryCode::fromString('US');
+ *    $c->toString(); // 'US'
+ *  - StringCountryCode::fromString('us'); // throws CountryCodeStringTypeException
  *
  * @psalm-immutable
  */

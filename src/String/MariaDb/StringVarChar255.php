@@ -10,9 +10,15 @@ use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
- * Database VARCHAR(255) string.
+ * MariaDB VARCHAR(255) string.
  *
- * Example "Hello world"
+ * Accepts any string with length up to 255 characters (mb_strlen based). The
+ * original string is preserved on success; longer values are rejected.
+ *
+ * Example
+ *  - $v = StringVarChar255::fromString('Hello world');
+ *    $v->toString(); // 'Hello world'
+ *  - StringVarChar255::fromString(str_repeat('x', 256)); // throws StringTypeException
  *
  * @psalm-immutable
  */

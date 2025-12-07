@@ -12,9 +12,15 @@ use PhpTypedValues\Undefined\Alias\Undefined;
 use function sprintf;
 
 /**
- * Non-empty string value.
+ * Non-empty string typed value.
  *
- * Example "hello"
+ * Ensures the wrapped string is not empty (length > 0). Useful for IDs,
+ * names, and other values where an empty string is invalid.
+ *
+ * Example
+ *  - $v = StringNonEmpty::fromString('hello');
+ *    $v->value(); // 'hello'
+ *  - StringNonEmpty::fromString(''); // throws StringTypeException
  *
  * @psalm-immutable
  */

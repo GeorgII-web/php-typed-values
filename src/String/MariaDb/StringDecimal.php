@@ -13,12 +13,20 @@ use function preg_match;
 use function sprintf;
 
 /**
- * MariaDB DECIMAL value represented as a string.
+ * MariaDB DECIMAL value encoded as a string.
  *
- * Example "123", "-5", "3.14"
+ * Accepts canonical decimal strings like "123", "-5", or "3.14". No leading
+ * plus sign and no invalid forms like ".5" or "1." are allowed. The original
+ * string is preserved as provided.
  *
- * Note: Use toFloat() only when the decimal can be represented exactly by PHP float.
- *       The method verifies exact round-trip: (string)(float)$src must equal the original string.
+ * Example
+ *  - $d = StringDecimal::fromString('3.14');
+ *    $d->toString(); // '3.14'
+ *  - StringDecimal::fromString('abc'); // throws DecimalStringTypeException
+ *
+ * Note: Use toFloat() only when the decimal can be represented exactly by a
+ * PHP float. The method verifies an exact round‑trip: (string)(float)$src must
+ * equal the original string and throws otherwise.
  *
  * @psalm-immutable
  */

@@ -7,9 +7,14 @@ namespace PhpTypedValues\String\Alias;
 use PhpTypedValues\String\StringNonEmpty;
 
 /**
- * Alias of Non-empty string value.
+ * Alias for non-empty string typed value.
  *
- * Example "hello"
+ * Provides the same behavior as StringNonEmpty while exposing a concise
+ * name suitable for APIs that prefer "NonEmpty".
+ *
+ * Example
+ *  - $v = NonEmpty::fromString('hello');
+ *    $v->value(); // 'hello'
  *
  * @psalm-immutable
  */

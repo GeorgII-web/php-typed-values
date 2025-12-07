@@ -6,6 +6,7 @@ use PhpTypedValues\Integer\Alias\IntType;
 use PhpTypedValues\Integer\Alias\MariaDb\Tiny;
 use PhpTypedValues\Integer\Alias\NonNegative;
 use PhpTypedValues\Integer\Alias\Positive;
+use PhpTypedValues\Integer\Alias\WeekDay;
 use PhpTypedValues\Integer\IntegerNonNegative;
 use PhpTypedValues\Integer\IntegerPositive;
 use PhpTypedValues\Integer\IntegerStandard;
@@ -19,6 +20,7 @@ testInteger(IntegerStandard::fromInt(10)->value());
 testPositiveInt(IntegerPositive::fromInt(10)->value());
 testNonNegativeInt(IntegerNonNegative::fromInt(10)->value());
 testWeekDayInt(IntegerWeekDay::fromInt(7)->value());
+echo WeekDay::fromInt(7)->value() . PHP_EOL;
 
 // DB tinyint usage
 echo Tiny::fromInt(-5)->toString() . \PHP_EOL;

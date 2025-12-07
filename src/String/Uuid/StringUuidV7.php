@@ -14,9 +14,16 @@ use function sprintf;
 use function strtolower;
 
 /**
- * UUID version 7 (time-ordered, Unix time-based).
+ * UUID version 7 (time‑ordered, Unix time‑based) string.
  *
- * Example "01890f2a-5bcd-7def-8abc-1234567890ab"
+ * Accepts an RFC 4122 UUID v7 in canonical dashed form. Input is treated
+ * case‑insensitively and normalized to lowercase for consistent storage and
+ * comparison.
+ *
+ * Example
+ *  - $u = StringUuidV7::fromString('01890F2A-5BCD-7DEF-9ABC-1234567890AB');
+ *    $u->toString(); // '01890f2a-5bcd-7def-9abc-1234567890ab'
+ *  - StringUuidV7::fromString('not-a-uuid'); // throws UuidStringTypeException
  *
  * @psalm-immutable
  */

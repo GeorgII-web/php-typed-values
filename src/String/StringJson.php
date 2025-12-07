@@ -16,9 +16,16 @@ use function json_decode;
 use function sprintf;
 
 /**
- * Represents a valid JSON text.
+ * JSON text string.
  *
- * Example '{"a":1}'
+ * Validates the input using json_decode with JSON_THROW_ON_ERROR and stores
+ * the original string on success. Helpers provide convenient decoding to
+ * an object or array while reusing the same strict validation path.
+ *
+ * Example
+ *  - $j = StringJson::fromString('{"a":1}');
+ *    $j->toArray(); // ['a' => 1]
+ *  - StringJson::fromString('{invalid}'); // throws JsonStringTypeException
  *
  * @psalm-immutable
  */

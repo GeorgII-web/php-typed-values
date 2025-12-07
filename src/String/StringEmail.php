@@ -15,9 +15,15 @@ use function filter_var;
 use function sprintf;
 
 /**
- * Email address string RFC 5322 (pragmatic validation).
+ * Email address string (RFC 5322 pragmatic validation).
  *
- * Example "user@example.com"
+ * Uses PHP's FILTER_VALIDATE_EMAIL to validate an address string. The value is
+ * stored as provided and must be non-empty.
+ *
+ * Example
+ *  - $e = StringEmail::fromString('user@example.com');
+ *    (string) $e; // 'user@example.com'
+ *  - StringEmail::fromString('not-an-email'); // throws EmailStringTypeException
  *
  * @psalm-immutable
  */

@@ -14,9 +14,16 @@ use function sprintf;
 use function strtolower;
 
 /**
- * RFC 4122 version 4 (random).
+ * UUID version 4 (random) string.
  *
- * Example "550e8400-e29b-41d4-a716-446655440000"
+ * Accepts a RFC 4122 UUID v4 in canonical dashed form. Input is treated
+ * case‑insensitively and normalized to lowercase for consistent storage and
+ * comparison.
+ *
+ * Example
+ *  - $u = StringUuidV4::fromString('550E8400-E29B-41D4-A716-446655440000');
+ *    $u->toString(); // '550e8400-e29b-41d4-a716-446655440000'
+ *  - StringUuidV4::fromString('not-a-uuid'); // throws UuidStringTypeException
  *
  * @psalm-immutable
  */

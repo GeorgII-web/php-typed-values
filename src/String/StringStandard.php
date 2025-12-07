@@ -8,9 +8,15 @@ use PhpTypedValues\Abstract\String\StrType;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
- * Represents any PHP string.
+ * Generic string typed value.
  *
- * Example "hello"
+ * Wraps any PHP string without additional validation and provides
+ * convenient factory and formatting helpers.
+ *
+ * Example
+ *  - $v = StringStandard::fromString('hello');
+ *    $v->toString(); // "hello"
+ *  - (string) StringStandard::fromString('x'); // "x"
  *
  * @psalm-immutable
  */

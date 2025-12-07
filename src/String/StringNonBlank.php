@@ -13,9 +13,15 @@ use function sprintf;
 use function trim;
 
 /**
- * Non-blank string value (not empty and not only whitespace).
+ * Non-blank string typed value (not empty and not only whitespace).
  *
- * Example "hello" or " hi ".
+ * Trims the input for validation purposes and rejects strings that are empty
+ * after trimming (e.g., " ", "\n\t"). The original value is preserved.
+ *
+ * Example
+ *  - $v = StringNonBlank::fromString(' hello ');
+ *    $v->toString(); // ' hello '
+ *  - StringNonBlank::fromString("   "); // throws StringTypeException
  *
  * @psalm-immutable
  */
