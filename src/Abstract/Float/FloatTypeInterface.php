@@ -16,4 +16,6 @@ interface FloatTypeInterface
     public function toString(): string;
 
     public static function fromString(string $value): static;
+
+    public function __toString(): string;
 }

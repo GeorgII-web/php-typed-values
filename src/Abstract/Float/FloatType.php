@@ -27,4 +27,9 @@ abstract readonly class FloatType implements FloatTypeInterface
     {
         return (string) $this->value();
     }
+
+    public function __toString(): string
+    {
+        return $this->toString();
+    }
 }

@@ -14,4 +14,6 @@ interface StrTypeInterface
     public static function fromString(string $value): static;
 
     public function toString(): string;
+
+    public function __toString(): string;
 }

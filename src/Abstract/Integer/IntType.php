@@ -29,4 +29,9 @@ abstract readonly class IntType implements IntTypeInterface
     {
         return (string) $this->value();
     }
+
+    public function __toString(): string
+    {
+        return $this->toString();
+    }
 }

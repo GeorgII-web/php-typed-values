@@ -111,4 +111,9 @@ abstract readonly class DateTimeType implements DateTimeTypeInterface
     {
         return static::FORMAT;
     }
+
+    public function __toString(): string
+    {
+        return $this->toString();
+    }
 }

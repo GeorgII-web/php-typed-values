@@ -14,4 +14,6 @@ interface UndefinedTypeInterface
     public function value(): void;
 
     public function toString(): void;
+
+    public function __toString(): string;
 }

@@ -35,4 +35,12 @@ abstract readonly class UndefinedType implements UndefinedTypeInterface
     {
         throw new UndefinedTypeException('Undefined type has no value.');
     }
+
+    /**
+     * @throws UndefinedTypeException
+     */
+    public function __toString(): string
+    {
+        throw new UndefinedTypeException('Undefined type cannot be converted to string.');
+    }
 }

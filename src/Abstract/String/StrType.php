@@ -13,4 +13,9 @@ abstract readonly class StrType implements StrTypeInterface
     {
         return $this->value();
     }
+
+    public function __toString(): string
+    {
+        return $this->toString();
+    }
 }
