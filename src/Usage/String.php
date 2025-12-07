@@ -1,5 +1,6 @@
 <?php
 
+use PhpTypedValues\String\Alias\CountryCode;
 use PhpTypedValues\String\Alias\Email;
 use PhpTypedValues\String\Alias\JsonStr;
 use PhpTypedValues\String\Alias\NonBlankStr;
@@ -9,6 +10,7 @@ use PhpTypedValues\String\Alias\StrType;
 use PhpTypedValues\String\Alias\Url;
 use PhpTypedValues\String\Json;
 use PhpTypedValues\String\MariaDb\StringVarChar255;
+use PhpTypedValues\String\StringCountryCode;
 use PhpTypedValues\String\StringEmail;
 use PhpTypedValues\String\StringNonBlank;
 use PhpTypedValues\String\StringNonEmpty;
@@ -60,6 +62,14 @@ echo StringUrl::fromString('https://example.com/path?x=1')->toString() . \PHP_EO
 $url = StringUrl::tryFromString('notaurl');
 if (!($url instanceof Undefined)) {
     echo $url->toString() . \PHP_EOL;
+}
+
+// CountryCode (usage and try* for Psalm visibility)
+echo CountryCode::fromString('US')->toString() . \PHP_EOL;
+echo StringCountryCode::fromString('gb')->toString() . \PHP_EOL; // normalized to uppercase
+$cc = StringCountryCode::tryFromString('ZZ');
+if (!($cc instanceof Undefined)) {
+    echo $cc->toString() . \PHP_EOL;
 }
 
 /**
