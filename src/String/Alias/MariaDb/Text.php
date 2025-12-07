@@ -18,6 +18,6 @@ use PhpTypedValues\String\MariaDb\StringText;
  *
  * @psalm-immutable
  */
-readonly class Text extends StringText
+final readonly class Text extends StringText
 {
 }

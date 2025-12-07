@@ -18,6 +18,6 @@ use PhpTypedValues\String\StringUrl;
  *
  * @psalm-immutable
  */
-readonly class Url extends StringUrl
+final readonly class Url extends StringUrl
 {
 }

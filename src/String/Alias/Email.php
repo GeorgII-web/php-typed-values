@@ -18,6 +18,6 @@ use PhpTypedValues\String\StringEmail;
  *
  * @psalm-immutable
  */
-readonly class Email extends StringEmail
+final readonly class Email extends StringEmail
 {
 }

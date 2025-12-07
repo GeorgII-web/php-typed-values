@@ -18,6 +18,6 @@ use PhpTypedValues\String\StringCountryCode;
  *
  * @psalm-immutable
  */
-readonly class CountryCode extends StringCountryCode
+final readonly class CountryCode extends StringCountryCode
 {
 }

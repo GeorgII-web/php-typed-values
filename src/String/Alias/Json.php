@@ -18,6 +18,6 @@ use PhpTypedValues\String\StringJson;
  *
  * @psalm-immutable
  */
-readonly class Json extends StringJson
+final readonly class Json extends StringJson
 {
 }

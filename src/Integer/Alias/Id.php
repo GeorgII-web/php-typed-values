@@ -21,6 +21,6 @@ use PhpTypedValues\Integer\IntegerPositive;
  *
  * @psalm-immutable
  */
-readonly class Id extends IntegerPositive
+final readonly class Id extends IntegerPositive
 {
 }

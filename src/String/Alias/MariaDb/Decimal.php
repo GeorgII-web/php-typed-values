@@ -18,6 +18,6 @@ use PhpTypedValues\String\MariaDb\StringDecimal;
  *
  * @psalm-immutable
  */
-readonly class Decimal extends StringDecimal
+final readonly class Decimal extends StringDecimal
 {
 }

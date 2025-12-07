@@ -20,6 +20,6 @@ use PhpTypedValues\Integer\IntegerStandard;
  *
  * @psalm-immutable
  */
-readonly class Integer extends IntegerStandard
+final readonly class Integer extends IntegerStandard
 {
 }
