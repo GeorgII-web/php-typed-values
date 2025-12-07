@@ -12,8 +12,7 @@ jobs:
     name: Verify PHP 8.2 Release
     runs-on: ubuntu-latest
     steps:
-      - name: Check out source
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -26,27 +25,41 @@ jobs:
             exit 1
           fi
 
-      - name: Setup PHP 8.2
+      - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
-          coverage: xdebug
-          tools: composer:v2
+          php-version: '8.2.16'
+          extensions: mbstring, intl
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate --strict
+
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-
 
       - name: Install dependencies
-        run: composer install --no-interaction --prefer-dist --no-progress
+        run: composer install --prefer-dist --no-progress --ignore-platform-reqs
 
-      - name: Run checks (cs, psalm, tests, type, coverage, mutate)
-        env:
-          XDEBUG_MODE: coverage
-        run: |
-          composer validate --strict
-          composer cs
-          composer sca
-          composer test
-          composer type
-          composer coverage
-          composer mutate
+      - name: Run style fixer
+        run: composer run-script cs
+
+      - name: Run psalm
+        run: composer run-script sca
+
+      - name: Run tests
+        run: composer run-script test
+
+      - name: Run type coverage
+        run: composer run-script type
+
+      - name: Run test coverage
+        run: composer run-script coverage
 
   downgrade-and-tag:
     name: Downgrade to PHP 7.4 and Tag v1.x

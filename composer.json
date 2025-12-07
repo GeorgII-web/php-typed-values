@@ -59,7 +59,7 @@
       "./vendor/bin/pest"
     ],
     "type": [
-      "./vendor/bin/pest --type-coverage --min=100"
+      "./vendor/bin/pest --type-coverage --min=100 --do-not-cache-result"
     ],
     "coverage": [
       "./vendor/bin/pest --coverage --min=100"
