@@ -53,8 +53,8 @@ Id::fromInt(123);
 final class Profile
 {
     public function __construct(
-        public readonly PositiveInt $id,
-        public readonly NonEmptyStr $firstName,
+        public readonly IntegerPositive $id,
+        public readonly StringNonEmpty $firstName,
         public readonly ?FloatNonNegative $height,
     ) {}
 
@@ -64,8 +64,8 @@ final class Profile
         string|float|int|null $height,
     ): static {
         return new static(
-            PositiveInt::fromInt($id),
-            NonEmptyStr::fromString($firstName),
+            IntegerPositive::fromInt($id),
+            StringNonEmpty::fromString($firstName),
             $height !== null ? FloatNonNegative::fromString((string) $height) : null,
         );
     }
@@ -81,7 +81,7 @@ Profile::fromScalars(id: 157, firstName: 'Tom', height: null);
 // From array
 $profile = Profile::fromScalars(...[157, 'Tom', null]);
 // Accessing values
-$profile->getHeight(); // "172.5 \ Undefined" type class
+$profile->getHeight(); // "172.5" OR "Undefined" type class (will throw an exception on trying to get value)
 ```
 
 ## Key Features
