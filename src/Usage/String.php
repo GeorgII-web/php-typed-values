@@ -7,6 +7,7 @@ use PhpTypedValues\String\Alias\Str;
 use PhpTypedValues\String\Alias\StrType;
 use PhpTypedValues\String\Json;
 use PhpTypedValues\String\MariaDb\StringVarChar255;
+use PhpTypedValues\String\StringEmail;
 use PhpTypedValues\String\StringNonBlank;
 use PhpTypedValues\String\StringNonEmpty;
 use PhpTypedValues\String\StringStandard;
@@ -41,6 +42,13 @@ echo StringVarChar255::tryFromString('hi')->toString() . \PHP_EOL;
 echo json_encode(JsonStr::fromString('{"a": 1, "b": "hi"}')->toArray(), \JSON_THROW_ON_ERROR) . \PHP_EOL;
 echo json_encode(Json::fromString('{"a": 1}')->toObject(), \JSON_THROW_ON_ERROR) . \PHP_EOL;
 echo Json::tryFromString('{}')->toString() . \PHP_EOL;
+
+// Email (usage and try* for Psalm visibility)
+echo StringEmail::fromString('User@Example.COM')->toString() . \PHP_EOL; // normalized to lowercase
+$em = StringEmail::tryFromString('not-an-email');
+if (!($em instanceof Undefined)) {
+    echo $em->toString() . \PHP_EOL;
+}
 
 /**
  * Artificial functions.
