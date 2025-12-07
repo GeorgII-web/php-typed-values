@@ -6,6 +6,8 @@ namespace PhpTypedValues\Float;
 
 use PhpTypedValues\Abstract\Float\FloatType;
 use PhpTypedValues\Exception\FloatTypeException;
+use PhpTypedValues\Exception\TypeException;
+use PhpTypedValues\Undefined\Alias\Undefined;
 
 use function sprintf;
 
@@ -26,7 +28,7 @@ readonly class FloatNonNegative extends FloatType
     public function __construct(float $value)
     {
         if ($value < 0) {
-            throw new FloatTypeException(sprintf('Expected non-negative float, got "%d"', $value));
+            throw new FloatTypeException(sprintf('Expected non-negative float, got "%s"', $value));
         }
 
         $this->value = $value;
@@ -38,6 +40,24 @@ readonly class FloatNonNegative extends FloatType
     public static function fromFloat(float $value): static
     {
         return new static($value);
+    }
+
+    public static function tryFromString(string $value): static|Undefined
+    {
+        try {
+            return static::fromString($value);
+        } catch (TypeException) {
+            return Undefined::create();
+        }
+    }
+
+    public static function tryFromFloat(float $value): static|Undefined
+    {
+        try {
+            return static::fromFloat($value);
+        } catch (TypeException) {
+            return Undefined::create();
+        }
     }
 
     /**
