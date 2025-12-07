@@ -4,8 +4,8 @@ require_once 'vendor/autoload.php';
 
 use PhpTypedValues\Float\Alias\Double;
 use PhpTypedValues\Float\Alias\FloatType;
-use PhpTypedValues\Float\Alias\NonNegativeFloat;
-use PhpTypedValues\Float\Alias\PositiveFloat;
+use PhpTypedValues\Float\Alias\NonNegative;
+use PhpTypedValues\Float\Alias\Positive;
 use PhpTypedValues\Float\FloatNonNegative;
 use PhpTypedValues\Float\FloatPositive;
 use PhpTypedValues\Float\FloatStandard;
@@ -17,10 +17,10 @@ use PhpTypedValues\Undefined\Alias\Undefined;
 testFloat(FloatStandard::fromFloat(3.14)->value());
 
 echo FloatStandard::fromString('2.71828')->toString() . \PHP_EOL;
-echo NonNegativeFloat::fromString('2.71828')->toString() . \PHP_EOL;
+echo NonNegative::fromString('2.71828')->toString() . \PHP_EOL;
 echo FloatType::fromString('2.71828')->toString() . \PHP_EOL;
 echo Double::fromString('2.71828')->toString() . \PHP_EOL;
-echo PositiveFloat::fromString('2.8')->toString() . \PHP_EOL;
+echo Positive::fromString('2.8')->toString() . \PHP_EOL;
 
 // PositiveFloat usage
 testPositiveFloat(FloatNonNegative::fromFloat(0.5)->value());

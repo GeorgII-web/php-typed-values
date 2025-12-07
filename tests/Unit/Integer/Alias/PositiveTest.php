@@ -1,0 +1,53 @@
+<?php
+
+declare(strict_types=1);
+
+use PhpTypedValues\Exception\IntegerTypeException;
+use PhpTypedValues\Integer\Alias\Positive;
+
+it('PositiveInt alias factories return PositiveInt instance', function (): void {
+    $a = Positive::fromInt(5);
+    $b = Positive::fromString('7');
+
+    expect($a)->toBeInstanceOf(Positive::class)
+        ->and($a::class)->toBe(Positive::class)
+        ->and($a->value())->toBe(5)
+        ->and($b)->toBeInstanceOf(Positive::class)
+        ->and($b->value())->toBe(7);
+});
+
+it('creates PositiveInt', function (): void {
+    expect(Positive::fromInt(1)->value())->toBe(1);
+});
+
+it('fails on 0', function (): void {
+    expect(fn() => Positive::fromInt(0))->toThrow(IntegerTypeException::class);
+});
+
+it('fails on negatives', function (): void {
+    expect(fn() => Positive::fromInt(-1))->toThrow(IntegerTypeException::class);
+});
+
+it('creates PositiveInt from string', function (): void {
+    expect(Positive::fromString('1')->value())->toBe(1);
+});
+
+it('fails PositiveInt from integerish string', function (): void {
+    expect(fn() => Positive::fromString('5.0'))->toThrow(IntegerTypeException::class);
+});
+
+it('fails creating PositiveInt from string 0', function (): void {
+    expect(fn() => Positive::fromString('0'))->toThrow(IntegerTypeException::class);
+});
+
+it('fails creating PositiveInt from negative string', function (): void {
+    expect(fn() => Positive::fromString('-3'))->toThrow(IntegerTypeException::class);
+});
+
+it('toString returns scalar string for PositiveInt', function (): void {
+    expect((new Positive(3))->toString())->toBe('3');
+});
+
+it('fails creating PositiveInt from float string', function (): void {
+    expect(fn() => Positive::fromString('5.5'))->toThrow(IntegerTypeException::class);
+});
