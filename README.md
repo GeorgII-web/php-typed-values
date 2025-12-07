@@ -1,6 +1,6 @@
 # PHP Typed Values
 
-A PHP 7.4 || 8.2 library of typed value objects for common PHP data types.
+PHP library of typed value objects for common PHP data types.
 
 Building blocks for a DTO's, ValueObjects, Entities, etc.
 
@@ -92,6 +92,13 @@ $profile->getHeight(); // "172.5 \ Undefined" type class
 - **Immutable** – Value objects are read‑only and never change after creation.
 - **No external dependencies** – Pure PHP implementation without requiring third‑party packages.
 - **Extendable** – Extendable with custom-typed values and composite value objects.
+
+## Performance disclaimer
+
+- **Performance** for an array of objects is about `3x` **slower** than an array of scalars;
+- **Memory usage** for an array of objects is about `2x` **higher**;
+- **Use value objects** for domain modeling, type safety, and validation boundaries;
+- **Use raw scalars** for high-performance loops or large-scale data processing;
 
 ## More information
 

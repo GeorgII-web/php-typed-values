@@ -58,6 +58,9 @@
     "test": [
       "./vendor/bin/pest"
     ],
+    "performance": [
+      "php ./src/Usage/Performance.php 1000 && php ./src/Usage/Performance.php 10000 && php ./src/Usage/Performance.php 100000 && php ./src/Usage/Performance.php 1000000"
+    ],
     "usage": [
       "php ./src/Usage/AllTypes.php"
     ],

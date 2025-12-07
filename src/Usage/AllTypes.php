@@ -8,7 +8,7 @@
 
 require_once 'vendor/autoload.php';
 
-require_once __DIR__ . '/integer.php';
+require_once __DIR__ . '/Integer.php';
 require_once __DIR__ . '/String.php';
 require_once __DIR__ . '/Float.php';
 require_once __DIR__ . '/Boolean.php';
