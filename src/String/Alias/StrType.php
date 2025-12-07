@@ -9,6 +9,6 @@ use PhpTypedValues\String\StringStandard;
 /**
  * @psalm-immutable
  */
-readonly class StrType extends StringStandard
+class StrType extends StringStandard
 {
 }

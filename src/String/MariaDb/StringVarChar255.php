@@ -14,8 +14,11 @@ use PhpTypedValues\Exception\StringTypeException;
  *
  * @psalm-immutable
  */
-readonly class StringVarChar255 extends StrType
+class StringVarChar255 extends StrType
 {
+    /**
+     * @readonly
+     */
     protected string $value;
 
     /**
@@ -32,8 +35,9 @@ readonly class StringVarChar255 extends StrType
 
     /**
      * @throws StringTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         return new static($value);
     }

@@ -13,11 +13,17 @@ interface DateTimeTypeInterface
 {
     public function value(): DateTimeImmutable;
 
-    public static function fromDateTime(DateTimeImmutable $value): static;
+    /**
+     * @return static
+     */
+    public static function fromDateTime(DateTimeImmutable $value);
 
     public function toString(): string;
 
-    public static function fromString(string $value): static;
+    /**
+     * @return static
+     */
+    public static function fromString(string $value);
 
     public function __toString(): string;
 }

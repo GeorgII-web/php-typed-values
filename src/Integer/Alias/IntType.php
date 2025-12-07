@@ -9,6 +9,6 @@ use PhpTypedValues\Integer\IntegerStandard;
 /**
  * @psalm-immutable
  */
-readonly class IntType extends IntegerStandard
+class IntType extends IntegerStandard
 {
 }
