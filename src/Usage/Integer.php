@@ -20,7 +20,7 @@ testInteger(IntegerStandard::fromInt(10)->value());
 testPositiveInt(IntegerPositive::fromInt(10)->value());
 testNonNegativeInt(IntegerNonNegative::fromInt(10)->value());
 testWeekDayInt(IntegerWeekDay::fromInt(7)->value());
-echo WeekDay::fromInt(7)->value() . PHP_EOL;
+echo WeekDay::fromInt(7)->value() . \PHP_EOL;
 
 // DB tinyint usage
 echo Tiny::fromInt(-5)->toString() . \PHP_EOL;

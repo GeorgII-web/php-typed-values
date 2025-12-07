@@ -17,6 +17,16 @@ try {
     // suppress
 }
 try {
+    UndefinedStandard::create()->toInt();
+} catch (UndefinedTypeException $e) {
+    // suppress
+}
+try {
+    UndefinedStandard::create()->toFloat();
+} catch (UndefinedTypeException $e) {
+    // suppress
+}
+try {
     NotExist::create()->value();
 } catch (UndefinedTypeException $e) {
     // suppress
