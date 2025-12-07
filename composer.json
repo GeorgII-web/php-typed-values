@@ -1,87 +1,87 @@
 {
-  "name": "georgii-web/php-typed-values",
-  "description": "Typed value objects library for common php data types.",
-  "type": "library",
-  "license": "MIT",
-  "require": {
-    "php": ">=8.2"
-  },
-  "require-dev": {
-    "friendsofphp/php-cs-fixer": "^v3.89",
-    "pestphp/pest": "^v3.8.4",
-    "pestphp/pest-plugin-type-coverage": "^v3.6",
-    "phpunit/phpunit": "^11.5",
-    "rector/rector": "^2.2",
-    "vimeo/psalm": "^6.13.1"
-  },
-  "autoload": {
-    "psr-4": {
-      "PhpTypedValues\\": "src/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "PhpTypedValues\\Tests\\": "tests/"
-    }
-  },
-  "scripts": {
-    "sca": [
-      "vendor/bin/psalm --no-cache --config=psalm.xml --diff --show-info=false --threads=2 --no-cache"
-    ],
-    "sca-baseline": [
-      "vendor/bin/psalm --no-cache --config=psalm.xml --set-baseline=psalm-baseline.xml --threads=4"
-    ],
-    "cs": [
-      "vendor/bin/php-cs-fixer fix --ansi --config=.php-cs-fixer.dist.php --diff --verbose"
-    ],
-    "oncheckout": [
-      "chmod -R 777 ./",
-      "composer install",
-      "composer dump-autoload",
-      "vendor/bin/psalm --clear-cache",
-      "echo '\\n\\n\\033[1;32mAfter-checkout preparations done!\\033[0m\\n'"
-    ],
-    "oncommit": [
-      "chmod -R 777 ./",
-      "composer validate --strict",
-      "@cs",
-      "@sca",
-      "@test",
-      "@type",
-      "@coverage",
-      "@mutate",
-      "echo '\\n\\n\\033[1;32mPre-commit checks passed!\\033[0m\\n'"
-    ],
-    "rector-dry-run": [
-      "./vendor/bin/rector process --config rector/toPhp7.4.php --dry-run"
-    ],
-    "test": [
-      "./vendor/bin/pest"
-    ],
-    "usage": [
-      "php ./src/Usage/AllTypes.php"
-    ],
-    "type": [
-      "./vendor/bin/pest --type-coverage --min=100 --do-not-cache-result"
-    ],
-    "coverage": [
-      "./vendor/bin/pest --coverage --min=100"
-    ],
-    "mutate": [
-      "./vendor/bin/pest --mutate --parallel --everything --covered-only --min=100"
+    "name": "georgii-web/php-typed-values",
+    "description": "Typed value objects library for common php data types.",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": ">=7.4,<=8.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^v3.89",
+        "pestphp/pest": "^v3.8.4",
+        "pestphp/pest-plugin-type-coverage": "^v3.6",
+        "phpunit/phpunit": "^11.5",
+        "rector/rector": "^2.2",
+        "vimeo/psalm": "^6.13.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "PhpTypedValues\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PhpTypedValues\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "sca": [
+            "vendor/bin/psalm --no-cache --config=psalm.xml --diff --show-info=false --threads=2 --no-cache"
+        ],
+        "sca-baseline": [
+            "vendor/bin/psalm --no-cache --config=psalm.xml --set-baseline=psalm-baseline.xml --threads=4"
+        ],
+        "cs": [
+            "vendor/bin/php-cs-fixer fix --ansi --config=.php-cs-fixer.dist.php --diff --verbose"
+        ],
+        "oncheckout": [
+            "chmod -R 777 ./",
+            "composer install",
+            "composer dump-autoload",
+            "vendor/bin/psalm --clear-cache",
+            "echo '\\n\\n\\033[1;32mAfter-checkout preparations done!\\033[0m\\n'"
+        ],
+        "oncommit": [
+            "chmod -R 777 ./",
+            "composer validate --strict",
+            "@cs",
+            "@sca",
+            "@test",
+            "@type",
+            "@coverage",
+            "@mutate",
+            "echo '\\n\\n\\033[1;32mPre-commit checks passed!\\033[0m\\n'"
+        ],
+        "rector-dry-run": [
+            "./vendor/bin/rector process --config rector/toPhp7.4.php --dry-run"
+        ],
+        "test": [
+            "./vendor/bin/pest"
+        ],
+        "usage": [
+            "php ./src/Usage/AllTypes.php"
+        ],
+        "type": [
+            "./vendor/bin/pest --type-coverage --min=100 --do-not-cache-result"
+        ],
+        "coverage": [
+            "./vendor/bin/pest --coverage --min=100"
+        ],
+        "mutate": [
+            "./vendor/bin/pest --mutate --parallel --everything --covered-only --min=100"
+        ]
+    },
+    "config": {
+        "process-timeout": 0,
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "authors": [
+        {
+            "name": "GeorgII",
+            "email": "george.webfullstack@gmail.com"
+        }
     ]
-  },
-  "config": {
-    "process-timeout": 0,
-    "sort-packages": true,
-    "allow-plugins": {
-      "pestphp/pest-plugin": true
-    }
-  },
-  "authors": [
-    {
-      "name": "GeorgII",
-      "email": "george.webfullstack@gmail.com"
-    }
-  ]
 }
