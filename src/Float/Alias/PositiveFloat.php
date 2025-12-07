@@ -9,6 +9,6 @@ use PhpTypedValues\Float\FloatPositive;
 /**
  * @psalm-immutable
  */
-readonly class PositiveFloat extends FloatPositive
+class PositiveFloat extends FloatPositive
 {
 }
