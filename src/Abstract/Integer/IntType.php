@@ -12,7 +12,7 @@ use function sprintf;
 /**
  * @psalm-immutable
  */
-abstract readonly class IntType implements TypeInterface, IntTypeInterface
+abstract class IntType implements TypeInterface, IntTypeInterface
 {
     /**
      * @throws IntegerTypeException

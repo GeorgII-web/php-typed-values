@@ -9,7 +9,7 @@ use PhpTypedValues\Abstract\TypeInterface;
 /**
  * @psalm-immutable
  */
-abstract readonly class StrType implements TypeInterface, StrTypeInterface
+abstract class StrType implements TypeInterface, StrTypeInterface
 {
     public function toString(): string
     {

@@ -9,6 +9,6 @@ use PhpTypedValues\String\StringUrl;
 /**
  * @psalm-immutable
  */
-readonly class Url extends StringUrl
+class Url extends StringUrl
 {
 }

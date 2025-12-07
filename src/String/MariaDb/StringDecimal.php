@@ -22,8 +22,11 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class StringDecimal extends StrType
+class StringDecimal extends StrType
 {
+    /**
+     * @readonly
+     */
     protected string $value;
 
     /**
@@ -37,17 +40,21 @@ readonly class StringDecimal extends StrType
 
     /**
      * @throws DecimalStringTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         return new static($value);
     }
 
-    public static function tryFromString(string $value): static|Undefined
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    public static function tryFromString(string $value)
     {
         try {
             return static::fromString($value);
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return Undefined::create();
         }
     }

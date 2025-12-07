@@ -9,6 +9,6 @@ use PhpTypedValues\String\StringJson;
 /**
  * @psalm-immutable
  */
-readonly class Json extends StringJson
+class Json extends StringJson
 {
 }

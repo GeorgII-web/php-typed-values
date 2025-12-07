@@ -9,6 +9,6 @@ use PhpTypedValues\String\MariaDb\StringText;
 /**
  * @psalm-immutable
  */
-readonly class Text extends StringText
+class Text extends StringText
 {
 }

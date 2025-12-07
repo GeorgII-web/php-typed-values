@@ -9,6 +9,6 @@ use PhpTypedValues\String\StringEmail;
 /**
  * @psalm-immutable
  */
-readonly class Email extends StringEmail
+class Email extends StringEmail
 {
 }

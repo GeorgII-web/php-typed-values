@@ -13,6 +13,6 @@ use PhpTypedValues\Float\FloatNonNegative;
  *
  * @psalm-immutable
  */
-readonly class NonNegative extends FloatNonNegative
+class NonNegative extends FloatNonNegative
 {
 }
