@@ -12,9 +12,16 @@ use PhpTypedValues\Undefined\Alias\Undefined;
 use function sprintf;
 
 /**
- * Positive float (> 0.0).
+ * Positive float-typed value (> 0.0).
  *
- * Example "0.1"
+ * Ensures the wrapped float is strictly greater than zero. Provides factories
+ * from validated string and native float and convenient formatting helpers.
+ *
+ * Example
+ *  - $v = FloatPositive::fromString('0.1');
+ *    $v->value(); // 0.1
+ *  - $v = FloatPositive::fromFloat(2.5);
+ *    (string) $v; // "2.5"
  *
  * @psalm-immutable
  */

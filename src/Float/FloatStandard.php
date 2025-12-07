@@ -10,9 +10,16 @@ use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
- * Represents any PHP float (double).
+ * Generic float-typed value.
  *
- * Example "3.14"
+ * Wraps any PHP float (double) and provides factories from native float or
+ * validated string, along with convenient string formatting.
+ *
+ * Example
+ *  - $v = FloatStandard::fromString('3.14');
+ *    $v->value(); // 3.14 (float)
+ *  - $v = FloatStandard::fromFloat(0.5);
+ *    (string) $v; // "0.5"
  *
  * @psalm-immutable
  */
