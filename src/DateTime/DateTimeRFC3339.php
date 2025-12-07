@@ -10,6 +10,8 @@ use DateTimeImmutable;
 use DateTimeZone;
 use PhpTypedValues\Abstract\DateTime\DateTimeType;
 use PhpTypedValues\Exception\DateTimeTypeException;
+use PhpTypedValues\Exception\TypeException;
+use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
  * RFC 3339 format based on ISO 8601.
@@ -34,6 +36,15 @@ readonly class DateTimeRFC3339 extends DateTimeType
                 new DateTimeZone(static::ZONE)
             )
         );
+    }
+
+    public static function tryFromString(string $value): static|Undefined
+    {
+        try {
+            return static::fromString($value);
+        } catch (TypeException) {
+            return Undefined::create();
+        }
     }
 
     public function toString(): string

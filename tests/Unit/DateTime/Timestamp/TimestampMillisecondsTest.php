@@ -99,3 +99,18 @@ it('fromString throws when value is out of supported range (createFromFormat ret
             ->and($e->getMessage())->toContain('253402300800');
     }
 });
+
+it('TimestampMilliseconds::tryFromString returns value for numeric milliseconds', function (): void {
+    $s = '1735787045678';
+    $v = TimestampMilliseconds::tryFromString($s);
+
+    expect($v)
+        ->toBeInstanceOf(TimestampMilliseconds::class)
+        ->and($v->toString())
+        ->toBe($s);
+});
+
+it('TimestampMilliseconds::tryFromString returns Undefined for non-digit input', function (): void {
+    $u = TimestampMilliseconds::tryFromString('abc');
+    expect($u)->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class);
+});

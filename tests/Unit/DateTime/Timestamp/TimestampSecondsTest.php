@@ -109,3 +109,18 @@ it('fromString accepts minimum supported seconds (min boundary)', function (): v
     expect($vo->toString())->toBe('-62135596800')
         ->and($vo->value()->format('U'))->toBe('-62135596800');
 });
+
+it('TimestampSeconds::tryFromString returns value for valid numeric seconds', function (): void {
+    $s = '1735787045';
+    $v = TimestampSeconds::tryFromString($s);
+
+    expect($v)
+        ->toBeInstanceOf(TimestampSeconds::class)
+        ->and($v->toString())
+        ->toBe($s);
+});
+
+it('TimestampSeconds::tryFromString returns Undefined for invalid string', function (): void {
+    $u = TimestampSeconds::tryFromString('not-a-number');
+    expect($u)->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class);
+});

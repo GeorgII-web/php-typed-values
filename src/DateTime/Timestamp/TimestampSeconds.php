@@ -7,6 +7,8 @@ namespace PhpTypedValues\DateTime\Timestamp;
 use DateTimeZone;
 use PhpTypedValues\Abstract\DateTime\DateTimeType;
 use PhpTypedValues\Exception\DateTimeTypeException;
+use PhpTypedValues\Exception\TypeException;
+use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
  * Unix timestamp (seconds since Unix epoch, UTC).
@@ -38,6 +40,15 @@ readonly class TimestampSeconds extends DateTimeType
                 new DateTimeZone(static::ZONE)
             )
         );
+    }
+
+    public static function tryFromString(string $value): static|Undefined
+    {
+        try {
+            return static::fromString($value);
+        } catch (TypeException) {
+            return Undefined::create();
+        }
     }
 
     public function toString(): string
