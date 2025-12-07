@@ -6,12 +6,14 @@ use PhpTypedValues\String\Alias\NonBlankStr;
 use PhpTypedValues\String\Alias\NonEmptyStr;
 use PhpTypedValues\String\Alias\Str;
 use PhpTypedValues\String\Alias\StrType;
+use PhpTypedValues\String\Alias\Url;
 use PhpTypedValues\String\Json;
 use PhpTypedValues\String\MariaDb\StringVarChar255;
 use PhpTypedValues\String\StringEmail;
 use PhpTypedValues\String\StringNonBlank;
 use PhpTypedValues\String\StringNonEmpty;
 use PhpTypedValues\String\StringStandard;
+use PhpTypedValues\String\StringUrl;
 use PhpTypedValues\String\StringUuidV4;
 use PhpTypedValues\String\StringUuidV7;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -50,6 +52,14 @@ echo StringEmail::fromString('User@Example.COM')->toString() . \PHP_EOL; // norm
 $em = StringEmail::tryFromString('not-an-email');
 if (!($em instanceof Undefined)) {
     echo $em->toString() . \PHP_EOL;
+}
+
+// URL (usage and try* for Psalm visibility)
+echo Url::fromString('https://example.com/path?x=1')->toString() . \PHP_EOL;
+echo StringUrl::fromString('https://example.com/path?x=1')->toString() . \PHP_EOL;
+$url = StringUrl::tryFromString('notaurl');
+if (!($url instanceof Undefined)) {
+    echo $url->toString() . \PHP_EOL;
 }
 
 /**

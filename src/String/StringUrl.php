@@ -4,35 +4,35 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\String;
 
-use const FILTER_VALIDATE_EMAIL;
+use const FILTER_VALIDATE_URL;
 
 use PhpTypedValues\Abstract\String\StrType;
-use PhpTypedValues\Exception\EmailStringTypeException;
 use PhpTypedValues\Exception\TypeException;
+use PhpTypedValues\Exception\UrlStringTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 use function filter_var;
 use function sprintf;
 
 /**
- * Email address string RFC 5322 (pragmatic validation).
+ * Absolute URL string (http/https recommended; uses FILTER_VALIDATE_URL for pragmatic validation).
  *
- * Example "user@example.com"
+ * Example "https://example.com/path?x=1"
  *
  * @psalm-immutable
  */
-readonly class StringEmail extends StrType
+readonly class StringUrl extends StrType
 {
     /** @var non-empty-string */
     protected string $value;
 
     /**
-     * @throws EmailStringTypeException
+     * @throws UrlStringTypeException
      */
     public function __construct(string $value)
     {
-        if (filter_var($value, FILTER_VALIDATE_EMAIL) === false) {
-            throw new EmailStringTypeException(sprintf('Expected valid email address, got "%s"', $value));
+        if (filter_var($value, FILTER_VALIDATE_URL) === false) {
+            throw new UrlStringTypeException(sprintf('Expected valid URL, got "%s"', $value));
         }
 
         /** @var non-empty-string $value */
@@ -40,7 +40,7 @@ readonly class StringEmail extends StrType
     }
 
     /**
-     * @throws EmailStringTypeException
+     * @throws UrlStringTypeException
      */
     public static function fromString(string $value): static
     {
