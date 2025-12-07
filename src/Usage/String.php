@@ -6,10 +6,12 @@ use PhpTypedValues\String\Alias\Str;
 use PhpTypedValues\String\Alias\StrType;
 use PhpTypedValues\String\Json;
 use PhpTypedValues\String\MariaDb\StringVarChar255;
+use PhpTypedValues\String\StringNonBlank;
 use PhpTypedValues\String\StringNonEmpty;
 use PhpTypedValues\String\StringStandard;
 use PhpTypedValues\String\StringUuidV4;
 use PhpTypedValues\String\StringUuidV7;
+use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
  * String.
@@ -23,6 +25,12 @@ echo StrType::fromString('hi')->toString() . \PHP_EOL;
 echo Str::fromString('hi')->toString() . \PHP_EOL;
 echo StringNonEmpty::tryFromString('hi')->toString() . \PHP_EOL;
 echo StringStandard::tryFromString('hi')->toString() . \PHP_EOL;
+// NonBlank usage (valid and try*)
+echo StringNonBlank::fromString(' hi ')->toString() . \PHP_EOL;
+$nb = StringNonBlank::tryFromString('   ');
+if (!($nb instanceof Undefined)) {
+    echo $nb->toString() . \PHP_EOL;
+}
 echo StringUuidV4::tryFromString('550e8400-e29b-41d4-a716-446655440000')->toString() . \PHP_EOL;
 echo StringUuidV7::tryFromString('01890f2a-5bcd-7def-8abc-1234567890ab')->toString() . \PHP_EOL;
 echo StringVarChar255::tryFromString('hi')->toString() . \PHP_EOL;
