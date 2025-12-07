@@ -1,6 +1,7 @@
 <?php
 
 use PhpTypedValues\String\Alias\JsonStr;
+use PhpTypedValues\String\Alias\NonBlankStr;
 use PhpTypedValues\String\Alias\NonEmptyStr;
 use PhpTypedValues\String\Alias\Str;
 use PhpTypedValues\String\Alias\StrType;
@@ -26,6 +27,7 @@ echo Str::fromString('hi')->toString() . \PHP_EOL;
 echo StringNonEmpty::tryFromString('hi')->toString() . \PHP_EOL;
 echo StringStandard::tryFromString('hi')->toString() . \PHP_EOL;
 // NonBlank usage (valid and try*)
+echo NonBlankStr::fromString(' hi ')->toString() . \PHP_EOL;
 echo StringNonBlank::fromString(' hi ')->toString() . \PHP_EOL;
 $nb = StringNonBlank::tryFromString('   ');
 if (!($nb instanceof Undefined)) {
