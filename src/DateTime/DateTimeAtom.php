@@ -14,9 +14,17 @@ use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
- * ATOM RFC 3339 format based on ISO 8601.
+ * Date-time value formatted using PHP's DATE_ATOM (RFC 3339 based on ISO 8601).
  *
- * Example "2025-01-02T03:04:05+00:00"
+ * Provides strict parsing with detailed error aggregation via the base
+ * DateTimeType, preserves the exact offset, and guarantees round-trip
+ * formatting using DATE_ATOM.
+ *
+ * Example
+ *  - $v = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
+ *    $v->toString(); // "2025-01-02T03:04:05+00:00"
+ *  - $v = DateTimeAtom::fromDateTime(new DateTimeImmutable('2030-12-31T23:59:59+03:00'));
+ *    (string) $v; // "2030-12-31T23:59:59+03:00"
  *
  * @psalm-immutable
  */

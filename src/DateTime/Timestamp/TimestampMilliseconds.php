@@ -14,9 +14,18 @@ use function intdiv;
 use function sprintf;
 
 /**
- * Unix timestamp in milliseconds since Unix epoch (UTC).
+ * Unix timestamp value in milliseconds since the Unix epoch (UTC).
  *
- * Example "1732445696123"
+ * Accepts a strictly numeric milliseconds string and converts it to an
+ * internal DateTimeImmutable with microsecond precision. Parsing and
+ * validation leverage DateTimeType, including detailed error aggregation and
+ * strict round‑trip verification. Output is rendered back to milliseconds.
+ *
+ * Example
+ *  - $v = TimestampMilliseconds::fromString('1732445696123');
+ *    $v->toString(); // "1732445696123"
+ *  - $v = TimestampMilliseconds::fromString('0');
+ *    (string) $v; // "0"
  *
  * @psalm-immutable
  */

@@ -14,9 +14,17 @@ use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
- * RFC 3339 format based on ISO 8601.
+ * Date-time value formatted using PHP's DATE_RFC3339 (RFC 3339 based on ISO 8601).
  *
- * Example "2025-01-02T03:04:05+00:00"
+ * Leverages the common DateTimeType parsing that aggregates parser errors and
+ * warnings, enforces strict round-trip formatting, and normalizes timezone
+ * handling. Guarantee output formatted with DATE_RFC3339.
+ *
+ * Example
+ *  - $v = DateTimeRFC3339::fromString('2025-01-02T03:04:05+00:00');
+ *    $v->toString(); // "2025-01-02T03:04:05+00:00"
+ *  - $v = DateTimeRFC3339::fromDateTime(new DateTimeImmutable('2030-12-31T23:59:59+03:00'));
+ *    (string) $v; // "2030-12-31T23:59:59+03:00"
  *
  * @psalm-immutable
  */

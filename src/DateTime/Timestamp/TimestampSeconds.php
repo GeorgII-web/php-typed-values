@@ -11,9 +11,16 @@ use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
- * Unix timestamp (seconds since Unix epoch, UTC).
+ * Unix timestamp value in whole seconds since the Unix epoch (UTC).
  *
- * Example "1732445696"
+ * Parses and formats using the 'U' pattern via the base DateTimeType, which
+ * performs strict error aggregation, round‑trip validation, and timezone
+ * normalization. Output has been guaranteed to be seconds since epoch as a string.
+ *
+ * Example
+ *  - $v = TimestampSeconds::fromString('1732445696');
+ *    $v->toString(); // "1732445696"
+ *  - (string) TimestampSeconds::fromString('0'); // "0"
  *
  * @psalm-immutable
  */
