@@ -10,6 +10,16 @@ use PhpTypedValues\Exception\FloatTypeException;
 use function sprintf;
 
 /**
+ * Base implementation for float-typed values.
+ *
+ * Provides common validation for float strings and formatting helpers for
+ * value objects backed by float primitives.
+ *
+ * Example
+ *  - $v = MyFloat::fromString('3.14');
+ *  - $v->value(); // 3.14 (float)
+ *  - (string) $v; // "3.14"
+ *
  * @psalm-immutable
  */
 abstract readonly class FloatType implements TypeInterface, FloatTypeInterface

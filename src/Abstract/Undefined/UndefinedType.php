@@ -8,9 +8,14 @@ use PhpTypedValues\Abstract\TypeInterface;
 use PhpTypedValues\Exception\UndefinedTypeException;
 
 /**
- * Special type for "Undefined" \ "Unknown" state.
- * Use it to return type hints when you don't know the value.
- * Use it instead of NULL (could mean anything) to make your code more readable.
+ * Base implementation for a special "Undefined/Unknown" typed value.
+ *
+ * Use it in APIs that must return a typed value when no meaningful value is available yet.
+ * Prefer this over null to make intent explicit and keep type-safety.
+ *
+ * Example
+ *  - return Undefined::create();
+ *  - $v->toString(); // throws UndefinedTypeException
  *
  * @psalm-immutable
  */
@@ -19,6 +24,22 @@ abstract readonly class UndefinedType implements TypeInterface, UndefinedTypeInt
     public static function create(): static
     {
         return new static();
+    }
+
+    /**
+     * @throws UndefinedTypeException
+     */
+    public function toInt(): void
+    {
+        throw new UndefinedTypeException('Undefined type cannot be converted to integer.');
+    }
+
+    /**
+     * @throws UndefinedTypeException
+     */
+    public function toFloat(): void
+    {
+        throw new UndefinedTypeException('Undefined type cannot be converted to float.');
     }
 
     /**

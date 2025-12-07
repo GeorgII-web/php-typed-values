@@ -10,6 +10,16 @@ use PhpTypedValues\Exception\IntegerTypeException;
 use function sprintf;
 
 /**
+ * Base implementation for integer-typed values.
+ *
+ * Contains strict string-to-int validation and common formatting helpers
+ * for value objects backed by integer primitives.
+ *
+ * Example
+ *  - $v = MyInt::fromString('42');
+ *  - $v->value(); // 42 (int)
+ *  - (string) $v; // "42"
+ *
  * @psalm-immutable
  */
 abstract readonly class IntType implements TypeInterface, IntTypeInterface

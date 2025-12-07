@@ -16,6 +16,16 @@ use function count;
 use function sprintf;
 
 /**
+ * Base implementation for DateTime typed values.
+ *
+ * Provides strict parsing with detailed error aggregation, round-trip
+ * validation against the format, timezone normalization and reasonable
+ * timestamp range checks.
+ *
+ * Example
+ *  - $v = MyDateTime::fromString('2025-01-02T03:04:05+00:00');
+ *  - $v->toString(); // '2025-01-02T03:04:05+00:00'
+ *
  * @psalm-immutable
  */
 abstract readonly class DateTimeType implements TypeInterface, DateTimeTypeInterface
