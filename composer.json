@@ -58,6 +58,9 @@
     "test": [
       "./vendor/bin/pest"
     ],
+    "usage": [
+      "php ./src/Usage/AllTypes.php"
+    ],
     "type": [
       "./vendor/bin/pest --type-coverage --min=100 --do-not-cache-result"
     ],

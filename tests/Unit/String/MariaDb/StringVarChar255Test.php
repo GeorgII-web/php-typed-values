@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use PhpTypedValues\Exception\StringTypeException;
 use PhpTypedValues\String\MariaDb\StringVarChar255;
+use PhpTypedValues\Undefined\Alias\Undefined;
 
 it('accepts empty string and preserves value', function (): void {
     $s = new StringVarChar255('');
@@ -35,4 +36,21 @@ it('throws on 256 multibyte characters (emoji)', function (): void {
     $str = str_repeat('🙂', 256);
     expect(fn() => StringVarChar255::fromString($str))
         ->toThrow(StringTypeException::class, 'String is too long, max 255 chars allowed');
+});
+
+it('StringVarChar255::tryFromString returns value when length <= 255', function (): void {
+    $short = str_repeat('a', 255);
+    $v = StringVarChar255::tryFromString($short);
+
+    expect($v)
+        ->toBeInstanceOf(StringVarChar255::class)
+        ->and($v->value())
+        ->toBe($short);
+});
+
+it('StringVarChar255::tryFromString returns Undefined when length > 255', function (): void {
+    $long = str_repeat('b', 256);
+    $u = StringVarChar255::tryFromString($long);
+
+    expect($u)->toBeInstanceOf(Undefined::class);
 });

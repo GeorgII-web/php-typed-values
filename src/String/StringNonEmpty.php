@@ -6,6 +6,8 @@ namespace PhpTypedValues\String;
 
 use PhpTypedValues\Abstract\String\StrType;
 use PhpTypedValues\Exception\StringTypeException;
+use PhpTypedValues\Exception\TypeException;
+use PhpTypedValues\Undefined\Alias\Undefined;
 
 use function sprintf;
 
@@ -31,6 +33,15 @@ readonly class StringNonEmpty extends StrType
         }
 
         $this->value = $value;
+    }
+
+    public static function tryFromString(string $value): static|Undefined
+    {
+        try {
+            return static::fromString($value);
+        } catch (TypeException) {
+            return Undefined::create();
+        }
     }
 
     /**

@@ -9,6 +9,8 @@ use const JSON_THROW_ON_ERROR;
 use JsonException;
 use PhpTypedValues\Abstract\String\StrType;
 use PhpTypedValues\Exception\JsonStringTypeException;
+use PhpTypedValues\Exception\TypeException;
+use PhpTypedValues\Undefined\Alias\Undefined;
 
 use function json_decode;
 use function sprintf;
@@ -42,6 +44,15 @@ readonly class Json extends StrType
         return new static($value);
     }
 
+    public static function tryFromString(string $value): static|Undefined
+    {
+        try {
+            return static::fromString($value);
+        } catch (TypeException) {
+            return Undefined::create();
+        }
+    }
+
     public function value(): string
     {
         return $this->value;
@@ -52,7 +63,6 @@ readonly class Json extends StrType
      */
     public function toObject(): object
     {
-        // Use named arguments and omit depth literal to avoid integer-mutation issues
         return json_decode(json: $this->value, associative: false, flags: JSON_THROW_ON_ERROR);
     }
 
@@ -61,7 +71,6 @@ readonly class Json extends StrType
      */
     public function toArray(): array
     {
-        // Use named arguments and omit depth literal to avoid integer-mutation issues
         return json_decode(json: $this->value, associative: true, flags: JSON_THROW_ON_ERROR);
     }
 
