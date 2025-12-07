@@ -9,6 +9,7 @@ use PhpTypedValues\String\Alias\Str;
 use PhpTypedValues\String\Alias\StrType;
 use PhpTypedValues\String\Alias\Url;
 use PhpTypedValues\String\Json;
+use PhpTypedValues\String\MariaDb\StringDecimal;
 use PhpTypedValues\String\MariaDb\StringVarChar255;
 use PhpTypedValues\String\StringCountryCode;
 use PhpTypedValues\String\StringEmail;
@@ -70,6 +71,19 @@ echo StringCountryCode::fromString('gb')->toString() . \PHP_EOL; // normalized t
 $cc = StringCountryCode::tryFromString('ZZ');
 if (!($cc instanceof Undefined)) {
     echo $cc->toString() . \PHP_EOL;
+}
+
+// MariaDb Decimal (usage and try*) and toFloat strictness
+echo StringDecimal::fromString('3.14')->toString() . \PHP_EOL;
+// tryFromString branch
+$dec = StringDecimal::tryFromString('1.5');
+if (!($dec instanceof Undefined)) {
+    // toFloat may throw if string cannot be represented exactly; suppress for usage demo
+    try {
+        echo (string) $dec->toFloat() . \PHP_EOL;
+    } catch (Throwable) {
+        // ignore in usage
+    }
 }
 
 /**
