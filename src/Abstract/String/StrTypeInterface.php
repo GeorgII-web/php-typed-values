@@ -22,9 +22,15 @@ interface StrTypeInterface
 {
     public function value(): string;
 
-    public static function fromString(string $value): static;
+    /**
+     * @return static
+     */
+    public static function fromString(string $value);
 
-    public static function tryFromString(string $value): static|Undefined;
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    public static function tryFromString(string $value);
 
     public function toString(): string;
 

@@ -19,7 +19,7 @@ use PhpTypedValues\Abstract\TypeInterface;
  *
  * @psalm-immutable
  */
-abstract readonly class BoolType implements TypeInterface, BoolTypeInterface
+abstract class BoolType implements TypeInterface, BoolTypeInterface
 {
     abstract protected function __construct(bool $value);
 
@@ -28,7 +28,10 @@ abstract readonly class BoolType implements TypeInterface, BoolTypeInterface
         return $this->value() ? 'true' : 'false';
     }
 
-    public static function fromBool(bool $value): static
+    /**
+     * @return static
+     */
+    public static function fromBool(bool $value)
     {
         return new static($value);
     }

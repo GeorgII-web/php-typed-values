@@ -20,6 +20,6 @@ use PhpTypedValues\Integer\MariaDb\IntegerTiny;
  *
  * @psalm-immutable
  */
-readonly class Tiny extends IntegerTiny
+class Tiny extends IntegerTiny
 {
 }

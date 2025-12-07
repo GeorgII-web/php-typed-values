@@ -20,6 +20,6 @@ use PhpTypedValues\Float\FloatStandard;
  *
  * @psalm-immutable
  */
-readonly class Double extends FloatStandard
+class Double extends FloatStandard
 {
 }
