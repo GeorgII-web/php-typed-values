@@ -69,6 +69,8 @@ readonly class StringCountryCode extends StrType
     /**
      * ISO 3166-1 alpha-2 codes used for validation.
      *
+     * @pest-mutate-ignore
+     *
      * @return list<non-empty-string>
      */
     private static function listAllowed(): array

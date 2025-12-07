@@ -1,6 +1,7 @@
 <?php
 
 use PhpTypedValues\String\Alias\CountryCode;
+use PhpTypedValues\String\Alias\Decimal;
 use PhpTypedValues\String\Alias\Email;
 use PhpTypedValues\String\Alias\JsonStr;
 use PhpTypedValues\String\Alias\NonBlankStr;
@@ -74,6 +75,7 @@ if (!($cc instanceof Undefined)) {
 }
 
 // MariaDb Decimal (usage and try*) and toFloat strictness
+echo Decimal::fromString('3.14')->toString() . \PHP_EOL;
 echo StringDecimal::fromString('3.14')->toString() . \PHP_EOL;
 // tryFromString branch
 $dec = StringDecimal::tryFromString('1.5');
