@@ -58,6 +58,15 @@ readonly class FloatPositive extends FloatType
         }
     }
 
+    public static function tryFromMixed(mixed $value): static|Undefined
+    {
+        try {
+            return static::fromString((string) $value);
+        } catch (TypeException) {
+            return Undefined::create();
+        }
+    }
+
     public static function tryFromFloat(float $value): static|Undefined
     {
         try {
@@ -80,5 +89,10 @@ readonly class FloatPositive extends FloatType
     public function value(): float
     {
         return $this->value;
+    }
+
+    public function jsonSerialize(): float
+    {
+        return $this->value();
     }
 }

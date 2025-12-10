@@ -1,7 +1,12 @@
 <?php
 
+namespace PhpTypedValues\Usage\Primitive;
+
 require_once 'vendor/autoload.php';
 
+use const PHP_EOL;
+
+use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Exception\UndefinedTypeException;
 use PhpTypedValues\Undefined\Alias\NotExist;
 use PhpTypedValues\Undefined\Alias\NotFound;
@@ -11,6 +16,8 @@ use PhpTypedValues\Undefined\Alias\Unknown;
 use PhpTypedValues\Undefined\UndefinedStandard;
 
 // Undefined
+echo PHP_EOL . '> UNDEFINED' . PHP_EOL;
+
 try {
     UndefinedStandard::create()->toString();
 } catch (UndefinedTypeException $e) {
@@ -33,5 +40,29 @@ try {
 }
 NotFound::create();
 NotSet::create();
-Undefined::create();
 Unknown::create();
+
+$undefined = Undefined::create();
+try {
+    $undefined->value();
+} catch (TypeException $e) {
+    echo $e->getMessage() . PHP_EOL;
+}
+
+try {
+    $undefined->toString();
+} catch (TypeException $e) {
+    echo $e->getMessage() . PHP_EOL;
+}
+
+try {
+    $undefined->toFloat();
+} catch (TypeException $e) {
+    echo $e->getMessage() . PHP_EOL;
+}
+
+try {
+    $undefined->toInt();
+} catch (TypeException $e) {
+    echo $e->getMessage() . PHP_EOL;
+}

@@ -97,4 +97,9 @@ readonly class StringJson extends StrType
             throw new JsonStringTypeException(sprintf('String "%s" has no valid JSON value', $value), 0, $e);
         }
     }
+
+    public function jsonSerialize(): string
+    {
+        return $this->toString();
+    }
 }

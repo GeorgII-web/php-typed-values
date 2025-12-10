@@ -71,6 +71,11 @@ readonly class StringCountryCode extends StrType
         return $this->value;
     }
 
+    public function jsonSerialize(): string
+    {
+        return $this->toString();
+    }
+
     /**
      * ISO 3166-1 alpha-2 codes used for validation.
      *

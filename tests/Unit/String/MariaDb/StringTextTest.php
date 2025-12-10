@@ -56,3 +56,7 @@ it('Alias Text behaves the same as StringText', function (): void {
     $alias = Text::fromString('alias');
     expect($alias->value())->toBe('alias');
 });
+
+it('jsonSerialize returns string', function (): void {
+    expect(Text::tryFromString('hello')->jsonSerialize())->toBeString();
+});

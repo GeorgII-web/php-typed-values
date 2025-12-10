@@ -56,3 +56,7 @@ it('toFloat returns exact float only when string equals (string)(float) cast', f
         ->and(fn() => StringDecimal::fromString('2.000')->toFloat())
         ->toThrow(DecimalStringTypeException::class, 'Unexpected float conversion');
 });
+
+it('jsonSerialize returns string', function (): void {
+    expect(StringDecimal::fromString('1.1')->jsonSerialize())->toBeString();
+});

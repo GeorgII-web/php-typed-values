@@ -62,4 +62,9 @@ readonly class TimestampSeconds extends DateTimeType
     {
         return $this->value()->format(static::FORMAT);
     }
+
+    public function jsonSerialize(): int
+    {
+        return (int) $this->toString();
+    }
 }

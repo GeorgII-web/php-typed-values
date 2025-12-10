@@ -10,7 +10,7 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  * Contract for string-typed values.
  *
  * Declares the API for string-backed value objects, including factory
- * methods, accessors and formatting helpers.
+ * methods, accessors, and formatting helpers.
  *
  * Example
  *  - $v = MyString::fromString('abc');
@@ -22,11 +22,5 @@ interface StrTypeInterface
 {
     public function value(): string;
 
-    public static function fromString(string $value): static;
-
     public static function tryFromString(string $value): static|Undefined;
-
-    public function toString(): string;
-
-    public function __toString(): string;
 }

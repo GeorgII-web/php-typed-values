@@ -43,3 +43,7 @@ it('throws on empty string via fromString', function (): void {
     expect(fn() => StringNonEmpty::fromString(''))
         ->toThrow(StringTypeException::class, 'Expected non-empty string, got ""');
 });
+
+it('jsonSerialize returns string', function (): void {
+    expect(StringNonEmpty::tryFromString('hello')->jsonSerialize())->toBeString();
+});

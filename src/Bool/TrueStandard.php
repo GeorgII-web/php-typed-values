@@ -91,4 +91,9 @@ readonly class TrueStandard extends BoolType
     {
         return $this->value;
     }
+
+    public function jsonSerialize(): bool
+    {
+        return $this->value();
+    }
 }

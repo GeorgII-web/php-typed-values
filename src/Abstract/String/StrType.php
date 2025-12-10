@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Abstract\String;
 
-use PhpTypedValues\Abstract\TypeInterface;
+use PhpTypedValues\Abstract\AbstractType;
 
 /**
  * Base implementation for string-typed values.
@@ -17,9 +17,13 @@ use PhpTypedValues\Abstract\TypeInterface;
  *  - $v = MyString::fromString('hello');
  *  - $v->toString(); // "hello"
  *
+ * @internal
+ *
+ * @psalm-internal PhpTypedValues
+ *
  * @psalm-immutable
  */
-abstract readonly class StrType implements TypeInterface, StrTypeInterface
+abstract readonly class StrType extends AbstractType implements StrTypeInterface
 {
     public function toString(): string
     {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Abstract\Float;
 
-use PhpTypedValues\Abstract\TypeInterface;
+use PhpTypedValues\Abstract\AbstractType;
 use PhpTypedValues\Exception\FloatTypeException;
 
 use function sprintf;
@@ -20,9 +20,13 @@ use function sprintf;
  *  - $v->value(); // 3.14 (float)
  *  - (string) $v; // "3.14"
  *
+ * @internal
+ *
+ * @psalm-internal PhpTypedValues
+ *
  * @psalm-immutable
  */
-abstract readonly class FloatType implements TypeInterface, FloatTypeInterface
+abstract readonly class FloatType extends AbstractType implements FloatTypeInterface
 {
     /**
      * @throws FloatTypeException

@@ -54,3 +54,7 @@ it('StringVarChar255::tryFromString returns Undefined when length > 255', functi
 
     expect($u)->toBeInstanceOf(Undefined::class);
 });
+
+it('jsonSerialize returns string', function (): void {
+    expect(StringVarChar255::tryFromString('hello')->jsonSerialize())->toBeString();
+});

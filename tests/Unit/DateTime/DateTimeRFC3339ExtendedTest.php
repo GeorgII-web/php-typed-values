@@ -127,3 +127,7 @@ it('DateTimeRFC3339Extended::tryFromString returns Undefined for invalid string'
 
     expect($u)->toBeInstanceOf(Undefined::class);
 });
+
+it('jsonSerialize returns string', function (): void {
+    expect(DateTimeRFC3339Extended::tryFromString('2025-01-02T03:04:05.000+00:00')->jsonSerialize())->toBeString();
+});

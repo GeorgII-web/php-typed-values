@@ -13,11 +13,11 @@ it('creates Undefined via factory', function (): void {
 it('throws on toString for Undefined', function (): void {
     $u = Undefined::create();
     expect(fn() => $u->toString())
-        ->toThrow(UndefinedTypeException::class, 'Undefined type cannot be converted to string.');
+        ->toThrow(UndefinedTypeException::class, 'UndefinedType cannot be converted to string.');
 });
 
 it('throws on value for Undefined', function (): void {
     $u = Undefined::create();
     expect(fn() => $u->value())
-        ->toThrow(UndefinedTypeException::class, 'Undefined type has no value.');
+        ->toThrow(UndefinedTypeException::class, 'UndefinedType has no value.');
 });

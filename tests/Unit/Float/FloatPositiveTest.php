@@ -94,3 +94,7 @@ it('FloatPositive::fromString enforces numeric and positivity', function (): voi
     $v = FloatPositive::fromString('1.25');
     expect($v->value())->toBe(1.25);
 });
+
+it('jsonSerialize returns float', function (): void {
+    expect(FloatPositive::tryFromString('1.1')->jsonSerialize())->toBeFloat();
+});

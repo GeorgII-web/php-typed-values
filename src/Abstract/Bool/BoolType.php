@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Abstract\Bool;
 
-use PhpTypedValues\Abstract\TypeInterface;
+use PhpTypedValues\Abstract\AbstractType;
 
 /**
  * Base implementation for boolean typed values.
@@ -17,9 +17,13 @@ use PhpTypedValues\Abstract\TypeInterface;
  *  - $v = MyBoolean::fromBool(true);
  *  - $v->toString(); // "true"
  *
+ * @internal
+ *
+ * @psalm-internal PhpTypedValues
+ *
  * @psalm-immutable
  */
-abstract readonly class BoolType implements TypeInterface, BoolTypeInterface
+abstract readonly class BoolType extends AbstractType implements BoolTypeInterface
 {
     abstract protected function __construct(bool $value);
 

@@ -41,6 +41,13 @@ it('getFormat returns DATE_ATOM format', function (): void {
     expect(DateTimeAtom::getFormat())->toBe(\DATE_ATOM);
 });
 
+it('casts to string via __toString and jsonSerialize equals toString (ATOM)', function (): void {
+    $vo = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
+
+    expect((string) $vo)->toBe($vo->toString())
+        ->and($vo->jsonSerialize())->toBe($vo->toString());
+});
+
 it('fromString with both parse error and warning includes both details in the exception message', function (): void {
     // invalid month (error) + trailing space (warning)
     $input = '2025-13-02T03:04:05+00:00 ';
@@ -129,4 +136,8 @@ it('DateTimeAtom::tryFromString returns Undefined for invalid string', function 
     $u = DateTimeAtom::tryFromString('2025-01-02T03:04:05');
 
     expect($u)->toBeInstanceOf(Undefined::class);
+});
+
+it('jsonSerialize returns string', function (): void {
+    expect(DateTimeAtom::tryFromString('2025-01-02T03:04:05+00:00')->jsonSerialize())->toBeString();
 });

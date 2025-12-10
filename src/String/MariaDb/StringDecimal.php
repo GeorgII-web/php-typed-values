@@ -93,4 +93,9 @@ readonly class StringDecimal extends StrType
             throw new DecimalStringTypeException(sprintf('Expected decimal string (e.g., "123", "-1", "3.14"), got "%s"', $value));
         }
     }
+
+    public function jsonSerialize(): string
+    {
+        return $this->toString();
+    }
 }

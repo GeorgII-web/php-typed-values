@@ -85,3 +85,7 @@ it('explicitly accepts tail-list country codes YT, ZA, ZM (guards against elemen
         ->and(StringCountryCode::fromString('ZA')->value())->toBe('ZA')
         ->and(StringCountryCode::fromString('ZM')->value())->toBe('ZM');
 });
+
+it('jsonSerialize returns string', function (): void {
+    expect(StringCountryCode::fromString('DE')->jsonSerialize())->toBeString();
+});

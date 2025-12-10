@@ -43,4 +43,9 @@ readonly class StringStandard extends StrType
     {
         return $this->value;
     }
+
+    public function jsonSerialize(): string
+    {
+        return $this->toString();
+    }
 }

@@ -27,7 +27,7 @@ composer require georgii-web/php-typed-values:^1.0
 #### 1. Use existing typed values with validation built in:
 
 ```php
-$id = PositiveInt::fromString('123');
+$id = IntegerPositive::fromString('123');
 ```
 
 instead of duplicating this logic across your application like:
@@ -42,7 +42,7 @@ if ($id <= 0) {
 #### 2. Create aliases:
 
 ```php
-readonly class Id extends PositiveInt {}
+readonly class Id extends IntegerPositive {}
 
 Id::fromInt(123);
 ```
@@ -50,7 +50,7 @@ Id::fromInt(123);
 #### 3. Create a composite value object:
 
 ```php
-final class Profile
+final readonly class Profile
 {
     public function __construct(
         public readonly IntegerPositive $id,
@@ -65,21 +65,21 @@ final class Profile
     ): static {
         return new static(
             IntegerPositive::fromInt($id),
-            StringNonEmpty::fromString($firstName),
+            StringNonEmpty::fromString($firstName), // Early fail
             $height !== null ? FloatNonNegative::fromString((string) $height) : null,
         );
     }
     
     public function getHeight(): FloatNonNegative|Undefined { // avoid using NULL, which could mean anything
-        return $this->height ?? Undefined::create();
+        return $this->height ?? Undefined::create(); // Late fail
     }
 }
 
 // Usage
-Profile::fromScalars(id: 101, firstName: 'Alice', height: '172.5');
-Profile::fromScalars(id: 157, firstName: 'Tom', height: null);
+\PhpTypedValues\Usage\Composite::fromScalars(id: 101, firstName: 'Alice', height: '172.5');
+\PhpTypedValues\Usage\Composite::fromScalars(id: 157, firstName: 'Tom', height: null);
 // From array
-$profile = Profile::fromScalars(...[157, 'Tom', null]);
+$profile = \PhpTypedValues\Usage\Composite::fromScalars(...[157, 'Tom', null]);
 // Accessing values
 $profile->getHeight(); // "172.5" OR "Undefined" type class (will throw an exception on trying to get value)
 ```

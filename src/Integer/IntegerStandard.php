@@ -66,4 +66,9 @@ readonly class IntegerStandard extends IntType
     {
         return $this->value;
     }
+
+    public function jsonSerialize(): int
+    {
+        return $this->value();
+    }
 }

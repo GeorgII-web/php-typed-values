@@ -16,6 +16,11 @@ it('constructs only with false and exposes value/toString', function (): void {
         ->toThrow(BoolTypeException::class, 'Expected false literal, got "true"');
 });
 
+it('jsonSerialize returns native false', function (): void {
+    $f = new FalseStandard(false);
+    expect($f->jsonSerialize())->toBeFalse();
+});
+
 it('fromString accepts false-like values only', function (): void {
     expect(FalseStandard::fromString('false')->value())->toBeFalse()
         ->and(FalseStandard::fromString(' NO ')->value())->toBeFalse()
@@ -45,4 +50,8 @@ it('tryFromString/tryFromInt return Undefined for non-false inputs', function ()
         ->and($okI->value())->toBeFalse()
         ->and($badStr)->toBeInstanceOf(Undefined::class)
         ->and($badI)->toBeInstanceOf(Undefined::class);
+});
+
+it('jsonSerialize returns bool', function (): void {
+    expect(FalseStandard::tryFromString('0')->jsonSerialize())->toBeBool();
 });

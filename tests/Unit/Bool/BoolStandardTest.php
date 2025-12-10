@@ -15,6 +15,14 @@ it('constructs with boolean and exposes value and toString', function (): void {
         ->and($f->toString())->toBe('false');
 });
 
+it('jsonSerialize returns native boolean for true/false', function (): void {
+    $t = new BoolStandard(true);
+    $f = new BoolStandard(false);
+
+    expect($t->jsonSerialize())->toBeTrue()
+        ->and($f->jsonSerialize())->toBeFalse();
+});
+
 it('creates fromBool correctly', function (): void {
     expect(BoolStandard::fromBool(true)->value())->toBeTrue()
         ->and(BoolStandard::fromBool(false)->toString())->toBe('false');
@@ -92,4 +100,8 @@ it('casts to string via __toString magic method', function (): void {
 
     expect((string) $t)->toBe('true')
         ->and((string) $f)->toBe('false');
+});
+
+it('jsonSerialize returns bool', function (): void {
+    expect(BoolStandard::tryFromString('1')->jsonSerialize())->toBeBool();
 });

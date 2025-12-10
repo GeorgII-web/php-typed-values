@@ -101,3 +101,58 @@ it('toString returns scalar string for WeekDayInt', function (): void {
 it('fails creating WeekDayInt from float string', function (): void {
     expect(fn() => IntegerWeekDay::fromString('5.5'))->toThrow(IntegerTypeException::class);
 });
+
+it('jsonSerialize returns integer', function (): void {
+    expect(IntegerWeekDay::tryFromString('1')->jsonSerialize())->toBeInt();
+});
+it('accepts 1..7 and exposes value/toString', function (): void {
+    $one = new IntegerWeekDay(1);
+    $seven = IntegerWeekDay::fromInt(7);
+
+    expect($one->value())->toBe(1)
+        ->and($one->toString())->toBe('1')
+        ->and((string) $one)->toBe('1')
+        ->and($seven->value())->toBe(7)
+        ->and($seven->toString())->toBe('7');
+});
+
+it('throws on values out of 1..7 in constructor/fromInt', function (): void {
+    expect(fn() => new IntegerWeekDay(0))
+        ->toThrow(IntegerTypeException::class, 'Expected value between 1-7, got "0"')
+        ->and(fn() => IntegerWeekDay::fromInt(8))
+        ->toThrow(IntegerTypeException::class, 'Expected value between 1-7, got "8"');
+});
+
+it('fromString enforces strict integer parsing and range', function (): void {
+    expect(IntegerWeekDay::fromString('2')->value())->toBe(2)
+        ->and(IntegerWeekDay::fromString('6')->toString())->toBe('6');
+
+    foreach (['01', '+1', '1.0', ' 1', '1 ', 'a'] as $bad) {
+        expect(fn() => IntegerWeekDay::fromString($bad))
+            ->toThrow(IntegerTypeException::class, \sprintf('String "%s" has no valid strict integer value', $bad));
+    }
+
+    // Strict string passes validation but out of range -> domain error
+    expect(fn() => IntegerWeekDay::fromString('0'))
+        ->toThrow(IntegerTypeException::class, 'Expected value between 1-7, got "0"')
+        ->and(fn() => IntegerWeekDay::fromString('8'))
+        ->toThrow(IntegerTypeException::class, 'Expected value between 1-7, got "8"');
+});
+
+it('tryFromInt/tryFromString return Undefined on invalid and instance on valid', function (): void {
+    $okI = IntegerWeekDay::tryFromInt(3);
+    $badI = IntegerWeekDay::tryFromInt(9);
+    $okS = IntegerWeekDay::tryFromString('4');
+    $badS = IntegerWeekDay::tryFromString('01');
+
+    expect($okI)->toBeInstanceOf(IntegerWeekDay::class)
+        ->and($okI->value())->toBe(3)
+        ->and($okS)->toBeInstanceOf(IntegerWeekDay::class)
+        ->and($okS->value())->toBe(4)
+        ->and($badI)->toBeInstanceOf(Undefined::class)
+        ->and($badS)->toBeInstanceOf(Undefined::class);
+});
+
+it('jsonSerialize returns native int', function (): void {
+    expect(IntegerWeekDay::fromInt(5)->jsonSerialize())->toBe(5);
+});

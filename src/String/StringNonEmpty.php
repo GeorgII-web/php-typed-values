@@ -41,6 +41,15 @@ readonly class StringNonEmpty extends StrType
         $this->value = $value;
     }
 
+    public static function tryFromMixed(mixed $value): static|Undefined
+    {
+        try {
+            return static::fromString((string) $value);
+        } catch (TypeException) {
+            return Undefined::create();
+        }
+    }
+
     public static function tryFromString(string $value): static|Undefined
     {
         try {
@@ -62,5 +71,10 @@ readonly class StringNonEmpty extends StrType
     public function value(): string
     {
         return $this->value;
+    }
+
+    public function jsonSerialize(): string
+    {
+        return $this->toString();
     }
 }

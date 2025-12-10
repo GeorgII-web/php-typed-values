@@ -65,4 +65,9 @@ readonly class StringNonBlank extends StrType
     {
         return $this->value;
     }
+
+    public function jsonSerialize(): string
+    {
+        return $this->toString();
+    }
 }

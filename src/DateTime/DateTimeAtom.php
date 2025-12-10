@@ -64,4 +64,9 @@ readonly class DateTimeAtom extends DateTimeType
     {
         return new static($value);
     }
+
+    public function jsonSerialize(): string
+    {
+        return $this->toString();
+    }
 }

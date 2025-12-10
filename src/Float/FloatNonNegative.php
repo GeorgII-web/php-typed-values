@@ -41,6 +41,17 @@ readonly class FloatNonNegative extends FloatType
         $this->value = $value;
     }
 
+    public static function tryFromMixed(mixed $value): static|Undefined
+    {
+        try {
+            return static::fromString(
+                static::convertMixedToString($value)
+            );
+        } catch (TypeException) {
+            return Undefined::create();
+        }
+    }
+
     /**
      * @throws FloatTypeException
      */
@@ -80,5 +91,10 @@ readonly class FloatNonNegative extends FloatType
     public function value(): float
     {
         return $this->value;
+    }
+
+    public function jsonSerialize(): float
+    {
+        return $this->value();
     }
 }

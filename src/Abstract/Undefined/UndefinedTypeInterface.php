@@ -21,13 +21,9 @@ interface UndefinedTypeInterface
 {
     public static function create(): static;
 
-    public function value(): void;
+    public function value(): never;
 
-    public function toInt(): void;
+    public function toInt(): never;
 
-    public function toFloat(): void;
-
-    public function toString(): void;
-
-    public function __toString(): string;
+    public function toFloat(): never;
 }

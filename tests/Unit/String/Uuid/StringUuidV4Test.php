@@ -62,3 +62,8 @@ it('StringUuidV4::tryFromString returns Undefined for non-v4 or invalid UUID', f
     expect($u1)->toBeInstanceOf(Undefined::class)
         ->and($u2)->toBeInstanceOf(Undefined::class);
 });
+
+it('jsonSerialize returns string', function (): void {
+    $t = new StringUuidV4('550e8400-e29b-41d4-a716-446655440000');
+    expect($t->jsonSerialize())->toBeString();
+});

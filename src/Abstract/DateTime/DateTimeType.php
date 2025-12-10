@@ -8,7 +8,7 @@ use const PHP_EOL;
 
 use DateTimeImmutable;
 use DateTimeZone;
-use PhpTypedValues\Abstract\TypeInterface;
+use PhpTypedValues\Abstract\AbstractType;
 use PhpTypedValues\Exception\DateTimeTypeException;
 use PhpTypedValues\Exception\ReasonableRangeDateTimeTypeException;
 
@@ -19,16 +19,20 @@ use function sprintf;
  * Base implementation for DateTime typed values.
  *
  * Provides strict parsing with detailed error aggregation, round-trip
- * validation against the format, timezone normalization and reasonable
+ * validation against the format, timezone normalization, and reasonable
  * timestamp range checks.
  *
  * Example
  *  - $v = MyDateTime::fromString('2025-01-02T03:04:05+00:00');
  *  - $v->toString(); // '2025-01-02T03:04:05+00:00'
  *
+ * @internal
+ *
+ * @psalm-internal PhpTypedValues
+ *
  * @psalm-immutable
  */
-abstract readonly class DateTimeType implements TypeInterface, DateTimeTypeInterface
+abstract readonly class DateTimeType extends AbstractType implements DateTimeTypeInterface
 {
     protected const FORMAT = '';
     protected const ZONE = 'UTC';

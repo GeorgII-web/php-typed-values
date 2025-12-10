@@ -27,11 +27,5 @@ interface BoolTypeInterface
 
     public static function tryFromInt(int $value): static|Undefined;
 
-    public static function fromString(string $value): static;
-
     public static function fromBool(bool $value): static;
-
-    public function toString(): string;
-
-    public function __toString(): string;
 }

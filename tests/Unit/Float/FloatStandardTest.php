@@ -36,3 +36,7 @@ it('FloatStandard::fromString throws on non-numeric strings', function (): void 
     expect(fn() => FloatStandard::fromString('NaN'))
         ->toThrow(FloatTypeException::class, 'String "NaN" has no valid float value');
 });
+
+it('jsonSerialize returns float', function (): void {
+    expect(FloatStandard::tryFromString('1.1')->jsonSerialize())->toBeFloat();
+});

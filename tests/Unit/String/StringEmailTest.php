@@ -37,3 +37,7 @@ it('tryFromString returns instance for valid and Undefined for invalid', functio
         ->and($bad)
         ->toBeInstanceOf(Undefined::class);
 });
+
+it('jsonSerialize returns string', function (): void {
+    expect(StringEmail::tryFromString('hello@domain.com')->jsonSerialize())->toBeString();
+});

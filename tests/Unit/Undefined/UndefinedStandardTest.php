@@ -10,26 +10,44 @@ it('creates UndefinedStandard via factory', function (): void {
     expect($u)->toBeInstanceOf(UndefinedStandard::class);
 });
 
+it('creates UndefinedStandard via fromString factory', function (): void {
+    $u = UndefinedStandard::fromString('anything');
+    expect($u)->toBeInstanceOf(UndefinedStandard::class);
+});
+
 it('throws on toString for UndefinedStandard', function (): void {
     $u = UndefinedStandard::create();
     expect(fn() => $u->toString())
-        ->toThrow(UndefinedTypeException::class, 'Undefined type cannot be converted to string.');
+        ->toThrow(UndefinedTypeException::class, 'UndefinedType cannot be converted to string.');
 });
 
 it('throws on toInt for UndefinedStandard', function (): void {
     $u = UndefinedStandard::create();
     expect(fn() => $u->toInt())
-        ->toThrow(UndefinedTypeException::class, 'Undefined type cannot be converted to integer.');
+        ->toThrow(UndefinedTypeException::class, 'UndefinedType cannot be converted to integer.');
 });
 
 it('throws on toFloat for UndefinedStandard', function (): void {
     $u = UndefinedStandard::create();
     expect(fn() => $u->toFloat())
-        ->toThrow(UndefinedTypeException::class, 'Undefined type cannot be converted to float.');
+        ->toThrow(UndefinedTypeException::class, 'UndefinedType cannot be converted to float.');
 });
 
 it('throws on value for UndefinedStandard', function (): void {
     $u = UndefinedStandard::create();
     expect(fn() => $u->value())
-        ->toThrow(UndefinedTypeException::class, 'Undefined type has no value.');
+        ->toThrow(UndefinedTypeException::class, 'UndefinedType has no value.');
+});
+
+it('throws on __toString for UndefinedStandard', function (): void {
+    $u = UndefinedStandard::create();
+    // Call magic directly to avoid implicit casting behavior
+    expect(fn() => $u->__toString())
+        ->toThrow(UndefinedTypeException::class, 'UndefinedType cannot be converted to string.');
+});
+
+it('throws on jsonSerialize for UndefinedStandard', function (): void {
+    $u = UndefinedStandard::create();
+    expect(fn() => $u->jsonSerialize())
+        ->toThrow(UndefinedTypeException::class, 'UndefinedType cannot be serialized for Json.');
 });

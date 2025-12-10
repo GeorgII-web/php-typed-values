@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Abstract\Integer;
 
-use PhpTypedValues\Abstract\TypeInterface;
+use PhpTypedValues\Abstract\AbstractType;
 use PhpTypedValues\Exception\IntegerTypeException;
 
 use function sprintf;
@@ -20,9 +20,13 @@ use function sprintf;
  *  - $v->value(); // 42 (int)
  *  - (string) $v; // "42"
  *
+ * @internal
+ *
+ * @psalm-internal PhpTypedValues
+ *
  * @psalm-immutable
  */
-abstract readonly class IntType implements TypeInterface, IntTypeInterface
+abstract readonly class IntType extends AbstractType implements IntTypeInterface
 {
     /**
      * @throws IntegerTypeException

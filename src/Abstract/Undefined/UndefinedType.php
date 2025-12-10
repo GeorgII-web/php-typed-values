@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Abstract\Undefined;
 
-use PhpTypedValues\Abstract\TypeInterface;
+use PhpTypedValues\Abstract\AbstractType;
 use PhpTypedValues\Exception\UndefinedTypeException;
 
 /**
@@ -17,11 +17,20 @@ use PhpTypedValues\Exception\UndefinedTypeException;
  *  - return Undefined::create();
  *  - $v->toString(); // throws UndefinedTypeException
  *
+ * @internal
+ *
+ * @psalm-internal PhpTypedValues
+ *
  * @psalm-immutable
  */
-abstract readonly class UndefinedType implements TypeInterface, UndefinedTypeInterface
+abstract readonly class UndefinedType extends AbstractType implements UndefinedTypeInterface
 {
     public static function create(): static
+    {
+        return new static();
+    }
+
+    public static function fromString(string $value): static
     {
         return new static();
     }
@@ -29,33 +38,33 @@ abstract readonly class UndefinedType implements TypeInterface, UndefinedTypeInt
     /**
      * @throws UndefinedTypeException
      */
-    public function toInt(): void
+    public function toInt(): never
     {
-        throw new UndefinedTypeException('Undefined type cannot be converted to integer.');
+        throw new UndefinedTypeException('UndefinedType cannot be converted to integer.');
     }
 
     /**
      * @throws UndefinedTypeException
      */
-    public function toFloat(): void
+    public function toFloat(): never
     {
-        throw new UndefinedTypeException('Undefined type cannot be converted to float.');
+        throw new UndefinedTypeException('UndefinedType cannot be converted to float.');
     }
 
     /**
      * @throws UndefinedTypeException
      */
-    public function toString(): void
+    public function toString(): never
     {
-        throw new UndefinedTypeException('Undefined type cannot be converted to string.');
+        throw new UndefinedTypeException('UndefinedType cannot be converted to string.');
     }
 
     /**
      * @throws UndefinedTypeException
      */
-    public function value(): void
+    public function value(): never
     {
-        throw new UndefinedTypeException('Undefined type has no value.');
+        throw new UndefinedTypeException('UndefinedType has no value.');
     }
 
     /**
@@ -63,6 +72,14 @@ abstract readonly class UndefinedType implements TypeInterface, UndefinedTypeInt
      */
     public function __toString(): string
     {
-        throw new UndefinedTypeException('Undefined type cannot be converted to string.');
+        throw new UndefinedTypeException('UndefinedType cannot be converted to string.');
+    }
+
+    /**
+     * @throws UndefinedTypeException
+     */
+    public function jsonSerialize(): never
+    {
+        throw new UndefinedTypeException('UndefinedType cannot be serialized for Json.');
     }
 }

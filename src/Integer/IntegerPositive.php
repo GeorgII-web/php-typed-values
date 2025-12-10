@@ -85,4 +85,9 @@ readonly class IntegerPositive extends IntType
     {
         return $this->value;
     }
+
+    public function jsonSerialize(): int
+    {
+        return $this->value();
+    }
 }

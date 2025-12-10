@@ -93,4 +93,9 @@ readonly class TimestampMilliseconds extends DateTimeType
 
         return (string) $milliseconds;
     }
+
+    public function jsonSerialize(): int
+    {
+        return (int) $this->toString();
+    }
 }

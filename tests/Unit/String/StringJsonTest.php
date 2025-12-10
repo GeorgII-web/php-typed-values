@@ -63,3 +63,7 @@ it('constructor throws with code 0 and previous JsonException on invalid JSON', 
             ->toBeInstanceOf(JsonException::class);
     }
 });
+
+it('jsonSerialize returns string', function (): void {
+    expect(StringJson::tryFromString('{}')->jsonSerialize())->toBeString();
+});

@@ -2,9 +2,17 @@
 
 declare(strict_types=1);
 
-require_once \dirname(__DIR__, 2) . '/vendor/autoload.php';
+namespace PhpTypedValues\Usage\Util;
+
+require_once 'vendor/autoload.php';
+
+use const PHP_EOL;
+use const PHP_VERSION;
 
 use PhpTypedValues\Integer\IntegerStandard;
+
+use function ini_get;
+use function sprintf;
 
 /**
  * Simple console performance comparison between:
@@ -18,10 +26,10 @@ function main(array $argv): int
     $defaultN = 1_000_000;
     $n = parseN($argv, $defaultN);
 
-    echo \PHP_EOL;
-    echo '---------------------------------------------------------' . \PHP_EOL;
+    echo PHP_EOL;
+    echo '---------------------------------------------------------' . PHP_EOL;
 
-    echo 'PHP: ' . \PHP_VERSION . ' Memory limit: ' . ((string) \ini_get('memory_limit')) . ' Dataset N: ' . number_format($n) . \PHP_EOL;
+    echo 'PHP: ' . PHP_VERSION . ' Memory limit: ' . ((string) ini_get('memory_limit')) . ' Dataset N: ' . number_format($n) . PHP_EOL;
 
     // Ensure a clean baseline
     gc_collect_cycles();
@@ -29,7 +37,7 @@ function main(array $argv): int
     $objects = measureObjects($n);
     $ints = measureInts($n);
 
-    echo \PHP_EOL;
+    echo PHP_EOL;
     printf(
         "%-10s | time: %9.3f ms | mem: %7.2f MB\n",
         'ints',
@@ -154,5 +162,5 @@ function formatPct(?float $pct): string
         return '   n/a';
     }
 
-    return \sprintf('%+6.1f%%', $pct);
+    return sprintf('%+6.1f%%', $pct);
 }

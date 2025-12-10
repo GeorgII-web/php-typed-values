@@ -64,4 +64,9 @@ readonly class DateTimeRFC3339 extends DateTimeType
     {
         return new static($value);
     }
+
+    public function jsonSerialize(): string
+    {
+        return $this->toString();
+    }
 }

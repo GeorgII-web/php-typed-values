@@ -70,3 +70,45 @@ it('fails on type mismatch', function (): void {
         }
     })->toThrow(IntegerTypeException::class);
 });
+
+it('jsonSerialize returns integer', function (): void {
+    expect(IntegerStandard::tryFromString('1')->jsonSerialize())->toBeInt();
+});
+
+it('wraps any PHP int and preserves value/toString', function (): void {
+    $n = new IntegerStandard(-10);
+    $p = IntegerStandard::fromInt(42);
+
+    expect($n->value())->toBe(-10)
+        ->and($n->toString())->toBe('-10')
+        ->and((string) $n)->toBe('-10')
+        ->and($p->value())->toBe(42)
+        ->and($p->toString())->toBe('42');
+});
+
+it('fromString uses strict integer parsing', function (): void {
+    expect(IntegerStandard::fromString('-5')->value())->toBe(-5)
+        ->and(IntegerStandard::fromString('0')->value())->toBe(0)
+        ->and(IntegerStandard::fromString('17')->toString())->toBe('17');
+
+    foreach (['01', '+1', '1.0', ' 1', '1 ', 'a'] as $bad) {
+        expect(fn() => IntegerStandard::fromString($bad))
+            ->toThrow(IntegerTypeException::class, \sprintf('String "%s" has no valid strict integer value', $bad));
+    }
+});
+
+it('tryFromInt always returns instance; tryFromString returns Undefined on invalid', function (): void {
+    $okI1 = IntegerStandard::tryFromInt(\PHP_INT_MIN + 1);
+    $okI2 = IntegerStandard::tryFromInt(\PHP_INT_MAX - 1);
+    $okS = IntegerStandard::tryFromString('123');
+    $badS = IntegerStandard::tryFromString('01');
+
+    expect($okI1)->toBeInstanceOf(IntegerStandard::class)
+        ->and($okI2)->toBeInstanceOf(IntegerStandard::class)
+        ->and($okS)->toBeInstanceOf(IntegerStandard::class)
+        ->and($badS)->toBeInstanceOf(Undefined::class);
+});
+
+it('jsonSerialize returns native int', function (): void {
+    expect(IntegerStandard::fromInt(-3)->jsonSerialize())->toBe(-3);
+});

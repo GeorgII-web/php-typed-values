@@ -73,3 +73,60 @@ it('IntTiny::tryFromInt returns value within range and Undefined otherwise', fun
         ->and($bad)
         ->toBeInstanceOf(Undefined::class);
 });
+
+it('jsonSerialize returns integer', function (): void {
+    expect(IntegerTiny::tryFromString('1')->jsonSerialize())->toBeInt();
+});
+
+it('accepts -128..127 and exposes value/toString', function (): void {
+    $min = new IntegerTiny(-128);
+    $max = IntegerTiny::fromInt(127);
+
+    expect($min->value())->toBe(-128)
+        ->and($min->toString())->toBe('-128')
+        ->and((string) $min)->toBe('-128')
+        ->and($max->value())->toBe(127)
+        ->and($max->toString())->toBe('127');
+});
+
+it('throws on values out of -128..127 in constructor/fromInt', function (): void {
+    expect(fn() => new IntegerTiny(-129))
+        ->toThrow(IntegerTypeException::class, 'Expected tiny integer in range -128..127, got "-129"')
+        ->and(fn() => IntegerTiny::fromInt(128))
+        ->toThrow(IntegerTypeException::class, 'Expected tiny integer in range -128..127, got "128"');
+});
+
+it('fromString enforces strict integer parsing and range', function (): void {
+    expect(IntegerTiny::fromString('-5')->value())->toBe(-5)
+        ->and(IntegerTiny::fromString('0')->toString())->toBe('0')
+        ->and(IntegerTiny::fromString('127')->value())->toBe(127);
+
+    foreach (['01', '+1', '1.0', ' 1', '1 ', 'a'] as $bad) {
+        expect(fn() => IntegerTiny::fromString($bad))
+            ->toThrow(IntegerTypeException::class, \sprintf('String "%s" has no valid strict integer value', $bad));
+    }
+
+    // In-range strict parse ok; out-of-range strict parse -> domain error
+    expect(fn() => IntegerTiny::fromString('128'))
+        ->toThrow(IntegerTypeException::class, 'Expected tiny integer in range -128..127, got "128"')
+        ->and(fn() => IntegerTiny::fromString('-129'))
+        ->toThrow(IntegerTypeException::class, 'Expected tiny integer in range -128..127, got "-129"');
+});
+
+it('tryFromInt/tryFromString return Undefined on invalid and instance on valid', function (): void {
+    $okI = IntegerTiny::tryFromInt(-1);
+    $badI = IntegerTiny::tryFromInt(1000);
+    $okS = IntegerTiny::tryFromString('5');
+    $badS = IntegerTiny::tryFromString('01');
+
+    expect($okI)->toBeInstanceOf(IntegerTiny::class)
+        ->and($okI->value())->toBe(-1)
+        ->and($okS)->toBeInstanceOf(IntegerTiny::class)
+        ->and($okS->value())->toBe(5)
+        ->and($badI)->toBeInstanceOf(Undefined::class)
+        ->and($badS)->toBeInstanceOf(Undefined::class);
+});
+
+it('jsonSerialize returns native int', function (): void {
+    expect(IntegerTiny::fromInt(-7)->jsonSerialize())->toBe(-7);
+});

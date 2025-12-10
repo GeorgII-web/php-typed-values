@@ -65,4 +65,9 @@ readonly class FloatStandard extends FloatType
     {
         return $this->value;
     }
+
+    public function jsonSerialize(): float
+    {
+        return $this->value();
+    }
 }

@@ -1,5 +1,11 @@
 <?php
 
+namespace PhpTypedValues\Usage\Primitive;
+
+require_once 'vendor/autoload.php';
+
+use const PHP_EOL;
+
 use PhpTypedValues\Integer\Alias\Id;
 use PhpTypedValues\Integer\Alias\Integer;
 use PhpTypedValues\Integer\Alias\IntType;
@@ -16,24 +22,26 @@ use PhpTypedValues\Integer\MariaDb\IntegerTiny;
 /**
  * Integer.
  */
+echo PHP_EOL . '> INTEGER' . PHP_EOL;
+
 testInteger(IntegerStandard::fromInt(10)->value());
 testPositiveInt(IntegerPositive::fromInt(10)->value());
 testNonNegativeInt(IntegerNonNegative::fromInt(10)->value());
 testWeekDayInt(IntegerWeekDay::fromInt(7)->value());
-echo WeekDay::fromInt(7)->value() . \PHP_EOL;
+echo WeekDay::fromInt(7)->value() . PHP_EOL;
 
 // DB tinyint usage
-echo Tiny::fromInt(-5)->toString() . \PHP_EOL;
-echo IntegerTiny::fromInt(-5)->toString() . \PHP_EOL;
-echo IntegerTiny::fromString('127')->toString() . \PHP_EOL;
-echo NonNegative::fromString('10')->toString() . \PHP_EOL;
-echo Positive::fromString('10')->toString() . \PHP_EOL;
-echo IntegerStandard::fromString('10')->toString() . \PHP_EOL;
-echo Id::fromString('10')->toString() . \PHP_EOL;
-echo IntType::fromString('10')->toString() . \PHP_EOL;
-echo Integer::fromString('10')->toString() . \PHP_EOL;
-echo Integer::tryFromString('127')->toString() . \PHP_EOL;
-echo Integer::tryFromInt(127)->toString() . \PHP_EOL;
+echo Tiny::fromInt(-5)->toString() . PHP_EOL;
+echo IntegerTiny::fromInt(-5)->toString() . PHP_EOL;
+echo IntegerTiny::fromString('127')->toString() . PHP_EOL;
+echo NonNegative::fromString('10')->toString() . PHP_EOL;
+echo Positive::fromString('10')->toString() . PHP_EOL;
+echo IntegerStandard::fromString('10')->toString() . PHP_EOL;
+echo Id::fromString('10')->toString() . PHP_EOL;
+echo IntType::fromString('10')->toString() . PHP_EOL;
+echo Integer::fromString('10')->toString() . PHP_EOL;
+echo Integer::tryFromString('127')->toString() . PHP_EOL;
+echo Integer::tryFromInt(127)->toString() . PHP_EOL;
 
 /**
  * Artificial functions.

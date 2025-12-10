@@ -61,4 +61,9 @@ readonly class StringText extends StrType
     {
         return $this->value;
     }
+
+    public function jsonSerialize(): string
+    {
+        return $this->toString();
+    }
 }

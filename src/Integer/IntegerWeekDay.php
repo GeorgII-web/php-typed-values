@@ -90,4 +90,9 @@ readonly class IntegerWeekDay extends IntType
 
         return new static((int) $value);
     }
+
+    public function jsonSerialize(): int
+    {
+        return $this->value();
+    }
 }

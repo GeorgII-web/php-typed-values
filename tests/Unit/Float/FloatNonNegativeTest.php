@@ -93,3 +93,53 @@ it('FloatNonNegative::fromString enforces numeric and non-negativity', function 
     $v = FloatNonNegative::fromString('0.75');
     expect($v->value())->toBe(0.75);
 });
+
+it('jsonSerialize returns float', function (): void {
+    expect(FloatNonNegative::tryFromString('1.1')->jsonSerialize())->toBeFloat();
+});
+
+it('__toString casts same as toString and equals string representation', function (): void {
+    $v = FloatNonNegative::fromFloat(2.5);
+
+    expect((string) $v)
+        ->toBe($v->toString())
+        ->and((string) $v)
+        ->toBe('2.5');
+});
+
+it('accepts negative zero and normalizes to "-0" in toString', function (): void {
+    // fromFloat with -0.0 must be treated as non-negative
+    $v = FloatNonNegative::fromFloat(-0.0);
+
+    expect($v->value())
+        ->toBe(0.0)
+        ->and($v->toString())
+        ->toBe('-0');
+});
+
+it('tryFromMixed accepts numeric strings/ints/floats and returns Undefined for invalid', function (): void {
+    $s = FloatNonNegative::tryFromMixed('3.5');
+    $i = FloatNonNegative::tryFromMixed(2);
+    $f = FloatNonNegative::tryFromMixed(4.25);
+    $bad1 = FloatNonNegative::tryFromMixed('-1');
+    $bad2 = FloatNonNegative::tryFromMixed('abc');
+    $bad3 = FloatNonNegative::tryFromMixed(['x']);
+    $bad4 = FloatNonNegative::tryFromMixed(new stdClass());
+
+    expect($s)
+        ->toBeInstanceOf(FloatNonNegative::class)
+        ->and($s->value())->toBe(3.5)
+        ->and($i)->toBeInstanceOf(FloatNonNegative::class)
+        ->and($i->value())->toBe(2.0)
+        ->and($f)->toBeInstanceOf(FloatNonNegative::class)
+        ->and($f->value())->toBe(4.25)
+        ->and($bad1)->toBeInstanceOf(Undefined::class)
+        ->and($bad2)->toBeInstanceOf(Undefined::class)
+        ->and($bad3)->toBeInstanceOf(Undefined::class)
+        ->and($bad4)->toBeInstanceOf(Undefined::class);
+});
+
+it('jsonSerialize equals value() for valid instances', function (): void {
+    $v = FloatNonNegative::fromString('10.5');
+    expect($v->jsonSerialize())->toBe($v->value());
+});

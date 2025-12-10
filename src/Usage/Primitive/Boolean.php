@@ -1,5 +1,11 @@
 <?php
 
+namespace PhpTypedValues\Usage\Primitive;
+
+require_once 'vendor/autoload.php';
+
+use const PHP_EOL;
+
 use PhpTypedValues\Abstract\Bool\BoolTypeInterface;
 use PhpTypedValues\Bool\Alias\Boolean;
 use PhpTypedValues\Bool\BoolStandard;
@@ -11,6 +17,8 @@ use PhpTypedValues\Undefined\Alias\Undefined;
 /**
  * Boolean.
  */
+echo PHP_EOL . '> BOOLEAN' . PHP_EOL;
+
 $undefinedType1 = BoolStandard::tryFromInt(2);
 $undefinedType2 = BoolStandard::tryFromString('test');
 try {
@@ -19,32 +27,32 @@ try {
 } catch (UndefinedTypeException $e) {
     // suppress
 }
-echo BoolStandard::fromString('true')->toString() . \PHP_EOL;
-echo BoolStandard::fromInt(1)->toString() . \PHP_EOL;
-echo BoolStandard::fromBool(true)->toString() . \PHP_EOL;
-echo Boolean::fromBool(Boolean::fromBool(true)->value())->toString() . \PHP_EOL;
+echo BoolStandard::fromString('true')->toString() . PHP_EOL;
+echo BoolStandard::fromInt(1)->toString() . PHP_EOL;
+echo BoolStandard::fromBool(true)->toString() . PHP_EOL;
+echo Boolean::fromBool(Boolean::fromBool(true)->value())->toString() . PHP_EOL;
 // Ensure interface method usage is visible to Psalm
-echo (testBool(BoolStandard::fromBool(true)) ? 'true' : 'false') . \PHP_EOL;
+echo (testBool(BoolStandard::fromBool(true)) ? 'true' : 'false') . PHP_EOL;
 
 // true/false literal usages (and try* to reference both branches for Psalm)
 $t1 = TrueStandard::tryFromString('yes');
 if (!($t1 instanceof Undefined)) {
-    echo $t1->toString() . \PHP_EOL;
+    echo $t1->toString() . PHP_EOL;
 }
 
 $t2 = TrueStandard::tryFromInt(1);
 if (!($t2 instanceof Undefined)) {
-    echo $t2->toString() . \PHP_EOL;
+    echo $t2->toString() . PHP_EOL;
 }
 
 $f1 = FalseStandard::tryFromString('off');
 if (!($f1 instanceof Undefined)) {
-    echo $f1->toString() . \PHP_EOL;
+    echo $f1->toString() . PHP_EOL;
 }
 
 $f2 = FalseStandard::tryFromInt(0);
 if (!($f2 instanceof Undefined)) {
-    echo $f2->toString() . \PHP_EOL;
+    echo $f2->toString() . PHP_EOL;
 }
 
 /**

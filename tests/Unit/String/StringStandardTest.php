@@ -14,3 +14,7 @@ it('StringStandard::tryFromString returns instance for any string', function ():
         ->and($v->toString())
         ->toBe('hello');
 });
+
+it('jsonSerialize returns string', function (): void {
+    expect(StringStandard::tryFromString('hello')->jsonSerialize())->toBeString();
+});

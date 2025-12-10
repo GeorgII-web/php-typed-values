@@ -38,3 +38,7 @@ it('StringNonBlank for an empty string', function (): void {
     expect(fn() => StringNonBlank::fromString(''))
         ->toThrow(StringTypeException::class, 'Expected non-blank string, got ""');
 });
+
+it('jsonSerialize returns string', function (): void {
+    expect(StringNonBlank::tryFromString('hello')->jsonSerialize())->toBeString();
+});

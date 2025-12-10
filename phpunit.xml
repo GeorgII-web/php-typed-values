@@ -20,7 +20,9 @@
             <directory>src</directory>
         </include>
         <exclude>
-            <directory>src/Usage</directory>
+            <directory>src/Usage/Composite</directory>
+            <directory>src/Usage/Primitive</directory>
+            <directory>src/Usage/Util</directory>
         </exclude>
     </source>
 </phpunit>
