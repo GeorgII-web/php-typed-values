@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpTypedValues\Usage\Example;
 
 use PhpTypedValues\Exception\FloatTypeException;
