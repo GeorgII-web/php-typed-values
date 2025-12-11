@@ -18,13 +18,25 @@ use PhpTypedValues\String\StringNonEmpty;
  *
  * @psalm-internal PhpTypedValues
  */
-final readonly class StrictType
+final class StrictType
 {
-    public function __construct(
-        private IntegerPositive $id,
-        private StringNonEmpty $firstName,
-        private FloatPositive $height,
-    ) {
+    /**
+     * @readonly
+     */
+    private IntegerPositive $id;
+    /**
+     * @readonly
+     */
+    private StringNonEmpty $firstName;
+    /**
+     * @readonly
+     */
+    private FloatPositive $height;
+    public function __construct(IntegerPositive $id, StringNonEmpty $firstName, FloatPositive $height)
+    {
+        $this->id = $id;
+        $this->firstName = $firstName;
+        $this->height = $height;
     }
 
     /**
@@ -35,7 +47,7 @@ final readonly class StrictType
     public static function fromScalars(
         int $id,
         string $firstName,
-        float $height,
+        float $height
     ): self {
         return new self(
             IntegerPositive::fromInt($id), // Early fail

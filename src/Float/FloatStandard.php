@@ -23,8 +23,11 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  *
  * @psalm-immutable
  */
-readonly class FloatStandard extends FloatType
+class FloatStandard extends FloatType
 {
+    /**
+     * @readonly
+     */
     protected float $value;
 
     public function __construct(float $value)
@@ -32,29 +35,39 @@ readonly class FloatStandard extends FloatType
         $this->value = $value;
     }
 
-    public static function fromFloat(float $value): static
+    /**
+     * @return static
+     */
+    public static function fromFloat(float $value)
     {
         return new static($value);
     }
 
-    public static function tryFromString(string $value): static|Undefined
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    public static function tryFromString(string $value)
     {
         try {
             return static::fromString($value);
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return Undefined::create();
         }
     }
 
-    public static function tryFromFloat(float $value): static|Undefined
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    public static function tryFromFloat(float $value)
     {
         return static::fromFloat($value);
     }
 
     /**
      * @throws FloatTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         parent::assertFloatString($value);
 

@@ -18,23 +18,42 @@ require_once 'vendor/autoload.php';
  *
  * @psalm-internal PhpTypedValues
  */
-final readonly class NullableType
+final class NullableType
 {
-    public function __construct(
-        private IntegerPositive $id,
-        private StringNonEmpty|Undefined $firstName,
-        private FloatPositive|Undefined $height,
-    ) {
+    /**
+     * @readonly
+     */
+    private IntegerPositive $id;
+    /**
+     * @readonly
+     * @var \PhpTypedValues\String\StringNonEmpty|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    private $firstName;
+    /**
+     * @readonly
+     * @var \PhpTypedValues\Float\FloatPositive|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    private $height;
+    /**
+     * @param \PhpTypedValues\String\StringNonEmpty|\PhpTypedValues\Undefined\Alias\Undefined $firstName
+     * @param \PhpTypedValues\Float\FloatPositive|\PhpTypedValues\Undefined\Alias\Undefined $height
+     */
+    public function __construct(IntegerPositive $id, $firstName, $height)
+    {
+        $this->id = $id;
+        $this->firstName = $firstName;
+        $this->height = $height;
     }
 
     /**
      * @throws IntegerTypeException
      * @throws FloatTypeException
+     * @param string|float|int|null $height
      */
     public static function fromScalars(
         int $id,
         ?string $firstName,
-        string|float|int|null $height,
+        $height
     ): self {
         return new self(
             IntegerPositive::fromInt($id), // Early fail
@@ -43,7 +62,10 @@ final readonly class NullableType
         );
     }
 
-    public function getHeight(): FloatPositive|Undefined
+    /**
+     * @return \PhpTypedValues\Float\FloatPositive|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    public function getHeight()
     {
         return $this->height;
     }
@@ -53,7 +75,10 @@ final readonly class NullableType
         return $this->id;
     }
 
-    public function getFirstName(): StringNonEmpty|Undefined
+    /**
+     * @return \PhpTypedValues\String\StringNonEmpty|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    public function getFirstName()
     {
         return $this->firstName;
     }

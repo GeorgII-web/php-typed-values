@@ -15,19 +15,19 @@ use PhpTypedValues\Usage\Example\StrictType;
  */
 echo PHP_EOL . '> COMPOSITE' . PHP_EOL;
 
-$test = StrictType::fromScalars(id: 1, firstName: 'Foobar', height: 170);
+$test = StrictType::fromScalars(1, 'Foobar', 170);
 
 echo $test->getId()->toString() . PHP_EOL;
 echo $test->getFirstName()->toString() . PHP_EOL;
 echo $test->getHeight()->toString() . PHP_EOL;
 
-$test = AnyType::fromScalars(id: 1, firstName: 'Foobar', height: 170);
+$test = AnyType::fromScalars(1, 'Foobar', 170);
 
 echo $test->getId()->toString() . PHP_EOL;
 echo $test->getFirstName()->toString() . PHP_EOL;
 echo $test->getHeight()->toString() . PHP_EOL;
 
-$test = NullableType::fromScalars(id: 1, firstName: 'Foobar', height: 170);
+$test = NullableType::fromScalars(1, 'Foobar', 170);
 
 echo $test->getId()->toString() . PHP_EOL;
 echo $test->getFirstName()->toString() . PHP_EOL;

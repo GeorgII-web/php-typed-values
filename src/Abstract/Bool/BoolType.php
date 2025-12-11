@@ -23,7 +23,7 @@ use PhpTypedValues\Abstract\AbstractType;
  *
  * @psalm-immutable
  */
-abstract readonly class BoolType extends AbstractType implements BoolTypeInterface
+abstract class BoolType extends AbstractType implements BoolTypeInterface
 {
     abstract protected function __construct(bool $value);
 
@@ -32,7 +32,10 @@ abstract readonly class BoolType extends AbstractType implements BoolTypeInterfa
         return $this->value() ? 'true' : 'false';
     }
 
-    public static function fromBool(bool $value): static
+    /**
+     * @return static
+     */
+    public static function fromBool(bool $value)
     {
         return new static($value);
     }
