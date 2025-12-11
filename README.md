@@ -30,7 +30,7 @@ composer require georgii-web/php-typed-values:^1.0
 $id = IntegerPositive::fromString('123');
 ```
 
-instead of duplicating this logic across your application like:
+instead of spreading this logic across your application like:
 
 ```php
 $id = (int) '123';
@@ -53,35 +53,53 @@ Id::fromInt(123);
 final readonly class Profile
 {
     public function __construct(
-        public readonly IntegerPositive $id,
-        public readonly StringNonEmpty $firstName,
-        public readonly ?FloatNonNegative $height,
+        private IntegerPositive $id,
+        private StringNonEmpty|Undefined $firstName,
+        private FloatPositive|Undefined $height,
     ) {}
 
     public static function fromScalars(
         int $id,
-        string $firstName,
-        string|float|int|null $height,
-    ): static {
-        return new static(
-            IntegerPositive::fromInt($id),
-            StringNonEmpty::fromString($firstName), // Early fail
-            $height !== null ? FloatNonNegative::fromString((string) $height) : null,
+        ?string $firstName,
+        string|float|int|null $height = null,
+    ): self {
+        return new self(
+            IntegerPositive::fromInt($id), // Early fail
+            StringNonEmpty::tryFromMixed($firstName), // Late fail
+            $height !== null
+                ? FloatPositive::fromString((string) $height) // Early fail for not NULL
+                : Undefined::create(), // Late fail for NULL
         );
     }
     
-    public function getHeight(): FloatNonNegative|Undefined { // avoid using NULL, which could mean anything
-        return $this->height ?? Undefined::create(); // Late fail
+    public function getHeight(): FloatPositive|Undefined { 
+        return $this->height;
     }
 }
+```
+VO strictly typed and must have all valid fields:
 
-// Usage
-\PhpTypedValues\Usage\Composite::fromScalars(id: 101, firstName: 'Alice', height: '172.5');
-\PhpTypedValues\Usage\Composite::fromScalars(id: 157, firstName: 'Tom', height: null);
-// From array
-$profile = \PhpTypedValues\Usage\Composite::fromScalars(...[157, 'Tom', null]);
-// Accessing values
-$profile->getHeight(); // "172.5" OR "Undefined" type class (will throw an exception on trying to get value)
+Use "Early fail" on wrong `Id`
+
+```php
+Profile::fromScalars(id: 0, firstName: 'Alice', height: '172.5'); // Early fail Exception
+```
+
+If VO partly valid but still must be created:
+
+Use "Late fail" on a wrong `firstName`
+```php
+$profile = Profile::fromScalars(id: 101, firstName: '', height: '172.5'); // Profile created
+$profile = Profile::fromScalars(id: 101, firstName: null, height: '172.5'); // Profile created
+$profile->getFirstName()->value(); // Late fail, "Undefined" class will throw an exception on trying to get the value
+```
+
+Or "Optioanal fail" on a wrong `height`
+```php
+$profile = Profile::fromScalars(id: 101, firstName: 'Alice', height: -1); // Early fail Exception
+
+$profile = Profile::fromScalars(id: 101, firstName: 'Alice', height: null); // Profile created
+$profile->getHeight()->value(); // Late fail, "Undefined" class will throw an exception on trying to get the value
 ```
 
 ## Key Features

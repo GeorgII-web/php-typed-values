@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Exception;
 
-class EmailStringTypeException extends TypeException
+class EmailStringTypeException extends StringTypeException
 {
 }
