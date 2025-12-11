@@ -99,7 +99,7 @@ final readonly class Profile
 Profile::fromScalars(id: 0, firstName: 'Alice', height: '172.5'); // throws exception
 ```
 
-##### Late fail with `Undefined` (object exists, fail on access)
+##### Late fail with `Undefined` (an object exists, fail on access)
 
 ```php
 $profile = Profile::fromScalars(id: 101, firstName: '', height: '172.5'); // created
