@@ -17,6 +17,7 @@ use PhpTypedValues\String\StringNonEmpty;
  * @internal
  *
  * @psalm-internal PhpTypedValues
+ *
  * @psalm-immutable
  */
 final readonly class EarlyFail

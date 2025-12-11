@@ -1,41 +1,22 @@
-# Main project instructions
+### Project Standards & Workflow
 
-## Events
+**Tech Stack & Style**
+*   **Core:** PHP 8.2 with `declare(strict_types=1);`.
+*   **Standards:** Follow PSR-12. Use clean, meaningful naming conventions.
+*   **Static Analysis:** Psalm v6 (Level 1).
 
-### On new type generation
+**Testing Strategy**
+*   **Frameworks:** PEST v3 (use `it` syntax) & PHPUnit v11.
+*   **Structure:** Test files must mirror the `src` directory structure.
+*   **Requirements:** Maintain **100%** code coverage, type coverage, and mutation score.
 
-- add new type to `src/"type name"` folder
-- add new type assertions to `src/Code/Assert/Assert.php` if needed
-- add new type tests to `tests/Unit/"type name"/"TypeName"Test.php`
-- add new Exception class to `src/Exception` folder and use it
+**Workflow: Adding a New Type**
+* **Implementation:** Add the new type class to `src/{TypeName}/`.
+* **Exception:** Create a corresponding exception in `src/Exception/`.
+* **Testing:** Add unit tests to `tests/Unit/{TypeName}/{TypeName}Test.php`.
 
-## Coding style
-
-- PHP 8.2 used
-- use strict typing
-- follow PSR-12 coding standards
-- use meaningful variable and function names
-- keep code clean and readable
-- PSALM v6 static analysis is used
-
-## Folder structure
-
-- `src/Abstract` folder contains the framework internal code
-- other folders like `src/"type"` contains specific types
-- `src/psalmTest.php` contains types usage to avoid Psalm issues like `unused method`
-
-## Tests
-
-- are in `tests` folder
-- used PhpUnit v11 and PEST v3
-- use PEST syntax `it` instead of `test`
-- keep the folder structure as tested src files
-- test coverage should be 100%
-- mutation tests used, avoid fails
-
-## Documentation
-
-- keep it simple
-- use Markdown format
-- include project overview in README.md, short examples of how to install, use, and extend
-- installation instructions, usage examples, develop instructions in `docs` folder
+**Directory Structure**
+*   `src/Abstract`: Internal framework base classes.
+*   `src/{Type}`: Concrete type implementations (e.g., `src/Integer`).
+*   `src/{Type}/Alias`: Concrete type aliases, just a new name (e.g., `src/Integer/Positive`).
+*   `src/Usage`: Usage examples (prevents "unused code" false positives in Psalm).

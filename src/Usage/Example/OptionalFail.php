@@ -19,6 +19,7 @@ require_once 'vendor/autoload.php';
  * @internal
  *
  * @psalm-internal PhpTypedValues
+ *
  * @psalm-immutable
  */
 final readonly class OptionalFail implements JsonSerializable

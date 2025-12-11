@@ -6,7 +6,6 @@ namespace PhpTypedValues\Abstract\Array;
 
 use IteratorAggregate;
 use JsonSerializable;
-use PhpTypedValues\Abstract\AbstractType;
 
 /**
  * Base implementation for array typed values.

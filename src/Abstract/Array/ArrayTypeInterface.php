@@ -18,5 +18,4 @@ interface ArrayTypeInterface
     public static function fromArray(array $value): static;
 
     public static function tryFromArray(array $value): static|Undefined;
-
 }

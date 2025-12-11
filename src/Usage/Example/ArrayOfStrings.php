@@ -6,9 +6,11 @@ namespace PhpTypedValues\Usage\Example;
 
 require_once 'vendor/autoload.php';
 
+use Generator;
 use PhpTypedValues\Abstract\Array\ArrayType;
 use PhpTypedValues\Exception\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
+use PhpTypedValues\Exception\UndefinedTypeException;
 use PhpTypedValues\String\StringNonEmpty;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -16,12 +18,13 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  * @internal
  *
  * @psalm-internal PhpTypedValues
+ *
  * @psalm-immutable
  */
 final readonly class ArrayOfStrings extends ArrayType
 {
     /**
-     * @param StringNonEmpty[] $value
+     * @param StringNonEmpty|Undefined[] $value
      *
      * @throws StringTypeException
      * @throws TypeException
@@ -34,8 +37,8 @@ final readonly class ArrayOfStrings extends ArrayType
         }
 
         foreach ($value as $item) {
-            if (!$item instanceof StringNonEmpty) {
-                throw new StringTypeException('Expected array of StringNonEmpty instance');
+            if ((!$item instanceof StringNonEmpty) && (!$item instanceof Undefined)) {
+                throw new StringTypeException('Expected array of StringNonEmpty or Undefined instance');
             }
         }
     }
@@ -44,7 +47,7 @@ final readonly class ArrayOfStrings extends ArrayType
      * @throws StringTypeException
      * @throws TypeException
      */
-    public static function fromArray(array $value): self
+    public static function fromArray(array $value): static
     {
         $typed = [];
         foreach ($value as $item) {
@@ -55,7 +58,7 @@ final readonly class ArrayOfStrings extends ArrayType
     }
 
     /**
-     * @return StringNonEmpty[]
+     * @return StringNonEmpty|Undefined[]
      */
     public function value(): array
     {
@@ -64,8 +67,10 @@ final readonly class ArrayOfStrings extends ArrayType
 
     /**
      * @return non-empty-list<non-empty-string>
+     *
+     * @throws UndefinedTypeException
      */
-    public function toStrings(): array
+    public function toArray(): array
     {
         $result = [];
         foreach ($this->value as $item) {
@@ -81,24 +86,28 @@ final readonly class ArrayOfStrings extends ArrayType
     /** @return non-empty-list<non-empty-string> */
     public function jsonSerialize(): array
     {
-        return $this->toStrings();
+        return $this->toArray();
     }
 
     /**
-     * @return Traversable<StringNonEmpty>
+     * @return Generator<StringNonEmpty>
      */
-    public function getIterator(): Traversable
+    public function getIterator(): Generator
     {
         yield from $this->value;
     }
 
+    /**
+     * @throws StringTypeException
+     * @throws TypeException
+     */
     public static function tryFromArray(array $value): static|Undefined
     {
         $typed = [];
         foreach ($value as $item) {
-            $typed[] = StringNonEmpty::tryFromString($item);
+            $typed[] = StringNonEmpty::tryFromMixed($item);
         }
 
-        return new self($typed);
+        return new static($typed);
     }
 }

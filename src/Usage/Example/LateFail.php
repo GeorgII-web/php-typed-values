@@ -16,6 +16,7 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  * @internal
  *
  * @psalm-internal PhpTypedValues
+ *
  * @psalm-immutable
  */
 final readonly class LateFail

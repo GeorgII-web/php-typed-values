@@ -108,6 +108,8 @@ $profile->getFirstName()->value(); // throws an exception on access the Undefine
 
 ##### Optional fail (only fail if the optional value is provided and invalid)
 
+Ideal for partial data handling (e.g., requests where only specific fields, like ID, are required), allowing access to valid fields without failing on missing ones.
+
 ```php
 Profile::fromScalars(id: 101, firstName: 'Alice', height: -1); // invalid provided value -> early fail
 
