@@ -16,17 +16,6 @@ Install dependencies
 composer install
 ```
 
-Composer scripts
-----------------
-
-Convenient scripts are defined in composer.json:
-
-- composer test — run test suite (Pest)
-- composer type — enforce 100% type coverage via Pest plugin
-- composer coverage — run tests with a coverage threshold
-- composer sca — static analysis via Psalm
-- composer cs — fix coding style with PHP-CS-Fixer
-
 After checkout: prepare the project
 -----------------------------------
 
@@ -61,43 +50,9 @@ This script will run, in order:
 - test suite (Pest)
 - type coverage check (100% via Pest plugin)
 - code coverage check (100% minimum)
-- mutation tests (threshold as configured)
+- mutation tests (100% minimum)
 
 If this command succeeds locally, your PR should pass CI checks.
-
-
-
-Project layout
---------------
-
-- src/ — library source code
-- tests/ — test suite (Pest + PHPUnit)
-- docs/ — documentation
-
-Running specific tests
-----------------------
-
-```
-./vendor/bin/pest --filter PositiveInt
-```
-
-Static analysis
----------------
-
-Psalm is configured via psalm.xml. Run:
-
-```
-composer sca
-```
-
-Code style
-----------
-
-PHP-CS-Fixer is configured via .php-cs-fixer.dist.php. To fix styles:
-
-```
-composer cs
-```
 
 Optional: Docker
 ----------------
@@ -107,7 +62,7 @@ The repo contains a docker-compose.yml and a docker/php setup you can adapt. Typ
 ```
 docker compose up -d
 docker compose exec php composer install
-docker compose exec php composer test
+docker compose exec php composer oncommit
 ```
 
 Contributing
