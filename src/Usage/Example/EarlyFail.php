@@ -4,48 +4,47 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Usage\Example;
 
+require_once 'vendor/autoload.php';
+
 use PhpTypedValues\Exception\FloatTypeException;
 use PhpTypedValues\Exception\IntegerTypeException;
+use PhpTypedValues\Exception\StringTypeException;
 use PhpTypedValues\Float\FloatPositive;
 use PhpTypedValues\Integer\IntegerPositive;
 use PhpTypedValues\String\StringNonEmpty;
-use PhpTypedValues\Undefined\Alias\Undefined;
-
-require_once 'vendor/autoload.php';
 
 /**
  * @internal
  *
  * @psalm-internal PhpTypedValues
  */
-final readonly class OptionalType
+final readonly class EarlyFail
 {
     public function __construct(
         private IntegerPositive $id,
-        private StringNonEmpty|Undefined $firstName,
-        private FloatPositive|Undefined $height,
+        private StringNonEmpty $firstName,
+        private FloatPositive $height,
     ) {
     }
 
     /**
      * @throws IntegerTypeException
      * @throws FloatTypeException
+     * @throws StringTypeException
      */
     public static function fromScalars(
         int $id,
-        ?string $firstName,
-        string|float|int|null $height = null,
+        string $firstName,
+        float $height,
     ): self {
         return new self(
             IntegerPositive::fromInt($id), // Early fail
-            StringNonEmpty::tryFromMixed($firstName), // Late fail
-            $height !== null
-                ? FloatPositive::fromString((string) $height) // Early fail for not NULL
-                : Undefined::create(), // Late fail for NULL
+            StringNonEmpty::fromString($firstName), // Early fail
+            FloatPositive::fromFloat($height), // Early fail
         );
     }
 
-    public function getHeight(): FloatPositive|Undefined
+    public function getHeight(): FloatPositive
     {
         return $this->height;
     }
@@ -55,7 +54,7 @@ final readonly class OptionalType
         return $this->id;
     }
 
-    public function getFirstName(): StringNonEmpty|Undefined
+    public function getFirstName(): StringNonEmpty
     {
         return $this->firstName;
     }

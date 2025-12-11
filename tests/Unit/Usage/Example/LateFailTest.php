@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 use PhpTypedValues\Exception\IntegerTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
-use PhpTypedValues\Usage\Example\AnyType;
+use PhpTypedValues\Usage\Example\LateFail;
 
-it('constructs AnyType from scalars/mixed and exposes typed values', function (): void {
-    $vo = AnyType::fromScalars(id: 1, firstName: 'Foobar', height: 170);
+it('constructs LateFail from scalars/mixed and exposes typed values', function (): void {
+    $vo = LateFail::fromScalars(id: 1, firstName: 'Foobar', height: 170);
 
     expect($vo->getId()->toString())->toBe('1');
     expect($vo->getFirstName()->toString())->toBe('Foobar');
@@ -15,7 +15,7 @@ it('constructs AnyType from scalars/mixed and exposes typed values', function ()
 });
 
 it('coerces mixed valid values via tryFromMixed', function (): void {
-    $vo = AnyType::fromScalars(id: 2, firstName: 123, height: '170.5');
+    $vo = LateFail::fromScalars(id: 2, firstName: 123, height: '170.5');
 
     expect($vo->getId()->toString())->toBe('2');
     expect($vo->getFirstName()->toString())->toBe('123');
@@ -23,7 +23,7 @@ it('coerces mixed valid values via tryFromMixed', function (): void {
 });
 
 it('keeps Undefined for invalid optional firstName (late fail)', function (): void {
-    $vo = AnyType::fromScalars(id: 1, firstName: '', height: 10);
+    $vo = LateFail::fromScalars(id: 1, firstName: '', height: 10);
 
     expect($vo->getFirstName())->toBeInstanceOf(Undefined::class);
     // height remains valid
@@ -31,17 +31,17 @@ it('keeps Undefined for invalid optional firstName (late fail)', function (): vo
 });
 
 it('keeps Undefined for invalid optional height values (late fail)', function (): void {
-    $vo1 = AnyType::fromScalars(id: 1, firstName: 'Foo', height: -10);
+    $vo1 = LateFail::fromScalars(id: 1, firstName: 'Foo', height: -10);
     expect($vo1->getHeight())->toBeInstanceOf(Undefined::class);
 
-    $vo2 = AnyType::fromScalars(id: 1, firstName: 'Foo', height: null);
+    $vo2 = LateFail::fromScalars(id: 1, firstName: 'Foo', height: null);
     expect($vo2->getHeight())->toBeInstanceOf(Undefined::class);
 
-    $vo3 = AnyType::fromScalars(id: 1, firstName: 'Foo', height: 'abc');
+    $vo3 = LateFail::fromScalars(id: 1, firstName: 'Foo', height: 'abc');
     expect($vo3->getHeight())->toBeInstanceOf(Undefined::class);
 });
 
 it('fails early on invalid id', function (): void {
-    expect(fn() => AnyType::fromScalars(id: 0, firstName: 'Foo', height: 10))
+    expect(fn() => LateFail::fromScalars(id: 0, firstName: 'Foo', height: 10))
         ->toThrow(IntegerTypeException::class, 'Expected positive integer, got "0"');
 });
