@@ -75,3 +75,9 @@ it('constructor fails when element is not StringNonEmpty', function (): void {
     expect(fn() => new ArrayOfStrings($bad))
         ->toThrow(StringTypeException::class, 'Expected array of StringNonEmpty or Undefined instance');
 });
+
+it('casts mixed scalars to strings in fromArray', function (): void {
+    // Without explicit (string) cast inside fromArray, this would fail under strict types
+    $a = ArrayOfStrings::fromArray([123, 45.6, '789']);
+    expect($a->toArray())->toBe(['123', '45.6', '789']);
+});
