@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Usage\Example;
 
+use JsonSerializable;
 use PhpTypedValues\Exception\FloatTypeException;
 use PhpTypedValues\Exception\IntegerTypeException;
+use PhpTypedValues\Exception\UndefinedTypeException;
 use PhpTypedValues\Float\FloatPositive;
 use PhpTypedValues\Integer\IntegerPositive;
 use PhpTypedValues\String\StringNonEmpty;
@@ -17,8 +19,9 @@ require_once 'vendor/autoload.php';
  * @internal
  *
  * @psalm-internal PhpTypedValues
+ * @psalm-immutable
  */
-final readonly class OptionalFail
+final readonly class OptionalFail implements JsonSerializable
 {
     public function __construct(
         private IntegerPositive $id,
@@ -58,5 +61,17 @@ final readonly class OptionalFail
     public function getFirstName(): StringNonEmpty|Undefined
     {
         return $this->firstName;
+    }
+
+    /**
+     * @throws UndefinedTypeException
+     */
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id->toString(),
+            'firstName' => $this->firstName->toString(),
+            'height' => $this->height->toString(),
+        ];
     }
 }

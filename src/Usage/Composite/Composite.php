@@ -32,3 +32,5 @@ $test = OptionalFail::fromScalars(id: 1, firstName: 'Foobar', height: 170);
 echo $test->getId()->toString() . PHP_EOL;
 echo $test->getFirstName()->toString() . PHP_EOL;
 echo $test->getHeight()->toString() . PHP_EOL;
+
+echo json_encode($test, JSON_THROW_ON_ERROR) . PHP_EOL;
