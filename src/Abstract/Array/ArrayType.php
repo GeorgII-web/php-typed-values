@@ -14,6 +14,12 @@ use JsonSerializable;
  *
  * @psalm-internal PhpTypedValues
  *
+ * @template TItem
+ *
+ * @implements IteratorAggregate<int, TItem>
+ *
+ * @template-implements ArrayTypeInterface<TItem>
+ *
  * @psalm-immutable
  */
 abstract readonly class ArrayType implements ArrayTypeInterface, IteratorAggregate, JsonSerializable

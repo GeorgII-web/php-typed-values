@@ -10,26 +10,27 @@ use Generator;
 use PhpTypedValues\Abstract\Array\ArrayType;
 use PhpTypedValues\Exception\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
-use PhpTypedValues\Exception\UndefinedTypeException;
 use PhpTypedValues\String\StringNonEmpty;
-use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
  * @internal
  *
  * @psalm-internal PhpTypedValues
  *
+ * @extends ArrayType<StringNonEmpty>
+ *
  * @psalm-immutable
  */
 final readonly class ArrayOfStrings extends ArrayType
 {
     /**
-     * @param StringNonEmpty|Undefined[] $value
+     * @param non-empty-list<StringNonEmpty> $value
      *
      * @throws StringTypeException
      * @throws TypeException
      */
     public function __construct(
+        /** @var non-empty-list<StringNonEmpty> */
         private array $value,
     ) {
         if ($value === []) {
@@ -37,28 +38,46 @@ final readonly class ArrayOfStrings extends ArrayType
         }
 
         foreach ($value as $item) {
-            if ((!$item instanceof StringNonEmpty) && (!$item instanceof Undefined)) {
+            if (!$item instanceof StringNonEmpty) {
                 throw new StringTypeException('Expected array of StringNonEmpty or Undefined instance');
             }
         }
     }
 
     /**
+     * @psalm-param list<mixed> $value
+     *
      * @throws StringTypeException
      * @throws TypeException
      */
     public static function fromArray(array $value): static
     {
-        $typed = [];
-        foreach ($value as $item) {
-            $typed[] = StringNonEmpty::fromString($item);
+        if ($value === []) {
+            throw new TypeException('Expected non-empty array');
         }
 
+        $typed = [];
+        foreach ($value as $item) {
+            $typed[] = StringNonEmpty::fromString((string) $item);
+        }
+
+        /** @var non-empty-list<StringNonEmpty> $typed */
         return new self($typed);
     }
 
     /**
-     * @return StringNonEmpty|Undefined[]
+     * @psalm-param list<mixed> $value
+     *
+     * @throws StringTypeException
+     * @throws TypeException
+     */
+    public static function tryFromArray(array $value): static
+    {
+        return static::fromArray($value);
+    }
+
+    /**
+     * @psalm-return non-empty-list<StringNonEmpty>
      */
     public function value(): array
     {
@@ -67,47 +86,33 @@ final readonly class ArrayOfStrings extends ArrayType
 
     /**
      * @return non-empty-list<non-empty-string>
-     *
-     * @throws UndefinedTypeException
      */
     public function toArray(): array
     {
         $result = [];
         foreach ($this->value as $item) {
-            /** @var non-empty-string $value */
-            $value = $item->toString();
-            $result[] = $value;
+            /** @var non-empty-string $str */
+            $str = $item->toString();
+            $result[] = $str;
         }
 
         /** @var non-empty-list<non-empty-string> $result */
         return $result;
     }
 
-    /** @return non-empty-list<non-empty-string> */
+    /**
+     * @return non-empty-list<non-empty-string>
+     */
     public function jsonSerialize(): array
     {
         return $this->toArray();
     }
 
     /**
-     * @return Generator<StringNonEmpty>
+     * @return Generator<int, StringNonEmpty>
      */
     public function getIterator(): Generator
     {
         yield from $this->value;
-    }
-
-    /**
-     * @throws StringTypeException
-     * @throws TypeException
-     */
-    public static function tryFromArray(array $value): static|Undefined
-    {
-        $typed = [];
-        foreach ($value as $item) {
-            $typed[] = StringNonEmpty::tryFromMixed($item);
-        }
-
-        return new static($typed);
     }
 }

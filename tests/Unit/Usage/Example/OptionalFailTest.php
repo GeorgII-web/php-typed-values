@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use PhpTypedValues\Exception\FloatTypeException;
 use PhpTypedValues\Exception\IntegerTypeException;
+use PhpTypedValues\Exception\UndefinedTypeException;
 use PhpTypedValues\Float\FloatPositive;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use PhpTypedValues\Usage\Example\OptionalFail;
@@ -63,4 +64,26 @@ it('invalid id throws IntegerTypeException with exact message', function (): voi
 it('non-numeric height string throws FloatTypeException from assertFloatString', function (): void {
     expect(fn() => OptionalFail::fromScalars(id: 1, firstName: 'Name', height: 'abc'))
         ->toThrow(FloatTypeException::class, 'String "abc" has no valid float value');
+});
+
+it('jsonSerialize returns associative array of strings when all values are present', function (): void {
+    $vo = OptionalFail::fromScalars(id: 1, firstName: 'Foo', height: 170);
+    expect($vo->jsonSerialize())
+        ->toBe([
+            'id' => '1',
+            'firstName' => 'Foo',
+            'height' => '170',
+        ]);
+});
+
+it('jsonSerialize fails when firstName is Undefined (late fail)', function (): void {
+    $vo = OptionalFail::fromScalars(id: 1, firstName: '', height: 10.0);
+    expect(fn() => $vo->jsonSerialize())
+        ->toThrow(UndefinedTypeException::class, 'UndefinedType cannot be converted to string.');
+});
+
+it('jsonSerialize fails when height is Undefined (late fail)', function (): void {
+    $vo = OptionalFail::fromScalars(id: 1, firstName: 'Name', height: null);
+    expect(fn() => $vo->jsonSerialize())
+        ->toThrow(UndefinedTypeException::class, 'UndefinedType cannot be converted to string.');
 });

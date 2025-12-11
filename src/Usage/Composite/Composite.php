@@ -35,3 +35,4 @@ echo json_encode($test, JSON_THROW_ON_ERROR) . PHP_EOL;
 
 $test = ArrayOfStrings::tryFromArray(['string', 'not-empty', '1', 2, true]);
 echo json_encode($test, JSON_THROW_ON_ERROR) . PHP_EOL;
+echo json_encode($test->value(), JSON_THROW_ON_ERROR) . PHP_EOL;

@@ -137,7 +137,7 @@ $profile->getHeight()->value(); // throws an exception on access the Undefined v
 ### Documentation
 
 - Development guide: `docs/DEVELOP.md`
-- Usage examples in `src/Usage`
+- Usage examples in `src/Usage` and `tests/Unit`
 
 ### License
 
