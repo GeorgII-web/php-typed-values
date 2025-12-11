@@ -22,11 +22,13 @@ interface ArrayTypeInterface
 
     /**
      * @psalm-param list<mixed> $value
+     * @return static
      */
-    public static function fromArray(array $value): static;
+    public static function fromArray(array $value);
 
     /**
      * @psalm-param list<mixed> $value
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
      */
-    public static function tryFromArray(array $value): static|Undefined;
+    public static function tryFromArray(array $value);
 }

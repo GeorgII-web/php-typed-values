@@ -23,46 +23,56 @@ use PhpTypedValues\Exception\UndefinedTypeException;
  *
  * @psalm-immutable
  */
-abstract readonly class UndefinedType extends AbstractType implements UndefinedTypeInterface
+abstract class UndefinedType extends AbstractType implements UndefinedTypeInterface
 {
-    public static function create(): static
+    /**
+     * @return static
+     */
+    public static function create()
     {
         return new static();
     }
 
-    public static function fromString(string $value): static
+    /**
+     * @return static
+     */
+    public static function fromString(string $value)
     {
         return new static();
     }
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    public function toInt(): never
+    public function toInt()
     {
         throw new UndefinedTypeException('UndefinedType cannot be converted to integer.');
     }
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    public function toFloat(): never
+    public function toFloat()
     {
         throw new UndefinedTypeException('UndefinedType cannot be converted to float.');
     }
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    public function toString(): never
+    public function toString()
     {
         throw new UndefinedTypeException('UndefinedType cannot be converted to string.');
     }
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    public function value(): never
+    public function value()
     {
         throw new UndefinedTypeException('UndefinedType has no value.');
     }
@@ -77,8 +87,9 @@ abstract readonly class UndefinedType extends AbstractType implements UndefinedT
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    public function jsonSerialize(): never
+    public function jsonSerialize()
     {
         throw new UndefinedTypeException('UndefinedType cannot be serialized for Json.');
     }

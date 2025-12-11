@@ -22,9 +22,18 @@ interface IntTypeInterface
 {
     public function value(): int;
 
-    public static function fromInt(int $value): static;
+    /**
+     * @return static
+     */
+    public static function fromInt(int $value);
 
-    public static function tryFromString(string $value): static|Undefined;
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    public static function tryFromString(string $value);
 
-    public static function tryFromInt(int $value): static|Undefined;
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    public static function tryFromInt(int $value);
 }

@@ -27,9 +27,10 @@ use function strtolower;
  *
  * @psalm-immutable
  */
-readonly class StringUuidV7 extends StrType
+class StringUuidV7 extends StrType
 {
-    /** @var non-empty-string */
+    /** @var non-empty-string
+     * @readonly */
     protected string $value;
 
     /**
@@ -54,19 +55,23 @@ readonly class StringUuidV7 extends StrType
         $this->value = $normalized;
     }
 
-    public static function tryFromString(string $value): static|Undefined
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    public static function tryFromString(string $value)
     {
         try {
             return static::fromString($value);
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return Undefined::create();
         }
     }
 
     /**
      * @throws UuidStringTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         return new static($value);
     }

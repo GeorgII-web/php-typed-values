@@ -29,8 +29,11 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class StringJson extends StrType
+class StringJson extends StrType
 {
+    /**
+     * @readonly
+     */
     protected string $value;
 
     /**
@@ -45,17 +48,21 @@ readonly class StringJson extends StrType
 
     /**
      * @throws JsonStringTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         return new static($value);
     }
 
-    public static function tryFromString(string $value): static|Undefined
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    public static function tryFromString(string $value)
     {
         try {
             return static::fromString($value);
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return Undefined::create();
         }
     }
@@ -70,7 +77,7 @@ readonly class StringJson extends StrType
      */
     public function toObject(): object
     {
-        return json_decode(json: $this->value, associative: false, flags: JSON_THROW_ON_ERROR);
+        return json_decode($this->value, false, 512, JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -78,7 +85,7 @@ readonly class StringJson extends StrType
      */
     public function toArray(): array
     {
-        return json_decode(json: $this->value, associative: true, flags: JSON_THROW_ON_ERROR);
+        return json_decode($this->value, true, 512, JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -92,7 +99,7 @@ readonly class StringJson extends StrType
              *
              * @psalm-suppress UnusedFunctionCall
              */
-            json_decode(json: $value, flags: JSON_THROW_ON_ERROR);
+            json_decode($value, null, 512, JSON_THROW_ON_ERROR);
         } catch (JsonException $e) {
             throw new JsonStringTypeException(sprintf('String "%s" has no valid JSON value', $value), 0, $e);
         }

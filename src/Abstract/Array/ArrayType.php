@@ -22,6 +22,6 @@ use JsonSerializable;
  *
  * @psalm-immutable
  */
-abstract readonly class ArrayType implements ArrayTypeInterface, IteratorAggregate, JsonSerializable
+abstract class ArrayType implements ArrayTypeInterface, IteratorAggregate, JsonSerializable
 {
 }

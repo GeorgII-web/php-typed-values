@@ -21,8 +21,13 @@ use PhpTypedValues\String\StringNonEmpty;
  *
  * @psalm-immutable
  */
-final readonly class ArrayOfStrings extends ArrayType
+final class ArrayOfStrings extends ArrayType
 {
+    /**
+     * @var non-empty-list<StringNonEmpty>
+     * @readonly
+     */
+    private array $value;
     /**
      * @param non-empty-list<StringNonEmpty> $value
      *
@@ -30,9 +35,10 @@ final readonly class ArrayOfStrings extends ArrayType
      * @throws TypeException
      */
     public function __construct(
-        /** @var non-empty-list<StringNonEmpty> */
-        private array $value,
+        array $value
     ) {
+        /** @var non-empty-list<StringNonEmpty> */
+        $this->value = $value;
         if ($value === []) {
             throw new TypeException('Expected non-empty array');
         }
@@ -49,8 +55,9 @@ final readonly class ArrayOfStrings extends ArrayType
      *
      * @throws StringTypeException
      * @throws TypeException
+     * @return static
      */
-    public static function fromArray(array $value): static
+    public static function fromArray(array $value)
     {
         if ($value === []) {
             throw new TypeException('Expected non-empty array');
@@ -70,8 +77,9 @@ final readonly class ArrayOfStrings extends ArrayType
      *
      * @throws StringTypeException
      * @throws TypeException
+     * @return static
      */
-    public static function tryFromArray(array $value): static
+    public static function tryFromArray(array $value)
     {
         return static::fromArray($value);
     }

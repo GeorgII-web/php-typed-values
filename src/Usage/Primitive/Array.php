@@ -15,6 +15,6 @@ echo PHP_EOL . '> ARRAY' . PHP_EOL;
 
 try {
     throw new ArrayTypeException('Array type exception occurred');
-} catch (ArrayTypeException) {
+} catch (ArrayTypeException $exception) {
     // suppress
 }
