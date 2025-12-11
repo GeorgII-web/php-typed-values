@@ -22,6 +22,13 @@ require_once 'vendor/autoload.php';
  * - `firstName` uses `tryFromMixed` and may be `Undefined` (late fail on access).
  * - `height` fails early only when provided; `null` becomes `Undefined` (late fail).
  *
+ * Example
+ *  - $p = OptionalFail::fromScalars(id: 1, firstName: 'Alice', height: 170);
+ *    $p->jsonSerialize(); // ['id' => '1', 'firstName' => 'Alice', 'height' => '170']
+ *  - $p = OptionalFail::fromScalars(id: 1, firstName: '', height: null);
+ *    $p->getFirstName()->toString(); // late fail (UndefinedTypeException)
+ *    $p->getHeight()->toString(); // late fail (UndefinedTypeException)
+ *
  * @internal
  *
  * @psalm-internal PhpTypedValues

@@ -19,6 +19,13 @@ use PhpTypedValues\String\StringNonEmpty;
  * items via `value()`, supports iteration, and can be converted to a plain
  * array or JSON.
  *
+ * Example
+ *  - $a = ArrayOfStrings::fromArray(['foo', 'bar']);
+ *    $a->toArray(); // ['foo', 'bar']
+ *    foreach ($a as $item) { $item->toString(); // 'foo', then 'bar' }
+ *  - ArrayOfStrings::fromArray([]); // throws TypeException('Expected non-empty array')
+ *  - ArrayOfStrings::fromArray([123, 45.6]); // casts to strings → ['123', '45.6']
+ *
  * @internal
  *
  * @psalm-internal PhpTypedValues

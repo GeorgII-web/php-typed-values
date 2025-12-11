@@ -19,6 +19,13 @@ use PhpTypedValues\String\StringNonEmpty;
  * All fields must be valid on creation time. Any invalid input immediately
  * raises a domain exception from the underlying typed values.
  *
+ * Example
+ *  - $p = EarlyFail::fromScalars(id: 1, firstName: 'Alice', height: 170.5);
+ *    $p->getFirstName()->toString(); // 'Alice'
+ *  - EarlyFail::fromScalars(id: 0, firstName: 'Alice', height: 170); // throws IntegerTypeException
+ *  - EarlyFail::fromScalars(id: 1, firstName: '', height: 170); // throws StringTypeException
+ *  - EarlyFail::fromScalars(id: 1, firstName: 'Alice', height: -1); // throws FloatTypeException
+ *
  * @internal
  *
  * @psalm-internal PhpTypedValues

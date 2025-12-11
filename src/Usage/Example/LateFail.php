@@ -19,6 +19,13 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  * - `firstName` and `height` accept mixed inputs and may become `Undefined`;
  *   accessing their string/primitive values may fail later.
  *
+ * Example
+ *  - $p = LateFail::fromScalars(id: 1, firstName: 'Bob', height: '170.5');
+ *    $p->getHeight()->toString(); // '170.5'
+ *  - $p = LateFail::fromScalars(id: 1, firstName: '', height: null);
+ *    $p->getFirstName()->toString(); // late fail (UndefinedTypeException)
+ *    $p->getHeight()->toString(); // late fail (UndefinedTypeException)
+ *
  * @internal
  *
  * @psalm-internal PhpTypedValues
