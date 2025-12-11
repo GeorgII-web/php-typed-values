@@ -16,6 +16,12 @@ use PhpTypedValues\Undefined\Alias\Undefined;
 require_once 'vendor/autoload.php';
 
 /**
+ * Example of optional/late‑fail semantics.
+ *
+ * - `id` must be valid at construction time (early fail).
+ * - `firstName` uses `tryFromMixed` and may be `Undefined` (late fail on access).
+ * - `height` fails early only when provided; `null` becomes `Undefined` (late fail).
+ *
  * @internal
  *
  * @psalm-internal PhpTypedValues
@@ -32,6 +38,12 @@ final readonly class OptionalFail implements JsonSerializable
     }
 
     /**
+     * Factory that supports optional and late‑fail inputs.
+     *
+     * @param int                   $id        positive integer identifier (validated immediately)
+     * @param string|null           $firstName non-empty string or empty/invalid treated as `Undefined`
+     * @param string|float|int|null $height    positive numeric value; `null` produces `Undefined`
+     *
      * @throws IntegerTypeException
      * @throws FloatTypeException
      */
@@ -49,22 +61,33 @@ final readonly class OptionalFail implements JsonSerializable
         );
     }
 
+    /**
+     * Returns height, which may be `Undefined` when it was omitted.
+     */
     public function getHeight(): FloatPositive|Undefined
     {
         return $this->height;
     }
 
+    /**
+     * Returns validated identifier.
+     */
     public function getId(): IntegerPositive
     {
         return $this->id;
     }
 
+    /**
+     * Returns first name or `Undefined` when the input was empty/invalid.
+     */
     public function getFirstName(): StringNonEmpty|Undefined
     {
         return $this->firstName;
     }
 
     /**
+     * Serializes to an associative array of strings.
+     *
      * @throws UndefinedTypeException
      */
     public function jsonSerialize(): array

@@ -87,7 +87,7 @@ it('serializes to JSON and back', function (): void {
 
     $arrayOfStrings = ArrayOfStrings::fromArray($array);
 
-    $arrayOfStringsJson = json_encode($arrayOfStrings, JSON_THROW_ON_ERROR);
+    $arrayOfStringsJson = json_encode($arrayOfStrings, \JSON_THROW_ON_ERROR);
     $arrayOfStringsJsonDecoded = json_decode($arrayOfStringsJson, true);
 
     expect($arrayOfStrings->toArray())->toBe($array);

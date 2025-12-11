@@ -13,6 +13,12 @@ use PhpTypedValues\String\StringNonEmpty;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
+ * Example of late‑fail semantics using `Undefined` for optional/invalid inputs.
+ *
+ * - `id` must be valid at construction time (early fail).
+ * - `firstName` and `height` accept mixed inputs and may become `Undefined`;
+ *   accessing their string/primitive values may fail later.
+ *
  * @internal
  *
  * @psalm-internal PhpTypedValues
@@ -29,6 +35,14 @@ final readonly class LateFail
     }
 
     /**
+     * Factory that validates only the strictly required field (`id`) early,
+     * while optional/mixed inputs for `firstName` and `height` may result in
+     * `Undefined` values (late‑fail on access).
+     *
+     * @param int                   $id        positive integer identifier (validated immediately)
+     * @param mixed                 $firstName non-empty string or will become `Undefined`
+     * @param string|float|int|null $height    positive numeric or `null` to become `Undefined`
+     *
      * @throws IntegerTypeException
      */
     public static function fromScalars(
@@ -43,16 +57,25 @@ final readonly class LateFail
         );
     }
 
+    /**
+     * Returns height, which may be `Undefined`.
+     */
     public function getHeight(): FloatPositive|Undefined
     {
         return $this->height;
     }
 
+    /**
+     * Returns validated identifier.
+     */
     public function getId(): IntegerPositive
     {
         return $this->id;
     }
 
+    /**
+     * Returns first name or `Undefined`.
+     */
     public function getFirstName(): StringNonEmpty|Undefined
     {
         return $this->firstName;

@@ -13,6 +13,12 @@ use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\String\StringNonEmpty;
 
 /**
+ * Immutable collection of non-empty strings represented as `StringNonEmpty`.
+ *
+ * Provides factory helpers to construct from raw arrays, exposes the typed
+ * items via `value()`, supports iteration, and can be converted to a plain
+ * array or JSON.
+ *
  * @internal
  *
  * @psalm-internal PhpTypedValues
@@ -24,7 +30,9 @@ use PhpTypedValues\String\StringNonEmpty;
 final readonly class ArrayOfStrings extends ArrayType
 {
     /**
-     * @param non-empty-list<StringNonEmpty> $value
+     * Creates a new collection from a non-empty list of `StringNonEmpty`.
+     *
+     * @param non-empty-list<StringNonEmpty> $value items must be instances of `StringNonEmpty`
      *
      * @throws StringTypeException
      * @throws TypeException
@@ -45,6 +53,11 @@ final readonly class ArrayOfStrings extends ArrayType
     }
 
     /**
+     * Creates a collection from a non-empty list of raw values by casting each
+     * value to string and validating it as `StringNonEmpty`.
+     *
+     * @param array $value raw values to convert
+     *
      * @psalm-param list<mixed> $value
      *
      * @throws StringTypeException
@@ -66,6 +79,11 @@ final readonly class ArrayOfStrings extends ArrayType
     }
 
     /**
+     * Same as `fromArray()` but intended for scenarios where late/optional
+     * failure might be desirable. Current implementation mirrors `fromArray()`.
+     *
+     * @param array $value raw values to convert
+     *
      * @psalm-param list<mixed> $value
      *
      * @throws StringTypeException
@@ -77,6 +95,8 @@ final readonly class ArrayOfStrings extends ArrayType
     }
 
     /**
+     * Returns the underlying typed items.
+     *
      * @psalm-return non-empty-list<StringNonEmpty>
      */
     public function value(): array
@@ -85,6 +105,8 @@ final readonly class ArrayOfStrings extends ArrayType
     }
 
     /**
+     * Converts the collection to a non-empty list of raw strings.
+     *
      * @return non-empty-list<non-empty-string>
      */
     public function toArray(): array
@@ -101,6 +123,8 @@ final readonly class ArrayOfStrings extends ArrayType
     }
 
     /**
+     * JSON serialization proxy that returns the same as `toArray()`.
+     *
      * @return non-empty-list<non-empty-string>
      */
     public function jsonSerialize(): array
@@ -109,6 +133,8 @@ final readonly class ArrayOfStrings extends ArrayType
     }
 
     /**
+     * Iterates over the underlying `StringNonEmpty` items.
+     *
      * @return Generator<int, StringNonEmpty>
      */
     public function getIterator(): Generator

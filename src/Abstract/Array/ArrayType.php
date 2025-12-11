@@ -10,6 +10,10 @@ use JsonSerializable;
 /**
  * Base implementation for array typed values.
  *
+ * Provides an immutable, iterable, and JSON‑serializable collection of
+ * typed items. Concrete implementations define item validation and
+ * factory behavior.
+ *
  * @internal
  *
  * @psalm-internal PhpTypedValues

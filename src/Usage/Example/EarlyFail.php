@@ -14,6 +14,11 @@ use PhpTypedValues\Integer\IntegerPositive;
 use PhpTypedValues\String\StringNonEmpty;
 
 /**
+ * Example of strict early‑fail semantics for constructing a composite value.
+ *
+ * All fields must be valid on creation time. Any invalid input immediately
+ * raises a domain exception from the underlying typed values.
+ *
  * @internal
  *
  * @psalm-internal PhpTypedValues
@@ -30,6 +35,12 @@ final readonly class EarlyFail
     }
 
     /**
+     * Factory that validates all inputs and fails immediately on invalid data.
+     *
+     * @param int    $id        positive integer identifier
+     * @param string $firstName non-empty person name
+     * @param float  $height    positive height value
+     *
      * @throws IntegerTypeException
      * @throws FloatTypeException
      * @throws StringTypeException
@@ -46,16 +57,25 @@ final readonly class EarlyFail
         );
     }
 
+    /**
+     * Returns validated height value.
+     */
     public function getHeight(): FloatPositive
     {
         return $this->height;
     }
 
+    /**
+     * Returns validated identifier.
+     */
     public function getId(): IntegerPositive
     {
         return $this->id;
     }
 
+    /**
+     * Returns validated first name.
+     */
     public function getFirstName(): StringNonEmpty
     {
         return $this->firstName;
