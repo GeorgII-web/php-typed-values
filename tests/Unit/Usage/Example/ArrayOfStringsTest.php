@@ -81,3 +81,15 @@ it('casts mixed scalars to strings in fromArray', function (): void {
     $a = ArrayOfStrings::fromArray([123, 45.6, '789']);
     expect($a->toArray())->toBe(['123', '45.6', '789']);
 });
+
+it('serializes to JSON and back', function (): void {
+    $array = ['foo', 'bar'];
+
+    $arrayOfStrings = ArrayOfStrings::fromArray($array);
+
+    $arrayOfStringsJson = json_encode($arrayOfStrings, JSON_THROW_ON_ERROR);
+    $arrayOfStringsJsonDecoded = json_decode($arrayOfStringsJson, true);
+
+    expect($arrayOfStrings->toArray())->toBe($array);
+    expect($arrayOfStringsJsonDecoded)->toBe($array);
+});
