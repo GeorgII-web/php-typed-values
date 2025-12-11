@@ -1,36 +1,45 @@
-# PHP Typed Values
+### PHP Typed Values
 
-PHP library of typed value objects for common PHP data types.
-
-Building blocks for a DTO's, ValueObjects, Entities, etc.
+Typed value objects for PHP. Build precise, immutable, and validated data for DTOs, Value Objects, and Entities.
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/georgii-web/php-typed-values.svg?style=flat-square)](https://packagist.org/packages/georgii-web/php-typed-values)
 [![Tests](https://github.com/georgii-web/php-typed-values/actions/workflows/php.yml/badge.svg)](https://github.com/georgii-web/php-typed-values/actions/workflows/php.yml)
 [![Total Downloads](https://img.shields.io/packagist/dt/georgii-web/php-typed-values.svg?style=flat-square)](https://packagist.org/packages/georgii-web/php-typed-values)
 
-## Install
+---
 
-Use `v2.*` for PHP 8.2 support:
+### Install
 
-```
+- PHP 8.2+:
+
+```bash
 composer require georgii-web/php-typed-values:^2.0
 ```
 
-Use `v1.*` for PHP 7.4 support:
+- PHP 7.4:
 
-```
+```bash
 composer require georgii-web/php-typed-values:^1.0
 ```
 
-## Usage
+### Why
 
-#### 1. Use existing typed values with validation built in:
+- Strong typing for scalars with runtime validation
+- Immutable and self‑documenting values
+- Safer constructors for your DTOs/VOs/Entities
+- Great fit for static analysis (Psalm/PHPStan)
+
+### Quick start
+
+#### Use existing typed values
 
 ```php
+use TypedValues\Integer\IntegerPositive;
+
 $id = IntegerPositive::fromString('123');
 ```
 
-instead of spreading this logic across your application like:
+Instead of spreading validation across an application:
 
 ```php
 $id = (int) '123';
@@ -39,17 +48,24 @@ if ($id <= 0) {
 }
 ```
 
-#### 2. Create aliases:
+#### Create an alias (domain name)
 
 ```php
+use TypedValues\Integer\IntegerPositive;
+
 readonly class Id extends IntegerPositive {}
 
 Id::fromInt(123);
 ```
 
-#### 3. Create a composite value object:
+#### Compose value objects
 
 ```php
+use TypedValues\Integer\IntegerPositive;
+use TypedValues\String\StringNonEmpty;
+use TypedValues\Float\FloatPositive;
+use TypedValues\Undefined\Alias\Undefined; // represents an intentionally missing value
+
 final readonly class Profile
 {
     public function __construct(
@@ -64,65 +80,63 @@ final readonly class Profile
         string|float|int|null $height = null,
     ): self {
         return new self(
-            IntegerPositive::fromInt($id), // Early fail
-            StringNonEmpty::tryFromMixed($firstName), // Late fail
+            IntegerPositive::fromInt($id),                   // early fail (must be valid)
+            StringNonEmpty::tryFromMixed($firstName),         // late fail (maybe undefined)
             $height !== null
-                ? FloatPositive::fromString((string) $height) // Early fail for not NULL
-                : Undefined::create(), // Late fail for NULL
+                ? FloatPositive::fromString((string) $height) // early fail if provided
+                : Undefined::create(),                        // late fail when accessed
         );
     }
-    
-    public function getHeight(): FloatPositive|Undefined { 
-        return $this->height;
-    }
+
+    public function getFirstName(): StringNonEmpty|Undefined { return $this->firstName; }
+    public function getHeight(): FloatPositive|Undefined { return $this->height; }
 }
 ```
-VO strictly typed and must have all valid fields:
 
-Use "Early fail" on wrong `Id`
+##### Early fail (invalid input prevents creation)
 
 ```php
-Profile::fromScalars(id: 0, firstName: 'Alice', height: '172.5'); // Early fail Exception
+Profile::fromScalars(id: 0, firstName: 'Alice', height: '172.5'); // throws exception
 ```
 
-If VO partly valid but still must be created:
+##### Late fail with `Undefined` (object exists, fail on access)
 
-Use "Late fail" on a wrong `firstName`
 ```php
-$profile = Profile::fromScalars(id: 101, firstName: '', height: '172.5'); // Profile created
-$profile = Profile::fromScalars(id: 101, firstName: null, height: '172.5'); // Profile created
-$profile->getFirstName()->value(); // Late fail, "Undefined" class will throw an exception on trying to get the value
+$profile = Profile::fromScalars(id: 101, firstName: '', height: '172.5'); // created
+$profile->getFirstName()->value(); // throws an exception on access the Undefined value
 ```
 
-Or "Optioanal fail" on a wrong `height`
+##### Optional fail (only fail if the optional value is provided and invalid)
+
 ```php
-$profile = Profile::fromScalars(id: 101, firstName: 'Alice', height: -1); // Early fail Exception
+Profile::fromScalars(id: 101, firstName: 'Alice', height: -1); // invalid provided value -> early fail
 
-$profile = Profile::fromScalars(id: 101, firstName: 'Alice', height: null); // Profile created
-$profile->getHeight()->value(); // Late fail, "Undefined" class will throw an exception on trying to get the value
+$profile = Profile::fromScalars(id: 101, firstName: 'Alice', height: null); // value omitted -> created, fails only on access
+$profile->getHeight()->value(); // throws an exception on access the Undefined value
 ```
 
-## Key Features
+### Key features
 
-- **Static analysis** – Designed for tools like Psalm and PHPStan with precise type annotations.
-- **Strict types** – Uses `declare(strict_types=1);` and strict type hints throughout.
-- **Validation** – Validates input on construction so objects can’t be created in an invalid state.
-- **Immutable** – Value objects are read‑only and never change after creation.
-- **No external dependencies** – Pure PHP implementation without requiring third‑party packages.
-- **Extendable** – Extendable with custom-typed values and composite value objects.
+- Static analysis friendly (Psalm/PHPStan-ready types)
+- Strict types with `declare(strict_types=1);`
+- Validation on construction; no invalid state
+- Immutable, readonly objects
+- No external runtime dependencies
+- Easy to extend with your own types and composites
 
-## Performance disclaimer
+### Performance note
 
-- **Performance** for an array of objects is about `3x` **slower** than an array of scalars;
-- **Memory usage** for an array of objects is about `2x` **higher**;
-- **Use value objects** for domain modeling, type safety, and validation boundaries;
-- **Use raw scalars** for high-performance loops or large-scale data processing;
+- Objects vs scalars:
+    - ~3× slower for large arrays of objects
+    - ~2× higher memory usage
+- Use value objects for domain boundaries, validation, and clarity
+- Use raw scalars in hot loops or large data processing paths
 
-## More information
+### Documentation
 
-See [docs/USAGE.md](docs/USAGE.md) for usage examples.  
-See [docs/DEVELOP.md](docs/DEVELOP.md) for development details.
+- Development guide: `docs/DEVELOP.md`
+- Usage examples in `src/Usage`
 
-## License
+### License
 
 MIT
