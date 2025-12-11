@@ -62,7 +62,7 @@
       "php ./src/Usage/Util/Performance.php 1000 && php ./src/Usage/Util/Performance.php 10000 && php ./src/Usage/Util/Performance.php 100000 && php ./src/Usage/Util/Performance.php 1000000"
     ],
     "usage": [
-      "php ./src/Usage/Composite/Composite.php && php ./src/Usage/Primitive/Boolean.php && php ./src/Usage/Primitive/DateTime.php && php ./src/Usage/Primitive/Float.php && php ./src/Usage/Primitive/Integer.php && php ./src/Usage/Primitive/String.php && php ./src/Usage/Primitive/Undefined.php"
+      "php ./src/Usage/Composite/Composite.php && php ./src/Usage/Primitive/Array.php && php ./src/Usage/Primitive/Boolean.php && php ./src/Usage/Primitive/DateTime.php && php ./src/Usage/Primitive/Float.php && php ./src/Usage/Primitive/Integer.php && php ./src/Usage/Primitive/String.php && php ./src/Usage/Primitive/Undefined.php"
     ],
     "type": [
       "./vendor/bin/pest --type-coverage --min=100 --do-not-cache-result"
