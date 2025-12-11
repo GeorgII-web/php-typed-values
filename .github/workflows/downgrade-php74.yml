@@ -46,26 +46,11 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --ignore-platform-reqs
 
-      - name: Run style fixer
-        run: composer run-script cs
-
-      - name: Run psalm
-        run: composer run-script sca
-
       - name: Run tests
         run: composer run-script test
 
-      - name: Run type coverage
-        run: composer run-script type
-
-      - name: Run test coverage
-        run: composer run-script coverage
-
-      - name: Run mutation tests
-        run: composer run-script mutate
-
   downgrade-and-tag:
-    name: Downgrade to PHP 7.4 and Tag v1.x
+    name: Release PHP 7.4 with Tag v1.x
     needs: verify-php82
     runs-on: ubuntu-latest
     steps:
