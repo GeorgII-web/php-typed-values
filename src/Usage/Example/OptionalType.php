@@ -18,7 +18,7 @@ require_once 'vendor/autoload.php';
  *
  * @psalm-internal PhpTypedValues
  */
-final readonly class NullableType
+final readonly class OptionalType
 {
     public function __construct(
         private IntegerPositive $id,
@@ -34,12 +34,14 @@ final readonly class NullableType
     public static function fromScalars(
         int $id,
         ?string $firstName,
-        string|float|int|null $height,
+        string|float|int|null $height = null,
     ): self {
         return new self(
             IntegerPositive::fromInt($id), // Early fail
             StringNonEmpty::tryFromMixed($firstName), // Late fail
-            $height !== null ? FloatPositive::fromString((string) $height) : Undefined::create(), // Late fail for NULL, Early fail for anything else
+            $height !== null
+                ? FloatPositive::fromString((string) $height) // Early fail for not NULL
+                : Undefined::create(), // Late fail for NULL
         );
     }
 

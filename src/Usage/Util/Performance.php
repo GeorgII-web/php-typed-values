@@ -51,7 +51,7 @@ function main(array $argv): int
         $objects['mem_delta_mb'],
     );
 
-    // Percent difference of objects vs ints (how much more/less objects use than ints)
+    // Percent difference of objects vs. ints (how much more/fewer objects use than ints)
     $timePct = formatPct(pctDiff($objects['time_ms'], $ints['time_ms']));
     $memPct = formatPct(pctDiff($objects['mem_delta_mb'], $ints['mem_delta_mb']));
 
@@ -90,7 +90,7 @@ function measureInts(int $n): array
     $baseUsage = memory_get_usage(true);
 
     $ints = [];
-    $ints[$n - 1] = 0; // pre-allocate last index (sparse) to reduce reallocs
+    $ints[$n - 1] = 0; // pre-allocate last index (sparse) to reduce reallocating
 
     $t0 = hrtime(true);
     for ($i = 0; $i < $n; ++$i) {
@@ -142,7 +142,7 @@ function measureObjects(int $n): array
 // Percentage helpers **************************************************************************************************
 
 /**
- * Compute percentage difference: (a / b - 1) * 100. Returns null when baseline is zero or not finite.
+ * Compute percentage difference: (a / b - 1) * 100. Returns null when the baseline is zero or not finite.
  */
 function pctDiff(float $a, float $b): ?float
 {
