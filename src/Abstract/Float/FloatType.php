@@ -37,14 +37,4 @@ abstract readonly class FloatType extends AbstractType implements FloatTypeInter
             throw new FloatTypeException(sprintf('String "%s" has no valid float value', $value));
         }
     }
-
-    public function toString(): string
-    {
-        return (string) $this->value();
-    }
-
-    public function __toString(): string
-    {
-        return $this->toString();
-    }
 }

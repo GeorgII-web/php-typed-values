@@ -39,7 +39,7 @@ abstract readonly class AbstractType implements AbstractTypeInterface, JsonSeria
      *
      * @throws TypeException
      */
-    public static function convertMixedToString(mixed $value): string
+    protected static function convertMixedToString(mixed $value): string
     {
         if (is_scalar($value) || $value === null) {
             return (string) $value;

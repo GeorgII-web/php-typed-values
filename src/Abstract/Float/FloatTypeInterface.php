@@ -24,7 +24,5 @@ interface FloatTypeInterface
 
     public static function fromFloat(float $value): static;
 
-    public function toString(): string;
-
     public static function tryFromString(string $value): static|Undefined;
 }

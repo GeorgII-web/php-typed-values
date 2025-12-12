@@ -39,14 +39,4 @@ abstract readonly class IntType extends AbstractType implements IntTypeInterface
             throw new IntegerTypeException(sprintf('String "%s" has no valid strict integer value', $value));
         }
     }
-
-    public function toString(): string
-    {
-        return (string) $this->value();
-    }
-
-    public function __toString(): string
-    {
-        return $this->toString();
-    }
 }

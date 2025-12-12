@@ -91,4 +91,14 @@ readonly class IntegerTiny extends IntType
     {
         return $this->value();
     }
+
+    public function toString(): string
+    {
+        return (string) $this->value();
+    }
+
+    public function __toString(): string
+    {
+        return $this->toString();
+    }
 }
