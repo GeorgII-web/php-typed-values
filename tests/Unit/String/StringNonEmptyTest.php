@@ -47,3 +47,9 @@ it('throws on empty string via fromString', function (): void {
 it('jsonSerialize returns string', function (): void {
     expect(StringNonEmpty::tryFromString('hello')->jsonSerialize())->toBeString();
 });
+
+it('__toString returns the original non-empty string', function (): void {
+    $s = new StringNonEmpty('world');
+    expect((string) $s)->toBe('world')
+        ->and($s->__toString())->toBe('world');
+});

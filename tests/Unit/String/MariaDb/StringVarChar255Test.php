@@ -58,3 +58,11 @@ it('StringVarChar255::tryFromString returns Undefined when length > 255', functi
 it('jsonSerialize returns string', function (): void {
     expect(StringVarChar255::tryFromString('hello')->jsonSerialize())->toBeString();
 });
+
+it('__toString returns the original string value', function (): void {
+    $str = str_repeat('C', 10);
+    $s = new StringVarChar255($str);
+
+    expect((string) $s)->toBe($str)
+        ->and($s->__toString())->toBe($str);
+});

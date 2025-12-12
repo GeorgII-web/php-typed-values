@@ -60,3 +60,9 @@ it('toFloat returns exact float only when string equals (string)(float) cast', f
 it('jsonSerialize returns string', function (): void {
     expect(StringDecimal::fromString('1.1')->jsonSerialize())->toBeString();
 });
+
+it('__toString returns the original decimal string', function (): void {
+    $d = new StringDecimal('3.14');
+    expect((string) $d)->toBe('3.14')
+        ->and($d->__toString())->toBe('3.14');
+});

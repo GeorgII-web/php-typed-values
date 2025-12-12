@@ -22,7 +22,5 @@ interface StrTypeInterface
 {
     public function value(): string;
 
-    public static function fromString(string $value): static;
-
     public static function tryFromString(string $value): static|Undefined;
 }

@@ -67,3 +67,11 @@ it('jsonSerialize returns string', function (): void {
     $t = new StringUuidV4('550e8400-e29b-41d4-a716-446655440000');
     expect($t->jsonSerialize())->toBeString();
 });
+
+it('__toString returns normalized lowercase UUID v4', function (): void {
+    $input = '550E8400-E29B-41D4-A716-446655440000';
+    $u = StringUuidV4::fromString($input);
+
+    expect((string) $u)->toBe(strtolower($input))
+        ->and($u->__toString())->toBe(strtolower($input));
+});

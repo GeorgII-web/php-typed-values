@@ -67,3 +67,11 @@ it('constructor throws with code 0 and previous JsonException on invalid JSON', 
 it('jsonSerialize returns string', function (): void {
     expect(StringJson::tryFromString('{}')->jsonSerialize())->toBeString();
 });
+
+it('__toString returns the original JSON text', function (): void {
+    $json = '{"k":1}';
+    $j = new StringJson($json);
+
+    expect((string) $j)->toBe($json)
+        ->and($j->__toString())->toBe($json);
+});

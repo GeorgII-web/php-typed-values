@@ -13,13 +13,13 @@ Typed value objects for PHP. Build precise, immutable, and validated data for DT
 - Use V2 for PHP 8.2+:
 
 ```bash
-composer require georgii-web/php-typed-values:^2.*
+composer require georgii-web/php-typed-values:^2
 ```
 
 - Use V1 for PHP 7.4:
 
 ```bash
-composer require georgii-web/php-typed-values:^1.*
+composer require georgii-web/php-typed-values:^1
 ```
 
 ### Why
