@@ -17,17 +17,17 @@ use PhpTypedValues\Usage\Example\OptionalFail;
  */
 echo PHP_EOL . '> COMPOSITE' . PHP_EOL;
 
-$test = EarlyFail::fromScalars(id: 1, firstName: 'Foobar', height: 170);
+$test = EarlyFail::fromScalars(1, 'Foobar', 170);
 echo $test->getId()->toString() . PHP_EOL;
 echo $test->getFirstName()->toString() . PHP_EOL;
 echo $test->getHeight()->toString() . PHP_EOL;
 
-$test = LateFail::fromScalars(id: 1, firstName: 'Foobar', height: 170);
+$test = LateFail::fromScalars(1, 'Foobar', 170);
 echo $test->getId()->toString() . PHP_EOL;
 echo $test->getFirstName()->toString() . PHP_EOL;
 echo $test->getHeight()->toString() . PHP_EOL;
 
-$test = OptionalFail::fromScalars(id: 1, firstName: 'Foobar', height: 170);
+$test = OptionalFail::fromScalars(1, 'Foobar', 170);
 echo $test->getId()->toString() . PHP_EOL;
 echo $test->getFirstName()->toString() . PHP_EOL;
 echo $test->getHeight()->toString() . PHP_EOL;

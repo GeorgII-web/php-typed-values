@@ -24,8 +24,11 @@ use function mb_strlen;
  *
  * @psalm-immutable
  */
-readonly class StringText extends StrType
+class StringText extends StrType
 {
+    /**
+     * @readonly
+     */
     protected string $value;
 
     /**
@@ -40,19 +43,23 @@ readonly class StringText extends StrType
         $this->value = $value;
     }
 
-    public static function tryFromString(string $value): static|Undefined
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    public static function tryFromString(string $value)
     {
         try {
             return static::fromString($value);
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return Undefined::create();
         }
     }
 
     /**
      * @throws StringTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         return new static($value);
     }

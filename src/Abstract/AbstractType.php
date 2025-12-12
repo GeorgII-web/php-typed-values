@@ -31,21 +31,22 @@ use function is_scalar;
  *
  * @psalm-immutable
  */
-abstract readonly class AbstractType implements AbstractTypeInterface, JsonSerializable
+abstract class AbstractType implements AbstractTypeInterface, JsonSerializable
 {
     /**
      * Safely attempts to convert a mixed value to a string.
      * Returns null if conversion is impossible (array, resource, non-stringable object).
      *
      * @throws TypeException
+     * @param mixed $value
      */
-    protected static function convertMixedToString(mixed $value): string
+    protected static function convertMixedToString($value): string
     {
         if (is_scalar($value) || $value === null) {
             return (string) $value;
         }
 
-        if ($value instanceof Stringable) {
+        if (is_object($value) && method_exists($value, '__toString')) {
             return (string) $value;
         }
 

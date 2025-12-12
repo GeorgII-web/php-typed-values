@@ -19,11 +19,23 @@ namespace PhpTypedValues\Abstract\Undefined;
  */
 interface UndefinedTypeInterface
 {
-    public static function create(): static;
+    /**
+     * @return static
+     */
+    public static function create();
 
-    public function value(): never;
+    /**
+     * @return never
+     */
+    public function value();
 
-    public function toInt(): never;
+    /**
+     * @return never
+     */
+    public function toInt();
 
-    public function toFloat(): never;
+    /**
+     * @return never
+     */
+    public function toFloat();
 }

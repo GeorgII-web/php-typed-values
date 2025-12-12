@@ -22,7 +22,13 @@ interface FloatTypeInterface
 {
     public function value(): float;
 
-    public static function fromFloat(float $value): static;
+    /**
+     * @return static
+     */
+    public static function fromFloat(float $value);
 
-    public static function tryFromString(string $value): static|Undefined;
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    public static function tryFromString(string $value);
 }
