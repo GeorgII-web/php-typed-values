@@ -25,13 +25,4 @@ use PhpTypedValues\Abstract\AbstractType;
  */
 abstract readonly class StrType extends AbstractType implements StrTypeInterface
 {
-    public function toString(): string
-    {
-        return $this->value();
-    }
-
-    public function __toString(): string
-    {
-        return $this->toString();
-    }
 }

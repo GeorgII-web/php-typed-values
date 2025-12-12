@@ -76,6 +76,16 @@ readonly class StringCountryCode extends StrType
         return $this->toString();
     }
 
+    public function toString(): string
+    {
+        return $this->value();
+    }
+
+    public function __toString(): string
+    {
+        return $this->toString();
+    }
+
     /**
      * ISO 3166-1 alpha-2 codes used for validation.
      *
