@@ -135,3 +135,28 @@ it('__toString returns the seconds string', function (): void {
     expect((string) $vo)->toBe('1735787045')
         ->and($vo->__toString())->toBe('1735787045');
 });
+
+it('tryFromMixed handles valid numeric strings/ints and invalid mixed inputs', function (): void {
+    // valid inputs
+    $fromString = TimestampSeconds::tryFromMixed('1735787045');
+    $fromInt = TimestampSeconds::tryFromMixed(1735787045);
+
+    // invalid inputs
+    $fromArray = TimestampSeconds::tryFromMixed(['x']);
+    $fromNull = TimestampSeconds::tryFromMixed(null);
+
+    // stringable object
+    $stringable = new class {
+        public function __toString(): string
+        {
+            return '1735787045';
+        }
+    };
+    $fromStringable = TimestampSeconds::tryFromMixed($stringable);
+
+    expect($fromString)->toBeInstanceOf(TimestampSeconds::class)
+        ->and($fromInt)->toBeInstanceOf(TimestampSeconds::class)
+        ->and($fromStringable)->toBeInstanceOf(TimestampSeconds::class)
+        ->and($fromArray)->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class)
+        ->and($fromNull)->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class);
+});

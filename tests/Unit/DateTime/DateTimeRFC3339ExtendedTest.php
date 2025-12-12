@@ -115,11 +115,14 @@ Error at 24: Trailing data
 });
 
 it('DateTimeRFC3339Extended::tryFromString returns value for valid RFC3339_EXTENDED string', function (): void {
-    $s = '2025-01-02T03:04:05.123456+00:00';
+    // DATE_RFC3339_EXTENDED uses milliseconds precision (3 digits)
+    $s = '2025-01-02T03:04:05.123+00:00';
     $v = DateTimeRFC3339Extended::tryFromString($s);
 
     expect($v)
-        ->toBeInstanceOf(Undefined::class);
+        ->toBeInstanceOf(DateTimeRFC3339Extended::class)
+        ->and($v->toString())
+        ->toBe($s);
 });
 
 it('DateTimeRFC3339Extended::tryFromString returns Undefined for invalid string', function (): void {
@@ -137,4 +140,28 @@ it('__toString returns RFC3339_EXTENDED formatted string', function (): void {
 
     expect((string) $vo)->toBe('2025-01-02T03:04:05.123+00:00')
         ->and($vo->__toString())->toBe('2025-01-02T03:04:05.123+00:00');
+});
+
+it('tryFromMixed handles valid RFC3339_EXTENDED strings and invalid mixed inputs', function (): void {
+    // valid string
+    $ok = DateTimeRFC3339Extended::tryFromMixed('2025-01-02T03:04:05.000+00:00');
+
+    // invalid types
+    $badArr = DateTimeRFC3339Extended::tryFromMixed(['x']);
+    $badNull = DateTimeRFC3339Extended::tryFromMixed(null);
+
+    // stringable object
+    $stringable = new class {
+        public function __toString(): string
+        {
+            return '2025-01-02T03:04:05.000+00:00';
+        }
+    };
+    $okStr = DateTimeRFC3339Extended::tryFromMixed($stringable);
+
+    expect($ok)->toBeInstanceOf(DateTimeRFC3339Extended::class)
+        ->and($ok->toString())->toBe('2025-01-02T03:04:05.000+00:00')
+        ->and($okStr)->toBeInstanceOf(DateTimeRFC3339Extended::class)
+        ->and($badArr)->toBeInstanceOf(Undefined::class)
+        ->and($badNull)->toBeInstanceOf(Undefined::class);
 });

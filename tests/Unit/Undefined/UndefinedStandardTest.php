@@ -51,3 +51,19 @@ it('throws on jsonSerialize for UndefinedStandard', function (): void {
     expect(fn() => $u->jsonSerialize())
         ->toThrow(UndefinedTypeException::class, 'UndefinedType cannot be serialized for Json.');
 });
+
+it('tryFromMixed always returns Undefined', function (): void {
+    $fromString = UndefinedStandard::tryFromMixed('hello');
+    $fromInt = UndefinedStandard::tryFromMixed(123);
+    $fromArray = UndefinedStandard::tryFromMixed([]);
+    $fromNull = UndefinedStandard::tryFromMixed(null);
+
+    expect($fromString)
+        ->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class)
+        ->and($fromInt)
+        ->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class)
+        ->and($fromArray)
+        ->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class)
+        ->and($fromNull)
+        ->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class);
+});

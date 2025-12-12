@@ -41,3 +41,30 @@ it('tryFromString returns instance for valid and Undefined for invalid', functio
 it('jsonSerialize returns string', function (): void {
     expect(StringEmail::tryFromString('hello@domain.com')->jsonSerialize())->toBeString();
 });
+
+it('tryFromMixed handles valid/invalid emails, stringable, and invalid mixed inputs', function (): void {
+    // valid email as string
+    $ok = StringEmail::tryFromMixed('admin@example.org');
+
+    // stringable producing a valid email
+    $stringable = new class {
+        public function __toString(): string
+        {
+            return 'user@domain.com';
+        }
+    };
+    $fromStringable = StringEmail::tryFromMixed($stringable);
+
+    // invalid inputs
+    $bad = StringEmail::tryFromMixed('not-an-email');
+    $fromArray = StringEmail::tryFromMixed(['x']);
+    $fromNull = StringEmail::tryFromMixed(null);
+
+    expect($ok)->toBeInstanceOf(StringEmail::class)
+        ->and($ok->value())->toBe('admin@example.org')
+        ->and($fromStringable)->toBeInstanceOf(StringEmail::class)
+        ->and($fromStringable->value())->toBe('user@domain.com')
+        ->and($bad)->toBeInstanceOf(Undefined::class)
+        ->and($fromArray)->toBeInstanceOf(Undefined::class)
+        ->and($fromNull)->toBeInstanceOf(Undefined::class);
+});

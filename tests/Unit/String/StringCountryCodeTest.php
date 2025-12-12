@@ -89,3 +89,32 @@ it('explicitly accepts tail-list country codes YT, ZA, ZM (guards against elemen
 it('jsonSerialize returns string', function (): void {
     expect(StringCountryCode::fromString('DE')->jsonSerialize())->toBeString();
 });
+
+it('tryFromMixed handles valid country codes and invalid mixed inputs', function (): void {
+    // valid uppercase string
+    $ok = StringCountryCode::tryFromMixed('US');
+
+    // stringable producing a valid code
+    $stringable = new class {
+        public function __toString(): string
+        {
+            return 'GB';
+        }
+    };
+    $fromStringable = StringCountryCode::tryFromMixed($stringable);
+
+    // invalid: lowercase format, unknown code, wrong types
+    $badLower = StringCountryCode::tryFromMixed('us');
+    $badUnknown = StringCountryCode::tryFromMixed('ZZ');
+    $fromArray = StringCountryCode::tryFromMixed(['US']);
+    $fromNull = StringCountryCode::tryFromMixed(null);
+
+    expect($ok)->toBeInstanceOf(StringCountryCode::class)
+        ->and($ok->value())->toBe('US')
+        ->and($fromStringable)->toBeInstanceOf(StringCountryCode::class)
+        ->and($fromStringable->value())->toBe('GB')
+        ->and($badLower)->toBeInstanceOf(Undefined::class)
+        ->and($badUnknown)->toBeInstanceOf(Undefined::class)
+        ->and($fromArray)->toBeInstanceOf(Undefined::class)
+        ->and($fromNull)->toBeInstanceOf(Undefined::class);
+});

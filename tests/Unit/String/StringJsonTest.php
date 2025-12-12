@@ -75,3 +75,35 @@ it('__toString returns the original JSON text', function (): void {
     expect((string) $j)->toBe($json)
         ->and($j->__toString())->toBe($json);
 });
+
+it('tryFromMixed handles valid JSON text, stringable, and invalid mixed inputs', function (): void {
+    // valid JSON as string
+    $ok = StringJson::tryFromMixed('{"a":1}');
+
+    // stringable producing valid JSON
+    $json = '{"x":10}';
+    $stringable = new class($json) {
+        public function __construct(private string $v)
+        {
+        }
+
+        public function __toString(): string
+        {
+            return $this->v;
+        }
+    };
+    $fromStringable = StringJson::tryFromMixed($stringable);
+
+    // invalid inputs
+    $bad = StringJson::tryFromMixed('{invalid');
+    $fromArray = StringJson::tryFromMixed(['x']);
+    $fromNull = StringJson::tryFromMixed(null);
+
+    expect($ok)->toBeInstanceOf(StringJson::class)
+        ->and($ok->value())->toBe('{"a":1}')
+        ->and($fromStringable)->toBeInstanceOf(StringJson::class)
+        ->and($fromStringable->value())->toBe($json)
+        ->and($bad)->toBeInstanceOf(Undefined::class)
+        ->and($fromArray)->toBeInstanceOf(Undefined::class)
+        ->and($fromNull)->toBeInstanceOf(Undefined::class);
+});

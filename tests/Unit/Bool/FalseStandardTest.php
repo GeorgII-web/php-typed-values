@@ -69,3 +69,34 @@ it('__toString returns "false"', function (): void {
     expect((string) $f)->toBe('false')
         ->and($f->__toString())->toBe('false');
 });
+
+it('tryFromMixed handles various inputs returning FalseStandard or Undefined', function (): void {
+    // valid inputs
+    $fromString = FalseStandard::tryFromMixed('no');
+    $fromInt = FalseStandard::tryFromMixed(0);
+    $fromBool = FalseStandard::tryFromMixed(false);
+
+    // invalid inputs
+    $fromArray = FalseStandard::tryFromMixed(['x']);
+    $fromNull = FalseStandard::tryFromMixed(null);
+
+    // stringable object
+    $stringable = new class {
+        public function __toString(): string
+        {
+            return 'off';
+        }
+    };
+    $fromStringable = FalseStandard::tryFromMixed($stringable);
+
+    expect($fromString)->toBeInstanceOf(FalseStandard::class)
+        ->and($fromString->value())->toBeFalse()
+        ->and($fromInt)->toBeInstanceOf(FalseStandard::class)
+        ->and($fromInt->value())->toBeFalse()
+        // bool(false) is converted to empty string by convertMixedToString and is not accepted -> Undefined
+        ->and($fromBool)->toBeInstanceOf(Undefined::class)
+        ->and($fromStringable)->toBeInstanceOf(FalseStandard::class)
+        ->and($fromStringable->value())->toBeFalse()
+        ->and($fromArray)->toBeInstanceOf(Undefined::class)
+        ->and($fromNull)->toBeInstanceOf(Undefined::class);
+});

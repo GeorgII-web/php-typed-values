@@ -140,3 +140,27 @@ it('__toString returns W3C formatted string', function (): void {
     expect((string) $vo)->toBe('2025-01-02T03:04:05+00:00')
         ->and($vo->__toString())->toBe('2025-01-02T03:04:05+00:00');
 });
+
+it('tryFromMixed handles valid W3C/RFC3339 strings and invalid mixed inputs', function (): void {
+    // valid string
+    $ok = DateTimeW3C::tryFromMixed('2025-01-02T03:04:05+00:00');
+
+    // invalid types
+    $badArr = DateTimeW3C::tryFromMixed(['x']);
+    $badNull = DateTimeW3C::tryFromMixed(null);
+
+    // stringable object
+    $stringable = new class {
+        public function __toString(): string
+        {
+            return '2025-01-02T03:04:05+00:00';
+        }
+    };
+    $okStr = DateTimeW3C::tryFromMixed($stringable);
+
+    expect($ok)->toBeInstanceOf(DateTimeW3C::class)
+        ->and($ok->toString())->toBe('2025-01-02T03:04:05+00:00')
+        ->and($okStr)->toBeInstanceOf(DateTimeW3C::class)
+        ->and($badArr)->toBeInstanceOf(Undefined::class)
+        ->and($badNull)->toBeInstanceOf(Undefined::class);
+});

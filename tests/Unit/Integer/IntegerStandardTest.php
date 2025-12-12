@@ -61,14 +61,11 @@ it('fails on float string', function (): void {
 });
 
 it('fails on type mismatch', function (): void {
-    expect(function () {
-        try {
-            // invalid integer string (contains decimal point)
-            IntegerStandard::fromInt('34.66');
-        } catch (Throwable $e) {
-            throw new IntegerTypeException('Failed to create Integer from string', previous: $e);
-        }
-    })->toThrow(IntegerTypeException::class);
+    // Instead of passing wrong-typed value to fromInt (violates Psalm),
+    // verify mixed conversion path rejects non-integer-like input.
+    $u = IntegerStandard::tryFromMixed('12.3');
+
+    expect($u)->toBeInstanceOf(Undefined::class);
 });
 
 it('jsonSerialize returns integer', function (): void {
@@ -111,4 +108,18 @@ it('tryFromInt always returns instance; tryFromString returns Undefined on inval
 
 it('jsonSerialize returns native int', function (): void {
     expect(IntegerStandard::fromInt(-3)->jsonSerialize())->toBe(-3);
+});
+
+it('tryFromMixed returns instance for integer-like inputs and Undefined otherwise', function (): void {
+    $okInt = IntegerStandard::tryFromMixed(15);
+    $okStr = IntegerStandard::tryFromMixed('20');
+    $badF = IntegerStandard::tryFromMixed('1.0');
+    $badX = IntegerStandard::tryFromMixed(['x']);
+
+    expect($okInt)->toBeInstanceOf(IntegerStandard::class)
+        ->and($okInt->value())->toBe(15)
+        ->and($okStr)->toBeInstanceOf(IntegerStandard::class)
+        ->and($okStr->toString())->toBe('20')
+        ->and($badF)->toBeInstanceOf(Undefined::class)
+        ->and($badX)->toBeInstanceOf(Undefined::class);
 });

@@ -66,3 +66,39 @@ it('__toString returns the original string value', function (): void {
     expect((string) $s)->toBe($str)
         ->and($s->__toString())->toBe($str);
 });
+
+it('tryFromMixed handles valid/too-long strings, stringable, and invalid mixed inputs', function (): void {
+    // valid within limit
+    $ok = StringVarChar255::tryFromMixed(str_repeat('a', 255));
+
+    // stringable within limit
+    $val = str_repeat('b', 5);
+    $stringable = new class($val) {
+        public function __construct(private string $v)
+        {
+        }
+
+        public function __toString(): string
+        {
+            return $this->v;
+        }
+    };
+    $fromStringable = StringVarChar255::tryFromMixed($stringable);
+
+    // too long
+    $tooLong = StringVarChar255::tryFromMixed(str_repeat('x', 256));
+
+    // invalid mixed
+    $fromArray = StringVarChar255::tryFromMixed(['x']);
+    $fromNull = StringVarChar255::tryFromMixed(null);
+
+    expect($ok)->toBeInstanceOf(StringVarChar255::class)
+        ->and($ok->value())->toBe(str_repeat('a', 255))
+        ->and($fromStringable)->toBeInstanceOf(StringVarChar255::class)
+        ->and($fromStringable->value())->toBe($val)
+        ->and($tooLong)->toBeInstanceOf(Undefined::class)
+        ->and($fromArray)->toBeInstanceOf(Undefined::class)
+        // null converts to empty string which is valid for VarChar(255)
+        ->and($fromNull)->toBeInstanceOf(StringVarChar255::class)
+        ->and($fromNull->value())->toBe('');
+});

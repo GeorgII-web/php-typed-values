@@ -18,3 +18,48 @@ it('StringStandard::tryFromString returns instance for any string', function ():
 it('jsonSerialize returns string', function (): void {
     expect(StringStandard::tryFromString('hello')->jsonSerialize())->toBeString();
 });
+
+it('tryFromMixed returns instance for valid string-convertible values', function (): void {
+    $fromString = StringStandard::tryFromMixed('world');
+    $fromInt = StringStandard::tryFromMixed(123);
+    $fromFloat = StringStandard::tryFromMixed(45.67);
+
+    expect($fromString)
+        ->toBeInstanceOf(StringStandard::class)
+        ->and($fromString->value())
+        ->toBe('world')
+        ->and($fromInt)
+        ->toBeInstanceOf(StringStandard::class)
+        ->and($fromInt->value())
+        ->toBe('123')
+        ->and($fromFloat)
+        ->toBeInstanceOf(StringStandard::class)
+        ->and($fromFloat->value())
+        ->toBe('45.67');
+});
+
+it('tryFromMixed returns Undefined for non-convertible values', function (): void {
+    $fromArray = StringStandard::tryFromMixed([]);
+    $fromObject = StringStandard::tryFromMixed(new stdClass());
+
+    expect($fromArray)
+        ->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class)
+        ->and($fromObject)
+        ->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class);
+});
+
+it('fromString creates instance with correct value', function (): void {
+    $s = StringStandard::fromString('test');
+
+    expect($s)
+        ->toBeInstanceOf(StringStandard::class)
+        ->and($s->value())
+        ->toBe('test');
+});
+
+it('__toString returns the string value', function (): void {
+    $s = StringStandard::fromString('cast test');
+
+    expect((string) $s)->toBe('cast test')
+        ->and($s->__toString())->toBe('cast test');
+});

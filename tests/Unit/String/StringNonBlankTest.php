@@ -42,3 +42,32 @@ it('StringNonBlank for an empty string', function (): void {
 it('jsonSerialize returns string', function (): void {
     expect(StringNonBlank::tryFromString('hello')->jsonSerialize())->toBeString();
 });
+
+it('tryFromMixed handles non-blank strings, stringable, and invalid mixed inputs', function (): void {
+    // valid non-blank
+    $ok = StringNonBlank::tryFromMixed('hello');
+
+    // stringable producing non-blank
+    $stringable = new class {
+        public function __toString(): string
+        {
+            return 'world';
+        }
+    };
+    $fromStringable = StringNonBlank::tryFromMixed($stringable);
+
+    // invalid blank
+    $blank = StringNonBlank::tryFromMixed('   ');
+
+    // invalid mixed
+    $fromArray = StringNonBlank::tryFromMixed(['x']);
+    $fromNull = StringNonBlank::tryFromMixed(null);
+
+    expect($ok)->toBeInstanceOf(StringNonBlank::class)
+        ->and($ok->value())->toBe('hello')
+        ->and($fromStringable)->toBeInstanceOf(StringNonBlank::class)
+        ->and($fromStringable->value())->toBe('world')
+        ->and($blank)->toBeInstanceOf(Undefined::class)
+        ->and($fromArray)->toBeInstanceOf(Undefined::class)
+        ->and($fromNull)->toBeInstanceOf(Undefined::class);
+});

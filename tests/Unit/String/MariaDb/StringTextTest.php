@@ -60,3 +60,39 @@ it('Alias Text behaves the same as StringText', function (): void {
 it('jsonSerialize returns string', function (): void {
     expect(Text::tryFromString('hello')->jsonSerialize())->toBeString();
 });
+
+it('tryFromMixed handles valid/too-long strings, stringable, and invalid mixed inputs', function (): void {
+    // valid within limit
+    $ok = StringText::tryFromMixed(str_repeat('a', 10));
+
+    // stringable object within limit
+    $str = str_repeat('b', 20);
+    $stringable = new class($str) {
+        public function __construct(private string $v)
+        {
+        }
+
+        public function __toString(): string
+        {
+            return $this->v;
+        }
+    };
+    $fromStringable = StringText::tryFromMixed($stringable);
+
+    // too long (over 65535)
+    $tooLong = StringText::tryFromMixed(str_repeat('x', 65536));
+
+    // invalid mixed types
+    $fromArray = StringText::tryFromMixed(['x']);
+    $fromNull = StringText::tryFromMixed(null);
+
+    expect($ok)->toBeInstanceOf(StringText::class)
+        ->and($ok->value())->toBe(str_repeat('a', 10))
+        ->and($fromStringable)->toBeInstanceOf(StringText::class)
+        ->and($fromStringable->value())->toBe($str)
+        ->and($tooLong)->toBeInstanceOf(Undefined::class)
+        ->and($fromArray)->toBeInstanceOf(Undefined::class)
+        // null is converted to empty string by convertMixedToString, which is valid for StringText
+        ->and($fromNull)->toBeInstanceOf(StringText::class)
+        ->and($fromNull->value())->toBe('');
+});

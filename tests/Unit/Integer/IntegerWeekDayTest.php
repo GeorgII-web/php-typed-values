@@ -156,3 +156,33 @@ it('tryFromInt/tryFromString return Undefined on invalid and instance on valid',
 it('jsonSerialize returns native int', function (): void {
     expect(IntegerWeekDay::fromInt(5)->jsonSerialize())->toBe(5);
 });
+
+it('tryFromMixed returns instance for integer-like inputs (1..7) and Undefined otherwise', function (): void {
+    $okInt = IntegerWeekDay::tryFromMixed(1);
+    $okStr = IntegerWeekDay::tryFromMixed('7');
+    $badLow = IntegerWeekDay::tryFromMixed(0);
+    $badHigh = IntegerWeekDay::tryFromMixed(8);
+    $badFloatish = IntegerWeekDay::tryFromMixed('1.0');
+    $badArr = IntegerWeekDay::tryFromMixed(['x']);
+    $badNull = IntegerWeekDay::tryFromMixed(null);
+
+    $stringable = new class implements Stringable {
+        public function __toString(): string
+        {
+            return '3';
+        }
+    };
+    $okStringable = IntegerWeekDay::tryFromMixed($stringable);
+
+    expect($okInt)->toBeInstanceOf(IntegerWeekDay::class)
+        ->and($okInt->value())->toBe(1)
+        ->and($okStr)->toBeInstanceOf(IntegerWeekDay::class)
+        ->and($okStr->value())->toBe(7)
+        ->and($okStringable)->toBeInstanceOf(IntegerWeekDay::class)
+        ->and($okStringable->value())->toBe(3)
+        ->and($badLow)->toBeInstanceOf(Undefined::class)
+        ->and($badHigh)->toBeInstanceOf(Undefined::class)
+        ->and($badFloatish)->toBeInstanceOf(Undefined::class)
+        ->and($badArr)->toBeInstanceOf(Undefined::class)
+        ->and($badNull)->toBeInstanceOf(Undefined::class);
+});

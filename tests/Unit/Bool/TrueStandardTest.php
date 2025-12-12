@@ -69,3 +69,34 @@ it('__toString returns "true"', function (): void {
     expect((string) $t)->toBe('true')
         ->and($t->__toString())->toBe('true');
 });
+
+it('tryFromMixed handles various inputs returning TrueStandard or Undefined', function (): void {
+    // valid inputs
+    $fromString = TrueStandard::tryFromMixed('yes');
+    $fromInt = TrueStandard::tryFromMixed(1);
+    $fromBool = TrueStandard::tryFromMixed(true);
+
+    // invalid inputs
+    $fromArray = TrueStandard::tryFromMixed(['x']);
+    $fromNull = TrueStandard::tryFromMixed(null);
+
+    // stringable object
+    $stringable = new class {
+        public function __toString(): string
+        {
+            return 'on';
+        }
+    };
+    $fromStringable = TrueStandard::tryFromMixed($stringable);
+
+    expect($fromString)->toBeInstanceOf(TrueStandard::class)
+        ->and($fromString->value())->toBeTrue()
+        ->and($fromInt)->toBeInstanceOf(TrueStandard::class)
+        ->and($fromInt->value())->toBeTrue()
+        ->and($fromBool)->toBeInstanceOf(TrueStandard::class)
+        ->and($fromBool->value())->toBeTrue()
+        ->and($fromStringable)->toBeInstanceOf(TrueStandard::class)
+        ->and($fromStringable->value())->toBeTrue()
+        ->and($fromArray)->toBeInstanceOf(Undefined::class)
+        ->and($fromNull)->toBeInstanceOf(Undefined::class);
+});

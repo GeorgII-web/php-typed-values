@@ -66,3 +66,31 @@ it('__toString returns the original decimal string', function (): void {
     expect((string) $d)->toBe('3.14')
         ->and($d->__toString())->toBe('3.14');
 });
+
+it('tryFromMixed handles valid decimal-like values and invalid mixed inputs', function (): void {
+    // valid inputs (as strings)
+    $fromString = StringDecimal::tryFromMixed('42');
+    $fromStringFloat = StringDecimal::tryFromMixed('3.1415');
+
+    // stringable object
+    $stringable = new class {
+        public function __toString(): string
+        {
+            return '-5.5';
+        }
+    };
+    $fromStringable = StringDecimal::tryFromMixed($stringable);
+
+    // invalid inputs
+    $fromArray = StringDecimal::tryFromMixed(['x']);
+    $fromNull = StringDecimal::tryFromMixed(null);
+
+    expect($fromString)->toBeInstanceOf(StringDecimal::class)
+        ->and($fromString->value())->toBe('42')
+        ->and($fromStringFloat)->toBeInstanceOf(StringDecimal::class)
+        ->and($fromStringFloat->value())->toBe('3.1415')
+        ->and($fromStringable)->toBeInstanceOf(StringDecimal::class)
+        ->and($fromStringable->value())->toBe('-5.5')
+        ->and($fromArray)->toBeInstanceOf(Undefined::class)
+        ->and($fromNull)->toBeInstanceOf(Undefined::class);
+});

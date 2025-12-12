@@ -136,3 +136,31 @@ it('tryFromInt/tryFromString return Undefined for invalid inputs', function (): 
 it('jsonSerialize returns native int', function (): void {
     expect(IntegerNonNegative::fromInt(11)->jsonSerialize())->toBe(11);
 });
+
+it('tryFromMixed returns instance for integer-like inputs and Undefined otherwise', function (): void {
+    $okInt = IntegerNonNegative::tryFromMixed(0);
+    $okStr = IntegerNonNegative::tryFromMixed('12');
+    $badNeg = IntegerNonNegative::tryFromMixed(-1);
+    $badFloatish = IntegerNonNegative::tryFromMixed('1.0');
+    $badArr = IntegerNonNegative::tryFromMixed(['x']);
+    $badNull = IntegerNonNegative::tryFromMixed(null);
+
+    $stringable = new class implements Stringable {
+        public function __toString(): string
+        {
+            return '7';
+        }
+    };
+    $okStringable = IntegerNonNegative::tryFromMixed($stringable);
+
+    expect($okInt)->toBeInstanceOf(IntegerNonNegative::class)
+        ->and($okInt->value())->toBe(0)
+        ->and($okStr)->toBeInstanceOf(IntegerNonNegative::class)
+        ->and($okStr->value())->toBe(12)
+        ->and($okStringable)->toBeInstanceOf(IntegerNonNegative::class)
+        ->and($okStringable->value())->toBe(7)
+        ->and($badNeg)->toBeInstanceOf(Undefined::class)
+        ->and($badFloatish)->toBeInstanceOf(Undefined::class)
+        ->and($badArr)->toBeInstanceOf(Undefined::class)
+        ->and($badNull)->toBeInstanceOf(Undefined::class);
+});

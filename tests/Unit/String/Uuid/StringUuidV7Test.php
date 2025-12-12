@@ -75,3 +75,38 @@ it('__toString returns normalized lowercase UUID v7', function (): void {
     expect((string) $u)->toBe(strtolower($input))
         ->and($u->__toString())->toBe(strtolower($input));
 });
+
+it('tryFromMixed returns instance for valid UUID v7 strings', function (): void {
+    $fromString = StringUuidV7::tryFromMixed('01890f2a-5bcd-7def-8abc-1234567890ab');
+    $fromStringable = StringUuidV7::tryFromMixed(new class {
+        public function __toString(): string
+        {
+            return '01890F2A-5BCD-7DEF-9ABC-1234567890AB';
+        }
+    });
+
+    expect($fromString)
+        ->toBeInstanceOf(StringUuidV7::class)
+        ->and($fromString->value())
+        ->toBe('01890f2a-5bcd-7def-8abc-1234567890ab')
+        ->and($fromStringable)
+        ->toBeInstanceOf(StringUuidV7::class)
+        ->and($fromStringable->value())
+        ->toBe('01890f2a-5bcd-7def-9abc-1234567890ab');
+});
+
+it('tryFromMixed returns Undefined for invalid or non-convertible values', function (): void {
+    $fromInvalidUuid = StringUuidV7::tryFromMixed('not-a-uuid');
+    $fromArray = StringUuidV7::tryFromMixed([]);
+    $fromObject = StringUuidV7::tryFromMixed(new stdClass());
+    $fromInt = StringUuidV7::tryFromMixed(123);
+
+    expect($fromInvalidUuid)
+        ->toBeInstanceOf(Undefined::class)
+        ->and($fromArray)
+        ->toBeInstanceOf(Undefined::class)
+        ->and($fromObject)
+        ->toBeInstanceOf(Undefined::class)
+        ->and($fromInt)
+        ->toBeInstanceOf(Undefined::class);
+});

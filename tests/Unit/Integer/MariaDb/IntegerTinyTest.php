@@ -130,3 +130,33 @@ it('tryFromInt/tryFromString return Undefined on invalid and instance on valid',
 it('jsonSerialize returns native int', function (): void {
     expect(IntegerTiny::fromInt(-7)->jsonSerialize())->toBe(-7);
 });
+
+it('tryFromMixed returns instance for integer-like inputs within range and Undefined otherwise', function (): void {
+    $okInt = IntegerTiny::tryFromMixed(-1);
+    $okStr = IntegerTiny::tryFromMixed('127');
+    $badLow = IntegerTiny::tryFromMixed(-129);
+    $badHigh = IntegerTiny::tryFromMixed(128);
+    $badFloatish = IntegerTiny::tryFromMixed('1.0');
+    $badArr = IntegerTiny::tryFromMixed(['x']);
+    $badNull = IntegerTiny::tryFromMixed(null);
+
+    $stringable = new class implements Stringable {
+        public function __toString(): string
+        {
+            return '0';
+        }
+    };
+    $okStringable = IntegerTiny::tryFromMixed($stringable);
+
+    expect($okInt)->toBeInstanceOf(IntegerTiny::class)
+        ->and($okInt->value())->toBe(-1)
+        ->and($okStr)->toBeInstanceOf(IntegerTiny::class)
+        ->and($okStr->value())->toBe(127)
+        ->and($okStringable)->toBeInstanceOf(IntegerTiny::class)
+        ->and($okStringable->value())->toBe(0)
+        ->and($badLow)->toBeInstanceOf(Undefined::class)
+        ->and($badHigh)->toBeInstanceOf(Undefined::class)
+        ->and($badFloatish)->toBeInstanceOf(Undefined::class)
+        ->and($badArr)->toBeInstanceOf(Undefined::class)
+        ->and($badNull)->toBeInstanceOf(Undefined::class);
+});

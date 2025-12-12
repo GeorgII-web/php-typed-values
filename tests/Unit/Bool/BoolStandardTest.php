@@ -105,3 +105,34 @@ it('casts to string via __toString magic method', function (): void {
 it('jsonSerialize returns bool', function (): void {
     expect(BoolStandard::tryFromString('1')->jsonSerialize())->toBeBool();
 });
+
+it('tryFromMixed handles various inputs returning BoolStandard or Undefined', function (): void {
+    // valid inputs
+    $fromString = BoolStandard::tryFromMixed('true');
+    $fromInt = BoolStandard::tryFromMixed(0);
+    $fromBool = BoolStandard::tryFromMixed(true);
+
+    // invalid inputs
+    $fromArray = BoolStandard::tryFromMixed(['x']);
+    $fromNull = BoolStandard::tryFromMixed(null);
+
+    // stringable object
+    $stringable = new class {
+        public function __toString(): string
+        {
+            return 'yes';
+        }
+    };
+    $fromStringable = BoolStandard::tryFromMixed($stringable);
+
+    expect($fromString)->toBeInstanceOf(BoolStandard::class)
+        ->and($fromString->value())->toBeTrue()
+        ->and($fromInt)->toBeInstanceOf(BoolStandard::class)
+        ->and($fromInt->value())->toBeFalse()
+        ->and($fromBool)->toBeInstanceOf(BoolStandard::class)
+        ->and($fromBool->value())->toBeTrue()
+        ->and($fromStringable)->toBeInstanceOf(BoolStandard::class)
+        ->and($fromStringable->value())->toBeTrue()
+        ->and($fromArray)->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class)
+        ->and($fromNull)->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class);
+});

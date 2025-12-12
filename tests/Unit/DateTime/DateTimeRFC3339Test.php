@@ -140,3 +140,27 @@ it('DateTimeRFC3339::tryFromString returns Undefined for invalid string', functi
 it('jsonSerialize returns string', function (): void {
     expect(DateTimeRFC3339::tryFromString('2025-01-02T03:04:05+00:00')->jsonSerialize())->toBeString();
 });
+
+it('tryFromMixed handles valid RFC3339 strings and invalid mixed inputs', function (): void {
+    // valid string
+    $ok = DateTimeRFC3339::tryFromMixed('2025-01-02T03:04:05+00:00');
+
+    // invalid types
+    $badArr = DateTimeRFC3339::tryFromMixed(['x']);
+    $badNull = DateTimeRFC3339::tryFromMixed(null);
+
+    // stringable object
+    $stringable = new class {
+        public function __toString(): string
+        {
+            return '2025-01-02T03:04:05+00:00';
+        }
+    };
+    $okStr = DateTimeRFC3339::tryFromMixed($stringable);
+
+    expect($ok)->toBeInstanceOf(DateTimeRFC3339::class)
+        ->and($ok->toString())->toBe('2025-01-02T03:04:05+00:00')
+        ->and($okStr)->toBeInstanceOf(DateTimeRFC3339::class)
+        ->and($badArr)->toBeInstanceOf(Undefined::class)
+        ->and($badNull)->toBeInstanceOf(Undefined::class);
+});

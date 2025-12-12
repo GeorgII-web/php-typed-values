@@ -39,3 +39,44 @@ it('tryFromString returns instance for valid and Undefined for invalid', functio
 it('jsonSerialize returns string', function (): void {
     expect(StringUrl::tryFromString('https://www.example.org')->jsonSerialize())->toBeString();
 });
+
+it('tryFromMixed returns instance for valid URL strings', function (): void {
+    $fromString = StringUrl::tryFromMixed('https://example.com');
+    $fromStringable = StringUrl::tryFromMixed(new class {
+        public function __toString(): string
+        {
+            return 'http://test.org/path';
+        }
+    });
+
+    expect($fromString)
+        ->toBeInstanceOf(StringUrl::class)
+        ->and($fromString->value())
+        ->toBe('https://example.com')
+        ->and($fromStringable)
+        ->toBeInstanceOf(StringUrl::class)
+        ->and($fromStringable->value())
+        ->toBe('http://test.org/path');
+});
+
+it('tryFromMixed returns Undefined for invalid or non-convertible values', function (): void {
+    $fromInvalidUrl = StringUrl::tryFromMixed('not-a-url');
+    $fromArray = StringUrl::tryFromMixed([]);
+    $fromObject = StringUrl::tryFromMixed(new stdClass());
+
+    expect($fromInvalidUrl)
+        ->toBeInstanceOf(Undefined::class)
+        ->and($fromArray)
+        ->toBeInstanceOf(Undefined::class)
+        ->and($fromObject)
+        ->toBeInstanceOf(Undefined::class);
+});
+
+it('fromString creates instance with correct value', function (): void {
+    $url = StringUrl::fromString('https://example.com/path');
+
+    expect($url)
+        ->toBeInstanceOf(StringUrl::class)
+        ->and($url->value())
+        ->toBe('https://example.com/path');
+});

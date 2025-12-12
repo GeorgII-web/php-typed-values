@@ -141,3 +141,27 @@ it('DateTimeAtom::tryFromString returns Undefined for invalid string', function 
 it('jsonSerialize returns string', function (): void {
     expect(DateTimeAtom::tryFromString('2025-01-02T03:04:05+00:00')->jsonSerialize())->toBeString();
 });
+
+it('tryFromMixed handles valid ATOM strings and invalid mixed inputs', function (): void {
+    // valid string
+    $ok = DateTimeAtom::tryFromMixed('2025-01-02T03:04:05+00:00');
+
+    // invalid types
+    $badArr = DateTimeAtom::tryFromMixed(['x']);
+    $badNull = DateTimeAtom::tryFromMixed(null);
+
+    // stringable object
+    $stringable = new class {
+        public function __toString(): string
+        {
+            return '2025-01-02T03:04:05+00:00';
+        }
+    };
+    $okStr = DateTimeAtom::tryFromMixed($stringable);
+
+    expect($ok)->toBeInstanceOf(DateTimeAtom::class)
+        ->and($ok->toString())->toBe('2025-01-02T03:04:05+00:00')
+        ->and($okStr)->toBeInstanceOf(DateTimeAtom::class)
+        ->and($badArr)->toBeInstanceOf(Undefined::class)
+        ->and($badNull)->toBeInstanceOf(Undefined::class);
+});
