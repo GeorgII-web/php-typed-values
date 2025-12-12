@@ -30,6 +30,7 @@ echo NonNegative::fromString('2.71828')->toString() . PHP_EOL;
 echo FloatType::fromString('2.71828')->toString() . PHP_EOL;
 echo Double::fromString('2.71828')->toString() . PHP_EOL;
 echo Positive::fromString('2.8')->toString() . PHP_EOL;
+echo FloatStandard::tryFromMixed('2.8')->toString() . PHP_EOL;
 
 // PositiveFloat usage
 testPositiveFloat(FloatNonNegative::fromFloat(0.5)->value());

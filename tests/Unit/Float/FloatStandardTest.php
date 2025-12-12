@@ -40,3 +40,45 @@ it('FloatStandard::fromString throws on non-numeric strings', function (): void 
 it('jsonSerialize returns float', function (): void {
     expect(FloatStandard::tryFromString('1.1')->jsonSerialize())->toBeFloat();
 });
+
+it('__toString mirrors toString and value', function (): void {
+    $v = FloatStandard::fromFloat(3.14);
+
+    expect((string) $v)
+        ->toBe('3.14')
+        ->and($v->toString())
+        ->toBe('3.14')
+        ->and($v->value())
+        ->toBe(3.14);
+});
+
+it('tryFromMixed covers numeric, non-numeric, and stringable inputs', function (): void {
+    // Numeric inputs
+    $fromNumericString = FloatStandard::tryFromMixed('1.2');
+    $fromInt = FloatStandard::tryFromMixed(3);
+    $fromFloat = FloatStandard::tryFromMixed(2.5);
+
+    // Non-numeric inputs
+    $fromArray = FloatStandard::tryFromMixed([1]);
+    $fromNull = FloatStandard::tryFromMixed(null);
+
+    // Stringable object
+    $stringable = new class {
+        public function __toString(): string
+        {
+            return '1.23';
+        }
+    };
+    $fromStringable = FloatStandard::tryFromMixed($stringable);
+
+    expect($fromNumericString)->toBeInstanceOf(FloatStandard::class)
+        ->and($fromNumericString->value())->toBe(1.2)
+        ->and($fromInt)->toBeInstanceOf(FloatStandard::class)
+        ->and($fromInt->value())->toBe(3.0)
+        ->and($fromFloat)->toBeInstanceOf(FloatStandard::class)
+        ->and($fromFloat->value())->toBe(2.5)
+        ->and($fromArray)->toBeInstanceOf(Undefined::class)
+        ->and($fromNull)->toBeInstanceOf(Undefined::class)
+        ->and($fromStringable)->toBeInstanceOf(FloatStandard::class)
+        ->and($fromStringable->value())->toBe(1.23);
+});

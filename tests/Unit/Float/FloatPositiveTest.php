@@ -98,3 +98,51 @@ it('FloatPositive::fromString enforces numeric and positivity', function (): voi
 it('jsonSerialize returns float', function (): void {
     expect(FloatPositive::tryFromString('1.1')->jsonSerialize())->toBeFloat();
 });
+
+it('__toString mirrors toString and value', function (): void {
+    $v = FloatPositive::fromFloat(3.14);
+
+    expect((string) $v)
+        ->toBe('3.14')
+        ->and($v->toString())
+        ->toBe('3.14')
+        ->and($v->value())
+        ->toBe(3.14);
+});
+
+it('tryFromMixed covers positive, non-positive, and non-numeric inputs', function (): void {
+    // Positive inputs
+    $fromNumericString = FloatPositive::tryFromMixed('1.2');
+    $fromInt = FloatPositive::tryFromMixed(3);
+    $fromFloat = FloatPositive::tryFromMixed(2.5);
+
+    // Non-positive inputs
+    $zero = FloatPositive::tryFromMixed(0);
+    $negative = FloatPositive::tryFromMixed(-1);
+
+    // Non-numeric inputs
+    $fromArray = FloatPositive::tryFromMixed([1]);
+    $fromNull = FloatPositive::tryFromMixed(null);
+
+    // Stringable object
+    $stringable = new class {
+        public function __toString(): string
+        {
+            return '1.23';
+        }
+    };
+    $fromStringable = FloatPositive::tryFromMixed($stringable);
+
+    expect($fromNumericString)->toBeInstanceOf(FloatPositive::class)
+        ->and($fromNumericString->value())->toBe(1.2)
+        ->and($fromInt)->toBeInstanceOf(FloatPositive::class)
+        ->and($fromInt->value())->toBe(3.0)
+        ->and($fromFloat)->toBeInstanceOf(FloatPositive::class)
+        ->and($fromFloat->value())->toBe(2.5)
+        ->and($zero)->toBeInstanceOf(Undefined::class)
+        ->and($negative)->toBeInstanceOf(Undefined::class)
+        ->and($fromArray)->toBeInstanceOf(Undefined::class)
+        ->and($fromNull)->toBeInstanceOf(Undefined::class)
+        ->and($fromStringable)->toBeInstanceOf(FloatPositive::class)
+        ->and($fromStringable->value())->toBe(1.23);
+});
