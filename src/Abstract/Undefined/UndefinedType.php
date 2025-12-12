@@ -23,6 +23,6 @@ use PhpTypedValues\Exception\UndefinedTypeException;
  *
  * @psalm-immutable
  */
-abstract readonly class UndefinedType extends AbstractType implements UndefinedTypeInterface
+abstract class UndefinedType extends AbstractType implements UndefinedTypeInterface
 {
 }

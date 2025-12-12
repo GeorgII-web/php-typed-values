@@ -23,6 +23,6 @@ use PhpTypedValues\Abstract\AbstractType;
  *
  * @psalm-immutable
  */
-abstract readonly class BoolType extends AbstractType implements BoolTypeInterface
+abstract class BoolType extends AbstractType implements BoolTypeInterface
 {
 }

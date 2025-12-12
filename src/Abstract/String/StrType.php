@@ -23,6 +23,6 @@ use PhpTypedValues\Abstract\AbstractType;
  *
  * @psalm-immutable
  */
-abstract readonly class StrType extends AbstractType implements StrTypeInterface
+abstract class StrType extends AbstractType implements StrTypeInterface
 {
 }

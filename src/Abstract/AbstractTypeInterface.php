@@ -31,8 +31,9 @@ interface AbstractTypeInterface
      * when the provided value is invalid.
      *
      * @throws TypeException
+     * @return static
      */
-    public static function fromString(string $value): static;
+    public static function fromString(string $value);
 
     /**
      * Returns a normalized string representation of the underlying value.

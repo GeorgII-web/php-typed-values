@@ -32,7 +32,7 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-abstract readonly class DateTimeType extends AbstractType implements DateTimeTypeInterface
+abstract class DateTimeType extends AbstractType implements DateTimeTypeInterface
 {
     protected const FORMAT = '';
     protected const ZONE = 'UTC';
@@ -46,7 +46,7 @@ abstract readonly class DateTimeType extends AbstractType implements DateTimeTyp
     protected static function createFromFormat(
         string $value,
         string $format,
-        ?DateTimeZone $timezone = null,
+        ?DateTimeZone $timezone = null
     ): DateTimeImmutable {
         /**
          * Collect errors and throw exception with all of them.

@@ -22,7 +22,14 @@ interface StrTypeInterface
 {
     public function value(): string;
 
-    public static function tryFromString(string $value): static|Undefined;
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    public static function tryFromString(string $value);
 
-    public static function tryFromMixed(mixed $value): static|Undefined;
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     * @param mixed $value
+     */
+    public static function tryFromMixed($value);
 }

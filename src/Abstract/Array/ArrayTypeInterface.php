@@ -37,8 +37,9 @@ interface ArrayTypeInterface
      * @param array $value raw input values
      *
      * @psalm-param list<mixed> $value
+     * @return static
      */
-    public static function fromArray(array $value): static;
+    public static function fromArray(array $value);
 
     /**
      * Creates a new collection from a list of raw values, allowing
@@ -47,6 +48,7 @@ interface ArrayTypeInterface
      * @param array $value raw input values
      *
      * @psalm-param list<mixed> $value
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
      */
-    public static function tryFromArray(array $value): static|Undefined;
+    public static function tryFromArray(array $value);
 }

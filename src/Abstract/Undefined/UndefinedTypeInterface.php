@@ -22,22 +22,31 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  */
 interface UndefinedTypeInterface
 {
-    public static function create(): static;
+    /**
+     * @return static
+     */
+    public static function create();
 
-    public static function tryFromMixed(mixed $value): Undefined;
+    /**
+     * @param mixed $value
+     */
+    public static function tryFromMixed($value): Undefined;
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    public function toInt(): never;
+    public function toInt();
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    public function toFloat(): never;
+    public function toFloat();
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    public function value(): never;
+    public function value();
 }
