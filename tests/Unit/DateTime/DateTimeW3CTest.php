@@ -133,3 +133,10 @@ it('DateTimeW3C::tryFromString returns Undefined for invalid string', function (
 it('jsonSerialize returns string', function (): void {
     expect(DateTimeW3C::tryFromString('2025-01-02T03:04:05+00:00')->jsonSerialize())->toBeString();
 });
+
+it('__toString returns W3C formatted string', function (): void {
+    $vo = DateTimeW3C::fromString('2025-01-02T03:04:05+00:00');
+
+    expect((string) $vo)->toBe('2025-01-02T03:04:05+00:00')
+        ->and($vo->__toString())->toBe('2025-01-02T03:04:05+00:00');
+});

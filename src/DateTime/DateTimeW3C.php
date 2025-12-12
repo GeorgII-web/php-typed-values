@@ -32,6 +32,13 @@ readonly class DateTimeW3C extends DateTimeType
 {
     protected const FORMAT = DATE_W3C;
 
+    protected DateTimeImmutable $value;
+
+    public function __construct(DateTimeImmutable $value)
+    {
+        $this->value = $value;
+    }
+
     /**
      * @throws DateTimeTypeException
      */
@@ -62,11 +69,29 @@ readonly class DateTimeW3C extends DateTimeType
 
     public static function fromDateTime(DateTimeImmutable $value): static
     {
-        return new static($value);
+        // normalized timezone
+        return new static(
+            $value->setTimezone(new DateTimeZone(static::ZONE))
+        );
     }
 
     public function jsonSerialize(): string
     {
         return $this->toString();
+    }
+
+    public function __toString(): string
+    {
+        return $this->toString();
+    }
+
+    public function value(): DateTimeImmutable
+    {
+        return $this->value;
+    }
+
+    public static function getFormat(): string
+    {
+        return static::FORMAT;
     }
 }

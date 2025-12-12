@@ -118,3 +118,21 @@ it('TimestampMilliseconds::tryFromString returns Undefined for non-digit input',
 it('jsonSerialize returns integer', function (): void {
     expect(TimestampMilliseconds::tryFromString('1732445696999')->jsonSerialize())->toBeInt();
 });
+
+it('__toString returns the milliseconds string', function (): void {
+    $vo = TimestampMilliseconds::fromString('1732445696123');
+
+    expect((string) $vo)->toBe('1732445696123')
+        ->and($vo->__toString())->toBe('1732445696123');
+});
+
+it('getFormat returns internal seconds.microseconds pattern', function (): void {
+    expect(TimestampMilliseconds::getFormat())->toBe('U.u');
+});
+
+it('fromString accepts zero and round-trips to "0"', function (): void {
+    $vo = TimestampMilliseconds::fromString('0');
+
+    expect($vo->toString())->toBe('0')
+        ->and($vo->value()->format('U.u'))->toBe('0.000000');
+});

@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpTypedValues\Usage\Primitive;
+namespace App\Usage\Primitive;
 
 require_once 'vendor/autoload.php';
 
@@ -63,6 +63,12 @@ try {
 
 try {
     $undefined->toInt();
+} catch (TypeException $e) {
+    echo $e->getMessage() . PHP_EOL;
+}
+
+try {
+    $undefined->jsonSerialize();
 } catch (TypeException $e) {
     echo $e->getMessage() . PHP_EOL;
 }

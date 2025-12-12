@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpTypedValues\Usage\Primitive;
+namespace App\Usage\Primitive;
 
 require_once 'vendor/autoload.php';
 
@@ -28,6 +28,7 @@ try {
     // suppress
 }
 echo BoolStandard::fromString('true')->toString() . PHP_EOL;
+echo ((string) BoolStandard::fromString('true')->jsonSerialize()) . PHP_EOL;
 echo BoolStandard::fromInt(1)->toString() . PHP_EOL;
 echo BoolStandard::fromBool(true)->toString() . PHP_EOL;
 echo Boolean::fromBool(Boolean::fromBool(true)->value())->toString() . PHP_EOL;

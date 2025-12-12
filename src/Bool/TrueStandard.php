@@ -96,4 +96,22 @@ readonly class TrueStandard extends BoolType
     {
         return $this->value();
     }
+
+    public function toString(): string
+    {
+        return $this->value() ? 'true' : 'false';
+    }
+
+    /**
+     * @throws BoolTypeException
+     */
+    public static function fromBool(bool $value): static
+    {
+        return new static($value);
+    }
+
+    public function __toString(): string
+    {
+        return $this->toString();
+    }
 }

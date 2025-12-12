@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\DateTime\Timestamp;
 
+use DateTimeImmutable;
 use DateTimeZone;
 use PhpTypedValues\Abstract\DateTime\DateTimeType;
 use PhpTypedValues\Exception\DateTimeTypeException;
@@ -37,6 +38,13 @@ readonly class TimestampMilliseconds extends DateTimeType
      * @see https://www.php.net/manual/en/datetime.format.php
      */
     protected const FORMAT = 'U.u';
+
+    protected DateTimeImmutable $value;
+
+    public function __construct(DateTimeImmutable $value)
+    {
+        $this->value = $value;
+    }
 
     /**
      * Parse from a numeric Unix timestamp string (milliseconds).
@@ -78,6 +86,14 @@ readonly class TimestampMilliseconds extends DateTimeType
         }
     }
 
+    public static function fromDateTime(DateTimeImmutable $value): static
+    {
+        // normalized timezone
+        return new static(
+            $value->setTimezone(new DateTimeZone(static::ZONE))
+        );
+    }
+
     /**
      * Render as milliseconds since epoch, e.g. "1732445696123".
      */
@@ -97,5 +113,20 @@ readonly class TimestampMilliseconds extends DateTimeType
     public function jsonSerialize(): int
     {
         return (int) $this->toString();
+    }
+
+    public function __toString(): string
+    {
+        return $this->toString();
+    }
+
+    public function value(): DateTimeImmutable
+    {
+        return $this->value;
+    }
+
+    public static function getFormat(): string
+    {
+        return static::FORMAT;
     }
 }

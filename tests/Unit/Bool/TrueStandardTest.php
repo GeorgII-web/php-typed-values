@@ -55,3 +55,17 @@ it('tryFromString/tryFromInt return Undefined for non-true inputs', function ():
 it('jsonSerialize returns bool', function (): void {
     expect(TrueStandard::tryFromString('1')->jsonSerialize())->toBeBool();
 });
+
+it('fromBool accepts only true and throws on false', function (): void {
+    $t = TrueStandard::fromBool(true);
+    expect($t->value())->toBeTrue();
+
+    expect(fn() => TrueStandard::fromBool(false))
+        ->toThrow(BoolTypeException::class, 'Expected true literal, got "false"');
+});
+
+it('__toString returns "true"', function (): void {
+    $t = new TrueStandard(true);
+    expect((string) $t)->toBe('true')
+        ->and($t->__toString())->toBe('true');
+});

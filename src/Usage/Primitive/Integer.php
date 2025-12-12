@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpTypedValues\Usage\Primitive;
+namespace App\Usage\Primitive;
 
 require_once 'vendor/autoload.php';
 
@@ -32,6 +32,7 @@ echo WeekDay::fromInt(7)->value() . PHP_EOL;
 
 // DB tinyint usage
 echo Tiny::fromInt(-5)->toString() . PHP_EOL;
+echo Tiny::fromInt(-5)->jsonSerialize() . PHP_EOL;
 echo IntegerTiny::fromInt(-5)->toString() . PHP_EOL;
 echo IntegerTiny::fromString('127')->toString() . PHP_EOL;
 echo NonNegative::fromString('10')->toString() . PHP_EOL;

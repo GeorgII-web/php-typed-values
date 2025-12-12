@@ -128,3 +128,10 @@ it('TimestampSeconds::tryFromString returns Undefined for invalid string', funct
 it('jsonSerialize returns integer', function (): void {
     expect(TimestampSeconds::tryFromString('1735787045')->jsonSerialize())->toBeInt();
 });
+
+it('__toString returns the seconds string', function (): void {
+    $vo = TimestampSeconds::fromString('1735787045');
+
+    expect((string) $vo)->toBe('1735787045')
+        ->and($vo->__toString())->toBe('1735787045');
+});

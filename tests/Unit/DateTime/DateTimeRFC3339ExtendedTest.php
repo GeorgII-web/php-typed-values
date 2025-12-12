@@ -131,3 +131,10 @@ it('DateTimeRFC3339Extended::tryFromString returns Undefined for invalid string'
 it('jsonSerialize returns string', function (): void {
     expect(DateTimeRFC3339Extended::tryFromString('2025-01-02T03:04:05.000+00:00')->jsonSerialize())->toBeString();
 });
+
+it('__toString returns RFC3339_EXTENDED formatted string', function (): void {
+    $vo = DateTimeRFC3339Extended::fromString('2025-01-02T03:04:05.123+00:00');
+
+    expect((string) $vo)->toBe('2025-01-02T03:04:05.123+00:00')
+        ->and($vo->__toString())->toBe('2025-01-02T03:04:05.123+00:00');
+});

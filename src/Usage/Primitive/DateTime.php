@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpTypedValues\Usage\Primitive;
+namespace App\Usage\Primitive;
 
 require_once 'vendor/autoload.php';
 
@@ -20,6 +20,11 @@ use PhpTypedValues\Undefined\Alias\Undefined;
 echo PHP_EOL . '> DATETIME' . PHP_EOL;
 
 echo DateTimeAtom::getFormat() . PHP_EOL;
+echo DateTimeRFC3339::getFormat() . PHP_EOL;
+echo DateTimeRFC3339Extended::getFormat() . PHP_EOL;
+echo DateTimeW3C::getFormat() . PHP_EOL;
+echo TimestampSeconds::getFormat() . PHP_EOL;
+echo TimestampMilliseconds::getFormat() . PHP_EOL;
 
 $dt = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00')->value();
 echo DateTimeAtom::fromDateTime($dt)->toString() . PHP_EOL;

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Abstract\Undefined;
 
+use PhpTypedValues\Exception\UndefinedTypeException;
+
 /**
  * Contract for the special Undefined typed value.
  *
@@ -21,9 +23,18 @@ interface UndefinedTypeInterface
 {
     public static function create(): static;
 
-    public function value(): never;
-
+    /**
+     * @throws UndefinedTypeException
+     */
     public function toInt(): never;
 
+    /**
+     * @throws UndefinedTypeException
+     */
     public function toFloat(): never;
+
+    /**
+     * @throws UndefinedTypeException
+     */
+    public function value(): never;
 }

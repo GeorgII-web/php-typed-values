@@ -39,8 +39,6 @@ abstract readonly class DateTimeType extends AbstractType implements DateTimeTyp
     protected const MIN_TIMESTAMP_SECONDS = -62135596800; // 0001-01-01
     protected const MAX_TIMESTAMP_SECONDS = 253402300799; // 9999-12-31 23:59:59
 
-    protected DateTimeImmutable $value;
-
     /**
      * @throws DateTimeTypeException
      * @throws ReasonableRangeDateTimeTypeException
@@ -102,33 +100,5 @@ abstract readonly class DateTimeType extends AbstractType implements DateTimeTyp
          * @psalm-suppress FalsableReturnStatement
          */
         return $dt;
-    }
-
-    public function __construct(DateTimeImmutable $value)
-    {
-        $this->value = $value;
-    }
-
-    public static function fromDateTime(DateTimeImmutable $value): static
-    {
-        // normalized timezone
-        return new static(
-            $value->setTimezone(new DateTimeZone(static::ZONE))
-        );
-    }
-
-    public function value(): DateTimeImmutable
-    {
-        return $this->value;
-    }
-
-    public static function getFormat(): string
-    {
-        return static::FORMAT;
-    }
-
-    public function __toString(): string
-    {
-        return $this->toString();
     }
 }

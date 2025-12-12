@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpTypedValues\Usage\Primitive;
+namespace App\Usage\Primitive;
 
 require_once 'vendor/autoload.php';
 

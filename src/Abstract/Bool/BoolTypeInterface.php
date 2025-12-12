@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Abstract\Bool;
 
+use PhpTypedValues\Exception\BoolTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
@@ -21,11 +22,16 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  */
 interface BoolTypeInterface
 {
-    public function value(): bool;
-
     public static function tryFromString(string $value): static|Undefined;
 
     public static function tryFromInt(int $value): static|Undefined;
+
+    /**
+     * @throws BoolTypeException
+     */
+    public static function fromInt(int $value): static;
+
+    public function value(): bool;
 
     public static function fromBool(bool $value): static;
 }
