@@ -45,6 +45,17 @@ readonly class StringEmail extends StrType
         $this->value = $value;
     }
 
+    public static function tryFromMixed(mixed $value): static|Undefined
+    {
+        try {
+            return static::fromString(
+                static::convertMixedToString($value)
+            );
+        } catch (TypeException) {
+            return Undefined::create();
+        }
+    }
+
     /**
      * @throws EmailStringTypeException
      */

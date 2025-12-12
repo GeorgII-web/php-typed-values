@@ -25,6 +25,7 @@ echo DateTimeRFC3339Extended::getFormat() . PHP_EOL;
 echo DateTimeW3C::getFormat() . PHP_EOL;
 echo TimestampSeconds::getFormat() . PHP_EOL;
 echo TimestampMilliseconds::getFormat() . PHP_EOL;
+echo DateTimeAtom::tryFromMixed('2025-01-02T03:04:05+00:00')->toString() . PHP_EOL;
 
 $dt = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00')->value();
 echo DateTimeAtom::fromDateTime($dt)->toString() . PHP_EOL;

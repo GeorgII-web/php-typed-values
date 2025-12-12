@@ -26,6 +26,8 @@ interface BoolTypeInterface
 
     public static function tryFromInt(int $value): static|Undefined;
 
+    public static function tryFromMixed(mixed $value): static|Undefined;
+
     /**
      * @throws BoolTypeException
      */

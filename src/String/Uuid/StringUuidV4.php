@@ -54,6 +54,17 @@ readonly class StringUuidV4 extends StrType
         $this->value = $normalized;
     }
 
+    public static function tryFromMixed(mixed $value): static|Undefined
+    {
+        try {
+            return static::fromString(
+                static::convertMixedToString($value)
+            );
+        } catch (TypeException) {
+            return Undefined::create();
+        }
+    }
+
     public static function tryFromString(string $value): static|Undefined
     {
         try {

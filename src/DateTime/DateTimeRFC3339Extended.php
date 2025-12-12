@@ -40,6 +40,17 @@ readonly class DateTimeRFC3339Extended extends DateTimeType
         $this->value = $value;
     }
 
+    public static function tryFromMixed(mixed $value): static|Undefined
+    {
+        try {
+            return static::fromString(
+                static::convertMixedToString($value)
+            );
+        } catch (TypeException) {
+            return Undefined::create();
+        }
+    }
+
     /**
      * @throws DateTimeTypeException
      */

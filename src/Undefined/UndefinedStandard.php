@@ -6,6 +6,7 @@ namespace PhpTypedValues\Undefined;
 
 use PhpTypedValues\Abstract\Undefined\UndefinedType;
 use PhpTypedValues\Exception\UndefinedTypeException;
+use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
  * Base implementation for a special "UndefinedStandard" typed value.
@@ -24,6 +25,11 @@ readonly class UndefinedStandard extends UndefinedType
     public static function create(): static
     {
         return new static();
+    }
+
+    public static function tryFromMixed(mixed $value): Undefined
+    {
+        return Undefined::create();
     }
 
     public static function fromString(string $value): static

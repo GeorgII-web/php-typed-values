@@ -46,6 +46,17 @@ readonly class TimestampMilliseconds extends DateTimeType
         $this->value = $value;
     }
 
+    public static function tryFromMixed(mixed $value): static|Undefined
+    {
+        try {
+            return static::fromString(
+                static::convertMixedToString($value)
+            );
+        } catch (TypeException) {
+            return Undefined::create();
+        }
+    }
+
     /**
      * Parse from a numeric Unix timestamp string (milliseconds).
      *

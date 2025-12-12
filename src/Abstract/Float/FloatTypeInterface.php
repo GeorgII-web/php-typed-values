@@ -24,5 +24,7 @@ interface FloatTypeInterface
 
     public static function fromFloat(float $value): static;
 
+    public static function tryFromMixed(mixed $value): static|Undefined;
+
     public static function tryFromString(string $value): static|Undefined;
 }

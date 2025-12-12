@@ -34,8 +34,6 @@ interface AbstractTypeInterface
      */
     public static function fromString(string $value): static;
 
-    //        public static function tryFromMixed(mixed $value): static|Undefined;  //todo enable it
-
     /**
      * Returns a normalized string representation of the underlying value.
      */

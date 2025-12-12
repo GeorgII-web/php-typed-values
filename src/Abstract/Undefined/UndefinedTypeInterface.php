@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PhpTypedValues\Abstract\Undefined;
 
 use PhpTypedValues\Exception\UndefinedTypeException;
+use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
  * Contract for the special Undefined typed value.
@@ -22,6 +23,8 @@ use PhpTypedValues\Exception\UndefinedTypeException;
 interface UndefinedTypeInterface
 {
     public static function create(): static;
+
+    public static function tryFromMixed(mixed $value): Undefined;
 
     /**
      * @throws UndefinedTypeException

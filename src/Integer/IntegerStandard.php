@@ -32,6 +32,17 @@ readonly class IntegerStandard extends IntType
         $this->value = $value;
     }
 
+    public static function tryFromMixed(mixed $value): static|Undefined
+    {
+        try {
+            return static::fromString(
+                static::convertMixedToString($value)
+            );
+        } catch (TypeException) {
+            return Undefined::create();
+        }
+    }
+
     public static function tryFromString(string $value): static|Undefined
     {
         try {

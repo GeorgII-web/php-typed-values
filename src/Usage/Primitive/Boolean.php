@@ -34,6 +34,7 @@ echo BoolStandard::fromBool(true)->toString() . PHP_EOL;
 echo Boolean::fromBool(Boolean::fromBool(true)->value())->toString() . PHP_EOL;
 // Ensure interface method usage is visible to Psalm
 echo (testBool(BoolStandard::fromBool(true)) ? 'true' : 'false') . PHP_EOL;
+echo TrueStandard::tryFromMixed('yes')->toString() . PHP_EOL;
 
 // true/false literal usages (and try* to reference both branches for Psalm)
 $t1 = TrueStandard::tryFromString('yes');

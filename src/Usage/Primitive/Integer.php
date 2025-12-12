@@ -31,6 +31,7 @@ testWeekDayInt(IntegerWeekDay::fromInt(7)->value());
 echo WeekDay::fromInt(7)->value() . PHP_EOL;
 
 // DB tinyint usage
+echo Tiny::tryFromMixed(-5)->toString() . PHP_EOL;
 echo Tiny::fromInt(-5)->toString() . PHP_EOL;
 echo Tiny::fromInt(-5)->jsonSerialize() . PHP_EOL;
 echo IntegerTiny::fromInt(-5)->toString() . PHP_EOL;

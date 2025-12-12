@@ -26,5 +26,7 @@ interface DateTimeTypeInterface
 
     public static function fromDateTime(DateTimeImmutable $value): static;
 
+    public static function tryFromMixed(mixed $value): static|Undefined;
+
     public static function tryFromString(string $value): static|Undefined;
 }

@@ -23,4 +23,6 @@ interface StrTypeInterface
     public function value(): string;
 
     public static function tryFromString(string $value): static|Undefined;
+
+    public static function tryFromMixed(mixed $value): static|Undefined;
 }
