@@ -25,8 +25,11 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class BoolStandard extends BoolType
+class BoolStandard extends BoolType
 {
+    /**
+     * @readonly
+     */
     protected bool $value;
 
     public function __construct(bool $value)
@@ -34,39 +37,50 @@ readonly class BoolStandard extends BoolType
         $this->value = $value;
     }
 
-    public static function tryFromMixed(mixed $value): static|Undefined
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     * @param mixed $value
+     */
+    public static function tryFromMixed($value)
     {
         try {
             return static::fromString(
                 static::convertMixedToString($value)
             );
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return Undefined::create();
         }
     }
 
-    public static function tryFromString(string $value): static|Undefined
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    public static function tryFromString(string $value)
     {
         try {
             return static::fromString($value);
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return Undefined::create();
         }
     }
 
-    public static function tryFromInt(int $value): static|Undefined
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    public static function tryFromInt(int $value)
     {
         try {
             return static::fromInt($value);
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return Undefined::create();
         }
     }
 
     /**
      * @throws BoolTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         $lowerCaseValue = strtolower(trim($value));
 
@@ -83,8 +97,9 @@ readonly class BoolStandard extends BoolType
 
     /**
      * @throws BoolTypeException
+     * @return static
      */
-    public static function fromInt(int $value): static
+    public static function fromInt(int $value)
     {
         if ($value === 1) {
             $boolValue = true;
@@ -112,7 +127,10 @@ readonly class BoolStandard extends BoolType
         return $this->value() ? 'true' : 'false';
     }
 
-    public static function fromBool(bool $value): static
+    /**
+     * @return static
+     */
+    public static function fromBool(bool $value)
     {
         return new static($value);
     }

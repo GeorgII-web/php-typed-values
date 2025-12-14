@@ -25,7 +25,7 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  *
  * @psalm-immutable
  */
-readonly class TimestampSeconds extends DateTimeType
+class TimestampSeconds extends DateTimeType
 {
     /**
      * DateTime::format() pattern for Unix timestamp.
@@ -34,6 +34,9 @@ readonly class TimestampSeconds extends DateTimeType
      */
     protected const FORMAT = 'U';
 
+    /**
+     * @readonly
+     */
     protected DateTimeImmutable $value;
 
     public function __construct(DateTimeImmutable $value)
@@ -41,13 +44,17 @@ readonly class TimestampSeconds extends DateTimeType
         $this->value = $value;
     }
 
-    public static function tryFromMixed(mixed $value): static|Undefined
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     * @param mixed $value
+     */
+    public static function tryFromMixed($value)
     {
         try {
             return static::fromString(
                 static::convertMixedToString($value)
             );
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return Undefined::create();
         }
     }
@@ -56,8 +63,9 @@ readonly class TimestampSeconds extends DateTimeType
      * Parse from a numeric Unix timestamp string (seconds).
      *
      * @throws DateTimeTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         return new static(
             static::createFromFormat(
@@ -68,7 +76,10 @@ readonly class TimestampSeconds extends DateTimeType
         );
     }
 
-    public static function fromDateTime(DateTimeImmutable $value): static
+    /**
+     * @return static
+     */
+    public static function fromDateTime(DateTimeImmutable $value)
     {
         // normalized timezone
         return new static(
@@ -76,11 +87,14 @@ readonly class TimestampSeconds extends DateTimeType
         );
     }
 
-    public static function tryFromString(string $value): static|Undefined
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    public static function tryFromString(string $value)
     {
         try {
             return static::fromString($value);
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return Undefined::create();
         }
     }

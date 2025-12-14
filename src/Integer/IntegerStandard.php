@@ -23,8 +23,11 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  *
  * @psalm-immutable
  */
-readonly class IntegerStandard extends IntType
+class IntegerStandard extends IntType
 {
+    /**
+     * @readonly
+     */
     protected int $value;
 
     public function __construct(int $value)
@@ -32,41 +35,55 @@ readonly class IntegerStandard extends IntType
         $this->value = $value;
     }
 
-    public static function tryFromMixed(mixed $value): static|Undefined
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     * @param mixed $value
+     */
+    public static function tryFromMixed($value)
     {
         try {
             return static::fromString(
                 static::convertMixedToString($value)
             );
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return Undefined::create();
         }
     }
 
-    public static function tryFromString(string $value): static|Undefined
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    public static function tryFromString(string $value)
     {
         try {
             return static::fromString($value);
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return Undefined::create();
         }
     }
 
-    public static function tryFromInt(int $value): static|Undefined
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    public static function tryFromInt(int $value)
     {
         // IntegerStandard accepts any PHP int, so construction cannot fail.
         return new static($value);
     }
 
-    public static function fromInt(int $value): static
+    /**
+     * @return static
+     */
+    public static function fromInt(int $value)
     {
         return new static($value);
     }
 
     /**
      * @throws IntegerTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         parent::assertIntegerString($value);
 
