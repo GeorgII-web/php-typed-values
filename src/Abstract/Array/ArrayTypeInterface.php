@@ -27,6 +27,7 @@ use PhpTypedValues\Exception\ArrayTypeException;
  * @template TItem
  *
  * @extends IteratorAggregate<int, TItem>
+ * @extends ArrayOfObjectsAndUndefinedInterface<TItem>
  *
  * @psalm-immutable
  */

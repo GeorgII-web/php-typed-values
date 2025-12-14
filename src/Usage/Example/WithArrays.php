@@ -109,9 +109,6 @@ final readonly class WithArrays implements JsonSerializable
         return $this->firstName;
     }
 
-    /**
-     * @return ArrayOfObjects<TNickNames>
-     */
     public function getNickNames(): ArrayOfObjects
     {
         return $this->nickNames;

@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Array;
 
-use IteratorAggregate;
 use JsonSerializable;
 use PhpTypedValues\Abstract\Array\ArrayType;
-use PhpTypedValues\Abstract\Array\ArrayTypeInterface;
 use PhpTypedValues\Abstract\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\ArrayTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -21,32 +19,35 @@ use function is_object;
  *
  * @template TItem of PrimitiveType
  *
- * @implements IteratorAggregate<int, TItem>
- *
- * @template-implements ArrayTypeInterface<TItem>
+ * @template-extends ArrayType<TItem>
  *
  * @psalm-immutable
  */
 readonly class ArrayOfObjects extends ArrayType
 {
     /**
+     * @var list<TItem>
+     */
+    private array $value;
+
+    /**
      * @param list<TItem> $value
      *
      * @throws ArrayTypeException
      */
-    public function __construct(private array $value)
+    public function __construct(array $value)
     {
         foreach ($value as $item) {
             if (!is_object($item)) {
                 throw new ArrayTypeException('Expected array of Object instances');
             }
         }
+
+        $this->value = $value;
     }
 
     /**
      * @param list<mixed> $value
-     *
-     * @return ArrayOfObjects<TItem>
      *
      * @throws ArrayTypeException
      */
@@ -58,8 +59,6 @@ readonly class ArrayOfObjects extends ArrayType
 
     /**
      * @param list<mixed> $value
-     *
-     * @return ArrayOfObjects<TItem>
      *
      * @throws ArrayTypeException
      */
@@ -74,7 +73,7 @@ readonly class ArrayOfObjects extends ArrayType
             }
         }
 
-        /** @var list<TItem> $value */
+        /** @var list<TItem> $valueWithUndefined */
         return new static($valueWithUndefined);
     }
 
@@ -120,6 +119,7 @@ readonly class ArrayOfObjects extends ArrayType
             if (!$item instanceof JsonSerializable) {
                 throw new ArrayTypeException('Conversion to array of scalars failed, should implement JsonSerializable interface');
             }
+
             $result[] = $item->jsonSerialize();
         }
 

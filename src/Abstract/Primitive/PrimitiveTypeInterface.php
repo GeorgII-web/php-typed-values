@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Abstract\Primitive;
 
+use JsonSerializable;
 use PhpTypedValues\Abstract\TypeInterface;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -22,7 +23,7 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  *
  * @psalm-immutable
  */
-interface PrimitiveTypeInterface extends TypeInterface
+interface PrimitiveTypeInterface extends TypeInterface, JsonSerializable
 {
     /**
      * Create an instance from a validated string representation.
@@ -44,4 +45,13 @@ interface PrimitiveTypeInterface extends TypeInterface
      * Alias of {@see toString} for convenient casting.
      */
     public function __toString(): string;
+
+    /**
+     * JSON representation of the value.
+     *
+     * Marked as mutation-free so Psalm treats calls as pure in immutable contexts.
+     *
+     * @psalm-mutation-free
+     */
+    public function jsonSerialize(): mixed;
 }

@@ -6,6 +6,8 @@ namespace Abstract\Primitive;
 
 use PhpTypedValues\Abstract\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\TypeException;
+use stdClass;
+use Stringable;
 
 use function is_resource;
 

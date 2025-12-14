@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Usage\Primitive;
+namespace PhpTypedValues\Usage\Primitive;
 
 require_once 'vendor/autoload.php';
 
@@ -8,10 +8,13 @@ use const JSON_THROW_ON_ERROR;
 use const PHP_EOL;
 
 use PhpTypedValues\Array\ArrayOfObjects;
+use PhpTypedValues\Bool\Alias\Boolean;
 use PhpTypedValues\Exception\ArrayTypeException;
 use PhpTypedValues\Integer\IntegerNonNegative;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use PhpTypedValues\Usage\Example\OptionalFail;
+
+use function count;
 
 /**
  * Array.
@@ -42,9 +45,9 @@ $collection = ArrayOfObjects::tryFromArray(
     ],
 );
 echo $collection->count() . PHP_EOL;
-echo $collection->hasUndefined() ? 'true' : 'false' . PHP_EOL;
-echo $collection->isEmpty() ? 'true' : 'false' . PHP_EOL;
-echo $collection->isUndefined() ? 'true' : 'false' . PHP_EOL;
+echo Boolean::fromBool($collection->hasUndefined())->toString() . PHP_EOL;
+echo Boolean::fromBool($collection->isEmpty())->toString() . PHP_EOL;
+echo Boolean::fromBool($collection->isUndefined())->toString() . PHP_EOL;
 
 foreach ($collection->value() as $item) {
     if (!$item instanceof Undefined) {
@@ -53,3 +56,7 @@ foreach ($collection->value() as $item) {
         echo 'Undefined' . PHP_EOL;
     }
 }
+
+// Demonstrate usage of getDefinedItems() to exclude Undefined values
+$defined = $collection->getDefinedItems();
+echo 'Defined items count: ' . count($defined) . PHP_EOL;

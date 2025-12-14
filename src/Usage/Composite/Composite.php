@@ -43,6 +43,9 @@ echo $test->getId()->toString() . PHP_EOL;
 echo $test->getFirstName()->toString() . PHP_EOL;
 echo $test->getHeight()->toString() . PHP_EOL;
 $nickNames = $test->getNickNames();
-echo $nickNames->isUndefined() . ' ' . $nickNames->isEmpty() . ' ' . $nickNames->hasUndefined() . ' ' . $nickNames->count() . PHP_EOL;
+echo ($nickNames->isUndefined() ? 'true' : 'false')
+    . ' ' . ($nickNames->isEmpty() ? 'true' : 'false')
+    . ' ' . ($nickNames->hasUndefined() ? 'true' : 'false')
+    . ' ' . $nickNames->count() . PHP_EOL;
 echo json_encode($nickNames->toArray(), JSON_THROW_ON_ERROR) . PHP_EOL;
 echo json_encode($test, JSON_THROW_ON_ERROR) . PHP_EOL;
