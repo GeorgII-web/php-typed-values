@@ -28,10 +28,13 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  *
  * @psalm-immutable
  */
-readonly class DateTimeW3C extends DateTimeType
+class DateTimeW3C extends DateTimeType
 {
     protected const FORMAT = DATE_W3C;
 
+    /**
+     * @readonly
+     */
     protected DateTimeImmutable $value;
 
     public function __construct(DateTimeImmutable $value)
@@ -39,21 +42,26 @@ readonly class DateTimeW3C extends DateTimeType
         $this->value = $value;
     }
 
-    public static function tryFromMixed(mixed $value): static|Undefined
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     * @param mixed $value
+     */
+    public static function tryFromMixed($value)
     {
         try {
             return static::fromString(
                 static::convertMixedToString($value)
             );
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return Undefined::create();
         }
     }
 
     /**
      * @throws DateTimeTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         return new static(
             static::createFromFormat(
@@ -64,11 +72,14 @@ readonly class DateTimeW3C extends DateTimeType
         );
     }
 
-    public static function tryFromString(string $value): static|Undefined
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    public static function tryFromString(string $value)
     {
         try {
             return static::fromString($value);
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return Undefined::create();
         }
     }
@@ -78,7 +89,10 @@ readonly class DateTimeW3C extends DateTimeType
         return $this->value()->format(static::FORMAT);
     }
 
-    public static function fromDateTime(DateTimeImmutable $value): static
+    /**
+     * @return static
+     */
+    public static function fromDateTime(DateTimeImmutable $value)
     {
         // normalized timezone
         return new static(

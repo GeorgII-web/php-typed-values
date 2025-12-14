@@ -22,6 +22,6 @@ use PhpTypedValues\Abstract\Primitive\PrimitiveType;
  *
  * @psalm-immutable
  */
-abstract readonly class UndefinedType extends PrimitiveType implements UndefinedTypeInterface
+abstract class UndefinedType extends PrimitiveType implements UndefinedTypeInterface
 {
 }

@@ -34,8 +34,9 @@ interface PrimitiveTypeInterface extends TypeInterface, JsonSerializable, IsEmpt
      * when the provided value is invalid.
      *
      * @throws TypeException
+     * @return static
      */
-    public static function fromString(string $value): static;
+    public static function fromString(string $value);
 
     /**
      * Returns a normalized string representation of the underlying value.
@@ -53,6 +54,7 @@ interface PrimitiveTypeInterface extends TypeInterface, JsonSerializable, IsEmpt
      * Marked as mutation-free so Psalm treats calls as pure in immutable contexts.
      *
      * @psalm-mutation-free
+     * @return mixed
      */
-    public function jsonSerialize(): mixed;
+    public function jsonSerialize();
 }
