@@ -2,8 +2,12 @@
 
 declare(strict_types=1);
 
+namespace Abstract\Primitive;
+
 use PhpTypedValues\Abstract\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\TypeException;
+
+use function is_resource;
 
 abstract readonly class PrimitiveTypeTest extends PrimitiveType
 {
@@ -48,6 +52,6 @@ it('convertMixedToString throws TypeException for non-stringable objects, arrays
         expect(fn() => PrimitiveTypeTest::convert($res))
             ->toThrow(TypeException::class, 'Value cannot be cast to string');
     } finally {
-        \is_resource($res) && fclose($res);
+        is_resource($res) && fclose($res);
     }
 });
