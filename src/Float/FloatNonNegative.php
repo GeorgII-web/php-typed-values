@@ -107,4 +107,9 @@ readonly class FloatNonNegative extends FloatType
     {
         return $this->toString();
     }
+
+    public function isEmpty(): bool
+    {
+        return false;
+    }
 }

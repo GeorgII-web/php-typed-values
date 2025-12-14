@@ -91,4 +91,9 @@ readonly class FloatStandard extends FloatType
     {
         return $this->toString();
     }
+
+    public function isEmpty(): bool
+    {
+        return false;
+    }
 }

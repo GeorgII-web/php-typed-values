@@ -101,9 +101,6 @@ readonly class ArrayOfObjects extends ArrayType
         return count($this->value);
     }
 
-    /**
-     * Return true if the array is empty, false otherwise.
-     */
     public function isEmpty(): bool
     {
         return $this->count() === 0;

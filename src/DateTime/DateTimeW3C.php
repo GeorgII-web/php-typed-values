@@ -105,4 +105,9 @@ readonly class DateTimeW3C extends DateTimeType
     {
         return static::FORMAT;
     }
+
+    public function isEmpty(): bool
+    {
+        return false;
+    }
 }

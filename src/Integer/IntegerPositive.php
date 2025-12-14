@@ -111,4 +111,9 @@ readonly class IntegerPositive extends IntType
     {
         return $this->toString();
     }
+
+    public function isEmpty(): bool
+    {
+        return false;
+    }
 }

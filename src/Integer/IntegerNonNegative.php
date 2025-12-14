@@ -111,4 +111,9 @@ readonly class IntegerNonNegative extends IntType
     {
         return $this->toString();
     }
+
+    public function isEmpty(): bool
+    {
+        return false;
+    }
 }

@@ -105,4 +105,9 @@ readonly class DateTimeRFC3339 extends DateTimeType
     {
         return static::FORMAT;
     }
+
+    public function isEmpty(): bool
+    {
+        return false;
+    }
 }

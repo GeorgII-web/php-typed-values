@@ -165,3 +165,8 @@ it('tryFromMixed handles valid RFC3339_EXTENDED strings and invalid mixed inputs
         ->and($badArr)->toBeInstanceOf(Undefined::class)
         ->and($badNull)->toBeInstanceOf(Undefined::class);
 });
+
+it('isEmpty is always false for DateTimeRFC3339Extended', function (): void {
+    $vo = DateTimeRFC3339Extended::fromString('2025-01-02T03:04:05.000+00:00');
+    expect($vo->isEmpty())->toBeFalse();
+});

@@ -164,3 +164,8 @@ it('tryFromMixed handles valid W3C/RFC3339 strings and invalid mixed inputs', fu
         ->and($badArr)->toBeInstanceOf(Undefined::class)
         ->and($badNull)->toBeInstanceOf(Undefined::class);
 });
+
+it('isEmpty is always false for DateTimeW3C', function (): void {
+    $vo = DateTimeW3C::fromString('2025-01-02T03:04:05+00:00');
+    expect($vo->isEmpty())->toBeFalse();
+});

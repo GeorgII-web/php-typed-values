@@ -143,3 +143,11 @@ it('jsonSerialize equals value() for valid instances', function (): void {
     $v = FloatNonNegative::fromString('10.5');
     expect($v->jsonSerialize())->toBe($v->value());
 });
+
+it('isEmpty returns false for FloatNonNegative', function (): void {
+    $a = new FloatNonNegative(0.0);
+    $b = FloatNonNegative::fromFloat(3.14);
+
+    expect($a->isEmpty())->toBeFalse()
+        ->and($b->isEmpty())->toBeFalse();
+});

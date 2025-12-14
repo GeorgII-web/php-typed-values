@@ -146,3 +146,11 @@ it('tryFromMixed covers positive, non-positive, and non-numeric inputs', functio
         ->and($fromStringable)->toBeInstanceOf(FloatPositive::class)
         ->and($fromStringable->value())->toBe(1.23);
 });
+
+it('isEmpty returns false for FloatPositive', function (): void {
+    $a = new FloatPositive(0.1);
+    $b = FloatPositive::fromFloat(2.5);
+
+    expect($a->isEmpty())->toBeFalse()
+        ->and($b->isEmpty())->toBeFalse();
+});

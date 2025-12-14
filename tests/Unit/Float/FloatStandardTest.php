@@ -82,3 +82,11 @@ it('tryFromMixed covers numeric, non-numeric, and stringable inputs', function (
         ->and($fromStringable)->toBeInstanceOf(FloatStandard::class)
         ->and($fromStringable->value())->toBe(1.23);
 });
+
+it('isEmpty returns false for FloatStandard', function (): void {
+    $a = new FloatStandard(-1.0);
+    $b = FloatStandard::fromFloat(0.0);
+
+    expect($a->isEmpty())->toBeFalse()
+        ->and($b->isEmpty())->toBeFalse();
+});

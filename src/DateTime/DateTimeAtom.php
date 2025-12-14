@@ -105,4 +105,9 @@ readonly class DateTimeAtom extends DateTimeType
     {
         return static::FORMAT;
     }
+
+    public function isEmpty(): bool
+    {
+        return false;
+    }
 }

@@ -165,3 +165,8 @@ it('tryFromMixed handles valid ATOM strings and invalid mixed inputs', function 
         ->and($badArr)->toBeInstanceOf(Undefined::class)
         ->and($badNull)->toBeInstanceOf(Undefined::class);
 });
+
+it('isEmpty is always false for DateTimeAtom', function (): void {
+    $vo = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
+    expect($vo->isEmpty())->toBeFalse();
+});

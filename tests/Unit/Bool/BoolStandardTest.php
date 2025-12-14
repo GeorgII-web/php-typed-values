@@ -136,3 +136,8 @@ it('tryFromMixed handles various inputs returning BoolStandard or Undefined', fu
         ->and($fromArray)->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class)
         ->and($fromNull)->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class);
 });
+
+it('isEmpty is always false for BoolStandard', function (): void {
+    expect(BoolStandard::fromBool(true)->isEmpty())->toBeFalse()
+        ->and(BoolStandard::fromBool(false)->isEmpty())->toBeFalse();
+});
