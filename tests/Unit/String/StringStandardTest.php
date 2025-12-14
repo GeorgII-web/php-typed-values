@@ -63,3 +63,13 @@ it('__toString returns the string value', function (): void {
     expect((string) $s)->toBe('cast test')
         ->and($s->__toString())->toBe('cast test');
 });
+
+it('isEmpty is false for non-empty StringStandard', function (): void {
+    $s = StringStandard::fromString('x');
+    expect($s->isEmpty())->toBeFalse();
+});
+
+it('isEmpty is true for empty StringStandard', function (): void {
+    $s = StringStandard::fromString('');
+    expect($s->isEmpty())->toBeTrue();
+});

@@ -110,3 +110,8 @@ it('tryFromMixed returns Undefined for invalid or non-convertible values', funct
         ->and($fromInt)
         ->toBeInstanceOf(Undefined::class);
 });
+
+it('isEmpty is always false for StringUuidV7', function (): void {
+    $u = new StringUuidV7('01890f2a-5bcd-7def-8abc-1234567890ab');
+    expect($u->isEmpty())->toBeFalse();
+});

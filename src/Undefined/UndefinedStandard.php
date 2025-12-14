@@ -84,4 +84,9 @@ readonly class UndefinedStandard extends UndefinedType
     {
         throw new UndefinedTypeException('UndefinedType cannot be serialized for Json.');
     }
+
+    public function isEmpty(): bool
+    {
+        return true;
+    }
 }

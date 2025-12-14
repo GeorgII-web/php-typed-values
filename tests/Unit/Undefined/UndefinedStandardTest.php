@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use PhpTypedValues\Exception\UndefinedTypeException;
+use PhpTypedValues\Undefined\Alias\Undefined;
 use PhpTypedValues\Undefined\UndefinedStandard;
 
 it('creates UndefinedStandard via factory', function (): void {
@@ -59,11 +60,19 @@ it('tryFromMixed always returns Undefined', function (): void {
     $fromNull = UndefinedStandard::tryFromMixed(null);
 
     expect($fromString)
-        ->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class)
+        ->toBeInstanceOf(Undefined::class)
         ->and($fromInt)
-        ->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class)
+        ->toBeInstanceOf(Undefined::class)
         ->and($fromArray)
-        ->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class)
+        ->toBeInstanceOf(Undefined::class)
         ->and($fromNull)
-        ->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class);
+        ->toBeInstanceOf(Undefined::class);
+});
+
+it('isEmpty returns true for UndefinedStandard', function (): void {
+    $u1 = UndefinedStandard::create();
+    $u2 = UndefinedStandard::fromString('ignored');
+
+    expect($u1->isEmpty())->toBeTrue()
+        ->and($u2->isEmpty())->toBeTrue();
 });

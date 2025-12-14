@@ -102,4 +102,9 @@ readonly class StringUuidV4 extends StrType
     {
         return $this->toString();
     }
+
+    public function isEmpty(): bool
+    {
+        return false;
+    }
 }

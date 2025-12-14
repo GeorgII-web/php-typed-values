@@ -102,3 +102,11 @@ it('tryFromMixed handles valid/too-long strings, stringable, and invalid mixed i
         ->and($fromNull)->toBeInstanceOf(StringVarChar255::class)
         ->and($fromNull->value())->toBe('');
 });
+
+it('isEmpty is true for empty and false for non-empty StringVarChar255', function (): void {
+    $empty = new StringVarChar255('');
+    $nonEmpty = StringVarChar255::fromString('x');
+
+    expect($empty->isEmpty())->toBeTrue()
+        ->and($nonEmpty->isEmpty())->toBeFalse();
+});

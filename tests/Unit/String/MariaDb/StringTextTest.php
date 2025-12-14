@@ -96,3 +96,11 @@ it('tryFromMixed handles valid/too-long strings, stringable, and invalid mixed i
         ->and($fromNull)->toBeInstanceOf(StringText::class)
         ->and($fromNull->value())->toBe('');
 });
+
+it('isEmpty is true for empty and false for non-empty StringText', function (): void {
+    $empty = new StringText('');
+    $nonEmpty = StringText::fromString('x');
+
+    expect($empty->isEmpty())->toBeTrue()
+        ->and($nonEmpty->isEmpty())->toBeFalse();
+});

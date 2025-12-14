@@ -140,4 +140,9 @@ readonly class TimestampMilliseconds extends DateTimeType
     {
         return static::FORMAT;
     }
+
+    public function isEmpty(): bool
+    {
+        return false;
+    }
 }

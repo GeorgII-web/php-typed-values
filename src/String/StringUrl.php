@@ -93,4 +93,9 @@ readonly class StringUrl extends StrType
     {
         return $this->toString();
     }
+
+    public function isEmpty(): bool
+    {
+        return false;
+    }
 }

@@ -80,3 +80,8 @@ it('fromString creates instance with correct value', function (): void {
         ->and($url->value())
         ->toBe('https://example.com/path');
 });
+
+it('isEmpty is always false for StringUrl', function (): void {
+    $u = new StringUrl('https://example.com');
+    expect($u->isEmpty())->toBeFalse();
+});

@@ -160,3 +160,8 @@ it('tryFromMixed handles valid numeric strings/ints and invalid mixed inputs', f
         ->and($fromArray)->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class)
         ->and($fromNull)->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class);
 });
+
+it('isEmpty is always false for TimestampSeconds', function (): void {
+    $vo = TimestampSeconds::fromString('0');
+    expect($vo->isEmpty())->toBeFalse();
+});

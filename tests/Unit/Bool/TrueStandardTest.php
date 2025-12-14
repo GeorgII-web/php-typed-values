@@ -100,3 +100,7 @@ it('tryFromMixed handles various inputs returning TrueStandard or Undefined', fu
         ->and($fromArray)->toBeInstanceOf(Undefined::class)
         ->and($fromNull)->toBeInstanceOf(Undefined::class);
 });
+
+it('isEmpty is always false for TrueStandard', function (): void {
+    expect(TrueStandard::fromString('yes')->isEmpty())->toBeFalse();
+});
