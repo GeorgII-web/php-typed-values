@@ -92,4 +92,9 @@ readonly class IntegerStandard extends IntType
     {
         return $this->value();
     }
+
+    public function isEmpty(): bool
+    {
+        return false;
+    }
 }

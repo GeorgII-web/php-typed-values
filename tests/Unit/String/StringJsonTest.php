@@ -107,3 +107,8 @@ it('tryFromMixed handles valid JSON text, stringable, and invalid mixed inputs',
         ->and($fromArray)->toBeInstanceOf(Undefined::class)
         ->and($fromNull)->toBeInstanceOf(Undefined::class);
 });
+
+it('isEmpty is always false for StringJson', function (): void {
+    $j = new StringJson('{"a":1}');
+    expect($j->isEmpty())->toBeFalse();
+});

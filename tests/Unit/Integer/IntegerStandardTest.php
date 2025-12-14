@@ -123,3 +123,11 @@ it('tryFromMixed returns instance for integer-like inputs and Undefined otherwis
         ->and($badF)->toBeInstanceOf(Undefined::class)
         ->and($badX)->toBeInstanceOf(Undefined::class);
 });
+
+it('isEmpty returns false for IntegerStandard', function (): void {
+    $a = new IntegerStandard(-1);
+    $b = IntegerStandard::fromInt(0);
+
+    expect($a->isEmpty())->toBeFalse()
+        ->and($b->isEmpty())->toBeFalse();
+});

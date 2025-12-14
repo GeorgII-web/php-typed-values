@@ -12,7 +12,7 @@ namespace PhpTypedValues\Abstract\Shared;
 interface IsEmptyInterface
 {
     /**
-     * Returns if the Object value is empty.
+     * Returns true if the Object value is empty.
      */
     public function isEmpty(): bool;
 }

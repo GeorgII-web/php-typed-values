@@ -160,3 +160,11 @@ it('tryFromMixed returns instance for integer-like inputs within range and Undef
         ->and($badArr)->toBeInstanceOf(Undefined::class)
         ->and($badNull)->toBeInstanceOf(Undefined::class);
 });
+
+it('isEmpty returns false for IntegerTiny', function (): void {
+    $a = new IntegerTiny(-1);
+    $b = IntegerTiny::fromInt(127);
+
+    expect($a->isEmpty())->toBeFalse()
+        ->and($b->isEmpty())->toBeFalse();
+});

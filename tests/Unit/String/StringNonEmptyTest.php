@@ -53,3 +53,8 @@ it('__toString returns the original non-empty string', function (): void {
     expect((string) $s)->toBe('world')
         ->and($s->__toString())->toBe('world');
 });
+
+it('isEmpty is always false for StringNonEmpty', function (): void {
+    $s = new StringNonEmpty('x');
+    expect($s->isEmpty())->toBeFalse();
+});

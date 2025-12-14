@@ -186,3 +186,11 @@ it('tryFromMixed returns instance for integer-like inputs (1..7) and Undefined o
         ->and($badArr)->toBeInstanceOf(Undefined::class)
         ->and($badNull)->toBeInstanceOf(Undefined::class);
 });
+
+it('isEmpty returns false for IntegerWeekDay', function (): void {
+    $a = new IntegerWeekDay(1);
+    $b = IntegerWeekDay::fromInt(7);
+
+    expect($a->isEmpty())->toBeFalse()
+        ->and($b->isEmpty())->toBeFalse();
+});

@@ -97,6 +97,11 @@ readonly class StringCountryCode extends StrType
         return $this->toString();
     }
 
+    public function isEmpty(): bool
+    {
+        return false;
+    }
+
     /**
      * ISO 3166-1 alpha-2 codes used for validation.
      *

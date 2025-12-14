@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PhpTypedValues\Abstract\Primitive;
 
 use JsonSerializable;
+use PhpTypedValues\Abstract\Shared\IsEmptyInterface;
 use PhpTypedValues\Abstract\TypeInterface;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -23,7 +24,7 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  *
  * @psalm-immutable
  */
-interface PrimitiveTypeInterface extends TypeInterface, JsonSerializable
+interface PrimitiveTypeInterface extends TypeInterface, JsonSerializable, IsEmptyInterface
 {
     /**
      * Create an instance from a validated string representation.

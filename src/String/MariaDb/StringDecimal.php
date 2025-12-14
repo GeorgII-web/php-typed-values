@@ -119,4 +119,10 @@ readonly class StringDecimal extends StrType
     {
         return $this->toString();
     }
+
+    public function isEmpty(): bool
+    {
+        // Decimal values are never empty by construction; constructor rejects empty strings
+        return false;
+    }
 }

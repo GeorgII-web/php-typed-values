@@ -186,3 +186,11 @@ it('tryFromMixed returns instance for integer-like inputs and Undefined otherwis
         ->and($badArr)->toBeInstanceOf(Undefined::class)
         ->and($badNull)->toBeInstanceOf(Undefined::class);
 });
+
+it('isEmpty returns false for IntegerPositive', function (): void {
+    $a = new IntegerPositive(1);
+    $b = IntegerPositive::fromInt(9);
+
+    expect($a->isEmpty())->toBeFalse()
+        ->and($b->isEmpty())->toBeFalse();
+});

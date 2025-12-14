@@ -94,3 +94,8 @@ it('tryFromMixed handles valid decimal-like values and invalid mixed inputs', fu
         ->and($fromArray)->toBeInstanceOf(Undefined::class)
         ->and($fromNull)->toBeInstanceOf(Undefined::class);
 });
+
+it('isEmpty is always false for StringDecimal', function (): void {
+    $d = new StringDecimal('0');
+    expect($d->isEmpty())->toBeFalse();
+});
