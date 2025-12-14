@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Bool;
 
-use PhpTypedValues\Abstract\Bool\BoolType;
+use PhpTypedValues\Abstract\Primitive\Bool\BoolType;
 use PhpTypedValues\Exception\BoolTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;

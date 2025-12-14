@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Abstract\Float;
+namespace PhpTypedValues\Abstract\Primitive\Float;
 
-use PhpTypedValues\Abstract\AbstractType;
+use PhpTypedValues\Abstract\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\FloatTypeException;
 
 use function sprintf;
@@ -26,7 +26,7 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-abstract readonly class FloatType extends AbstractType implements FloatTypeInterface
+abstract readonly class FloatType extends PrimitiveType implements FloatTypeInterface
 {
     /**
      * @throws FloatTypeException

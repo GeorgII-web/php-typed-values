@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Abstract;
+namespace PhpTypedValues\Abstract\Primitive;
 
+use PhpTypedValues\Abstract\TypeInterface;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -21,7 +22,7 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  *
  * @psalm-immutable
  */
-interface AbstractTypeInterface
+interface PrimitiveTypeInterface extends TypeInterface
 {
     /**
      * Create an instance from a validated string representation.

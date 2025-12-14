@@ -6,7 +6,7 @@ namespace PhpTypedValues\String;
 
 use const FILTER_VALIDATE_URL;
 
-use PhpTypedValues\Abstract\String\StrType;
+use PhpTypedValues\Abstract\Primitive\String\StrType;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Exception\UrlStringTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;

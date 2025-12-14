@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\String\MariaDb;
 
-use PhpTypedValues\Abstract\String\StrType;
+use PhpTypedValues\Abstract\Primitive\String\StrType;
 use PhpTypedValues\Exception\DecimalStringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;

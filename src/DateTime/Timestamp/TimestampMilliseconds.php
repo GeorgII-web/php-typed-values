@@ -6,7 +6,7 @@ namespace PhpTypedValues\DateTime\Timestamp;
 
 use DateTimeImmutable;
 use DateTimeZone;
-use PhpTypedValues\Abstract\DateTime\DateTimeType;
+use PhpTypedValues\Abstract\Primitive\DateTime\DateTimeType;
 use PhpTypedValues\Exception\DateTimeTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;

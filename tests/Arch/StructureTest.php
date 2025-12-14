@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Abstract\Bool\BoolType;
-use PhpTypedValues\Abstract\DateTime\DateTimeType;
-use PhpTypedValues\Abstract\Float\FloatType;
-use PhpTypedValues\Abstract\Integer\IntType;
-use PhpTypedValues\Abstract\String\StrType;
-use PhpTypedValues\Abstract\Undefined\UndefinedType;
+use PhpTypedValues\Abstract\Primitive\Bool\BoolType;
+use PhpTypedValues\Abstract\Primitive\DateTime\DateTimeType;
+use PhpTypedValues\Abstract\Primitive\Float\FloatType;
+use PhpTypedValues\Abstract\Primitive\Integer\IntType;
+use PhpTypedValues\Abstract\Primitive\String\StrType;
+use PhpTypedValues\Abstract\Primitive\Undefined\UndefinedType;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\UndefinedStandard;
 

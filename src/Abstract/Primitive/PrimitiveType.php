@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Abstract;
+namespace PhpTypedValues\Abstract\Primitive;
 
 use JsonSerializable;
 use PhpTypedValues\Exception\TypeException;
@@ -15,7 +15,7 @@ use function is_scalar;
  *
  * Responsibilities
  *  - Define a common root for value objects in this library.
- *  - Enforce immutability and a unified interface via {@see AbstractTypeInterface}.
+ *  - Enforce immutability and a unified interface via {@see PrimitiveTypeInterface}.
  *  - Mark all descendants as implementing {@see JsonSerializable} — concrete
  *    classes SHOULD implement `jsonSerialize()` consistently with their
  *    `toString()`/`value()` representation.
@@ -31,7 +31,7 @@ use function is_scalar;
  *
  * @psalm-immutable
  */
-abstract readonly class AbstractType implements AbstractTypeInterface, JsonSerializable
+abstract readonly class PrimitiveType implements PrimitiveTypeInterface, JsonSerializable
 {
     /**
      * Safely attempts to convert a mixed value to a string.

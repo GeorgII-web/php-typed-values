@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Float;
 
-use PhpTypedValues\Abstract\Float\FloatType;
+use PhpTypedValues\Abstract\Primitive\Float\FloatType;
 use PhpTypedValues\Exception\FloatTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;

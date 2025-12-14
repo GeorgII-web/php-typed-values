@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Integer;
 
-use PhpTypedValues\Abstract\Integer\IntType;
+use PhpTypedValues\Abstract\Primitive\Integer\IntType;
 use PhpTypedValues\Exception\IntegerTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;

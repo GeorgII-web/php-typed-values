@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Undefined;
 
-use PhpTypedValues\Abstract\Undefined\UndefinedType;
+use PhpTypedValues\Abstract\Primitive\Undefined\UndefinedType;
 use PhpTypedValues\Exception\UndefinedTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 

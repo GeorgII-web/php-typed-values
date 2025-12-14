@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Abstract\Bool;
+namespace PhpTypedValues\Abstract\Primitive\Bool;
 
-use PhpTypedValues\Abstract\AbstractType;
+use PhpTypedValues\Abstract\Primitive\PrimitiveType;
 
 /**
  * Base implementation for boolean typed values.
@@ -23,6 +23,6 @@ use PhpTypedValues\Abstract\AbstractType;
  *
  * @psalm-immutable
  */
-abstract readonly class BoolType extends AbstractType implements BoolTypeInterface
+abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterface
 {
 }

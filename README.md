@@ -39,7 +39,7 @@ use TypedValues\Integer\IntegerPositive;
 $id = IntegerPositive::fromString('123');
 ```
 
-Instead of spreading validation across an application:
+Instead of spreading validation across an application
 
 ```php
 $id = (int) '123';

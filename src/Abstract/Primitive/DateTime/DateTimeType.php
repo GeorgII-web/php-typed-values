@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Abstract\DateTime;
+namespace PhpTypedValues\Abstract\Primitive\DateTime;
 
 use const PHP_EOL;
 
 use DateTimeImmutable;
 use DateTimeZone;
-use PhpTypedValues\Abstract\AbstractType;
+use PhpTypedValues\Abstract\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\DateTimeTypeException;
 use PhpTypedValues\Exception\ReasonableRangeDateTimeTypeException;
 
@@ -32,7 +32,7 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-abstract readonly class DateTimeType extends AbstractType implements DateTimeTypeInterface
+abstract readonly class DateTimeType extends PrimitiveType implements DateTimeTypeInterface
 {
     protected const FORMAT = '';
     protected const ZONE = 'UTC';

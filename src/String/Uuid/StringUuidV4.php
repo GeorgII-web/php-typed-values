@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\String\Uuid;
 
-use PhpTypedValues\Abstract\String\StrType;
+use PhpTypedValues\Abstract\Primitive\String\StrType;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Exception\UuidStringTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;

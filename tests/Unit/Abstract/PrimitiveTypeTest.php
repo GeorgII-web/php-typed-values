@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Abstract\AbstractType;
+use PhpTypedValues\Abstract\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\TypeException;
 
-abstract readonly class AbstractTypeTest extends AbstractType
+abstract readonly class PrimitiveTypeTest extends PrimitiveType
 {
     public static function convert(mixed $value): string
     {
@@ -14,12 +14,12 @@ abstract readonly class AbstractTypeTest extends AbstractType
 }
 
 it('convertMixedToString casts scalars and null to string', function (): void {
-    expect(AbstractTypeTest::convert(123))->toBe('123')
-        ->and(AbstractTypeTest::convert(1.5))->toBe('1.5')
-        ->and(AbstractTypeTest::convert('foo'))->toBe('foo')
-        ->and(AbstractTypeTest::convert(true))->toBe('1')
-        ->and(AbstractTypeTest::convert(false))->toBe('')
-        ->and(AbstractTypeTest::convert(null))->toBe('');
+    expect(PrimitiveTypeTest::convert(123))->toBe('123')
+        ->and(PrimitiveTypeTest::convert(1.5))->toBe('1.5')
+        ->and(PrimitiveTypeTest::convert('foo'))->toBe('foo')
+        ->and(PrimitiveTypeTest::convert(true))->toBe('1')
+        ->and(PrimitiveTypeTest::convert(false))->toBe('')
+        ->and(PrimitiveTypeTest::convert(null))->toBe('');
 });
 
 it('convertMixedToString accepts Stringable objects', function (): void {
@@ -30,22 +30,22 @@ it('convertMixedToString accepts Stringable objects', function (): void {
         }
     };
 
-    expect(AbstractTypeTest::convert($obj))->toBe('3.5');
+    expect(PrimitiveTypeTest::convert($obj))->toBe('3.5');
 });
 
 it('convertMixedToString throws TypeException for non-stringable objects, arrays and resources', function (): void {
     // array
-    expect(fn() => AbstractTypeTest::convert(['x']))
+    expect(fn() => PrimitiveTypeTest::convert(['x']))
         ->toThrow(TypeException::class, 'Value cannot be cast to string');
 
     // stdClass (non-stringable)
-    expect(fn() => AbstractTypeTest::convert(new stdClass()))
+    expect(fn() => PrimitiveTypeTest::convert(new stdClass()))
         ->toThrow(TypeException::class, 'Value cannot be cast to string');
 
     // resource
     $res = fopen('php://memory', 'r');
     try {
-        expect(fn() => AbstractTypeTest::convert($res))
+        expect(fn() => PrimitiveTypeTest::convert($res))
             ->toThrow(TypeException::class, 'Value cannot be cast to string');
     } finally {
         \is_resource($res) && fclose($res);

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Abstract\Integer;
+namespace PhpTypedValues\Abstract\Primitive\Integer;
 
-use PhpTypedValues\Abstract\AbstractType;
+use PhpTypedValues\Abstract\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\IntegerTypeException;
 
 use function sprintf;
@@ -26,7 +26,7 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-abstract readonly class IntType extends AbstractType implements IntTypeInterface
+abstract readonly class IntType extends PrimitiveType implements IntTypeInterface
 {
     /**
      * @throws IntegerTypeException

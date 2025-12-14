@@ -6,7 +6,7 @@ require_once 'vendor/autoload.php';
 
 use const PHP_EOL;
 
-use PhpTypedValues\Abstract\Bool\BoolTypeInterface;
+use PhpTypedValues\Abstract\Primitive\Bool\BoolTypeInterface;
 use PhpTypedValues\Bool\Alias\Boolean;
 use PhpTypedValues\Bool\BoolStandard;
 use PhpTypedValues\Bool\FalseStandard;

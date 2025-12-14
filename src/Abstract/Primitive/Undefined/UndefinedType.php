@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Abstract\Undefined;
+namespace PhpTypedValues\Abstract\Primitive\Undefined;
 
-use PhpTypedValues\Abstract\AbstractType;
-use PhpTypedValues\Exception\UndefinedTypeException;
+use PhpTypedValues\Abstract\Primitive\PrimitiveType;
 
 /**
  * Base implementation for a special "Undefined/Unknown" typed value.
@@ -23,6 +22,6 @@ use PhpTypedValues\Exception\UndefinedTypeException;
  *
  * @psalm-immutable
  */
-abstract readonly class UndefinedType extends AbstractType implements UndefinedTypeInterface
+abstract readonly class UndefinedType extends PrimitiveType implements UndefinedTypeInterface
 {
 }

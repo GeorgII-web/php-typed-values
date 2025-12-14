@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Abstract\String;
+namespace PhpTypedValues\Abstract\Primitive\String;
 
-use PhpTypedValues\Abstract\AbstractType;
+use PhpTypedValues\Abstract\Primitive\PrimitiveType;
 
 /**
  * Base implementation for string-typed values.
@@ -23,6 +23,6 @@ use PhpTypedValues\Abstract\AbstractType;
  *
  * @psalm-immutable
  */
-abstract readonly class StrType extends AbstractType implements StrTypeInterface
+abstract readonly class StrType extends PrimitiveType implements StrTypeInterface
 {
 }
