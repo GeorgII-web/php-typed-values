@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Abstract\Primitive;
 
-use JsonSerializable;
 use PhpTypedValues\Exception\TypeException;
 use Stringable;
 
@@ -31,7 +30,7 @@ use function is_scalar;
  *
  * @psalm-immutable
  */
-abstract readonly class PrimitiveType implements PrimitiveTypeInterface, JsonSerializable
+abstract readonly class PrimitiveType implements PrimitiveTypeInterface
 {
     /**
      * Safely attempts to convert a mixed value to a string.
