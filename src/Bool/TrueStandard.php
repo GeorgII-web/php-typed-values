@@ -28,8 +28,11 @@ use function trim;
  *
  * @psalm-immutable
  */
-readonly class TrueStandard extends BoolType
+class TrueStandard extends BoolType
 {
+    /**
+     * @readonly
+     */
     protected bool $value;
 
     /**
@@ -44,39 +47,50 @@ readonly class TrueStandard extends BoolType
         $this->value = true;
     }
 
-    public static function tryFromMixed(mixed $value): static|Undefined
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     * @param mixed $value
+     */
+    public static function tryFromMixed($value)
     {
         try {
             return static::fromString(
                 static::convertMixedToString($value)
             );
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return Undefined::create();
         }
     }
 
-    public static function tryFromString(string $value): static|Undefined
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    public static function tryFromString(string $value)
     {
         try {
             return static::fromString($value);
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return Undefined::create();
         }
     }
 
-    public static function tryFromInt(int $value): static|Undefined
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    public static function tryFromInt(int $value)
     {
         try {
             return static::fromInt($value);
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return Undefined::create();
         }
     }
 
     /**
      * @throws BoolTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         $v = strtolower(trim($value));
         if ($v === 'true' || $v === '1' || $v === 'yes' || $v === 'on' || $v === 'y') {
@@ -88,8 +102,9 @@ readonly class TrueStandard extends BoolType
 
     /**
      * @throws BoolTypeException
+     * @return static
      */
-    public static function fromInt(int $value): static
+    public static function fromInt(int $value)
     {
         if ($value === 1) {
             return new static(true);
@@ -115,8 +130,9 @@ readonly class TrueStandard extends BoolType
 
     /**
      * @throws BoolTypeException
+     * @return static
      */
-    public static function fromBool(bool $value): static
+    public static function fromBool(bool $value)
     {
         return new static($value);
     }
