@@ -56,7 +56,7 @@ readonly class UndefinedStandard extends UndefinedType
     /**
      * @throws UndefinedTypeException
      */
-    public function toString(): never
+    public function toString(): string
     {
         throw new UndefinedTypeException('UndefinedType cannot be converted to string.');
     }
