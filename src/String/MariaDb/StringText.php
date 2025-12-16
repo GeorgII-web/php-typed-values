@@ -92,4 +92,9 @@ readonly class StringText extends StrType
     {
         return $this->value === '';
     }
+
+    public function isUndefined(): bool
+    {
+        return false;
+    }
 }

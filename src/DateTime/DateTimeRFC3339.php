@@ -110,4 +110,9 @@ readonly class DateTimeRFC3339 extends DateTimeType
     {
         return false;
     }
+
+    public function isUndefined(): bool
+    {
+        return false;
+    }
 }

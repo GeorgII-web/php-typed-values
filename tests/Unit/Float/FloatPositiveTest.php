@@ -154,3 +154,20 @@ it('isEmpty returns false for FloatPositive', function (): void {
     expect($a->isEmpty())->toBeFalse()
         ->and($b->isEmpty())->toBeFalse();
 });
+
+it('isUndefined returns false for instances and true for Undefined results', function (): void {
+    // Valid instances should report isUndefined() = false
+    $v1 = new FloatPositive(0.1);
+    $v2 = FloatPositive::fromFloat(2.5);
+
+    // Invalid inputs via tryFrom* produce Undefined which should report true
+    $u1 = FloatPositive::tryFromString('0');
+    $u2 = FloatPositive::tryFromMixed('abc');
+    $u3 = FloatPositive::tryFromFloat(0.0);
+
+    expect($v1->isUndefined())->toBeFalse()
+        ->and($v2->isUndefined())->toBeFalse()
+        ->and($u1->isUndefined())->toBeTrue()
+        ->and($u2->isUndefined())->toBeTrue()
+        ->and($u3->isUndefined())->toBeTrue();
+});

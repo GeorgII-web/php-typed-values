@@ -76,3 +76,8 @@ it('isEmpty is always false for StringNonBlank', function (): void {
     $v = new StringNonBlank('x');
     expect($v->isEmpty())->toBeFalse();
 });
+
+it('isUndefined is always false for StringNonBlank', function (): void {
+    $v = new StringNonBlank('x');
+    expect($v->isUndefined())->toBeFalse();
+});

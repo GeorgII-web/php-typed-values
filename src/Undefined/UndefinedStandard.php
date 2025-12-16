@@ -89,4 +89,9 @@ readonly class UndefinedStandard extends UndefinedType
     {
         return true;
     }
+
+    public function isUndefined(): bool
+    {
+        return true;
+    }
 }

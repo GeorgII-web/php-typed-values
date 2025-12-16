@@ -73,3 +73,8 @@ it('isEmpty is true for empty StringStandard', function (): void {
     $s = StringStandard::fromString('');
     expect($s->isEmpty())->toBeTrue();
 });
+
+it('isUndefined is always false for StringStandard', function (): void {
+    expect(StringStandard::fromString('x')->isUndefined())->toBeFalse()
+        ->and(StringStandard::fromString('')->isUndefined())->toBeFalse();
+});

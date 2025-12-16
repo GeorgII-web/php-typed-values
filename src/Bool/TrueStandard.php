@@ -130,4 +130,9 @@ readonly class TrueStandard extends BoolType
     {
         return false;
     }
+
+    public function isUndefined(): bool
+    {
+        return false;
+    }
 }

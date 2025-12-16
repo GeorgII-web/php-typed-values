@@ -166,3 +166,8 @@ it('isEmpty is always false for TimestampMilliseconds', function (): void {
     $vo = TimestampMilliseconds::fromString('0');
     expect($vo->isEmpty())->toBeFalse();
 });
+
+it('isUndefined is always false for TimestampMilliseconds', function (): void {
+    $vo = TimestampMilliseconds::fromString('0');
+    expect($vo->isUndefined())->toBeFalse();
+});

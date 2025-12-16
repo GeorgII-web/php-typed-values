@@ -90,4 +90,9 @@ readonly class StringVarChar255 extends StrType
     {
         return $this->value === '';
     }
+
+    public function isUndefined(): bool
+    {
+        return false;
+    }
 }

@@ -96,4 +96,9 @@ readonly class FloatStandard extends FloatType
     {
         return false;
     }
+
+    public function isUndefined(): bool
+    {
+        return false;
+    }
 }

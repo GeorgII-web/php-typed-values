@@ -97,4 +97,9 @@ readonly class IntegerStandard extends IntType
     {
         return false;
     }
+
+    public function isUndefined(): bool
+    {
+        return false;
+    }
 }

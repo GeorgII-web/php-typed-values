@@ -76,3 +76,11 @@ it('isEmpty returns true for UndefinedStandard', function (): void {
     expect($u1->isEmpty())->toBeTrue()
         ->and($u2->isEmpty())->toBeTrue();
 });
+
+it('isUndefined returns true for UndefinedStandard', function (): void {
+    $u1 = UndefinedStandard::create();
+    $u2 = UndefinedStandard::fromString('ignored');
+
+    expect($u1->isUndefined())->toBeTrue()
+        ->and($u2->isUndefined())->toBeTrue();
+});

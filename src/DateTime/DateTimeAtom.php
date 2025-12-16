@@ -110,4 +110,9 @@ readonly class DateTimeAtom extends DateTimeType
     {
         return false;
     }
+
+    public function isUndefined(): bool
+    {
+        return false;
+    }
 }

@@ -102,6 +102,11 @@ readonly class StringCountryCode extends StrType
         return false;
     }
 
+    public function isUndefined(): bool
+    {
+        return false;
+    }
+
     /**
      * ISO 3166-1 alpha-2 codes used for validation.
      *

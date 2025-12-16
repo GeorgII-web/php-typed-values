@@ -112,4 +112,9 @@ readonly class FloatNonNegative extends FloatType
     {
         return false;
     }
+
+    public function isUndefined(): bool
+    {
+        return false;
+    }
 }

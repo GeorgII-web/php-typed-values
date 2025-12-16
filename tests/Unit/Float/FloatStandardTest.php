@@ -90,3 +90,18 @@ it('isEmpty returns false for FloatStandard', function (): void {
     expect($a->isEmpty())->toBeFalse()
         ->and($b->isEmpty())->toBeFalse();
 });
+
+it('isUndefined returns false for instances and true for Undefined results', function (): void {
+    // Instances should be defined
+    $v1 = new FloatStandard(-1.0);
+    $v2 = FloatStandard::fromFloat(0.0);
+
+    // Undefined results via tryFrom*
+    $u1 = FloatStandard::tryFromString('not-a-number');
+    $u2 = FloatStandard::tryFromMixed([1]);
+
+    expect($v1->isUndefined())->toBeFalse()
+        ->and($v2->isUndefined())->toBeFalse()
+        ->and($u1->isUndefined())->toBeTrue()
+        ->and($u2->isUndefined())->toBeTrue();
+});

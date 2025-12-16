@@ -110,3 +110,18 @@ it('isEmpty is true for empty and false for non-empty StringVarChar255', functio
     expect($empty->isEmpty())->toBeTrue()
         ->and($nonEmpty->isEmpty())->toBeFalse();
 });
+
+it('isUndefined returns false for instances and true for Undefined results', function (): void {
+    // Valid instances
+    $v1 = new StringVarChar255('');
+    $v2 = StringVarChar255::fromString('ok');
+
+    // Invalid via tryFrom*: too long and non-string mixed
+    $u1 = StringVarChar255::tryFromString(str_repeat('x', 256));
+    $u2 = StringVarChar255::tryFromMixed(['x']);
+
+    expect($v1->isUndefined())->toBeFalse()
+        ->and($v2->isUndefined())->toBeFalse()
+        ->and($u1->isUndefined())->toBeTrue()
+        ->and($u2->isUndefined())->toBeTrue();
+});

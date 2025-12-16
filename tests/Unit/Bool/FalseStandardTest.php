@@ -104,3 +104,7 @@ it('tryFromMixed handles various inputs returning FalseStandard or Undefined', f
 it('isEmpty is always false for FalseStandard', function (): void {
     expect(FalseStandard::fromString('no')->isEmpty())->toBeFalse();
 });
+
+it('isUndefined is always false for FalseStandard', function (): void {
+    expect(FalseStandard::fromString('no')->isUndefined())->toBeFalse();
+});

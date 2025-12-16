@@ -117,4 +117,9 @@ readonly class IntegerTiny extends IntType
     {
         return false;
     }
+
+    public function isUndefined(): bool
+    {
+        return false;
+    }
 }

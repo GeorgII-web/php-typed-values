@@ -115,3 +115,8 @@ it('isEmpty is always false for StringUuidV7', function (): void {
     $u = new StringUuidV7('01890f2a-5bcd-7def-8abc-1234567890ab');
     expect($u->isEmpty())->toBeFalse();
 });
+
+it('isUndefined is always false for StringUuidV7', function (): void {
+    $u = new StringUuidV7('01890f2a-5bcd-7def-8abc-1234567890ab');
+    expect($u->isUndefined())->toBeFalse();
+});

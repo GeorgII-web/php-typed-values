@@ -125,4 +125,9 @@ readonly class StringDecimal extends StrType
         // Decimal values are never empty by construction; constructor rejects empty strings
         return false;
     }
+
+    public function isUndefined(): bool
+    {
+        return false;
+    }
 }

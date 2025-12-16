@@ -123,3 +123,18 @@ it('isEmpty is always false for StringCountryCode', function (): void {
     $c = new StringCountryCode('US');
     expect($c->isEmpty())->toBeFalse();
 });
+
+it('isUndefined returns false for instances and true for Undefined results', function (): void {
+    // Valid instance
+    $ok = StringCountryCode::fromString('US');
+
+    // Invalid via tryFrom*: wrong case, unknown code, and non-string mixed
+    $u1 = StringCountryCode::tryFromString('us');
+    $u2 = StringCountryCode::tryFromString('ZZ');
+    $u3 = StringCountryCode::tryFromMixed(['US']);
+
+    expect($ok->isUndefined())->toBeFalse()
+        ->and($u1->isUndefined())->toBeTrue()
+        ->and($u2->isUndefined())->toBeTrue()
+        ->and($u3->isUndefined())->toBeTrue();
+});

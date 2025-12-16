@@ -129,4 +129,9 @@ readonly class StringJson extends StrType
         // JSON values are never empty by construction; constructor rejects empty strings
         return false;
     }
+
+    public function isUndefined(): bool
+    {
+        return false;
+    }
 }

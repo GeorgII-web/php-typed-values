@@ -73,3 +73,16 @@ it('isEmpty is always false for StringEmail', function (): void {
     $e = new StringEmail('user@example.com');
     expect($e->isEmpty())->toBeFalse();
 });
+
+it('isUndefined returns false for instances and true for Undefined results', function (): void {
+    // Valid instance
+    $ok = StringEmail::fromString('john.doe@example.com');
+
+    // Invalid via tryFrom*: malformed email and non-string mixed
+    $u1 = StringEmail::tryFromString('not-an-email');
+    $u2 = StringEmail::tryFromMixed(['x']);
+
+    expect($ok->isUndefined())->toBeFalse()
+        ->and($u1->isUndefined())->toBeTrue()
+        ->and($u2->isUndefined())->toBeTrue();
+});

@@ -194,3 +194,8 @@ it('isEmpty returns false for IntegerWeekDay', function (): void {
     expect($a->isEmpty())->toBeFalse()
         ->and($b->isEmpty())->toBeFalse();
 });
+
+it('isUndefined is always false', function (): void {
+    expect(IntegerWeekDay::fromInt(7)->isUndefined())->toBeFalse()
+        ->and(IntegerWeekDay::fromInt(1)->isUndefined())->toBeFalse();
+});

@@ -145,4 +145,9 @@ readonly class TimestampMilliseconds extends DateTimeType
     {
         return false;
     }
+
+    public function isUndefined(): bool
+    {
+        return false;
+    }
 }

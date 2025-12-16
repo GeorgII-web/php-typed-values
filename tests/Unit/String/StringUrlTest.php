@@ -85,3 +85,8 @@ it('isEmpty is always false for StringUrl', function (): void {
     $u = new StringUrl('https://example.com');
     expect($u->isEmpty())->toBeFalse();
 });
+
+it('isUndefined is always false for StringUrl', function (): void {
+    $u = new StringUrl('https://example.com');
+    expect($u->isUndefined())->toBeFalse();
+});

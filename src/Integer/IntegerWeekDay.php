@@ -121,4 +121,9 @@ readonly class IntegerWeekDay extends IntType
     {
         return false;
     }
+
+    public function isUndefined(): bool
+    {
+        return false;
+    }
 }

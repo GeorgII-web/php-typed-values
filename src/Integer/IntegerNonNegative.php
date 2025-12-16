@@ -116,4 +116,9 @@ readonly class IntegerNonNegative extends IntType
     {
         return false;
     }
+
+    public function isUndefined(): bool
+    {
+        return false;
+    }
 }

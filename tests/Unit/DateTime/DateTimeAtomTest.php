@@ -170,3 +170,8 @@ it('isEmpty is always false for DateTimeAtom', function (): void {
     $vo = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
     expect($vo->isEmpty())->toBeFalse();
 });
+
+it('isUndefined is always false for DateTimeAtom', function (): void {
+    $vo = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
+    expect($vo->isUndefined())->toBeFalse();
+});

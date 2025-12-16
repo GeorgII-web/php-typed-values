@@ -104,3 +104,18 @@ it('isEmpty is true for empty and false for non-empty StringText', function (): 
     expect($empty->isEmpty())->toBeTrue()
         ->and($nonEmpty->isEmpty())->toBeFalse();
 });
+
+it('isUndefined returns false for instances and true for Undefined results', function (): void {
+    // Valid instances
+    $v1 = new StringText('');
+    $v2 = StringText::fromString('short');
+
+    // Invalid via tryFrom*: too long and non-stringable object
+    $u1 = StringText::tryFromString(str_repeat('x', 65536));
+    $u2 = StringText::tryFromMixed(new stdClass());
+
+    expect($v1->isUndefined())->toBeFalse()
+        ->and($v2->isUndefined())->toBeFalse()
+        ->and($u1->isUndefined())->toBeTrue()
+        ->and($u2->isUndefined())->toBeTrue();
+});

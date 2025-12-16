@@ -98,4 +98,9 @@ readonly class StringUrl extends StrType
     {
         return false;
     }
+
+    public function isUndefined(): bool
+    {
+        return false;
+    }
 }

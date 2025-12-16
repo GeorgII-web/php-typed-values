@@ -99,3 +99,16 @@ it('isEmpty is always false for StringDecimal', function (): void {
     $d = new StringDecimal('0');
     expect($d->isEmpty())->toBeFalse();
 });
+
+it('isUndefined returns false for instances and true for Undefined results', function (): void {
+    // Valid instance should report false
+    $ok = StringDecimal::fromString('10.5');
+
+    // Invalid inputs via tryFrom* should return Undefined which reports true
+    $u1 = StringDecimal::tryFromString('abc');
+    $u2 = StringDecimal::tryFromMixed(['x']);
+
+    expect($ok->isUndefined())->toBeFalse()
+        ->and($u1->isUndefined())->toBeTrue()
+        ->and($u2->isUndefined())->toBeTrue();
+});

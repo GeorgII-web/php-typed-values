@@ -168,3 +168,8 @@ it('isEmpty returns false for IntegerTiny', function (): void {
     expect($a->isEmpty())->toBeFalse()
         ->and($b->isEmpty())->toBeFalse();
 });
+
+it('isUndefined is always false', function (): void {
+    expect(IntegerTiny::fromInt(0)->isUndefined())->toBeFalse()
+        ->and(IntegerTiny::fromInt(1)->isUndefined())->toBeFalse();
+});

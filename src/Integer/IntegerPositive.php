@@ -116,4 +116,9 @@ readonly class IntegerPositive extends IntType
     {
         return false;
     }
+
+    public function isUndefined(): bool
+    {
+        return false;
+    }
 }

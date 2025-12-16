@@ -170,3 +170,8 @@ it('isEmpty is always false for DateTimeRFC3339Extended', function (): void {
     $vo = DateTimeRFC3339Extended::fromString('2025-01-02T03:04:05.000+00:00');
     expect($vo->isEmpty())->toBeFalse();
 });
+
+it('isUndefined is always false for DateTimeRFC3339Extended', function (): void {
+    $vo = DateTimeRFC3339Extended::fromString('2025-01-02T03:04:05.000+00:00');
+    expect($vo->isUndefined())->toBeFalse();
+});

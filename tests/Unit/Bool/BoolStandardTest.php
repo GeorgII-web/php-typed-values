@@ -141,3 +141,8 @@ it('isEmpty is always false for BoolStandard', function (): void {
     expect(BoolStandard::fromBool(true)->isEmpty())->toBeFalse()
         ->and(BoolStandard::fromBool(false)->isEmpty())->toBeFalse();
 });
+
+it('isUndefined is always false for BoolStandard', function (): void {
+    expect(BoolStandard::fromBool(true)->isUndefined())->toBeFalse()
+        ->and(BoolStandard::fromBool(false)->isUndefined())->toBeFalse();
+});

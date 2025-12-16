@@ -151,3 +151,20 @@ it('isEmpty returns false for FloatNonNegative', function (): void {
     expect($a->isEmpty())->toBeFalse()
         ->and($b->isEmpty())->toBeFalse();
 });
+
+it('isUndefined returns false for instances and true for Undefined results', function (): void {
+    // Valid instances should report isUndefined() = false
+    $v1 = new FloatNonNegative(0.0);
+    $v2 = FloatNonNegative::fromFloat(1.0);
+
+    // Invalid inputs via tryFrom* produce Undefined which should report true
+    $u1 = FloatNonNegative::tryFromString('-0.1');
+    $u2 = FloatNonNegative::tryFromMixed('abc');
+    $u3 = FloatNonNegative::tryFromFloat(-1.0);
+
+    expect($v1->isUndefined())->toBeFalse()
+        ->and($v2->isUndefined())->toBeFalse()
+        ->and($u1->isUndefined())->toBeTrue()
+        ->and($u2->isUndefined())->toBeTrue()
+        ->and($u3->isUndefined())->toBeTrue();
+});

@@ -110,4 +110,9 @@ readonly class DateTimeW3C extends DateTimeType
     {
         return false;
     }
+
+    public function isUndefined(): bool
+    {
+        return false;
+    }
 }

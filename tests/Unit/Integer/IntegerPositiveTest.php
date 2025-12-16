@@ -194,3 +194,8 @@ it('isEmpty returns false for IntegerPositive', function (): void {
     expect($a->isEmpty())->toBeFalse()
         ->and($b->isEmpty())->toBeFalse();
 });
+
+it('isUndefined is always false', function (): void {
+    expect(IntegerPositive::fromInt(2)->isUndefined())->toBeFalse()
+        ->and(IntegerPositive::fromInt(1)->isUndefined())->toBeFalse();
+});

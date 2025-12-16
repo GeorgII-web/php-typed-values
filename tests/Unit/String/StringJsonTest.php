@@ -112,3 +112,16 @@ it('isEmpty is always false for StringJson', function (): void {
     $j = new StringJson('{"a":1}');
     expect($j->isEmpty())->toBeFalse();
 });
+
+it('isUndefined returns false for instances and true for Undefined results', function (): void {
+    // Valid instance
+    $ok = StringJson::fromString('{"a":1}');
+
+    // Invalid via tryFrom*: malformed JSON and non-string mixed
+    $u1 = StringJson::tryFromString('{invalid');
+    $u2 = StringJson::tryFromMixed(['x']);
+
+    expect($ok->isUndefined())->toBeFalse()
+        ->and($u1->isUndefined())->toBeTrue()
+        ->and($u2->isUndefined())->toBeTrue();
+});

@@ -107,4 +107,9 @@ readonly class StringUuidV7 extends StrType
     {
         return false;
     }
+
+    public function isUndefined(): bool
+    {
+        return false;
+    }
 }

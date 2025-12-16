@@ -78,4 +78,9 @@ readonly class StringStandard extends StrType
     {
         return $this->value === '';
     }
+
+    public function isUndefined(): bool
+    {
+        return false;
+    }
 }
