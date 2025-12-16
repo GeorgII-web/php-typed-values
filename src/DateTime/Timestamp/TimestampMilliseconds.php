@@ -6,9 +6,9 @@ namespace PhpTypedValues\DateTime\Timestamp;
 
 use DateTimeImmutable;
 use DateTimeZone;
-use PhpTypedValues\Abstract\Primitive\DateTime\DateTimeType;
 use PhpTypedValues\Exception\DateTimeTypeException;
 use PhpTypedValues\Exception\TypeException;
+use PhpTypedValues\Internal\Primitive\DateTime\DateTimeType;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 use function intdiv;

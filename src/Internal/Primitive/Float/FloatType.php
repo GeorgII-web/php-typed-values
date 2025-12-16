@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Abstract\Primitive\Float;
+namespace PhpTypedValues\Internal\Primitive\Float;
 
-use PhpTypedValues\Abstract\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\FloatTypeException;
+use PhpTypedValues\Internal\Primitive\PrimitiveType;
 
 use function sprintf;
 

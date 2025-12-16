@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace PhpTypedValues\Array;
 
 use JsonSerializable;
-use PhpTypedValues\Abstract\Array\ArrayType;
-use PhpTypedValues\Abstract\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\ArrayTypeException;
+use PhpTypedValues\Internal\Array\ArrayType;
+use PhpTypedValues\Internal\Primitive\PrimitiveType;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Traversable;
 

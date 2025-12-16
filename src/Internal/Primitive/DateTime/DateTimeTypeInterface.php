@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Abstract\Primitive\DateTime;
+namespace PhpTypedValues\Internal\Primitive\DateTime;
 
 use DateTimeImmutable;
 use PhpTypedValues\Undefined\Alias\Undefined;

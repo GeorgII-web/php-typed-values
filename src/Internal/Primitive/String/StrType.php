@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Abstract\Primitive\String;
+namespace PhpTypedValues\Internal\Primitive\String;
 
-use PhpTypedValues\Abstract\Primitive\PrimitiveType;
+use PhpTypedValues\Internal\Primitive\PrimitiveType;
 
 /**
  * Base implementation for string-typed values.

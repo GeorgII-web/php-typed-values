@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Abstract\Primitive\Bool\BoolType;
-use PhpTypedValues\Abstract\Primitive\DateTime\DateTimeType;
-use PhpTypedValues\Abstract\Primitive\Float\FloatType;
-use PhpTypedValues\Abstract\Primitive\Integer\IntType;
-use PhpTypedValues\Abstract\Primitive\String\StrType;
-use PhpTypedValues\Abstract\Primitive\Undefined\UndefinedType;
 use PhpTypedValues\Exception\TypeException;
+use PhpTypedValues\Internal\Primitive\Bool\BoolType;
+use PhpTypedValues\Internal\Primitive\DateTime\DateTimeType;
+use PhpTypedValues\Internal\Primitive\Float\FloatType;
+use PhpTypedValues\Internal\Primitive\Integer\IntType;
+use PhpTypedValues\Internal\Primitive\String\StrType;
+use PhpTypedValues\Internal\Primitive\Undefined\UndefinedType;
 use PhpTypedValues\Undefined\UndefinedStandard;
 
 arch('Abstract Int classes')

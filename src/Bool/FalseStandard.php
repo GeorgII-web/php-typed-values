@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Bool;
 
-use PhpTypedValues\Abstract\Primitive\Bool\BoolType;
 use PhpTypedValues\Exception\BoolTypeException;
 use PhpTypedValues\Exception\TypeException;
+use PhpTypedValues\Internal\Primitive\Bool\BoolType;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 use function sprintf;

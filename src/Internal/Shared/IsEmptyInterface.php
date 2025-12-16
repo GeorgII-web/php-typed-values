@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Abstract\Shared;
+namespace PhpTypedValues\Internal\Shared;
 
 /**
  * Base contract for Emptiness check for any typed value object.

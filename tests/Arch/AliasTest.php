@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Abstract\Primitive\Bool\BoolType;
-use PhpTypedValues\Abstract\Primitive\Bool\BoolTypeInterface;
-use PhpTypedValues\Abstract\Primitive\Float\FloatTypeInterface;
-use PhpTypedValues\Abstract\Primitive\Integer\IntTypeInterface;
-use PhpTypedValues\Abstract\Primitive\PrimitiveTypeInterface;
-use PhpTypedValues\Abstract\Primitive\String\StrTypeInterface;
-use PhpTypedValues\Abstract\Primitive\Undefined\UndefinedTypeInterface;
+use PhpTypedValues\Internal\Primitive\Bool\BoolType;
+use PhpTypedValues\Internal\Primitive\Bool\BoolTypeInterface;
+use PhpTypedValues\Internal\Primitive\Float\FloatTypeInterface;
+use PhpTypedValues\Internal\Primitive\Integer\IntTypeInterface;
+use PhpTypedValues\Internal\Primitive\PrimitiveTypeInterface;
+use PhpTypedValues\Internal\Primitive\String\StrTypeInterface;
+use PhpTypedValues\Internal\Primitive\Undefined\UndefinedTypeInterface;
 
 arch('Alias Boolean')
     ->expect('PhpTypedValues\Bool\Alias')

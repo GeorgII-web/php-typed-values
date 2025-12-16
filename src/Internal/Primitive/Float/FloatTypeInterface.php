@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Abstract\Primitive\Float;
+namespace PhpTypedValues\Internal\Primitive\Float;
 
 use PhpTypedValues\Undefined\Alias\Undefined;
 

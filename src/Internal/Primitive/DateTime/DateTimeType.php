@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Abstract\Primitive\DateTime;
+namespace PhpTypedValues\Internal\Primitive\DateTime;
 
 use const PHP_EOL;
 
 use DateTimeImmutable;
 use DateTimeZone;
-use PhpTypedValues\Abstract\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\DateTimeTypeException;
 use PhpTypedValues\Exception\ReasonableRangeDateTimeTypeException;
+use PhpTypedValues\Internal\Primitive\PrimitiveType;
 
 use function count;
 use function sprintf;

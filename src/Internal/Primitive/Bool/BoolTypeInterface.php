@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Abstract\Primitive\Bool;
+namespace PhpTypedValues\Internal\Primitive\Bool;
 
 use PhpTypedValues\Exception\BoolTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
