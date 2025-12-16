@@ -22,18 +22,32 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  */
 interface BoolTypeInterface
 {
-    public static function tryFromString(string $value): static|Undefined;
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    public static function tryFromString(string $value);
 
-    public static function tryFromInt(int $value): static|Undefined;
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    public static function tryFromInt(int $value);
 
-    public static function tryFromMixed(mixed $value): static|Undefined;
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     * @param mixed $value
+     */
+    public static function tryFromMixed($value);
 
     /**
      * @throws BoolTypeException
+     * @return static
      */
-    public static function fromInt(int $value): static;
+    public static function fromInt(int $value);
 
     public function value(): bool;
 
-    public static function fromBool(bool $value): static;
+    /**
+     * @return static
+     */
+    public static function fromBool(bool $value);
 }
