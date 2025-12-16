@@ -9,6 +9,6 @@ use PhpTypedValues\Integer\IntegerWeekDay;
 /**
  * @psalm-immutable
  */
-final readonly class WeekDay extends IntegerWeekDay
+final class WeekDay extends IntegerWeekDay
 {
 }

@@ -17,27 +17,27 @@ use PhpTypedValues\Usage\Example\WithArrays;
  */
 echo PHP_EOL . '> COMPOSITE' . PHP_EOL;
 
-$test = EarlyFail::fromScalars(id: 1, firstName: 'Foobar', height: 170);
+$test = EarlyFail::fromScalars(1, 'Foobar', 170);
 echo $test->getId()->toString() . PHP_EOL;
 echo $test->getFirstName()->toString() . PHP_EOL;
 echo $test->getHeight()->toString() . PHP_EOL;
 
-$test = LateFail::fromScalars(id: 1, firstName: 'Foobar', height: 170);
+$test = LateFail::fromScalars(1, 'Foobar', 170);
 echo $test->getId()->toString() . PHP_EOL;
 echo $test->getFirstName()->toString() . PHP_EOL;
 echo $test->getHeight()->toString() . PHP_EOL;
 
-$test = OptionalFail::fromScalars(id: 1, firstName: 'Foobar', height: 170);
+$test = OptionalFail::fromScalars(1, 'Foobar', 170);
 echo $test->getId()->toString() . PHP_EOL;
 echo $test->getFirstName()->toString() . PHP_EOL;
 echo $test->getHeight()->toString() . PHP_EOL;
 echo json_encode($test, JSON_THROW_ON_ERROR) . PHP_EOL;
 
 $test = WithArrays::fromScalars(
-    id: 1,
-    firstName: 'Foobar',
-    height: 170,
-    nickNames: ['User1', 'Admin5'],
+    1,
+    'Foobar',
+    170,
+    ['User1', 'Admin5'],
 );
 echo $test->getId()->toString() . PHP_EOL;
 echo $test->getFirstName()->toString() . PHP_EOL;
