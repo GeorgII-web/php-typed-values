@@ -2,7 +2,7 @@ name: Release and Downgrade to PHP 7.4
 
 on:
   release:
-    types: [published]
+    types: [ published ]
 
 permissions:
   contents: write
@@ -81,13 +81,14 @@ jobs:
       - name: Run Rector downgrade to PHP 7.4
         run: ./vendor/bin/rector process --config rector/toPhp7.4.php
 
-      - name: Update composer.json PHP constraint to ">=7.4,<=8.0"
+      - name: Update composer.json PHP constraint to ">=7.4,<8.2"
         run: |
           php -r '
             $f = "composer.json";
             $j = json_decode(file_get_contents($f), true, 512, JSON_THROW_ON_ERROR);
             if (!isset($j["require"])) { $j["require"] = []; }
-            $j["require"]["php"] = ">=7.4,<=8.0";
+            $j["require"]["php"] = ">=7.4,<8.2";
+            $j["description"] = $j["description"] . " (PHP 7.4 version)";
             file_put_contents($f, json_encode($j, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES) . "\n");
           '
 
