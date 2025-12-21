@@ -38,7 +38,7 @@ it('fromString rejects non-numeric strings and magic conversions', function (): 
 
 it('fromString precious for string and float difference', function (): void {
     expect(FloatStandard::fromFloat(2 / 3)->value())->toBe(0.6666666666666666) // accepts "messy" real float value
-    ->and(FloatStandard::fromString((string) (2 / 3))->value())->toBe(0.66666666666667); // "string cast" uses serialize_precision to have a precious value
+        ->and(FloatStandard::fromString((string) (2 / 3))->value())->toBe(0.66666666666667); // "string cast" uses serialize_precision to have a precious value
 });
 
 it('__toString proxies to toString for FloatType', function (): void {

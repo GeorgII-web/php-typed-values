@@ -63,7 +63,9 @@ readonly class FloatStandard extends FloatType
     }
 
     /**
-     * String conversion uses a setting called serialize_precision (usually 14 or 17, but often configured to round the last digit for "cleaner" output)
+     * String conversion uses a setting called serialize_precision
+     * (usually 14 or 17, but often configured to round the last digit
+     * for "cleaner" output).
      *
      * @throws FloatTypeException
      */
@@ -71,7 +73,7 @@ readonly class FloatStandard extends FloatType
     {
         parent::assertFloatString($value);
 
-        return new static((float) (string) (float) $value);
+        return new static((float) $value);
     }
 
     public function value(): float

@@ -51,9 +51,9 @@ abstract readonly class FloatType extends PrimitiveType implements FloatTypeInte
         // the input, UNLESS the input has trailing .0 (like "5.0").
         // If we want to be very strict and reject "0005"
         if (
-            $value !== '0' &&
-            $value !== $normalized &&
-            $value !== $normalized . '.0'
+            $value !== '0'
+            && $value !== $normalized
+            && $value !== $normalized . '.0'
         ) {
             throw new FloatTypeException(sprintf('String "%s" has invalid formatting (leading zeros or redundant characters)', $value));
         }
