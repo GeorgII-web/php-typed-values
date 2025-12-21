@@ -28,8 +28,11 @@ use function trim;
  *
  * @psalm-immutable
  */
-readonly class FalseStandard extends BoolType
+class FalseStandard extends BoolType
 {
+    /**
+     * @readonly
+     */
     protected false $value;
 
     /**
@@ -44,39 +47,50 @@ readonly class FalseStandard extends BoolType
         $this->value = false;
     }
 
-    public static function tryFromMixed(mixed $value): static|Undefined
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     * @param mixed $value
+     */
+    public static function tryFromMixed($value)
     {
         try {
             return static::fromString(
                 static::convertMixedToString($value)
             );
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return Undefined::create();
         }
     }
 
-    public static function tryFromString(string $value): static|Undefined
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    public static function tryFromString(string $value)
     {
         try {
             return static::fromString($value);
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return Undefined::create();
         }
     }
 
-    public static function tryFromInt(int $value): static|Undefined
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    public static function tryFromInt(int $value)
     {
         try {
             return static::fromInt($value);
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return Undefined::create();
         }
     }
 
     /**
      * @throws BoolTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         $v = strtolower(trim($value));
         if ($v === 'false' || $v === '0' || $v === 'no' || $v === 'off' || $v === 'n') {
@@ -88,8 +102,9 @@ readonly class FalseStandard extends BoolType
 
     /**
      * @throws BoolTypeException
+     * @return static
      */
-    public static function fromInt(int $value): static
+    public static function fromInt(int $value)
     {
         if ($value === 0) {
             return new static(false);
@@ -115,8 +130,9 @@ readonly class FalseStandard extends BoolType
 
     /**
      * @throws BoolTypeException
+     * @return static
      */
-    public static function fromBool(bool $value): static
+    public static function fromBool(bool $value)
     {
         return new static($value);
     }
