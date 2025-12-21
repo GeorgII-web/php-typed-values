@@ -66,6 +66,8 @@ interface ArrayTypeInterface extends TypeInterface, JsonSerializable, IteratorAg
      * Each Item should implement JsonSerializable interface.
      *
      * @throws ArrayTypeException
+     *
+     * @psalm-mutation-free
      */
     public function toArray(): array;
 }

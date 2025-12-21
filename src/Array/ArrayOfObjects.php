@@ -7,7 +7,6 @@ namespace PhpTypedValues\Array;
 use JsonSerializable;
 use PhpTypedValues\Exception\ArrayTypeException;
 use PhpTypedValues\Internal\Array\ArrayType;
-use PhpTypedValues\Internal\Primitive\PrimitiveType;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Traversable;
 
@@ -15,9 +14,9 @@ use function count;
 use function is_object;
 
 /**
- * Immutable collection of Primitive type classes.
+ * Immutable collection of objects.
  *
- * @template TItem of PrimitiveType
+ * @template TItem of object
  *
  * @template-extends ArrayType<TItem>
  *
@@ -108,15 +107,19 @@ readonly class ArrayOfObjects extends ArrayType
 
     /**
      * @throws ArrayTypeException
+     *
+     * @psalm-mutation-free
      */
     public function toArray(): array
     {
         $result = [];
+        /** @psalm-suppress ImpureVariable */
         foreach ($this->value as $item) {
             if (!$item instanceof JsonSerializable) {
                 throw new ArrayTypeException('Conversion to array of scalars failed, should implement JsonSerializable interface');
             }
 
+            /** @psalm-suppress ImpureMethodCall */
             $result[] = $item->jsonSerialize();
         }
 
@@ -127,15 +130,18 @@ readonly class ArrayOfObjects extends ArrayType
      * JSON serialization helper.
      *
      * @throws ArrayTypeException
+     *
+     * @psalm-mutation-free
      */
     public function jsonSerialize(): array
     {
+        /** @psalm-suppress ImpureVariable */
         return $this->toArray();
     }
 
     public function isUndefined(): bool
     {
-        $items = $this->value();
+        $items = $this->value;
 
         if ($items === []) {
             return false;
@@ -152,7 +158,7 @@ readonly class ArrayOfObjects extends ArrayType
 
     public function hasUndefined(): bool
     {
-        foreach ($this->value() as $item) {
+        foreach ($this->value as $item) {
             if ($item instanceof Undefined) {
                 return true;
             }
@@ -168,7 +174,7 @@ readonly class ArrayOfObjects extends ArrayType
     {
         $result = [];
 
-        foreach ($this->value() as $item) {
+        foreach ($this->value as $item) {
             if (!$item instanceof Undefined) {
                 $result[] = $item;
             }

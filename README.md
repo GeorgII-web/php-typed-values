@@ -34,7 +34,7 @@ composer require georgii-web/php-typed-values:^1
 #### Use existing typed values
 
 ```php
-use TypedValues\Integer\IntegerPositive;
+use PhpTypedValues\Integer\IntegerPositive;
 
 $id = IntegerPositive::fromString('123');
 ```
@@ -51,7 +51,7 @@ if ($id <= 0) {
 #### Create an alias (domain name)
 
 ```php
-use TypedValues\Integer\IntegerPositive;
+use PhpTypedValues\Integer\IntegerPositive;
 
 readonly class Id extends IntegerPositive {}
 
@@ -61,10 +61,10 @@ Id::fromInt(123);
 #### Compose value objects
 
 ```php
-use TypedValues\Integer\IntegerPositive;
-use TypedValues\String\StringNonEmpty;
-use TypedValues\Float\FloatPositive;
-use TypedValues\Undefined\Alias\Undefined; // represents an intentionally missing value
+use PhpTypedValues\Integer\IntegerPositive;
+use PhpTypedValues\String\StringNonEmpty;
+use PhpTypedValues\Float\FloatPositive;
+use PhpTypedValues\Undefined\Alias\Undefined; // represents an intentionally missing value
 
 final readonly class Profile
 {
