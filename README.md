@@ -88,6 +88,7 @@ final readonly class Profile
         );
     }
 
+    public function getId(): IntegerPositive { return $this->id; }
     public function getFirstName(): StringNonEmpty|Undefined { return $this->firstName; }
     public function getHeight(): FloatPositive|Undefined { return $this->height; }
 }
