@@ -7,7 +7,7 @@ require_once 'vendor/autoload.php';
 use const JSON_THROW_ON_ERROR;
 use const PHP_EOL;
 
-use PhpTypedValues\Array\ArrayEmpty;
+use PhpTypedValues\ArrayType\ArrayEmpty;
 use PhpTypedValues\Usage\Example\EarlyFail;
 use PhpTypedValues\Usage\Example\LateFail;
 use PhpTypedValues\Usage\Example\OptionalFail;

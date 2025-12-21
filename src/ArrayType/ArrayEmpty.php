@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Array;
+namespace PhpTypedValues\ArrayType;
 
 use PhpTypedValues\Exception\ArrayTypeException;
-use PhpTypedValues\Internal\Array\ArrayType;
+use PhpTypedValues\Internal\ArrayType\ArrayType;
 use Traversable;
 
 use function count;

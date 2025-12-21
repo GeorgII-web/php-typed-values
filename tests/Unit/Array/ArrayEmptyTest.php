@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Tests\Unit\Array;
 
-use PhpTypedValues\Array\ArrayEmpty;
+use PhpTypedValues\ArrayType\ArrayEmpty;
 use PhpTypedValues\Exception\ArrayTypeException;
 
 covers(ArrayEmpty::class);

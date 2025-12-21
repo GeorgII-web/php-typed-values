@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Tests\Unit\Usage\Example\WithArrays;
 
-use PhpTypedValues\Array\ArrayOfObjects;
+use PhpTypedValues\ArrayType\ArrayOfObjects;
 use PhpTypedValues\Exception\FloatTypeException;
 use PhpTypedValues\Exception\IntegerTypeException;
 use PhpTypedValues\Exception\UndefinedTypeException;

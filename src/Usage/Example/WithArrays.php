@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace PhpTypedValues\Usage\Example;
 
 use JsonSerializable;
-use PhpTypedValues\Array\ArrayOfObjects;
+use PhpTypedValues\ArrayType\ArrayOfObjects;
 use PhpTypedValues\Exception\ArrayTypeException;
 use PhpTypedValues\Exception\FloatTypeException;
 use PhpTypedValues\Exception\IntegerTypeException;

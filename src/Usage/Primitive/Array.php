@@ -7,7 +7,7 @@ require_once 'vendor/autoload.php';
 use const JSON_THROW_ON_ERROR;
 use const PHP_EOL;
 
-use PhpTypedValues\Array\ArrayOfObjects;
+use PhpTypedValues\ArrayType\ArrayOfObjects;
 use PhpTypedValues\Bool\Alias\Boolean;
 use PhpTypedValues\Exception\ArrayTypeException;
 use PhpTypedValues\Integer\IntegerNonNegative;

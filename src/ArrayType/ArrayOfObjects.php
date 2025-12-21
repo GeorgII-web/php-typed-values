@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Array;
+namespace PhpTypedValues\ArrayType;
 
 use JsonSerializable;
 use PhpTypedValues\Exception\ArrayTypeException;
-use PhpTypedValues\Internal\Array\ArrayType;
+use PhpTypedValues\Internal\ArrayType\ArrayType;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Traversable;
 
@@ -116,7 +116,7 @@ readonly class ArrayOfObjects extends ArrayType
         /** @psalm-suppress ImpureVariable */
         foreach ($this->value as $item) {
             if (!$item instanceof JsonSerializable) {
-                throw new ArrayTypeException('Conversion to array of scalars failed, should implement JsonSerializable interface');
+                throw new ArrayTypeException('Conversion to array of Scalars failed, should implement JsonSerializable interface');
             }
 
             /** @psalm-suppress ImpureMethodCall */

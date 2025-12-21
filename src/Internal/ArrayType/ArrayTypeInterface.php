@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Internal\Array;
+namespace PhpTypedValues\Internal\ArrayType;
 
 use Countable;
 use IteratorAggregate;

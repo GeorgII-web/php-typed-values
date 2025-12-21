@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Tests\Unit\Array\ArrayOfObjects;
 
-use PhpTypedValues\Array\ArrayOfObjects;
+use PhpTypedValues\ArrayType\ArrayOfObjects;
 use PhpTypedValues\Exception\ArrayTypeException;
 use PhpTypedValues\Integer\IntegerNonNegative;
 use PhpTypedValues\String\StringNonEmpty;
@@ -97,7 +97,7 @@ it('toArray throws when an item is not JsonSerializable', function (): void {
     $obj = new stdClass(); // not JsonSerializable
     $c = ArrayOfObjects::fromArray([$obj]);
     expect(fn() => $c->toArray())
-        ->toThrow(ArrayTypeException::class, 'Conversion to array of scalars failed, should implement JsonSerializable interface');
+        ->toThrow(ArrayTypeException::class, 'Conversion to array of Scalars failed, should implement JsonSerializable interface');
 });
 
 it('fromArray throws when any item is not an object (early fail in constructor)', function (): void {
