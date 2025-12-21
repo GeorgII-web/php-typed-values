@@ -36,5 +36,26 @@ abstract readonly class FloatType extends PrimitiveType implements FloatTypeInte
         if (!is_numeric($value)) {
             throw new FloatTypeException(sprintf('String "%s" has no valid float value', $value));
         }
+
+        // Numerical stability check (catches precision loss)
+        $floatValue = (float) $value;
+        if ($floatValue !== (float) (string) $floatValue) {
+            throw new FloatTypeException(sprintf('String "%s" has no valid strict float value', $value));
+        }
+
+        // Formatting check: Ensure no leading zeros (unless it's "0" or "0.something")
+        // and that the string isn't an integer formatted with a trailing .0 that PHP would drop.
+        $normalized = (string) $floatValue;
+
+        // If it's a "clean" float string, PHP's "(string)(float)" cast usually matches
+        // the input, UNLESS the input has trailing .0 (like "5.0").
+        // If we want to be very strict and reject "0005"
+        if (
+            $value !== '0' &&
+            $value !== $normalized &&
+            $value !== $normalized . '.0'
+        ) {
+            throw new FloatTypeException(sprintf('String "%s" has invalid formatting (leading zeros or redundant characters)', $value));
+        }
     }
 }

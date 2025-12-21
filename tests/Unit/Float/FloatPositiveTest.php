@@ -29,7 +29,7 @@ it('throws on zero via constructor', function (): void {
 });
 
 it('throws on zero via fromString', function (): void {
-    expect(fn() => FloatPositive::fromString('0.0'))
+    expect(fn() => FloatPositive::fromString('0'))
         ->toThrow(FloatTypeException::class, 'Expected positive float, got "0"');
 });
 

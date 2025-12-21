@@ -5,7 +5,7 @@ declare(strict_types=1);
 use PhpTypedValues\Float\Alias\NonNegative;
 
 it('NonNegativeFloat::fromFloat returns NonNegativeFloat instance', function (): void {
-    $v = NonNegative::fromFloat(0.0);
+    $v = NonNegative::fromFloat(0);
 
     expect($v)->toBeInstanceOf(NonNegative::class)
         ->and($v::class)->toBe(NonNegative::class)
@@ -13,7 +13,7 @@ it('NonNegativeFloat::fromFloat returns NonNegativeFloat instance', function ():
 });
 
 it('NonNegativeFloat::fromString returns NonNegativeFloat instance', function (): void {
-    $v = NonNegative::fromString('2.0');
+    $v = NonNegative::fromString('2');
 
     expect($v)->toBeInstanceOf(NonNegative::class)
         ->and($v::class)->toBe(NonNegative::class)

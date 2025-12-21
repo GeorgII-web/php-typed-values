@@ -68,8 +68,9 @@ readonly class FloatStandard extends FloatType
     public static function fromString(string $value): static
     {
         parent::assertFloatString($value);
-
-        return new static((float) $value);
+        echo PHP_EOL;
+        var_dump($value, (float) $value, (float) (string) (float) $value);
+        return new static((float) (string) (float) $value);
     }
 
     public function value(): float

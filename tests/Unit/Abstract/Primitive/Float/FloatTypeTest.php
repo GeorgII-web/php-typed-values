@@ -5,6 +5,36 @@ declare(strict_types=1);
 use PhpTypedValues\Exception\FloatTypeException;
 use PhpTypedValues\Float\FloatStandard;
 
+it('fromString parses valid float strings including negatives, decimals, and scientific', function (): void {
+    expect(FloatStandard::fromString('-15.25')->value())->toBe(-15.25)
+        ->and(FloatStandard::fromString('5')->value())->toBe(5.0)
+        ->and(FloatStandard::fromString('5.0')->value())->toBe(5.0)
+        ->and(FloatStandard::fromString('0.0')->value())->toBe(0.0)
+        ->and(FloatStandard::fromString('0')->value())->toBe(0.0)
+        ->and(FloatStandard::fromString('-0')->value())->toBe(0.0)
+        ->and(FloatStandard::fromString('-0.0')->value())->toBe(0.0)
+        ->and(FloatStandard::fromString('-0.0')->toString())->toBe('-0')
+        ->and(FloatStandard::fromString('1.2345678912345')->toString())->toBe('1.2345678912345')
+        ->and(FloatStandard::fromString('42')->value())->toBe(42.0)
+        ->and(FloatStandard::fromString('42')->toString())->toBe('42');
+});
+
+it('fromString rejects non-numeric strings', function (): void {
+    expect(fn() => FloatStandard::fromString('5a'))->toThrow(FloatTypeException::class)
+        ->and(fn() => FloatStandard::fromString('a5'))->toThrow(FloatTypeException::class)
+        ->and(fn() => FloatStandard::fromString(''))->toThrow(FloatTypeException::class)
+        ->and(fn() => FloatStandard::fromString('abc'))->toThrow(FloatTypeException::class)
+        ->and(fn() => FloatStandard::fromString('--5'))->toThrow(FloatTypeException::class)
+        ->and(fn() => FloatStandard::fromString('5,5'))->toThrow(FloatTypeException::class)
+        ->and(fn() => FloatStandard::fromString('5 5'))->toThrow(FloatTypeException::class)
+        ->and(fn() => FloatStandard::fromString('1.23456789012345678'))->toThrow(FloatTypeException::class)
+        ->and(fn() => FloatStandard::fromString('0005'))->toThrow(FloatTypeException::class)
+        ->and(fn() => FloatStandard::fromString('5.00000'))->toThrow(FloatTypeException::class)
+        ->and(fn() => FloatStandard::fromString('0005.0'))->toThrow(FloatTypeException::class)
+        ->and(fn() => FloatStandard::fromString('0005.000'))->toThrow(FloatTypeException::class)
+        ->and(fn() => FloatStandard::fromString('1e3'))->toThrow(FloatTypeException::class);
+});
+
 it('__toString proxies to toString for FloatType', function (): void {
     $v = new FloatStandard(1.5);
 
@@ -22,19 +52,4 @@ it('fromFloat returns exact value and toString matches', function (): void {
     $f2 = FloatStandard::fromFloat(0.0);
     expect($f2->value())->toBe(0.0)
         ->and($f2->toString())->toBe('0');
-});
-
-it('fromString parses valid float strings including negatives, decimals, and scientific', function (): void {
-    expect(FloatStandard::fromString('-15.25')->value())->toBe(-15.25)
-        ->and(FloatStandard::fromString('0007.5')->value())->toBe(7.5)
-        ->and(FloatStandard::fromString('+5.0')->value())->toBe(5.0)
-        ->and(FloatStandard::fromString('1e3')->value())->toBe(1000.0)
-        ->and(FloatStandard::fromString('42')->toString())->toBe('42');
-});
-
-it('fromString rejects non-numeric strings', function (): void {
-    $invalid = ['5a', 'a5', '', 'abc', '--5', '5,5'];
-    foreach ($invalid as $str) {
-        expect(fn() => FloatStandard::fromString($str))->toThrow(FloatTypeException::class);
-    }
 });

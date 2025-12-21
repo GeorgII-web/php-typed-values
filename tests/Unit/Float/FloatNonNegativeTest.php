@@ -20,7 +20,6 @@ it('parses non-negative numeric strings via fromString', function (): void {
     expect(FloatNonNegative::fromString('0')->value())->toBe(0.0)
         ->and(FloatNonNegative::fromString('0.0')->value())->toBe(0.0)
         ->and(FloatNonNegative::fromString('3.14')->value())->toBe(3.14)
-        ->and(FloatNonNegative::fromString('1e2')->value())->toBe(100.0)
         ->and(FloatNonNegative::fromString('42')->toString())->toBe('42');
 });
 

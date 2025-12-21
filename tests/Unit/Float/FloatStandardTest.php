@@ -37,6 +37,11 @@ it('FloatStandard::fromString throws on non-numeric strings', function (): void 
         ->toThrow(FloatTypeException::class, 'String "NaN" has no valid float value');
 });
 
+it('FloatStandard::fromString throws exception for a long tail', function (): void {
+    expect(fn() => FloatStandard::fromString('12.444144424443444044454446444744484449444'))
+        ->toThrow(FloatTypeException::class, 'String "12.444144424443444044454446444744484449444" has no valid strict float value');
+});
+
 it('jsonSerialize returns float', function (): void {
     expect(FloatStandard::tryFromString('1.1')->jsonSerialize())->toBeFloat();
 });
