@@ -63,13 +63,14 @@ readonly class FloatStandard extends FloatType
     }
 
     /**
+     * String conversion uses a setting called serialize_precision (usually 14 or 17, but often configured to round the last digit for "cleaner" output)
+     *
      * @throws FloatTypeException
      */
     public static function fromString(string $value): static
     {
         parent::assertFloatString($value);
-        echo PHP_EOL;
-        var_dump($value, (float) $value, (float) (string) (float) $value);
+
         return new static((float) (string) (float) $value);
     }
 

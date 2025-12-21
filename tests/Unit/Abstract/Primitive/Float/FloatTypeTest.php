@@ -19,7 +19,7 @@ it('fromString parses valid float strings including negatives, decimals, and sci
         ->and(FloatStandard::fromString('42')->toString())->toBe('42');
 });
 
-it('fromString rejects non-numeric strings', function (): void {
+it('fromString rejects non-numeric strings and magic conversions', function (): void {
     expect(fn() => FloatStandard::fromString('5a'))->toThrow(FloatTypeException::class)
         ->and(fn() => FloatStandard::fromString('a5'))->toThrow(FloatTypeException::class)
         ->and(fn() => FloatStandard::fromString(''))->toThrow(FloatTypeException::class)
@@ -28,11 +28,17 @@ it('fromString rejects non-numeric strings', function (): void {
         ->and(fn() => FloatStandard::fromString('5,5'))->toThrow(FloatTypeException::class)
         ->and(fn() => FloatStandard::fromString('5 5'))->toThrow(FloatTypeException::class)
         ->and(fn() => FloatStandard::fromString('1.23456789012345678'))->toThrow(FloatTypeException::class)
+        ->and(fn() => FloatStandard::fromString('0.666666666666666629'))->toThrow(FloatTypeException::class)
         ->and(fn() => FloatStandard::fromString('0005'))->toThrow(FloatTypeException::class)
         ->and(fn() => FloatStandard::fromString('5.00000'))->toThrow(FloatTypeException::class)
         ->and(fn() => FloatStandard::fromString('0005.0'))->toThrow(FloatTypeException::class)
         ->and(fn() => FloatStandard::fromString('0005.000'))->toThrow(FloatTypeException::class)
         ->and(fn() => FloatStandard::fromString('1e3'))->toThrow(FloatTypeException::class);
+});
+
+it('fromString precious for string and float difference', function (): void {
+    expect(FloatStandard::fromFloat(2 / 3)->value())->toBe(0.6666666666666666) // accepts "messy" real float value
+    ->and(FloatStandard::fromString((string) (2 / 3))->value())->toBe(0.66666666666667); // "string cast" uses serialize_precision to have a precious value
 });
 
 it('__toString proxies to toString for FloatType', function (): void {
