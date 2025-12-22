@@ -6,7 +6,11 @@ require_once 'vendor/autoload.php';
 
 use const PHP_EOL;
 
+use PhpTypedValues\Bool\Alias\Binary;
 use PhpTypedValues\Bool\Alias\Boolean;
+use PhpTypedValues\Bool\Alias\Flag;
+use PhpTypedValues\Bool\Alias\Logical;
+use PhpTypedValues\Bool\Alias\Toggle;
 use PhpTypedValues\Bool\BoolStandard;
 use PhpTypedValues\Bool\FalseStandard;
 use PhpTypedValues\Bool\TrueStandard;
@@ -35,6 +39,10 @@ echo Boolean::fromBool(Boolean::fromBool(true)->value())->toString() . PHP_EOL;
 // Ensure interface method usage is visible to Psalm
 echo (testBool(BoolStandard::fromBool(true)) ? 'true' : 'false') . PHP_EOL;
 echo TrueStandard::tryFromMixed('yes')->toString() . PHP_EOL;
+echo Binary::tryFromMixed('yes')->toString() . PHP_EOL;
+echo Flag::tryFromMixed('yes')->toString() . PHP_EOL;
+echo Logical::tryFromMixed('yes')->toString() . PHP_EOL;
+echo Toggle::tryFromMixed('yes')->toString() . PHP_EOL;
 
 // true/false literal usages (and try* to reference both branches for Psalm)
 $t1 = TrueStandard::tryFromString('yes');
