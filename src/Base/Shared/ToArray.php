@@ -5,13 +5,11 @@ declare(strict_types=1);
 namespace PhpTypedValues\Base\Shared;
 
 /**
- * Base contract for Array methods.
+ * Base contract to convert an object to array.
  *
  * @psalm-immutable
  */
-interface ValueObjectArrayInterface
+interface ToArray
 {
     public function toArray(): array;
-
-    public static function fromArray(array $value): self;
 }

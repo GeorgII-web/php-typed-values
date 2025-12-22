@@ -61,12 +61,13 @@ Id::fromInt(123);
 #### Compose value objects
 
 ```php
+use PhpTypedValues\Base\ValueObjectInterface;
 use PhpTypedValues\Integer\IntegerPositive;
 use PhpTypedValues\String\StringNonEmpty;
 use PhpTypedValues\Float\FloatPositive;
 use PhpTypedValues\Undefined\Alias\Undefined; // represents an intentionally missing value
 
-final readonly class Profile
+final readonly class Profile implements ValueObjectInterface
 {
     public function __construct(
         private IntegerPositive $id,
@@ -80,7 +81,7 @@ final readonly class Profile
         string|float|int|null $height = null,
     ): self {
         return new self(
-            IntegerPositive::fromInt($id),                   // early fail (must be valid)
+            IntegerPositive::fromInt($id),                    // early fail (must be valid)
             StringNonEmpty::tryFromMixed($firstName),         // late fail (maybe undefined)
             $height !== null
                 ? FloatPositive::fromString((string) $height) // early fail if provided
@@ -88,6 +89,18 @@ final readonly class Profile
         );
     }
 
+    public static function fromArray(array $value): self {
+        return new self(
+            IntegerPositive::fromInt($value['id']),                    // early fail (must be valid)
+            StringNonEmpty::tryFromMixed($value['firstName']),         // late fail (maybe undefined)
+            $value['height'] !== null
+                ? FloatPositive::fromString((string) $value['height']) // early fail if provided
+                : Undefined::create(),                                 // late fail when accessed
+        );
+    }
+    public function toArray(): array { return ['id' => $this->id->value()]; }
+    public function jsonSerialize(): array { return $this->toArray(); }
+    
     public function getId(): IntegerPositive { return $this->id; }
     public function getFirstName(): StringNonEmpty|Undefined { return $this->firstName; }
     public function getHeight(): FloatPositive|Undefined { return $this->height; }

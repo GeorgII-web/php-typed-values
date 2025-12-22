@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace PhpTypedValues\Base;
 
 use JsonSerializable;
-use PhpTypedValues\Base\Shared\isEmptyInterface;
-use PhpTypedValues\Base\Shared\isUndefinedInterface;
-use PhpTypedValues\Base\Shared\ValueObjectArrayInterface;
+use PhpTypedValues\Base\Shared\FromArray;
+use PhpTypedValues\Base\Shared\IsEmptyInterface;
+use PhpTypedValues\Base\Shared\IsUndefinedInterface;
+use PhpTypedValues\Base\Shared\ToArray;
 
 /**
  * Base contract for a composite Value object
@@ -15,6 +16,6 @@ use PhpTypedValues\Base\Shared\ValueObjectArrayInterface;
  *
  * @psalm-immutable
  */
-interface ValueObjectInterface extends JsonSerializable, ValueObjectArrayInterface, isUndefinedInterface, isEmptyInterface
+interface ValueObjectInterface extends JsonSerializable, IsUndefinedInterface, IsEmptyInterface, ToArray, FromArray
 {
 }

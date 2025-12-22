@@ -108,12 +108,12 @@ final readonly class EarlyFail implements ValueObjectInterface
         ];
     }
 
-    public static function fromArray(array $value): self
+    public static function fromArray(array $value): static
     {
         return new self(
-            IntegerPositive::fromInt($value['id']),
-            StringNonEmpty::fromString($value['firstName']),
-            FloatPositive::fromFloat($value['height']),
+            IntegerPositive::fromInt($value['id'] ?? 0),
+            StringNonEmpty::fromString($value['firstName'] ?? ''),
+            FloatPositive::fromFloat($value['height'] ?? 0.0),
         );
     }
 
