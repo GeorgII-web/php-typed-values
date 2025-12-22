@@ -6,6 +6,17 @@ use PhpTypedValues\Exception\PathStringTypeException;
 use PhpTypedValues\String\StringPath;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
+it('checks valid paths', function (): void {
+    expect(StringPath::fromString('/etc/passwd')->value())->toBe('/etc/passwd')
+        ->and(StringPath::fromString('etc/passwd')->value())->toBe('etc/passwd')
+        ->and(StringPath::fromString('etc')->value())->toBe('etc')
+        ->and(StringPath::fromString('etc/')->value())->toBe('etc/')
+        ->and(StringPath::fromString('/etc')->value())->toBe('/etc')
+        ->and(StringPath::fromString('etc/passwd/')->value())->toBe('etc/passwd/')
+        ->and(StringPath::fromString('//etc//passwd//')->value())->toBe('//etc//passwd//')
+        ->and(StringPath::fromString('/etc/passwd/')->value())->toBe('/etc/passwd/');
+});
+
 it('accepts valid path, preserves value/toString and casts via __toString', function (): void {
     $p1 = new StringPath('/src/String');
     $p2 = new StringPath('src\String\\');
