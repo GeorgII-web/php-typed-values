@@ -113,6 +113,13 @@ readonly class TimestampMilliseconds extends DateTimeType
         );
     }
 
+    public function withTimeZone(string $timezone): static
+    {
+        return new static(
+            $this->value()->setTimezone(new DateTimeZone($timezone))
+        );
+    }
+
     /**
      * Render as milliseconds since epoch, e.g. "1732445696123".
      */

@@ -29,4 +29,9 @@ interface DateTimeTypeInterface
     public static function tryFromMixed(mixed $value): static|Undefined;
 
     public static function tryFromString(string $value): static|Undefined;
+
+    /**
+     * @param non-empty-string $timezone
+     */
+    public function withTimeZone(string $timezone): static;
 }

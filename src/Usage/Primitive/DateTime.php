@@ -46,11 +46,13 @@ echo TimestampMilliseconds::fromDateTime($tsVo->value())->toString() . PHP_EOL;
 $a = DateTimeAtom::tryFromString('2025-01-02T03:04:05+00:00');
 if (!($a instanceof Undefined)) {
     echo $a->toString() . PHP_EOL;
+    echo $a->withTimeZone('Europe/Berlin')->toString() . PHP_EOL;
 }
 
 $r = DateTimeRFC3339::tryFromString('2025-01-02T03:04:05+00:00');
 if (!($r instanceof Undefined)) {
     echo $r->toString() . PHP_EOL;
+    echo $r->withTimeZone('America/New_York')->toString() . PHP_EOL;
 }
 
 $re = DateTimeRFC3339Extended::tryFromString('2025-01-02T03:04:05.123456+00:00');
@@ -61,6 +63,7 @@ if (!($re instanceof Undefined)) {
 $w = DateTimeW3C::tryFromString('2025-01-02T03:04:05+00:00');
 if (!($w instanceof Undefined)) {
     echo $w->toString() . PHP_EOL;
+    echo $w->withTimeZone('UTC')->toString() . PHP_EOL;
 }
 
 $ts = TimestampSeconds::tryFromString('1735787045');

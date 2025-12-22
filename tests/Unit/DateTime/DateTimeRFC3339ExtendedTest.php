@@ -171,6 +171,18 @@ it('isEmpty is always false for DateTimeRFC3339Extended', function (): void {
     expect($vo->isEmpty())->toBeFalse();
 });
 
+it('withTimeZone returns a new instance with updated timezone', function (): void {
+    $vo = DateTimeRFC3339Extended::fromString('2025-01-02T03:04:05.123+00:00');
+    $vo2 = $vo->withTimeZone('Europe/Berlin');
+
+    expect($vo2)->toBeInstanceOf(DateTimeRFC3339Extended::class)
+        ->and($vo2->toString())->toBe('2025-01-02T04:04:05.123+01:00')
+        ->and($vo2->value()->getTimezone()->getName())->toBe('Europe/Berlin');
+
+    // original is immutable
+    expect($vo->toString())->toBe('2025-01-02T03:04:05.123+00:00');
+});
+
 it('isUndefined is always false for DateTimeRFC3339Extended', function (): void {
     $vo = DateTimeRFC3339Extended::fromString('2025-01-02T03:04:05.000+00:00');
     expect($vo->isUndefined())->toBeFalse();

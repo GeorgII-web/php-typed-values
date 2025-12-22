@@ -170,6 +170,15 @@ it('isEmpty is always false for TimestampMilliseconds', function (): void {
     expect($vo->isEmpty())->toBeFalse();
 });
 
+it('withTimeZone returns a new instance with updated timezone', function (): void {
+    $vo = TimestampMilliseconds::fromString('1732445696123');
+    $vo2 = $vo->withTimeZone('Europe/Berlin');
+
+    expect($vo2)->toBeInstanceOf(TimestampMilliseconds::class)
+        ->and($vo2->toString())->toBe('1732445696123')
+        ->and($vo2->value()->getTimezone()->getName())->toBe('Europe/Berlin');
+});
+
 it('isUndefined is always false for TimestampMilliseconds', function (): void {
     $vo = TimestampMilliseconds::fromString('0');
     expect($vo->isUndefined())->toBeFalse();

@@ -73,6 +73,13 @@ readonly class DateTimeW3C extends DateTimeType
         }
     }
 
+    public function withTimeZone(string $timezone): static
+    {
+        return new static(
+            $this->value()->setTimezone(new DateTimeZone($timezone))
+        );
+    }
+
     public function toString(): string
     {
         return $this->value()->format(static::FORMAT);

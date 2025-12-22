@@ -171,6 +171,18 @@ it('isEmpty is always false for DateTimeAtom', function (): void {
     expect($vo->isEmpty())->toBeFalse();
 });
 
+it('withTimeZone returns a new instance with updated timezone', function (): void {
+    $vo = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
+    $vo2 = $vo->withTimeZone('Europe/Berlin');
+
+    expect($vo2)->toBeInstanceOf(DateTimeAtom::class)
+        ->and($vo2->toString())->toBe('2025-01-02T04:04:05+01:00')
+        ->and($vo2->value()->getTimezone()->getName())->toBe('Europe/Berlin');
+
+    // original is immutable
+    expect($vo->toString())->toBe('2025-01-02T03:04:05+00:00');
+});
+
 it('isUndefined is always false for DateTimeAtom', function (): void {
     $vo = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
     expect($vo->isUndefined())->toBeFalse();
