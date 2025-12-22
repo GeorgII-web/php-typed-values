@@ -26,10 +26,13 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  *
  * @psalm-immutable
  */
-readonly class DateTimeSql extends DateTimeType
+class DateTimeSql extends DateTimeType
 {
     protected const FORMAT = 'Y-m-d H:i:s';
 
+    /**
+     * @readonly
+     */
     protected DateTimeImmutable $value;
 
     public function __construct(DateTimeImmutable $value)
@@ -39,15 +42,17 @@ readonly class DateTimeSql extends DateTimeType
 
     /**
      * @param non-empty-string $timezone
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     * @param mixed $value
      */
-    public static function tryFromMixed(mixed $value, string $timezone = self::ZONE): static|Undefined
+    public static function tryFromMixed($value, string $timezone = self::ZONE)
     {
         try {
             return static::fromString(
                 static::convertMixedToString($value),
                 $timezone
             );
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return Undefined::create();
         }
     }
@@ -56,8 +61,9 @@ readonly class DateTimeSql extends DateTimeType
      * @param non-empty-string $timezone
      *
      * @throws DateTimeTypeException
+     * @return static
      */
-    public static function fromString(string $value, string $timezone = self::ZONE): static
+    public static function fromString(string $value, string $timezone = self::ZONE)
     {
         return new static(
             static::createFromFormat(
@@ -70,17 +76,21 @@ readonly class DateTimeSql extends DateTimeType
 
     /**
      * @param non-empty-string $timezone
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
      */
-    public static function tryFromString(string $value, string $timezone = self::ZONE): static|Undefined
+    public static function tryFromString(string $value, string $timezone = self::ZONE)
     {
         try {
             return static::fromString($value, $timezone);
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return Undefined::create();
         }
     }
 
-    public function withTimeZone(string $timezone): static
+    /**
+     * @return static
+     */
+    public function withTimeZone(string $timezone)
     {
         return new static(
             $this->value()->setTimezone(new DateTimeZone($timezone))
@@ -92,7 +102,10 @@ readonly class DateTimeSql extends DateTimeType
         return $this->value()->format(static::FORMAT);
     }
 
-    public static function fromDateTime(DateTimeImmutable $value): static
+    /**
+     * @return static
+     */
+    public static function fromDateTime(DateTimeImmutable $value)
     {
         // normalized timezone
         return new static(
