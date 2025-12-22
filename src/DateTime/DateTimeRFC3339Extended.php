@@ -29,10 +29,13 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  *
  * @psalm-immutable
  */
-readonly class DateTimeRFC3339Extended extends DateTimeType
+class DateTimeRFC3339Extended extends DateTimeType
 {
     protected const FORMAT = DATE_RFC3339_EXTENDED;
 
+    /**
+     * @readonly
+     */
     protected DateTimeImmutable $value;
 
     public function __construct(DateTimeImmutable $value)
@@ -40,21 +43,26 @@ readonly class DateTimeRFC3339Extended extends DateTimeType
         $this->value = $value;
     }
 
-    public static function tryFromMixed(mixed $value): static|Undefined
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     * @param mixed $value
+     */
+    public static function tryFromMixed($value)
     {
         try {
             return static::fromString(
                 static::convertMixedToString($value)
             );
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return Undefined::create();
         }
     }
 
     /**
      * @throws DateTimeTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         return new static(
             static::createFromFormat(
@@ -65,16 +73,22 @@ readonly class DateTimeRFC3339Extended extends DateTimeType
         );
     }
 
-    public static function tryFromString(string $value): static|Undefined
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    public static function tryFromString(string $value)
     {
         try {
             return static::fromString($value);
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return Undefined::create();
         }
     }
 
-    public function withTimeZone(string $timezone): static
+    /**
+     * @return static
+     */
+    public function withTimeZone(string $timezone)
     {
         return new static(
             $this->value()->setTimezone(new DateTimeZone($timezone))
@@ -86,7 +100,10 @@ readonly class DateTimeRFC3339Extended extends DateTimeType
         return $this->value()->format(static::FORMAT);
     }
 
-    public static function fromDateTime(DateTimeImmutable $value): static
+    /**
+     * @return static
+     */
+    public static function fromDateTime(DateTimeImmutable $value)
     {
         // normalized timezone
         return new static(
