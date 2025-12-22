@@ -8,9 +8,9 @@ use const DATE_RFC3339_EXTENDED;
 
 use DateTimeImmutable;
 use DateTimeZone;
+use PhpTypedValues\Base\Primitive\DateTime\DateTimeType;
 use PhpTypedValues\Exception\DateTimeTypeException;
 use PhpTypedValues\Exception\TypeException;
-use PhpTypedValues\Internal\Primitive\DateTime\DateTimeType;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Internal\Primitive\Undefined;
+namespace PhpTypedValues\Base\Primitive\Undefined;
 
 use PhpTypedValues\Exception\UndefinedTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;

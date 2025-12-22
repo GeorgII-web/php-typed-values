@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Internal\Primitive\Undefined;
+namespace PhpTypedValues\Base\Primitive\Undefined;
 
-use PhpTypedValues\Internal\Primitive\PrimitiveType;
+use PhpTypedValues\Base\Primitive\PrimitiveType;
 
 /**
  * Base implementation for a special "Undefined/Unknown" typed value.

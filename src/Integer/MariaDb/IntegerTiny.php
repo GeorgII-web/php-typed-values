@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Integer\MariaDb;
 
+use PhpTypedValues\Base\Primitive\Integer\IntType;
 use PhpTypedValues\Exception\IntegerTypeException;
 use PhpTypedValues\Exception\TypeException;
-use PhpTypedValues\Internal\Primitive\Integer\IntType;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 use function sprintf;

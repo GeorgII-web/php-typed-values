@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace PhpTypedValues\ArrayType;
 
 use JsonSerializable;
+use PhpTypedValues\Base\ArrayType\ArrayType;
 use PhpTypedValues\Exception\ArrayTypeException;
-use PhpTypedValues\Internal\ArrayType\ArrayType;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Traversable;
 

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Internal\Primitive;
+namespace PhpTypedValues\Base\Primitive;
 
 use JsonSerializable;
+use PhpTypedValues\Base\Shared\IsEmptyInterface;
+use PhpTypedValues\Base\Shared\IsUndefinedInterface;
+use PhpTypedValues\Base\TypeInterface;
 use PhpTypedValues\Exception\TypeException;
-use PhpTypedValues\Internal\Shared\IsEmptyInterface;
-use PhpTypedValues\Internal\Shared\IsUndefinedInterface;
-use PhpTypedValues\Internal\TypeInterface;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**

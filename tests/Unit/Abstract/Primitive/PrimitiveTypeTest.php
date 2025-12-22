@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Abstract\Primitive;
 
+use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\TypeException;
-use PhpTypedValues\Internal\Primitive\PrimitiveType;
 use stdClass;
 use Stringable;
 

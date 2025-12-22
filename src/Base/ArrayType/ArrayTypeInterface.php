@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Internal\ArrayType;
+namespace PhpTypedValues\Base\ArrayType;
 
 use Countable;
 use IteratorAggregate;
 use JsonSerializable;
+use PhpTypedValues\Base\Shared\ArrayOfObjectsAndUndefinedInterface;
+use PhpTypedValues\Base\Shared\IsEmptyInterface;
+use PhpTypedValues\Base\Shared\IsUndefinedInterface;
+use PhpTypedValues\Base\TypeInterface;
 use PhpTypedValues\Exception\ArrayTypeException;
-use PhpTypedValues\Internal\Shared\ArrayOfObjectsAndUndefinedInterface;
-use PhpTypedValues\Internal\Shared\IsEmptyInterface;
-use PhpTypedValues\Internal\Shared\IsUndefinedInterface;
-use PhpTypedValues\Internal\TypeInterface;
 
 /**
  * Contract for array typed values.

@@ -6,9 +6,9 @@ namespace PhpTypedValues\String;
 
 use const FILTER_VALIDATE_EMAIL;
 
+use PhpTypedValues\Base\Primitive\String\StrType;
 use PhpTypedValues\Exception\EmailStringTypeException;
 use PhpTypedValues\Exception\TypeException;
-use PhpTypedValues\Internal\Primitive\String\StrType;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 use function filter_var;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Internal\ArrayType;
+namespace PhpTypedValues\Base\ArrayType;
 
 /**
  * Base implementation for array typed values.

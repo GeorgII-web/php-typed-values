@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Internal\Primitive;
+namespace PhpTypedValues\Base\Primitive;
 
 use PhpTypedValues\Exception\TypeException;
 use Stringable;

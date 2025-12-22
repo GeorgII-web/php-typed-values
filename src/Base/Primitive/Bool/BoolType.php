@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Internal\Primitive\Bool;
+namespace PhpTypedValues\Base\Primitive\Bool;
 
-use PhpTypedValues\Internal\Primitive\PrimitiveType;
+use PhpTypedValues\Base\Primitive\PrimitiveType;
 
 /**
  * Base implementation for boolean typed values.

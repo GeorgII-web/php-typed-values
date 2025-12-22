@@ -6,6 +6,7 @@ namespace PhpTypedValues\Usage\Example;
 
 require_once 'vendor/autoload.php';
 
+use PhpTypedValues\Base\ValueObjectInterface;
 use PhpTypedValues\Exception\FloatTypeException;
 use PhpTypedValues\Exception\IntegerTypeException;
 use PhpTypedValues\Exception\StringTypeException;
@@ -32,7 +33,7 @@ use PhpTypedValues\String\StringNonEmpty;
  *
  * @psalm-immutable
  */
-final readonly class EarlyFail
+final readonly class EarlyFail implements ValueObjectInterface
 {
     public function __construct(
         private IntegerPositive $id,
@@ -86,5 +87,38 @@ final readonly class EarlyFail
     public function getFirstName(): StringNonEmpty
     {
         return $this->firstName;
+    }
+
+    public function isEmpty(): bool
+    {
+        return false;
+    }
+
+    public function isUndefined(): bool
+    {
+        return false;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id->value(),
+            'firstName' => $this->firstName->value(),
+            'height' => $this->height->value(),
+        ];
+    }
+
+    public static function fromArray(array $value): self
+    {
+        return new self(
+            IntegerPositive::fromInt($value['id']),
+            StringNonEmpty::fromString($value['firstName']),
+            FloatPositive::fromFloat($value['height']),
+        );
+    }
+
+    public function jsonSerialize(): array
+    {
+        return $this->toArray();
     }
 }

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\String;
 
+use PhpTypedValues\Base\Primitive\String\StrType;
 use PhpTypedValues\Exception\TypeException;
-use PhpTypedValues\Internal\Primitive\String\StrType;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**

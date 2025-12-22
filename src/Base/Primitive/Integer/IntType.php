@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Internal\Primitive\Integer;
+namespace PhpTypedValues\Base\Primitive\Integer;
 
+use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\IntegerTypeException;
-use PhpTypedValues\Internal\Primitive\PrimitiveType;
 
 use function sprintf;
 

@@ -6,6 +6,7 @@ require_once 'vendor/autoload.php';
 
 use const PHP_EOL;
 
+use PhpTypedValues\Base\Primitive\Bool\BoolTypeInterface;
 use PhpTypedValues\Bool\Alias\Binary;
 use PhpTypedValues\Bool\Alias\Boolean;
 use PhpTypedValues\Bool\Alias\Flag;
@@ -15,7 +16,6 @@ use PhpTypedValues\Bool\BoolStandard;
 use PhpTypedValues\Bool\FalseStandard;
 use PhpTypedValues\Bool\TrueStandard;
 use PhpTypedValues\Exception\UndefinedTypeException;
-use PhpTypedValues\Internal\Primitive\Bool\BoolTypeInterface;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**

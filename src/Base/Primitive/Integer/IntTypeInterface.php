@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Internal\Primitive\Integer;
+namespace PhpTypedValues\Base\Primitive\Integer;
 
 use PhpTypedValues\Undefined\Alias\Undefined;
 

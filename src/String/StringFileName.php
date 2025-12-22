@@ -7,9 +7,9 @@ namespace PhpTypedValues\String;
 use const PATHINFO_EXTENSION;
 use const PATHINFO_FILENAME;
 
+use PhpTypedValues\Base\Primitive\String\StrType;
 use PhpTypedValues\Exception\FileNameStringTypeException;
 use PhpTypedValues\Exception\TypeException;
-use PhpTypedValues\Internal\Primitive\String\StrType;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 use function pathinfo;

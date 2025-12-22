@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Internal\Primitive\String;
+namespace PhpTypedValues\Base\Primitive\String;
 
 use PhpTypedValues\Undefined\Alias\Undefined;
 

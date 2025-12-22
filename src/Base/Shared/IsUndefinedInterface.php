@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Internal\Shared;
+namespace PhpTypedValues\Base\Shared;
 
 /**
  * Base contract for Undefined type check for any typed value object.

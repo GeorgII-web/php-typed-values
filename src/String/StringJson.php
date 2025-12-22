@@ -7,9 +7,9 @@ namespace PhpTypedValues\String;
 use const JSON_THROW_ON_ERROR;
 
 use JsonException;
+use PhpTypedValues\Base\Primitive\String\StrType;
 use PhpTypedValues\Exception\JsonStringTypeException;
 use PhpTypedValues\Exception\TypeException;
-use PhpTypedValues\Internal\Primitive\String\StrType;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 use function json_decode;

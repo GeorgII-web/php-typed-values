@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Internal;
+namespace PhpTypedValues\Base;
 
 /**
  * Base contract for all typed values in this library.

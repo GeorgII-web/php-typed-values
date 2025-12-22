@@ -22,6 +22,8 @@ $testEarly = EarlyFail::fromScalars(id: 1, firstName: 'Foobar', height: 170);
 echo $testEarly->getId()->toString() . PHP_EOL;
 echo $testEarly->getFirstName()->toString() . PHP_EOL;
 echo $testEarly->getHeight()->toString() . PHP_EOL;
+$testEarly2 = EarlyFail::fromArray(['id' => 1, 'firstName' => 'ss', 'height' => 12.2]);
+echo json_encode($testEarly2->toArray(), JSON_THROW_ON_ERROR) . PHP_EOL;
 
 $testLate = LateFail::fromScalars(id: 1, firstName: 'Foobar', height: 170);
 echo $testLate->getId()->toString() . PHP_EOL;
