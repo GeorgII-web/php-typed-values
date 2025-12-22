@@ -51,15 +51,17 @@ readonly class DateTimeAtom extends DateTimeType
     }
 
     /**
+     * @param non-empty-string $timezone
+     *
      * @throws DateTimeTypeException
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value, string $timezone = self::ZONE): static
     {
         return new static(
             static::createFromFormat(
                 $value,
                 static::FORMAT,
-                new DateTimeZone(static::ZONE)
+                new DateTimeZone($timezone)
             )
         );
     }
