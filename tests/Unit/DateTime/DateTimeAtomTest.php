@@ -183,6 +183,19 @@ it('withTimeZone returns a new instance with updated timezone', function (): voi
     expect($vo->toString())->toBe('2025-01-02T03:04:05+00:00');
 });
 
+it('tryFromString and tryFromMixed accept custom timezone', function (): void {
+    $s = '2025-01-02T04:04:05+01:00';
+    $vo1 = DateTimeAtom::tryFromString($s, 'Europe/Berlin');
+    expect($vo1)->toBeInstanceOf(DateTimeAtom::class)
+        ->and($vo1->toString())->toBe($s)
+        ->and($vo1->value()->getOffset())->toBe(3600);
+
+    $vo2 = DateTimeAtom::tryFromMixed($s, 'Europe/Berlin');
+    expect($vo2)->toBeInstanceOf(DateTimeAtom::class)
+        ->and($vo2->toString())->toBe($s)
+        ->and($vo2->value()->getOffset())->toBe(3600);
+});
+
 it('isUndefined is always false for DateTimeAtom', function (): void {
     $vo = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
     expect($vo->isUndefined())->toBeFalse();

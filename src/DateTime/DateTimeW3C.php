@@ -39,11 +39,15 @@ readonly class DateTimeW3C extends DateTimeType
         $this->value = $value;
     }
 
-    public static function tryFromMixed(mixed $value): static|Undefined
+    /**
+     * @param non-empty-string $timezone
+     */
+    public static function tryFromMixed(mixed $value, string $timezone = self::ZONE): static|Undefined
     {
         try {
             return static::fromString(
-                static::convertMixedToString($value)
+                static::convertMixedToString($value),
+                $timezone
             );
         } catch (TypeException) {
             return Undefined::create();
@@ -51,23 +55,28 @@ readonly class DateTimeW3C extends DateTimeType
     }
 
     /**
+     * @param non-empty-string $timezone
+     *
      * @throws DateTimeTypeException
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value, string $timezone = self::ZONE): static
     {
         return new static(
             static::createFromFormat(
                 $value,
                 static::FORMAT,
-                new DateTimeZone(static::ZONE)
+                new DateTimeZone($timezone)
             )
         );
     }
 
-    public static function tryFromString(string $value): static|Undefined
+    /**
+     * @param non-empty-string $timezone
+     */
+    public static function tryFromString(string $value, string $timezone = self::ZONE): static|Undefined
     {
         try {
-            return static::fromString($value);
+            return static::fromString($value, $timezone);
         } catch (TypeException) {
             return Undefined::create();
         }

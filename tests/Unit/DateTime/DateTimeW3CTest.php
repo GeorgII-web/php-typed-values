@@ -182,6 +182,25 @@ it('withTimeZone returns a new instance with updated timezone', function (): voi
     expect($vo->toString())->toBe('2025-01-02T03:04:05+00:00');
 });
 
+it('fromString accepts custom timezone', function (): void {
+    $vo = DateTimeW3C::fromString('2025-01-02T04:04:05+01:00', 'Europe/Berlin');
+    expect($vo->toString())->toBe('2025-01-02T04:04:05+01:00')
+        ->and($vo->value()->getTimezone()->getName())->toBe('Europe/Berlin');
+});
+
+it('tryFromString and tryFromMixed accept custom timezone', function (): void {
+    $s = '2025-01-02T04:04:05+01:00';
+    $vo1 = DateTimeW3C::tryFromString($s, 'Europe/Berlin');
+    expect($vo1)->toBeInstanceOf(DateTimeW3C::class)
+        ->and($vo1->toString())->toBe($s)
+        ->and($vo1->value()->getTimezone()->getName())->toBe('Europe/Berlin');
+
+    $vo2 = DateTimeW3C::tryFromMixed($s, 'Europe/Berlin');
+    expect($vo2)->toBeInstanceOf(DateTimeW3C::class)
+        ->and($vo2->toString())->toBe($s)
+        ->and($vo2->value()->getTimezone()->getName())->toBe('Europe/Berlin');
+});
+
 it('isUndefined is always false for DateTimeW3C', function (): void {
     $vo = DateTimeW3C::fromString('2025-01-02T03:04:05+00:00');
     expect($vo->isUndefined())->toBeFalse();
