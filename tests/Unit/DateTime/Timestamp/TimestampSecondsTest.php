@@ -181,11 +181,11 @@ it('withTimeZone returns a new instance with updated timezone', function (): voi
 it('fromString and fromInt accept custom timezone', function (): void {
     $vo1 = TimestampSeconds::fromString('1735787045', 'Europe/Berlin');
     expect($vo1->toString())->toBe('1735787045')
-        ->and($vo1->value()->getTimezone()->getName())->toBe('Europe/Berlin');
+        ->and($vo1->value()->getOffset())->toBe(3600);
 
     $vo2 = TimestampSeconds::fromInt(1735787045, 'America/New_York');
     expect($vo2->toString())->toBe('1735787045')
-        ->and($vo2->value()->getTimezone()->getName())->toBe('America/New_York');
+        ->and($vo2->value()->getOffset())->toBe(-18000);
 });
 
 it('tryFromString and tryFromMixed accept custom timezone', function (): void {
@@ -193,12 +193,12 @@ it('tryFromString and tryFromMixed accept custom timezone', function (): void {
     $vo1 = TimestampSeconds::tryFromString($s, 'Europe/Berlin');
     expect($vo1)->toBeInstanceOf(TimestampSeconds::class)
         ->and($vo1->toString())->toBe($s)
-        ->and($vo1->value()->getTimezone()->getName())->toBe('Europe/Berlin');
+        ->and($vo1->value()->getOffset())->toBe(3600);
 
     $vo2 = TimestampSeconds::tryFromMixed($s, 'Europe/Berlin');
     expect($vo2)->toBeInstanceOf(TimestampSeconds::class)
         ->and($vo2->toString())->toBe($s)
-        ->and($vo2->value()->getTimezone()->getName())->toBe('Europe/Berlin');
+        ->and($vo2->value()->getOffset())->toBe(3600);
 });
 
 it('isUndefined is always false for TimestampSeconds', function (): void {

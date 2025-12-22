@@ -80,7 +80,7 @@ readonly class TimestampSeconds extends DateTimeType
                 $value,
                 static::FORMAT,
                 new DateTimeZone($timezone)
-            )
+            )->setTimezone(new DateTimeZone($timezone))
         );
     }
 

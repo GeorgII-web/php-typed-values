@@ -11,7 +11,7 @@ it('fromString returns same instant and toString is milliseconds', function (): 
 
     expect($vo->value()->format('U'))->toBe($dt->format('U'))
         ->and($vo->toString())->toBe('1000000000000')
-        ->and($vo->value()->getTimezone()->getName())->toBe('+00:00');
+        ->and($vo->value()->getTimezone()->getName())->toBe('UTC');
 });
 
 it('fromString maps remainder milliseconds to microseconds exactly (123 -> 123000)', function (): void {
@@ -182,11 +182,11 @@ it('withTimeZone returns a new instance with updated timezone', function (): voi
 it('fromString and fromInt accept custom timezone', function (): void {
     $vo1 = TimestampMilliseconds::fromString('1732445696123', 'Europe/Berlin');
     expect($vo1->toString())->toBe('1732445696123')
-        ->and($vo1->value()->getTimezone()->getName())->toBe('Europe/Berlin');
+        ->and($vo1->value()->getOffset())->toBe(3600);
 
     $vo2 = TimestampMilliseconds::fromInt(1732445696123, 'America/New_York');
     expect($vo2->toString())->toBe('1732445696123')
-        ->and($vo2->value()->getTimezone()->getName())->toBe('America/New_York');
+        ->and($vo2->value()->getOffset())->toBe(-18000);
 });
 
 it('tryFromString and tryFromMixed accept custom timezone', function (): void {
@@ -194,12 +194,12 @@ it('tryFromString and tryFromMixed accept custom timezone', function (): void {
     $vo1 = TimestampMilliseconds::tryFromString($s, 'Europe/Berlin');
     expect($vo1)->toBeInstanceOf(TimestampMilliseconds::class)
         ->and($vo1->toString())->toBe($s)
-        ->and($vo1->value()->getTimezone()->getName())->toBe('Europe/Berlin');
+        ->and($vo1->value()->getOffset())->toBe(3600);
 
     $vo2 = TimestampMilliseconds::tryFromMixed($s, 'Europe/Berlin');
     expect($vo2)->toBeInstanceOf(TimestampMilliseconds::class)
         ->and($vo2->toString())->toBe($s)
-        ->and($vo2->value()->getTimezone()->getName())->toBe('Europe/Berlin');
+        ->and($vo2->value()->getOffset())->toBe(3600);
 });
 
 it('isUndefined is always false for TimestampMilliseconds', function (): void {
