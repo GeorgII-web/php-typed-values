@@ -75,25 +75,11 @@ final readonly class Profile implements ValueObjectInterface
         private FloatPositive|Undefined $height,
     ) {}
 
-    public static function fromScalars(
-        int $id,
-        ?string $firstName,
-        string|float|int|null $height = null,
-    ): self {
-        return new self(
-            IntegerPositive::fromInt($id),                    // early fail (must be valid)
-            StringNonEmpty::tryFromMixed($firstName),         // late fail (maybe undefined)
-            $height !== null
-                ? FloatPositive::fromString((string) $height) // early fail if provided
-                : Undefined::create(),                        // late fail when accessed
-        );
-    }
-
     public static function fromArray(array $value): self {
         return new self(
             IntegerPositive::fromInt($value['id']),                    // early fail (must be valid)
             StringNonEmpty::tryFromMixed($value['firstName']),         // late fail (maybe undefined)
-            $value['height'] !== null
+            ($value['height'] ?? null) !== null
                 ? FloatPositive::fromString((string) $value['height']) // early fail if provided
                 : Undefined::create(),                                 // late fail when accessed
         );
@@ -110,13 +96,13 @@ final readonly class Profile implements ValueObjectInterface
 ##### Early fail (invalid input prevents creation)
 
 ```php
-Profile::fromScalars(id: 0, firstName: 'Alice', height: '172.5'); // throws exception
+Profile::fromArray(['id' => 0, 'firstName' => 'Alice', 'height' => 172.5]); // throws exception
 ```
 
 ##### Late fail with `Undefined` (an object exists, fail on access)
 
 ```php
-$profile = Profile::fromScalars(id: 101, firstName: '', height: '172.5'); // created
+$profile = Profile::fromArray(['id' => 101, 'firstName' => '', 'height' => '172.5']); // created
 $profile->getFirstName()->value(); // throws an exception on access the Undefined value
 ```
 
@@ -125,9 +111,9 @@ $profile->getFirstName()->value(); // throws an exception on access the Undefine
 Ideal for partial data handling (e.g., requests where only specific fields, like ID, are required), allowing access to valid fields without failing on missing ones.
 
 ```php
-Profile::fromScalars(id: 101, firstName: 'Alice', height: -1); // invalid provided value -> early fail
+Profile::fromArray(['id' => 101, 'firstName' => 'Alice', 'height' => -1]); // invalid provided value -> early fail
 
-$profile = Profile::fromScalars(id: 101, firstName: 'Alice', height: null); // value omitted -> created, fails only on access
+$profile = Profile::fromArray(['id' => 101, 'firstName' => 'Alice', 'height' => null]); // value omitted -> created, fails only on access
 $profile->getHeight()->value(); // throws an exception on access the Undefined value
 ```
 
@@ -150,8 +136,8 @@ $profile->getHeight()->value(); // throws an exception on access the Undefined v
 
 ### Documentation
 
-- Development guide: `docs/DEVELOP.md`
-- Usage examples in `src/Usage` and `tests/Unit`
+- Development guide: [docs/DEVELOP.md](docs/DEVELOP.md)
+- Usage examples in [src/Usage](src/Usage) and [tests/Unit](tests/Unit)
 
 ### License
 
