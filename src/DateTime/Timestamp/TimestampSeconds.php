@@ -53,6 +53,14 @@ readonly class TimestampSeconds extends DateTimeType
     }
 
     /**
+     * @throws DateTimeTypeException
+     */
+    public static function fromInt(int $value): static|Undefined
+    {
+        return static::fromString((string) $value);
+    }
+
+    /**
      * Parse from a numeric Unix timestamp string (seconds).
      *
      * @throws DateTimeTypeException

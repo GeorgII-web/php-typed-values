@@ -92,6 +92,14 @@ readonly class IntegerPositive extends IntType
     /**
      * @return positive-int
      */
+    public function toInt(): int
+    {
+        return $this->value;
+    }
+
+    /**
+     * @return positive-int
+     */
     public function value(): int
     {
         return $this->value;

@@ -96,9 +96,11 @@ it('accepts non-negative integers and exposes value/toString', function (): void
     $p = IntegerNonNegative::fromInt(10);
 
     expect($z->value())->toBe(0)
+        ->and($z->toInt())->toBe(0)
         ->and($z->toString())->toBe('0')
         ->and((string) $z)->toBe('0')
         ->and($p->value())->toBe(10)
+        ->and($p->toInt())->toBe(10)
         ->and($p->toString())->toBe('10');
 });
 

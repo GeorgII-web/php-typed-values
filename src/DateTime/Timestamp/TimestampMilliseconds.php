@@ -46,6 +46,14 @@ readonly class TimestampMilliseconds extends DateTimeType
         $this->value = $value;
     }
 
+    /**
+     * @throws DateTimeTypeException
+     */
+    public static function fromInt(int $value): static|Undefined
+    {
+        return static::fromString((string) $value);
+    }
+
     public static function tryFromMixed(mixed $value): static|Undefined
     {
         try {

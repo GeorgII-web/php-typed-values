@@ -97,6 +97,14 @@ readonly class IntegerNonNegative extends IntType
         return $this->value;
     }
 
+    /**
+     * @return non-negative-int
+     */
+    public function toInt(): int
+    {
+        return $this->value;
+    }
+
     public function jsonSerialize(): int
     {
         return $this->value();

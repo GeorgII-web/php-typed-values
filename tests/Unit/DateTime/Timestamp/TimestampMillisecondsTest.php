@@ -140,7 +140,8 @@ it('fromString accepts zero and round-trips to "0"', function (): void {
 it('tryFromMixed handles valid numeric strings/ints and invalid mixed inputs', function (): void {
     // valid inputs
     $fromString = TimestampMilliseconds::tryFromMixed('1732445696123');
-    $fromInt = TimestampMilliseconds::tryFromMixed(1732445696123);
+    $fromIntMixed = TimestampMilliseconds::tryFromMixed(1732445696123);
+    $fromInt = TimestampMilliseconds::fromInt(1732445696123);
 
     // invalid inputs
     $fromArray = TimestampMilliseconds::tryFromMixed(['x']);
@@ -156,7 +157,9 @@ it('tryFromMixed handles valid numeric strings/ints and invalid mixed inputs', f
     $fromStringable = TimestampMilliseconds::tryFromMixed($stringable);
 
     expect($fromString)->toBeInstanceOf(TimestampMilliseconds::class)
+        ->and($fromIntMixed)->toBeInstanceOf(TimestampMilliseconds::class)
         ->and($fromInt)->toBeInstanceOf(TimestampMilliseconds::class)
+        ->and($fromInt->toString())->toBe('1732445696123')
         ->and($fromStringable)->toBeInstanceOf(TimestampMilliseconds::class)
         ->and($fromArray)->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class)
         ->and($fromNull)->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class);

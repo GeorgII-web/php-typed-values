@@ -102,6 +102,8 @@ it('accepts positive integers and exposes value/toString', function (): void {
 
     expect($v->value())
         ->toBe(1)
+        ->and($v->toInt())
+        ->toBe(1)
         ->and($v->toString())
         ->toBe('1')
         ->and((string) $v)

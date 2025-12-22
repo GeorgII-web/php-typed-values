@@ -77,9 +77,11 @@ it('wraps any PHP int and preserves value/toString', function (): void {
     $p = IntegerStandard::fromInt(42);
 
     expect($n->value())->toBe(-10)
+        ->and($n->toInt())->toBe(-10)
         ->and($n->toString())->toBe('-10')
         ->and((string) $n)->toBe('-10')
         ->and($p->value())->toBe(42)
+        ->and($p->toInt())->toBe(42)
         ->and($p->toString())->toBe('42');
 });
 

@@ -110,9 +110,11 @@ it('accepts 1..7 and exposes value/toString', function (): void {
     $seven = IntegerWeekDay::fromInt(7);
 
     expect($one->value())->toBe(1)
+        ->and($one->toInt())->toBe(1)
         ->and($one->toString())->toBe('1')
         ->and((string) $one)->toBe('1')
         ->and($seven->value())->toBe(7)
+        ->and($seven->toInt())->toBe(7)
         ->and($seven->toString())->toBe('7');
 });
 

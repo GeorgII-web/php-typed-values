@@ -98,6 +98,14 @@ readonly class IntegerTiny extends IntType
         return $this->value;
     }
 
+    /**
+     * @return int<-128, 127>
+     */
+    public function toInt(): int
+    {
+        return $this->value;
+    }
+
     public function jsonSerialize(): int
     {
         return $this->value();

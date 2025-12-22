@@ -35,9 +35,11 @@ echo DateTimeRFC3339::fromDateTime($dt)->toString() . PHP_EOL;
 
 // Timestamp
 $tsVo = TimestampSeconds::fromString('1735787045');
+echo TimestampSeconds::fromInt(1735787045)->toString() . PHP_EOL;
 echo TimestampSeconds::fromDateTime($tsVo->value())->toString() . PHP_EOL;
 
 $tsVo = TimestampMilliseconds::fromString('1735787045123');
+echo TimestampMilliseconds::fromInt(1735787045123)->toString() . PHP_EOL;
 echo TimestampMilliseconds::fromDateTime($tsVo->value())->toString() . PHP_EOL;
 
 // tryFromString usages to satisfy Psalm (ensure both success and failure branches are referenced)

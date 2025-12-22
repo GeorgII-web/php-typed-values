@@ -83,9 +83,11 @@ it('accepts -128..127 and exposes value/toString', function (): void {
     $max = IntegerTiny::fromInt(127);
 
     expect($min->value())->toBe(-128)
+        ->and($min->toInt())->toBe(-128)
         ->and($min->toString())->toBe('-128')
         ->and((string) $min)->toBe('-128')
         ->and($max->value())->toBe(127)
+        ->and($max->toInt())->toBe(127)
         ->and($max->toString())->toBe('127');
 });
 

@@ -73,6 +73,11 @@ readonly class IntegerStandard extends IntType
         return new static((int) $value);
     }
 
+    public function toInt(): int
+    {
+        return $this->value;
+    }
+
     public function value(): int
     {
         return $this->value;

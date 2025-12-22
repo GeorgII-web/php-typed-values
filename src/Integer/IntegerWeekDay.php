@@ -61,6 +61,14 @@ readonly class IntegerWeekDay extends IntType
     /**
      * @return int<1, 7>
      */
+    public function toInt(): int
+    {
+        return $this->value;
+    }
+
+    /**
+     * @return int<1, 7>
+     */
     public function value(): int
     {
         return $this->value;
