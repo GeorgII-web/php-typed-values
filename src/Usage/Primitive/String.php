@@ -10,12 +10,14 @@ use const PHP_EOL;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\String\Alias\CountryCode;
 use PhpTypedValues\String\Alias\Email;
+use PhpTypedValues\String\Alias\File;
 use PhpTypedValues\String\Alias\Json;
 use PhpTypedValues\String\Alias\MariaDb\Decimal;
 use PhpTypedValues\String\Alias\MariaDb\Text;
 use PhpTypedValues\String\Alias\MariaDb\VarChar255;
 use PhpTypedValues\String\Alias\NonBlank;
 use PhpTypedValues\String\Alias\NonEmpty;
+use PhpTypedValues\String\Alias\Path;
 use PhpTypedValues\String\Alias\Str;
 use PhpTypedValues\String\Alias\StrType;
 use PhpTypedValues\String\Alias\Url;
@@ -29,6 +31,7 @@ use PhpTypedValues\String\StringEmail;
 use PhpTypedValues\String\StringFileName;
 use PhpTypedValues\String\StringNonBlank;
 use PhpTypedValues\String\StringNonEmpty;
+use PhpTypedValues\String\StringPath;
 use PhpTypedValues\String\StringStandard;
 use PhpTypedValues\String\StringUrl;
 use PhpTypedValues\String\Uuid\StringUuidV4;
@@ -55,6 +58,10 @@ echo StringNonBlank::fromString(' hi ')->toString() . PHP_EOL;
 
 $file = StringFileName::fromString('file.name');
 echo $file->toString() . ' ' . $file->getFileNameOnly() . ' ' . $file->getExtension() . PHP_EOL;
+
+echo File::fromString('file.name')->toString() . PHP_EOL;
+echo Path::fromString('/src/String')->toString() . PHP_EOL;
+echo StringPath::fromString('src\String\\')->toString() . PHP_EOL;
 
 echo UuidV4::tryFromString('550e8400-e29b-41d4-a716-446655440000')->toString() . PHP_EOL;
 
