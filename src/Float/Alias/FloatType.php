@@ -18,6 +18,6 @@ use PhpTypedValues\Float\FloatStandard;
  *
  * @psalm-immutable
  */
-final readonly class FloatType extends FloatStandard
+final class FloatType extends FloatStandard
 {
 }

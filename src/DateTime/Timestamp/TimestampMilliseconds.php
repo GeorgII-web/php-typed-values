@@ -30,7 +30,7 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class TimestampMilliseconds extends DateTimeType
+class TimestampMilliseconds extends DateTimeType
 {
     /**
      * Internal formatting pattern for seconds + microseconds.
@@ -39,6 +39,9 @@ readonly class TimestampMilliseconds extends DateTimeType
      */
     protected const FORMAT = 'U.u';
 
+    /**
+     * @readonly
+     */
     protected DateTimeImmutable $value;
 
     public function __construct(DateTimeImmutable $value)
@@ -46,13 +49,17 @@ readonly class TimestampMilliseconds extends DateTimeType
         $this->value = $value;
     }
 
-    public static function tryFromMixed(mixed $value): static|Undefined
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     * @param mixed $value
+     */
+    public static function tryFromMixed($value)
     {
         try {
             return static::fromString(
                 static::convertMixedToString($value)
             );
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return Undefined::create();
         }
     }
@@ -61,8 +68,9 @@ readonly class TimestampMilliseconds extends DateTimeType
      * Parse from a numeric Unix timestamp string (milliseconds).
      *
      * @throws DateTimeTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         if (!ctype_digit($value)) {
             throw new DateTimeTypeException(sprintf('Expected milliseconds timestamp as digits, got "%s"', $value));
@@ -88,16 +96,22 @@ readonly class TimestampMilliseconds extends DateTimeType
         );
     }
 
-    public static function tryFromString(string $value): static|Undefined
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    public static function tryFromString(string $value)
     {
         try {
             return static::fromString($value);
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return Undefined::create();
         }
     }
 
-    public static function fromDateTime(DateTimeImmutable $value): static
+    /**
+     * @return static
+     */
+    public static function fromDateTime(DateTimeImmutable $value)
     {
         // normalized timezone
         return new static(

@@ -21,6 +21,6 @@ namespace PhpTypedValues\Internal\ArrayType;
  *
  * @psalm-immutable
  */
-abstract readonly class ArrayType implements ArrayTypeInterface
+abstract class ArrayType implements ArrayTypeInterface
 {
 }

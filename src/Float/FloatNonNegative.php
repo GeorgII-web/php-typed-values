@@ -25,8 +25,11 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class FloatNonNegative extends FloatType
+class FloatNonNegative extends FloatType
 {
+    /**
+     * @readonly
+     */
     protected float $value;
 
     /**
@@ -41,47 +44,59 @@ readonly class FloatNonNegative extends FloatType
         $this->value = $value;
     }
 
-    public static function tryFromMixed(mixed $value): static|Undefined
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     * @param mixed $value
+     */
+    public static function tryFromMixed($value)
     {
         try {
             return static::fromString(
                 static::convertMixedToString($value)
             );
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return Undefined::create();
         }
     }
 
     /**
      * @throws FloatTypeException
+     * @return static
      */
-    public static function fromFloat(float $value): static
+    public static function fromFloat(float $value)
     {
         return new static($value);
     }
 
-    public static function tryFromString(string $value): static|Undefined
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    public static function tryFromString(string $value)
     {
         try {
             return static::fromString($value);
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return Undefined::create();
         }
     }
 
-    public static function tryFromFloat(float $value): static|Undefined
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    public static function tryFromFloat(float $value)
     {
         try {
             return static::fromFloat($value);
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return Undefined::create();
         }
     }
 
     /**
      * @throws FloatTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         parent::assertFloatString($value);
 
