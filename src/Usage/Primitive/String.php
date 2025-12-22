@@ -26,6 +26,7 @@ use PhpTypedValues\String\MariaDb\StringText;
 use PhpTypedValues\String\MariaDb\StringVarChar255;
 use PhpTypedValues\String\StringCountryCode;
 use PhpTypedValues\String\StringEmail;
+use PhpTypedValues\String\StringFileName;
 use PhpTypedValues\String\StringNonBlank;
 use PhpTypedValues\String\StringNonEmpty;
 use PhpTypedValues\String\StringStandard;
@@ -52,10 +53,8 @@ echo StringStandard::tryFromString('hi')->toString() . PHP_EOL;
 echo NonBlank::fromString(' hi ')->toString() . PHP_EOL;
 echo StringNonBlank::fromString(' hi ')->toString() . PHP_EOL;
 
-// $nb = StringNonBlank::tryFromString('   ');
-// if (!($nb instanceof Undefined)) {
-//    echo $nb->toString() . \PHP_EOL;
-// }
+$file = StringFileName::fromString('file.name');
+echo $file->toString() . ' ' . $file->getFileNameOnly() . ' ' . $file->getExtension() . PHP_EOL;
 
 echo UuidV4::tryFromString('550e8400-e29b-41d4-a716-446655440000')->toString() . PHP_EOL;
 
