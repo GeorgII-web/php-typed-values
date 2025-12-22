@@ -23,6 +23,6 @@ use PhpTypedValues\Base\Primitive\PrimitiveType;
  *
  * @psalm-immutable
  */
-abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterface
+abstract class BoolType extends PrimitiveType implements BoolTypeInterface
 {
 }

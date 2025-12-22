@@ -18,6 +18,6 @@ use PhpTypedValues\Bool\BoolStandard;
  *
  * @psalm-immutable
  */
-final readonly class Toggle extends BoolStandard
+final class Toggle extends BoolStandard
 {
 }

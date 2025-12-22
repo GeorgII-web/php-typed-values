@@ -11,5 +11,8 @@ namespace PhpTypedValues\Base\Shared;
  */
 interface FromArray
 {
-    public static function fromArray(array $value): static;
+    /**
+     * @return static
+     */
+    public static function fromArray(array $value);
 }
