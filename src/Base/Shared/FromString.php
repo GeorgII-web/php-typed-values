@@ -21,6 +21,7 @@ interface FromString
      * when the provided value is invalid.
      *
      * @throws TypeException
+     * @return static
      */
-    public static function fromString(string $value): static;
+    public static function fromString(string $value);
 }

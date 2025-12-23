@@ -26,21 +26,33 @@ interface DateTimeTypeInterface
 
     public function value(): DateTimeImmutable;
 
-    public static function fromDateTime(DateTimeImmutable $value): static;
+    /**
+     * @return static
+     */
+    public static function fromDateTime(DateTimeImmutable $value);
 
-    public static function tryFromMixed(mixed $value): static|Undefined;
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     * @param mixed $value
+     */
+    public static function tryFromMixed($value);
 
-    public static function tryFromString(string $value): static|Undefined;
+    /**
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    public static function tryFromString(string $value);
 
     /**
      * @param non-empty-string $timezone
+     * @return static
      */
-    public static function fromString(string $value, string $timezone = self::ZONE): static;
+    public static function fromString(string $value, string $timezone = self::ZONE);
 
     /**
      * @param non-empty-string $timezone
+     * @return static
      */
-    public function withTimeZone(string $timezone): static;
+    public function withTimeZone(string $timezone);
 
     public static function getFormat(): string;
 

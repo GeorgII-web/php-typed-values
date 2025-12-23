@@ -24,6 +24,6 @@ use PhpTypedValues\Base\Shared\FromString;
  *
  * @psalm-immutable
  */
-abstract readonly class StrType extends PrimitiveType implements StrTypeInterface, FromString
+abstract class StrType extends PrimitiveType implements StrTypeInterface, FromString
 {
 }

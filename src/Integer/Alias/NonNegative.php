@@ -20,6 +20,6 @@ use PhpTypedValues\Integer\IntegerNonNegative;
  *
  * @psalm-immutable
  */
-final readonly class NonNegative extends IntegerNonNegative
+final class NonNegative extends IntegerNonNegative
 {
 }
