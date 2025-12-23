@@ -16,8 +16,17 @@ it('fromDateTime returns same instant and toString is ISO 8601', function (): vo
 it('fromString parses valid ATOM and preserves timezone offset', function (): void {
     $vo = DateTimeAtom::fromString('2030-12-31T23:59:59+03:00');
 
-    expect($vo->toString())->toBe('2030-12-31T23:59:59+03:00')
-        ->and($vo->value()->format(\DATE_ATOM))->toBe('2030-12-31T23:59:59+03:00');
+    expect($vo->toString())->toBe('2030-12-31T20:59:59+00:00')
+        ->and($vo->value()->format(\DATE_ATOM))->toBe('2030-12-31T20:59:59+00:00')
+        ->and($vo->withTimeZone('Europe/Berlin')->toString())->toBe('2030-12-31T21:59:59+01:00');
+});
+
+it('fromString parses valid ATOM and preserves timezone offset for UTC', function (): void {
+    $vo = DateTimeAtom::fromString('2030-12-31T21:59:59+00:00');
+
+    expect($vo->toString())->toBe('2030-12-31T21:59:59+00:00')
+        ->and($vo->value()->format(\DATE_ATOM))->toBe('2030-12-31T21:59:59+00:00')
+        ->and($vo->withTimeZone('Europe/Berlin')->toString())->toBe('2030-12-31T22:59:59+01:00');
 });
 
 it('fromString throws on invalid date parts (errors path)', function (): void {
@@ -187,13 +196,13 @@ it('tryFromString and tryFromMixed accept custom timezone', function (): void {
     $s = '2025-01-02T04:04:05+01:00';
     $vo1 = DateTimeAtom::tryFromString($s, 'Europe/Berlin');
     expect($vo1)->toBeInstanceOf(DateTimeAtom::class)
-        ->and($vo1->toString())->toBe($s)
-        ->and($vo1->value()->getOffset())->toBe(3600);
+        ->and($vo1->toString())->toBe('2025-01-02T03:04:05+00:00')
+        ->and($vo1->value()->getOffset())->toBe(0);
 
     $vo2 = DateTimeAtom::tryFromMixed($s, 'Europe/Berlin');
     expect($vo2)->toBeInstanceOf(DateTimeAtom::class)
-        ->and($vo2->toString())->toBe($s)
-        ->and($vo2->value()->getOffset())->toBe(3600);
+        ->and($vo2->toString())->toBe('2025-01-02T03:04:05+00:00')
+        ->and($vo2->value()->getOffset())->toBe(0);
 });
 
 it('isUndefined is always false for DateTimeAtom', function (): void {

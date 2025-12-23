@@ -82,11 +82,11 @@ it('tryFromString and tryFromMixed accept custom timezone', function (): void {
     $s = '2025-01-02 04:04:05';
     $vo1 = DateTimeSql::tryFromString($s, 'Europe/Berlin');
     expect($vo1)->toBeInstanceOf(DateTimeSql::class)
-        ->and($vo1->toString())->toBe($s)
-        ->and($vo1->value()->getOffset())->toBe(3600);
+        ->and($vo1->toString())->toBe('2025-01-02 03:04:05')
+        ->and($vo1->value()->getOffset())->toBe(0);
 
     $vo2 = DateTimeSql::tryFromMixed($s, 'Europe/Berlin');
     expect($vo2)->toBeInstanceOf(DateTimeSql::class)
-        ->and($vo2->toString())->toBe($s)
-        ->and($vo2->value()->getOffset())->toBe(3600);
+        ->and($vo2->toString())->toBe('2025-01-02 03:04:05')
+        ->and($vo2->value()->getOffset())->toBe(0);
 });

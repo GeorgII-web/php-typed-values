@@ -16,8 +16,8 @@ it('fromDateTime returns same instant and toString is ISO 8601', function (): vo
 it('fromString parses valid RFC3339 and preserves timezone offset', function (): void {
     $vo = DateTimeRFC3339::fromString('2030-12-31T23:59:59+03:00');
 
-    expect($vo->toString())->toBe('2030-12-31T23:59:59+03:00')
-        ->and($vo->value()->format(\DATE_RFC3339))->toBe('2030-12-31T23:59:59+03:00');
+    expect($vo->toString())->toBe('2030-12-31T20:59:59+00:00')
+        ->and($vo->value()->format(\DATE_RFC3339))->toBe('2030-12-31T20:59:59+00:00');
 });
 
 it('fromString throws on invalid date parts (errors path)', function (): void {
@@ -184,21 +184,21 @@ it('withTimeZone returns a new instance with updated timezone', function (): voi
 
 it('fromString accepts custom timezone', function (): void {
     $vo = DateTimeRFC3339::fromString('2025-01-02T04:04:05+01:00', 'Europe/Berlin');
-    expect($vo->toString())->toBe('2025-01-02T04:04:05+01:00')
-        ->and($vo->value()->getOffset())->toBe(3600);
+    expect($vo->toString())->toBe('2025-01-02T03:04:05+00:00')
+        ->and($vo->value()->getOffset())->toBe(0);
 });
 
 it('tryFromString and tryFromMixed accept custom timezone', function (): void {
     $s = '2025-01-02T04:04:05+01:00';
     $vo1 = DateTimeRFC3339::tryFromString($s, 'Europe/Berlin');
     expect($vo1)->toBeInstanceOf(DateTimeRFC3339::class)
-        ->and($vo1->toString())->toBe($s)
-        ->and($vo1->value()->getOffset())->toBe(3600);
+        ->and($vo1->toString())->toBe('2025-01-02T03:04:05+00:00')
+        ->and($vo1->value()->getOffset())->toBe(0);
 
     $vo2 = DateTimeRFC3339::tryFromMixed($s, 'Europe/Berlin');
     expect($vo2)->toBeInstanceOf(DateTimeRFC3339::class)
-        ->and($vo2->toString())->toBe($s)
-        ->and($vo2->value()->getOffset())->toBe(3600);
+        ->and($vo2->toString())->toBe('2025-01-02T03:04:05+00:00')
+        ->and($vo2->value()->getOffset())->toBe(0);
 });
 
 it('isUndefined is always false for DateTimeRFC3339', function (): void {

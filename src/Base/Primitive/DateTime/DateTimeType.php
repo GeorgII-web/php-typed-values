@@ -96,9 +96,10 @@ abstract readonly class DateTimeType extends PrimitiveType implements DateTimeTy
 
         /**
          * $dt is not FALSE here, it will fail before on error checking.
+         * Reset to a default time zone.
          *
          * @psalm-suppress FalsableReturnStatement
          */
-        return $dt;
+        return $dt->setTimezone(new DateTimeZone(self::ZONE));
     }
 }
