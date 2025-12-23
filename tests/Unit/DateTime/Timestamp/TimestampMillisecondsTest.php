@@ -115,8 +115,10 @@ it('TimestampMilliseconds::tryFromString returns Undefined for non-digit input',
     expect($u)->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class);
 });
 
-it('jsonSerialize returns integer', function (): void {
-    expect(TimestampMilliseconds::tryFromString('1732445696999')->jsonSerialize())->toBeInt();
+it('jsonSerialize and toInt return integer', function (): void {
+    $vo = TimestampMilliseconds::tryFromString('1732445696999');
+    expect($vo->jsonSerialize())->toBe(1732445696999)
+        ->and($vo->toInt())->toBe(1732445696999);
 });
 
 it('__toString returns the milliseconds string', function (): void {

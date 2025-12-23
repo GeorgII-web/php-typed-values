@@ -75,6 +75,12 @@ try {
 }
 
 try {
+    $undefined->toArray();
+} catch (TypeException $e) {
+    echo $e->getMessage() . PHP_EOL;
+}
+
+try {
     $undefined->jsonSerialize();
 } catch (TypeException $e) {
     echo $e->getMessage() . PHP_EOL;

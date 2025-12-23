@@ -61,7 +61,7 @@ readonly class TimestampSeconds extends DateTimeType
      *
      * @throws DateTimeTypeException
      */
-    public static function fromInt(int $value, string $timezone = self::ZONE): static|Undefined
+    public static function fromInt(int $value, string $timezone = self::ZONE): static
     {
         return static::fromString((string) $value, $timezone);
     }
@@ -114,6 +114,11 @@ readonly class TimestampSeconds extends DateTimeType
     public function toString(): string
     {
         return $this->value()->format(static::FORMAT);
+    }
+
+    public function toInt(): int
+    {
+        return (int) $this->toString();
     }
 
     public function jsonSerialize(): int

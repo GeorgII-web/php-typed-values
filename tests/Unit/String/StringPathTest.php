@@ -9,6 +9,7 @@ use PhpTypedValues\Undefined\Alias\Undefined;
 it('checks valid paths', function (): void {
     expect(StringPath::fromString('/etc/passwd')->value())->toBe('/etc/passwd')
         ->and(StringPath::fromString('etc/passwd')->value())->toBe('etc/passwd')
+        ->and(StringPath::fromString('/')->value())->toBe('/')
         ->and(StringPath::fromString('etc')->value())->toBe('etc')
         ->and(StringPath::fromString('etc/')->value())->toBe('etc/')
         ->and(StringPath::fromString('/etc')->value())->toBe('/etc')

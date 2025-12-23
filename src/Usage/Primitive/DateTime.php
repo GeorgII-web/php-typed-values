@@ -72,9 +72,11 @@ if (!($w instanceof Undefined)) {
 $ts = TimestampSeconds::tryFromString('1735787045');
 if (!($ts instanceof Undefined)) {
     echo $ts->toString() . PHP_EOL;
+    echo $ts->toInt() . PHP_EOL;
 }
 
 $tm = TimestampMilliseconds::tryFromString('1735787045123');
 if (!($tm instanceof Undefined)) {
     echo $tm->toString() . PHP_EOL;
+    echo $tm->toInt() . PHP_EOL;
 }

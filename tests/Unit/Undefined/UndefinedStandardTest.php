@@ -34,6 +34,12 @@ it('throws on toFloat for UndefinedStandard', function (): void {
         ->toThrow(UndefinedTypeException::class, 'UndefinedType cannot be converted to float.');
 });
 
+it('throws on toArray for UndefinedStandard', function (): void {
+    $u = UndefinedStandard::create();
+    expect(fn() => $u->toArray())
+        ->toThrow(UndefinedTypeException::class, 'UndefinedType cannot be converted to array.');
+});
+
 it('throws on value for UndefinedStandard', function (): void {
     $u = UndefinedStandard::create();
     expect(fn() => $u->value())

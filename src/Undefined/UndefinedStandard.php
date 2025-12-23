@@ -56,6 +56,14 @@ readonly class UndefinedStandard extends UndefinedType
     /**
      * @throws UndefinedTypeException
      */
+    public function toArray(): never
+    {
+        throw new UndefinedTypeException('UndefinedType cannot be converted to array.');
+    }
+
+    /**
+     * @throws UndefinedTypeException
+     */
     public function toString(): string
     {
         throw new UndefinedTypeException('UndefinedType cannot be converted to string.');
