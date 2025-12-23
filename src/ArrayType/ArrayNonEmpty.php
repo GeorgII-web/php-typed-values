@@ -24,10 +24,11 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class ArrayNonEmpty extends ArrayType
+class ArrayNonEmpty extends ArrayType
 {
     /**
      * @var list<TItem>
+     * @readonly
      */
     private array $value;
 
@@ -49,8 +50,9 @@ readonly class ArrayNonEmpty extends ArrayType
      * @param list<mixed> $value
      *
      * @throws ArrayTypeException
+     * @return static
      */
-    public static function fromArray(array $value): static
+    public static function fromArray(array $value)
     {
         /** @var list<TItem> $value */
         return new static($value);
@@ -60,8 +62,9 @@ readonly class ArrayNonEmpty extends ArrayType
      * @param list<mixed> $value
      *
      * @throws ArrayTypeException
+     * @return static
      */
-    public static function tryFromArray(array $value): static
+    public static function tryFromArray(array $value)
     {
         /** @var list<TItem> $value */
         return new static($value);
@@ -119,7 +122,7 @@ readonly class ArrayNonEmpty extends ArrayType
             }
 
             // 3. Fallback for objects that don't implement JsonSerializable but might be Stringable
-            if ($item instanceof Stringable) {
+            if (is_object($item) && method_exists($item, '__toString')) {
                 $result[] = $item->__toString();
                 continue;
             }

@@ -30,7 +30,7 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class TimestampMilliseconds extends DateTimeType
+class TimestampMilliseconds extends DateTimeType
 {
     /**
      * Internal formatting pattern for seconds + microseconds.
@@ -39,6 +39,9 @@ readonly class TimestampMilliseconds extends DateTimeType
      */
     protected const FORMAT = 'U.u';
 
+    /**
+     * @readonly
+     */
     protected DateTimeImmutable $value;
 
     public function __construct(DateTimeImmutable $value)
@@ -51,23 +54,26 @@ readonly class TimestampMilliseconds extends DateTimeType
      * @param non-empty-string $timezone
      *
      * @throws DateTimeTypeException
+     * @return static
      */
-    public static function fromInt(int $value, string $timezone = self::ZONE): static
+    public static function fromInt(int $value, string $timezone = self::ZONE)
     {
         return static::fromString((string) $value, $timezone);
     }
 
     /**
      * @param non-empty-string $timezone
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
+     * @param mixed $value
      */
-    public static function tryFromMixed(mixed $value, string $timezone = self::ZONE): static|Undefined
+    public static function tryFromMixed($value, string $timezone = self::ZONE)
     {
         try {
             return static::fromString(
                 static::convertMixedToString($value),
                 $timezone
             );
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return Undefined::create();
         }
     }
@@ -78,8 +84,9 @@ readonly class TimestampMilliseconds extends DateTimeType
      * @param non-empty-string $timezone
      *
      * @throws DateTimeTypeException
+     * @return static
      */
-    public static function fromString(string $value, string $timezone = self::ZONE): static
+    public static function fromString(string $value, string $timezone = self::ZONE)
     {
         if (!ctype_digit($value)) {
             throw new DateTimeTypeException(sprintf('Expected milliseconds timestamp as digits, got "%s"', $value));
@@ -107,22 +114,29 @@ readonly class TimestampMilliseconds extends DateTimeType
 
     /**
      * @param non-empty-string $timezone
+     * @return static|\PhpTypedValues\Undefined\Alias\Undefined
      */
-    public static function tryFromString(string $value, string $timezone = self::ZONE): static|Undefined
+    public static function tryFromString(string $value, string $timezone = self::ZONE)
     {
         try {
             return static::fromString($value, $timezone);
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             return Undefined::create();
         }
     }
 
-    public static function fromDateTime(DateTimeImmutable $value): static
+    /**
+     * @return static
+     */
+    public static function fromDateTime(DateTimeImmutable $value)
     {
         return new static($value);
     }
 
-    public function withTimeZone(string $timezone): static
+    /**
+     * @return static
+     */
+    public function withTimeZone(string $timezone)
     {
         return new static(
             $this->value()->setTimezone(new DateTimeZone($timezone))

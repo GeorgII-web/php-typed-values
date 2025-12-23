@@ -22,10 +22,11 @@ use function is_object;
  *
  * @psalm-immutable
  */
-readonly class ArrayOfObjects extends ArrayType
+class ArrayOfObjects extends ArrayType
 {
     /**
      * @var list<TItem>
+     * @readonly
      */
     private array $value;
 
@@ -49,8 +50,9 @@ readonly class ArrayOfObjects extends ArrayType
      * @param list<mixed> $value
      *
      * @throws ArrayTypeException
+     * @return static
      */
-    public static function fromArray(array $value): static
+    public static function fromArray(array $value)
     {
         /** @var list<TItem> $value */
         return new static($value);
@@ -60,8 +62,9 @@ readonly class ArrayOfObjects extends ArrayType
      * @param list<mixed> $value
      *
      * @throws ArrayTypeException
+     * @return static
      */
-    public static function tryFromArray(array $value): static
+    public static function tryFromArray(array $value)
     {
         $valueWithUndefined = [];
         foreach ($value as $item) {

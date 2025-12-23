@@ -27,7 +27,7 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-abstract readonly class FloatType extends PrimitiveType implements FloatTypeInterface, FromString
+abstract class FloatType extends PrimitiveType implements FloatTypeInterface, FromString
 {
     /**
      * @throws FloatTypeException

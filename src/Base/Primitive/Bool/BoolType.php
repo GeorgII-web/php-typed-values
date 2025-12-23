@@ -24,6 +24,6 @@ use PhpTypedValues\Base\Shared\FromString;
  *
  * @psalm-immutable
  */
-abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterface, FromString
+abstract class BoolType extends PrimitiveType implements BoolTypeInterface, FromString
 {
 }
