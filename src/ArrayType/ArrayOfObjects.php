@@ -77,6 +77,17 @@ readonly class ArrayOfObjects extends ArrayType
     }
 
     /**
+     * @no-named-arguments
+     *
+     * @throws ArrayTypeException
+     */
+    public static function fromItems(object ...$items): static
+    {
+        /** @var list<TItem> $items */
+        return new static($items);
+    }
+
+    /**
      * @return list<TItem>
      */
     public function value(): array

@@ -81,7 +81,7 @@ final readonly class WithArrays implements JsonSerializable
             $height !== null
                 ? FloatPositive::fromString((string) $height) // Early fail for not NULL
                 : Undefined::create(), // Late fail for NULL
-            ArrayOfObjects::fromArray($nickNamesObjects)
+            ArrayOfObjects::fromItems(...$nickNamesObjects)
         );
     }
 

@@ -115,3 +115,15 @@ it('does not mutate internal state across calls', function (): void {
     expect($v1)->toBe($v2)
         ->and($c->toArray())->toBe($c->toArray());
 });
+
+it('can be created fromItems (variadic factory)', function (): void {
+    $i1 = IntegerNonNegative::fromInt(1);
+    $s1 = StringNonEmpty::fromString('A');
+
+    $c = ArrayOfObjects::fromItems($i1, $s1);
+
+    expect($c->value())
+        ->toHaveCount(2)
+        ->and($c->value()[0])->toBe($i1)
+        ->and($c->value()[1])->toBe($s1);
+});
