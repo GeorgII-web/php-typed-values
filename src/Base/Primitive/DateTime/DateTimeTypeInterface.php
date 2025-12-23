@@ -22,6 +22,8 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  */
 interface DateTimeTypeInterface
 {
+    public const ZONE = 'UTC';
+
     public function value(): DateTimeImmutable;
 
     public static function fromDateTime(DateTimeImmutable $value): static;
@@ -33,5 +35,14 @@ interface DateTimeTypeInterface
     /**
      * @param non-empty-string $timezone
      */
+    public static function fromString(string $value, string $timezone = self::ZONE): static;
+
+    /**
+     * @param non-empty-string $timezone
+     */
     public function withTimeZone(string $timezone): static;
+
+    public static function getFormat(): string;
+
+    public function toString(): string;
 }

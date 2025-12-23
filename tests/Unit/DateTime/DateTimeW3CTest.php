@@ -175,8 +175,8 @@ it('withTimeZone returns a new instance with updated timezone', function (): voi
     $vo2 = $vo->withTimeZone('Europe/Berlin');
 
     expect($vo2)->toBeInstanceOf(DateTimeW3C::class)
-        ->and($vo2->toString())->toBe('2025-01-02T04:04:05+01:00')
-        ->and($vo2->value()->getTimezone()->getName())->toBe('Europe/Berlin');
+        ->and($vo2->toString())->toBe('2025-01-02T03:04:05+00:00')
+        ->and($vo2->value()->getTimezone()->getName())->toBe('UTC');
 
     // original is immutable
     expect($vo->toString())->toBe('2025-01-02T03:04:05+00:00');

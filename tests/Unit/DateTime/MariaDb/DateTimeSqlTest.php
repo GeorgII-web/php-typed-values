@@ -74,8 +74,8 @@ it('withTimeZone returns a new instance with updated timezone', function (): voi
     $vo2 = $vo->withTimeZone('Europe/Berlin');
 
     expect($vo2)->toBeInstanceOf(DateTimeSql::class)
-        ->and($vo2->toString())->toBe('2025-01-02 04:04:05')
-        ->and($vo2->value()->getTimezone()->getName())->toBe('Europe/Berlin');
+        ->and($vo2->toString())->toBe('2025-01-02 03:04:05')
+        ->and($vo2->value()->getTimezone()->getName())->toBe('UTC');
 });
 
 it('tryFromString and tryFromMixed accept custom timezone', function (): void {

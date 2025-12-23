@@ -8,14 +8,13 @@ use JsonSerializable;
 use PhpTypedValues\Base\Shared\IsEmptyInterface;
 use PhpTypedValues\Base\Shared\IsUndefinedInterface;
 use PhpTypedValues\Base\TypeInterface;
-use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
  * Base contract for all immutable typed values in this library.
  *
  * Responsibilities
- *  - Provide strict construction from a validated string via {@see fromString}.
+ *  - Provide strict construction from a validated string via {@see FromString}.
  *  - Provide a lossless string representation via {@see toString} and {@see __toString}.
  *  - Concrete implementations may also provide tolerant factories like
  *    `tryFromMixed(mixed): static|Undefined` that return {@see Undefined} on failure.
@@ -27,17 +26,6 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  */
 interface PrimitiveTypeInterface extends TypeInterface, JsonSerializable, IsEmptyInterface, IsUndefinedInterface
 {
-    /**
-     * Create an instance from a validated string representation.
-     *
-     * Implementations should perform strict validation and may throw a
-     * domain-specific subtype of {@see TypeException}
-     * when the provided value is invalid.
-     *
-     * @throws TypeException
-     */
-    public static function fromString(string $value): static;
-
     /**
      * Returns a normalized string representation of the underlying value.
      */

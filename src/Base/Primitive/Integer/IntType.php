@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PhpTypedValues\Base\Primitive\Integer;
 
 use PhpTypedValues\Base\Primitive\PrimitiveType;
+use PhpTypedValues\Base\Shared\FromString;
 use PhpTypedValues\Exception\IntegerTypeException;
 
 use function sprintf;
@@ -26,7 +27,7 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-abstract readonly class IntType extends PrimitiveType implements IntTypeInterface
+abstract readonly class IntType extends PrimitiveType implements IntTypeInterface, FromString
 {
     /**
      * @throws IntegerTypeException

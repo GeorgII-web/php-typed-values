@@ -36,7 +36,8 @@ readonly class DateTimeRFC3339 extends DateTimeType
 
     public function __construct(DateTimeImmutable $value)
     {
-        $this->value = $value;
+        // normalized time zone
+        $this->value = $value->setTimezone(new DateTimeZone(static::ZONE));
     }
 
     /**
@@ -96,10 +97,7 @@ readonly class DateTimeRFC3339 extends DateTimeType
 
     public static function fromDateTime(DateTimeImmutable $value): static
     {
-        // normalized timezone
-        return new static(
-            $value->setTimezone(new DateTimeZone(static::ZONE))
-        );
+        return new static($value);
     }
 
     public function jsonSerialize(): string
