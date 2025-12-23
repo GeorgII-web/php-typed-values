@@ -23,6 +23,6 @@ use PhpTypedValues\Base\Shared\FromString;
  *
  * @psalm-immutable
  */
-abstract readonly class UndefinedType extends PrimitiveType implements UndefinedTypeInterface, FromString
+abstract class UndefinedType extends PrimitiveType implements UndefinedTypeInterface, FromString
 {
 }

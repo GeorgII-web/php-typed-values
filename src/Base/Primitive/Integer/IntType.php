@@ -27,7 +27,7 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-abstract readonly class IntType extends PrimitiveType implements IntTypeInterface, FromString
+abstract class IntType extends PrimitiveType implements IntTypeInterface, FromString
 {
     /**
      * @throws IntegerTypeException
