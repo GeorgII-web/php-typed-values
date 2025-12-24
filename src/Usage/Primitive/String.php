@@ -131,7 +131,7 @@ if (!($dec instanceof Undefined)) {
     // toFloat may throw if string cannot be represented exactly; suppress for usage demo
     try {
         echo (string) $dec->toFloat() . PHP_EOL;
-    } catch (TypeException) {
+    } catch (TypeException $exception) {
         // ignore in usage
     }
 }
