@@ -67,15 +67,6 @@ readonly class StringCountryCode extends StrType
         return new static($value);
     }
 
-    public static function tryFromString(string $value): static|Undefined
-    {
-        try {
-            return static::fromString($value);
-        } catch (TypeException) {
-            return Undefined::create();
-        }
-    }
-
     /** @return non-empty-string */
     public function value(): string
     {

@@ -49,15 +49,6 @@ readonly class StringVarChar255 extends StrType
         }
     }
 
-    public static function tryFromString(string $value): static|Undefined
-    {
-        try {
-            return static::fromString($value);
-        } catch (TypeException) {
-            return Undefined::create();
-        }
-    }
-
     /**
      * @throws StringTypeException
      */

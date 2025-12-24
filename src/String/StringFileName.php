@@ -71,15 +71,6 @@ readonly class StringFileName extends StrType
         return new static($value);
     }
 
-    public static function tryFromString(string $value): static|Undefined
-    {
-        try {
-            return static::fromString($value);
-        } catch (TypeException) {
-            return Undefined::create();
-        }
-    }
-
     /**
      * Returns the name of the file without the extension.
      */

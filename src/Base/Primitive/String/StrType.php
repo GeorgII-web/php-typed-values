@@ -6,6 +6,8 @@ namespace PhpTypedValues\Base\Primitive\String;
 
 use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Base\Shared\FromString;
+use PhpTypedValues\Exception\TypeException;
+use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
  * Base implementation for string-typed values.
@@ -26,4 +28,20 @@ use PhpTypedValues\Base\Shared\FromString;
  */
 abstract readonly class StrType extends PrimitiveType implements StrTypeInterface, FromString
 {
+    /**
+     * @template T
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromString(string $value, mixed $default = new Undefined()): mixed
+    {
+        try {
+            /** @var static */
+            return static::fromString($value);
+        } catch (TypeException) {
+            return $default;
+        }
+    }
 }

@@ -48,6 +48,8 @@ testString(StringStandard::fromString('hi')->value());
 testNonEmptyString(StringNonEmpty::fromString('hi')->value());
 testEmptyString(StringEmpty::fromString('')->value());
 
+echo StringNonEmpty::tryFromString('', new Integer(3))->value() . PHP_EOL;
+echo StringNonEmpty::tryFromString('', new StringCountryCode('DE'))->toString() . PHP_EOL;
 echo StringStandard::fromString('hi')->toString() . PHP_EOL;
 echo NonEmpty::fromString('hi')->toString() . PHP_EOL;
 echo StrType::fromString('hi')->toString() . PHP_EOL;

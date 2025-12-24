@@ -62,15 +62,6 @@ readonly class StringDecimal extends StrType
         return new static($value);
     }
 
-    public static function tryFromString(string $value): static|Undefined
-    {
-        try {
-            return static::fromString($value);
-        } catch (TypeException) {
-            return Undefined::create();
-        }
-    }
-
     public function value(): string
     {
         return $this->value;

@@ -52,15 +52,6 @@ readonly class StringNonEmpty extends StrType
         }
     }
 
-    public static function tryFromString(string $value): static|Undefined
-    {
-        try {
-            return static::fromString($value);
-        } catch (TypeException) {
-            return Undefined::create();
-        }
-    }
-
     /**
      * @throws StringTypeException
      */

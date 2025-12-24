@@ -41,14 +41,6 @@ readonly class StringStandard extends StrType
         }
     }
 
-    /**
-     * @throws TypeException
-     */
-    public static function tryFromString(string $value): static|Undefined
-    {
-        return static::fromString($value);
-    }
-
     public static function fromString(string $value): static
     {
         return new static($value);
