@@ -18,9 +18,6 @@ use PhpTypedValues\String\StringFileName;
  *    $f->getFileNameOnly(); // "image"
  *    $f->getExtension(); // "jpg"
  *
- * @method        non-empty-string value()
- * @method static static|mixed     tryFromString(string $value, mixed $default = null)
- *
  * @psalm-immutable
  */
 final readonly class File extends StringFileName

@@ -16,9 +16,6 @@ use PhpTypedValues\String\StringNonEmpty;
  *  - $v = NonEmpty::fromString('hello');
  *    $v->value(); // 'hello'
  *
- * @method        non-empty-string value()
- * @method static static|mixed     tryFromString(string $value, mixed $default = null)
- *
  * @psalm-immutable
  */
 final readonly class NonEmpty extends StringNonEmpty

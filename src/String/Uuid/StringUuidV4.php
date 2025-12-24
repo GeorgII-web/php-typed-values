@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace PhpTypedValues\String\Uuid;
 
 use PhpTypedValues\Base\Primitive\String\StrType;
-use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Exception\UuidStringTypeException;
-use PhpTypedValues\Undefined\Alias\Undefined;
 
 use function preg_match;
 use function sprintf;
@@ -27,6 +25,7 @@ use function strtolower;
  *
  * @method        non-empty-string value()
  * @method static static|mixed     tryFromString(string $value, mixed $default = null)
+ * @method static static|mixed     tryFromMixed(mixed $value, mixed $default = null)
  *
  * @psalm-immutable
  */
@@ -55,17 +54,6 @@ readonly class StringUuidV4 extends StrType
         }
 
         $this->value = $normalized;
-    }
-
-    public static function tryFromMixed(mixed $value): static|Undefined
-    {
-        try {
-            return static::fromString(
-                static::convertMixedToString($value)
-            );
-        } catch (TypeException) {
-            return Undefined::create();
-        }
     }
 
     /**

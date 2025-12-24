@@ -16,9 +16,6 @@ use PhpTypedValues\String\StringJson;
  *  - $j = Json::fromString('{"a":1}');
  *    $j->toArray(); // ['a' => 1]
  *
- * @method        string       value()
- * @method static static|mixed tryFromString(string $value, mixed $default = null)
- *
  * @psalm-immutable
  */
 final readonly class Json extends StringJson

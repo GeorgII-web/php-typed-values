@@ -16,9 +16,6 @@ use PhpTypedValues\String\Uuid\StringUuidV4;
  *  - $u = UuidV4::fromString('550E8400-E29B-41D4-A716-446655440000');
  *    $u->toString(); // '550e8400-e29b-41d4-a716-446655440000'
  *
- * @method        non-empty-string value()
- * @method static static|mixed     tryFromString(string $value, mixed $default = null)
- *
  * @psalm-immutable
  */
 final readonly class UuidV4 extends StringUuidV4

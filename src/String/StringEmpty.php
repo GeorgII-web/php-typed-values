@@ -6,8 +6,6 @@ namespace PhpTypedValues\String;
 
 use PhpTypedValues\Base\Primitive\String\StrType;
 use PhpTypedValues\Exception\StringTypeException;
-use PhpTypedValues\Exception\TypeException;
-use PhpTypedValues\Undefined\Alias\Undefined;
 
 use function sprintf;
 
@@ -23,6 +21,7 @@ use function sprintf;
  *
  * @method        string       value()
  * @method static static|mixed tryFromString(string $value, mixed $default = null)
+ * @method static static|mixed tryFromMixed(mixed $value, mixed $default = null)
  *
  * @psalm-immutable
  */
@@ -40,17 +39,6 @@ readonly class StringEmpty extends StrType
         }
 
         $this->value = '';
-    }
-
-    public static function tryFromMixed(mixed $value): static|Undefined
-    {
-        try {
-            return static::fromString(
-                static::convertMixedToString($value)
-            );
-        } catch (TypeException) {
-            return Undefined::create();
-        }
     }
 
     /**

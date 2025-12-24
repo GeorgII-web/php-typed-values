@@ -47,6 +47,25 @@ abstract readonly class StrType extends PrimitiveType implements StrTypeInterfac
         }
     }
 
+    /**
+     * @template T
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromMixed(mixed $value, mixed $default = new Undefined()): mixed
+    {
+        try {
+            /** @var static */
+            return static::fromString(
+                static::convertMixedToString($value)
+            );
+        } catch (TypeException) {
+            return $default;
+        }
+    }
+
     public function value(): string
     {
         return $this->value;
