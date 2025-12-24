@@ -28,6 +28,7 @@ use PhpTypedValues\String\MariaDb\StringText;
 use PhpTypedValues\String\MariaDb\StringVarChar255;
 use PhpTypedValues\String\StringCountryCode;
 use PhpTypedValues\String\StringEmail;
+use PhpTypedValues\String\StringEmpty;
 use PhpTypedValues\String\StringFileName;
 use PhpTypedValues\String\StringNonBlank;
 use PhpTypedValues\String\StringNonEmpty;
@@ -45,6 +46,7 @@ echo PHP_EOL . '> STRING' . PHP_EOL;
 
 testString(StringStandard::fromString('hi')->value());
 testNonEmptyString(StringNonEmpty::fromString('hi')->value());
+testEmptyString(StringEmpty::fromString('')->value());
 
 echo StringStandard::fromString('hi')->toString() . PHP_EOL;
 echo NonEmpty::fromString('hi')->toString() . PHP_EOL;
@@ -146,6 +148,11 @@ function testString(string $i): string
  * @param non-empty-string $i
  */
 function testNonEmptyString(string $i): string
+{
+    return $i;
+}
+
+function testEmptyString(string $i): string
 {
     return $i;
 }

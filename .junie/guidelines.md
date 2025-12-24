@@ -20,3 +20,12 @@
 *   `src/{Type}`: Concrete type implementations (e.g., `src/Integer`).
 *   `src/{Type}/Alias`: Concrete type aliases, just a new name (e.g., `src/Integer/Positive`).
 *   `src/Usage`: Usage examples (prevents "unused code" false positives in Psalm).
+
+**Testing scripts**
+*   **Style fix:** Use `composer cs` script.
+*   **Psalm check:** Use `composer sca` script.
+*   **Usage check:** Use `composer usage` script.
+*   **Unit testing:** Use `composer test` script.
+*   **Type coverage:** Use `composer type` script.
+*   **Test coverage:** Use `composer coverage` script.
+*   **Mutation Testing:** Use `composer mutate` script.
