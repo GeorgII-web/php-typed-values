@@ -23,7 +23,8 @@ use function trim;
  *    $v->toString(); // ' hello '
  *  - StringNonBlank::fromString("   "); // throws StringTypeException
  *
- * @method static static|mixed tryFromString(string $value, mixed $default = null)
+ * @method        non-empty-string value()
+ * @method static static|mixed     tryFromString(string $value, mixed $default = null)
  *
  * @psalm-immutable
  */
@@ -62,12 +63,6 @@ readonly class StringNonBlank extends StrType
     public static function fromString(string $value): static
     {
         return new static($value);
-    }
-
-    /** @return non-empty-string */
-    public function value(): string
-    {
-        return $this->value;
     }
 
     public function jsonSerialize(): string

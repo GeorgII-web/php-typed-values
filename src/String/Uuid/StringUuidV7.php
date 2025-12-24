@@ -25,7 +25,8 @@ use function strtolower;
  *    $u->toString(); // '01890f2a-5bcd-7def-9abc-1234567890ab'
  *  - StringUuidV7::fromString('not-a-uuid'); // throws UuidStringTypeException
  *
- * @method static static|mixed tryFromString(string $value, mixed $default = null)
+ * @method        non-empty-string value()
+ * @method static static|mixed     tryFromString(string $value, mixed $default = null)
  *
  * @psalm-immutable
  */
@@ -73,12 +74,6 @@ readonly class StringUuidV7 extends StrType
     public static function fromString(string $value): static
     {
         return new static($value);
-    }
-
-    /** @return non-empty-string */
-    public function value(): string
-    {
-        return $this->value;
     }
 
     public function jsonSerialize(): string

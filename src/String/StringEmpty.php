@@ -21,12 +21,15 @@ use function sprintf;
  *    $v->value(); // ''
  *  - StringEmpty::fromString('hello'); // throws StringTypeException
  *
+ * @method        string       value()
  * @method static static|mixed tryFromString(string $value, mixed $default = null)
  *
  * @psalm-immutable
  */
 readonly class StringEmpty extends StrType
 {
+    protected string $value;
+
     /**
      * @throws StringTypeException
      */
@@ -35,6 +38,8 @@ readonly class StringEmpty extends StrType
         if ($value !== '') {
             throw new StringTypeException(sprintf('Expected empty string, got "%s"', $value));
         }
+
+        $this->value = '';
     }
 
     public static function tryFromMixed(mixed $value): static|Undefined
@@ -54,11 +59,6 @@ readonly class StringEmpty extends StrType
     public static function fromString(string $value): static
     {
         return new static($value);
-    }
-
-    public function value(): string
-    {
-        return '';
     }
 
     public function jsonSerialize(): string

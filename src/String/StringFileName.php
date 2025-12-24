@@ -28,7 +28,8 @@ use function sprintf;
  *    $f->getFileNameOnly(); // "image"
  *    $f->getExtension(); // "jpg"
  *
- * @method static static|mixed tryFromString(string $value, mixed $default = null)
+ * @method        non-empty-string value()
+ * @method static static|mixed     tryFromString(string $value, mixed $default = null)
  *
  * @psalm-immutable
  */
@@ -87,12 +88,6 @@ readonly class StringFileName extends StrType
     public function getExtension(): string
     {
         return pathinfo($this->value, PATHINFO_EXTENSION);
-    }
-
-    /** @return non-empty-string */
-    public function value(): string
-    {
-        return $this->value;
     }
 
     public function jsonSerialize(): string
