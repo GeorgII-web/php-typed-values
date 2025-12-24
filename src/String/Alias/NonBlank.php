@@ -16,6 +16,11 @@ use PhpTypedValues\String\StringNonBlank;
  *  - $v = NonBlank::fromString(' hello ');
  *    $v->toString(); // ' hello '
  *
+ * @method        false            isUndefined()
+ * @method        non-empty-string value()
+ * @method static static|mixed     tryFromString(string $value, mixed $default = null)
+ * @method static static|mixed     tryFromMixed(mixed $value, mixed $default = null)
+ *
  * @psalm-immutable
  */
 final readonly class NonBlank extends StringNonBlank

@@ -23,6 +23,7 @@ use function sprintf;
  *    (string) $e; // 'user@example.com'
  *  - StringEmail::fromString('not-an-email'); // throws EmailStringTypeException
  *
+ * @method        false        isUndefined()
  * @method        string       value()
  * @method static static|mixed tryFromString(string $value, mixed $default = null)
  * @method static static|mixed tryFromMixed(mixed $value, mixed $default = null)
@@ -71,11 +72,6 @@ readonly class StringEmail extends StrType
     }
 
     public function isEmpty(): bool
-    {
-        return false;
-    }
-
-    public function isUndefined(): bool
     {
         return false;
     }

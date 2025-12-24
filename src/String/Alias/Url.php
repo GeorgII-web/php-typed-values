@@ -16,6 +16,11 @@ use PhpTypedValues\String\StringUrl;
  *  - $u = Url::fromString('https://example.com/path?x=1');
  *    (string) $u; // "https://example.com/path?x=1"
  *
+ * @method        false        isUndefined()
+ * @method        string       value()
+ * @method static static|mixed tryFromString(string $value, mixed $default = null)
+ * @method static static|mixed tryFromMixed(mixed $value, mixed $default = null)
+ *
  * @psalm-immutable
  */
 final readonly class Url extends StringUrl

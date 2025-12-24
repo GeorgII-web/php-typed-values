@@ -16,6 +16,11 @@ use PhpTypedValues\String\StringStandard;
  *  - $v = StrType::fromString('x');
  *    $v->toString(); // "x"
  *
+ * @method        false        isUndefined()
+ * @method        string       value()
+ * @method static static|mixed tryFromString(string $value, mixed $default = null)
+ * @method static static|mixed tryFromMixed(mixed $value, mixed $default = null)
+ *
  * @psalm-immutable
  */
 final readonly class StrType extends StringStandard

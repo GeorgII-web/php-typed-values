@@ -18,6 +18,7 @@ use PhpTypedValues\Exception\StringTypeException;
  *    $v->toString(); // 'Hello world'
  *  - StringVarChar255::fromString(str_repeat('x', 256)); // throws StringTypeException
  *
+ * @method        false        isUndefined()
  * @method        string       value()
  * @method static static|mixed tryFromString(string $value, mixed $default = null)
  * @method static static|mixed tryFromMixed(mixed $value, mixed $default = null)
@@ -66,10 +67,5 @@ readonly class StringVarChar255 extends StrType
     public function isEmpty(): bool
     {
         return $this->value === '';
-    }
-
-    public function isUndefined(): bool
-    {
-        return false;
     }
 }

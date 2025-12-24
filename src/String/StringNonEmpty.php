@@ -20,6 +20,7 @@ use function sprintf;
  *    $v->value(); // 'hello'
  *  - StringNonEmpty::fromString(''); // throws StringTypeException
  *
+ * @method        false            isUndefined()
  * @method        non-empty-string value()
  * @method static static|mixed     tryFromString(string $value, mixed $default = null)
  * @method static static|mixed     tryFromMixed(mixed $value, mixed $default = null)
@@ -67,11 +68,6 @@ readonly class StringNonEmpty extends StrType
     }
 
     public function isEmpty(): bool
-    {
-        return false;
-    }
-
-    public function isUndefined(): bool
     {
         return false;
     }

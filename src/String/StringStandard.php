@@ -19,6 +19,7 @@ use PhpTypedValues\Base\Primitive\String\StrType;
  *
  * Methods
  *
+ * @method        false        isUndefined()
  * @method        string       value()
  * @method static static|mixed tryFromString(string $value, mixed $default = null)
  * @method static static|mixed tryFromMixed(mixed $value, mixed $default = null)
@@ -57,10 +58,5 @@ readonly class StringStandard extends StrType
     public function isEmpty(): bool
     {
         return $this->value === '';
-    }
-
-    public function isUndefined(): bool
-    {
-        return false;
     }
 }

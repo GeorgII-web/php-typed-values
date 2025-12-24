@@ -20,6 +20,7 @@ use function mb_strlen;
  *    $t->toString(); // 'lorem ipsum'
  *  - StringText::fromString(str_repeat('x', 65536)); // throws StringTypeException
  *
+ * @method        false        isUndefined()
  * @method        string       value()
  * @method static static|mixed tryFromString(string $value, mixed $default = null)
  * @method static static|mixed tryFromMixed(mixed $value, mixed $default = null)
@@ -68,10 +69,5 @@ readonly class StringText extends StrType
     public function isEmpty(): bool
     {
         return $this->value === '';
-    }
-
-    public function isUndefined(): bool
-    {
-        return false;
     }
 }

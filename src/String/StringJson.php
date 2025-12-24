@@ -25,6 +25,7 @@ use function sprintf;
  *    $j->toArray(); // ['a' => 1]
  *  - StringJson::fromString('{invalid}'); // throws JsonStringTypeException
  *
+ * @method        false        isUndefined()
  * @method        string       value()
  * @method static static|mixed tryFromString(string $value, mixed $default = null)
  * @method static static|mixed tryFromMixed(mixed $value, mixed $default = null)
@@ -104,11 +105,6 @@ readonly class StringJson extends StrType
     public function isEmpty(): bool
     {
         // JSON values are never empty by construction; constructor rejects empty strings
-        return false;
-    }
-
-    public function isUndefined(): bool
-    {
         return false;
     }
 }

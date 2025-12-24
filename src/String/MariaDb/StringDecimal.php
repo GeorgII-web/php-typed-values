@@ -26,6 +26,7 @@ use function sprintf;
  * PHP float. The method verifies an exact round‑trip: (string)(float)$src must
  * equal the original string and throws otherwise.
  *
+ * @method        false        isUndefined()
  * @method        string       value()
  * @method static static|mixed tryFromString(string $value, mixed $default = null)
  * @method static static|mixed tryFromMixed(mixed $value, mixed $default = null)
@@ -100,11 +101,6 @@ readonly class StringDecimal extends StrType
     public function isEmpty(): bool
     {
         // Decimal values are never empty by construction; constructor rejects empty strings
-        return false;
-    }
-
-    public function isUndefined(): bool
-    {
         return false;
     }
 }

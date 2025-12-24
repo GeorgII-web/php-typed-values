@@ -23,6 +23,7 @@ use function strtolower;
  *    $u->toString(); // '550e8400-e29b-41d4-a716-446655440000'
  *  - StringUuidV4::fromString('not-a-uuid'); // throws UuidStringTypeException
  *
+ * @method        false            isUndefined()
  * @method        non-empty-string value()
  * @method static static|mixed     tryFromString(string $value, mixed $default = null)
  * @method static static|mixed     tryFromMixed(mixed $value, mixed $default = null)
@@ -80,11 +81,6 @@ readonly class StringUuidV4 extends StrType
     }
 
     public function isEmpty(): bool
-    {
-        return false;
-    }
-
-    public function isUndefined(): bool
     {
         return false;
     }

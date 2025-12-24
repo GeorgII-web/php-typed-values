@@ -23,6 +23,7 @@ use function sprintf;
  *    (string) $u; // "https://example.com/path?x=1"
  *  - StringUrl::fromString('not a url'); // throws UrlStringTypeException
  *
+ * @method        false        isUndefined()
  * @method        string       value()
  * @method static static|mixed tryFromString(string $value, mixed $default = null)
  * @method static static|mixed tryFromMixed(mixed $value, mixed $default = null)
@@ -71,11 +72,6 @@ readonly class StringUrl extends StrType
     }
 
     public function isEmpty(): bool
-    {
-        return false;
-    }
-
-    public function isUndefined(): bool
     {
         return false;
     }

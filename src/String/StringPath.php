@@ -19,6 +19,7 @@ use function sprintf;
  *  - $p = StringPath::fromString('/src/String');
  *  - $p = StringPath::fromString('src\String\');
  *
+ * @method        false        isUndefined()
  * @method        string       value()
  * @method static static|mixed tryFromString(string $value, mixed $default = null)
  * @method static static|mixed tryFromMixed(mixed $value, mixed $default = null)
@@ -73,11 +74,6 @@ readonly class StringPath extends StrType
     }
 
     public function isEmpty(): bool
-    {
-        return false;
-    }
-
-    public function isUndefined(): bool
     {
         return false;
     }

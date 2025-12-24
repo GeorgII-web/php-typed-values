@@ -23,6 +23,7 @@ use function sprintf;
  *    $c->toString(); // 'US'
  *  - StringCountryCode::fromString('us'); // throws CountryCodeStringTypeException
  *
+ * @method        false        isUndefined()
  * @method        string       value()
  * @method static static|mixed tryFromString(string $value, mixed $default = null)
  * @method static static|mixed tryFromMixed(mixed $value, mixed $default = null)
@@ -74,11 +75,6 @@ readonly class StringCountryCode extends StrType
     }
 
     public function isEmpty(): bool
-    {
-        return false;
-    }
-
-    public function isUndefined(): bool
     {
         return false;
     }
