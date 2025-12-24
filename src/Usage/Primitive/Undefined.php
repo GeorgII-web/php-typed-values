@@ -8,9 +8,11 @@ use const PHP_EOL;
 
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Exception\UndefinedTypeException;
+use PhpTypedValues\Undefined\Alias\EmptyValue;
 use PhpTypedValues\Undefined\Alias\NotExist;
 use PhpTypedValues\Undefined\Alias\NotFound;
 use PhpTypedValues\Undefined\Alias\NotSet;
+use PhpTypedValues\Undefined\Alias\NoValue;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use PhpTypedValues\Undefined\Alias\Unknown;
 use PhpTypedValues\Undefined\UndefinedStandard;
@@ -40,6 +42,8 @@ try {
 }
 NotFound::create();
 NotSet::create();
+EmptyValue::create();
+NoValue::create();
 Unknown::create();
 
 $undefined = Unknown::tryFromMixed('hi');
