@@ -19,6 +19,9 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  *    $v->toString(); // "hello"
  *  - (string) StringStandard::fromString('x'); // "x"
  *
+ * Methods
+ * @method static static|mixed tryFromString(string $value, mixed $default = null)
+ *
  * @psalm-immutable
  */
 readonly class StringStandard extends StrType
