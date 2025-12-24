@@ -28,6 +28,8 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  */
 abstract readonly class StrType extends PrimitiveType implements StrTypeInterface, FromStringInterface
 {
+    protected string $value;
+
     /**
      * @template T
      *
@@ -43,5 +45,10 @@ abstract readonly class StrType extends PrimitiveType implements StrTypeInterfac
         } catch (TypeException) {
             return $default;
         }
+    }
+
+    public function value(): string
+    {
+        return $this->value;
     }
 }

@@ -21,6 +21,9 @@ use function sprintf;
  *  - $p = StringPath::fromString('/src/String');
  *  - $p = StringPath::fromString('src\String\');
  *
+ * @method        string       value()
+ * @method static static|mixed tryFromString(string $value, mixed $default = null)
+ *
  * @psalm-immutable
  */
 readonly class StringPath extends StrType
@@ -64,12 +67,6 @@ readonly class StringPath extends StrType
     public static function fromString(string $value): static
     {
         return new static($value);
-    }
-
-    /** @return non-empty-string */
-    public function value(): string
-    {
-        return $this->value;
     }
 
     public function jsonSerialize(): string

@@ -16,6 +16,9 @@ use PhpTypedValues\String\StringEmail;
  *  - $e = Email::fromString('user@example.com');
  *    (string) $e; // "user@example.com"
  *
+ * @method        string       value()
+ * @method static static|mixed tryFromString(string $value, mixed $default = null)
+ *
  * @psalm-immutable
  */
 final readonly class Email extends StringEmail

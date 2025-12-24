@@ -25,6 +25,8 @@ use function strtolower;
  *    $u->toString(); // '550e8400-e29b-41d4-a716-446655440000'
  *  - StringUuidV4::fromString('not-a-uuid'); // throws UuidStringTypeException
  *
+ * @method static static|mixed tryFromString(string $value, mixed $default = null)
+ *
  * @psalm-immutable
  */
 readonly class StringUuidV4 extends StrType

@@ -28,6 +28,9 @@ use function sprintf;
  * PHP float. The method verifies an exact round‑trip: (string)(float)$src must
  * equal the original string and throws otherwise.
  *
+ * @method        string       value()
+ * @method static static|mixed tryFromString(string $value, mixed $default = null)
+ *
  * @psalm-immutable
  */
 readonly class StringDecimal extends StrType
@@ -60,11 +63,6 @@ readonly class StringDecimal extends StrType
     public static function fromString(string $value): static
     {
         return new static($value);
-    }
-
-    public function value(): string
-    {
-        return $this->value;
     }
 
     /**

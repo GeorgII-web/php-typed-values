@@ -16,6 +16,9 @@ use PhpTypedValues\String\MariaDb\StringText;
  *  - $t = Text::fromString('lorem ipsum');
  *    $t->toString(); // 'lorem ipsum'
  *
+ * @method        string       value()
+ * @method static static|mixed tryFromString(string $value, mixed $default = null)
+ *
  * @psalm-immutable
  */
 final readonly class Text extends StringText

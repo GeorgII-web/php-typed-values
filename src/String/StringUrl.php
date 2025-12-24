@@ -25,6 +25,9 @@ use function sprintf;
  *    (string) $u; // "https://example.com/path?x=1"
  *  - StringUrl::fromString('not a url'); // throws UrlStringTypeException
  *
+ * @method        string       value()
+ * @method static static|mixed tryFromString(string $value, mixed $default = null)
+ *
  * @psalm-immutable
  */
 readonly class StringUrl extends StrType
@@ -62,12 +65,6 @@ readonly class StringUrl extends StrType
     public static function fromString(string $value): static
     {
         return new static($value);
-    }
-
-    /** @return non-empty-string */
-    public function value(): string
-    {
-        return $this->value;
     }
 
     public function jsonSerialize(): string

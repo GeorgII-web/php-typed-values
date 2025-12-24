@@ -16,6 +16,9 @@ use PhpTypedValues\String\MariaDb\StringDecimal;
  *  - $d = Decimal::fromString('3.14');
  *    $d->toFloat(); // 3.14 (only if exact)
  *
+ * @method        string       value()
+ * @method static static|mixed tryFromString(string $value, mixed $default = null)
+ *
  * @psalm-immutable
  */
 final readonly class Decimal extends StringDecimal

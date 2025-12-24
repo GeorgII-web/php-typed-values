@@ -23,6 +23,8 @@ use function trim;
  *    $v->toString(); // ' hello '
  *  - StringNonBlank::fromString("   "); // throws StringTypeException
  *
+ * @method static static|mixed tryFromString(string $value, mixed $default = null)
+ *
  * @psalm-immutable
  */
 readonly class StringNonBlank extends StrType

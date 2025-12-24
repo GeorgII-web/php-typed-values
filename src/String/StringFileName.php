@@ -28,6 +28,8 @@ use function sprintf;
  *    $f->getFileNameOnly(); // "image"
  *    $f->getExtension(); // "jpg"
  *
+ * @method static static|mixed tryFromString(string $value, mixed $default = null)
+ *
  * @psalm-immutable
  */
 readonly class StringFileName extends StrType

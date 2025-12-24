@@ -27,6 +27,9 @@ use function sprintf;
  *    $j->toArray(); // ['a' => 1]
  *  - StringJson::fromString('{invalid}'); // throws JsonStringTypeException
  *
+ * @method        string       value()
+ * @method static static|mixed tryFromString(string $value, mixed $default = null)
+ *
  * @psalm-immutable
  */
 readonly class StringJson extends StrType
@@ -60,11 +63,6 @@ readonly class StringJson extends StrType
     public static function fromString(string $value): static
     {
         return new static($value);
-    }
-
-    public function value(): string
-    {
-        return $this->value;
     }
 
     /**

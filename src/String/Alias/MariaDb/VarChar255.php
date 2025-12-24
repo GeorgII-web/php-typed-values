@@ -16,6 +16,9 @@ use PhpTypedValues\String\MariaDb\StringVarChar255;
  *  - $v = VarChar255::fromString('Hello world');
  *    $v->toString(); // 'Hello world'
  *
+ * @method        string       value()
+ * @method static static|mixed tryFromString(string $value, mixed $default = null)
+ *
  * @psalm-immutable
  */
 final readonly class VarChar255 extends StringVarChar255

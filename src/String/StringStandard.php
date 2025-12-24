@@ -20,6 +20,8 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  *  - (string) StringStandard::fromString('x'); // "x"
  *
  * Methods
+ *
+ * @method        string       value()
  * @method static static|mixed tryFromString(string $value, mixed $default = null)
  *
  * @psalm-immutable
@@ -47,11 +49,6 @@ readonly class StringStandard extends StrType
     public static function fromString(string $value): static
     {
         return new static($value);
-    }
-
-    public function value(): string
-    {
-        return $this->value;
     }
 
     public function jsonSerialize(): string

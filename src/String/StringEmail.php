@@ -25,6 +25,9 @@ use function sprintf;
  *    (string) $e; // 'user@example.com'
  *  - StringEmail::fromString('not-an-email'); // throws EmailStringTypeException
  *
+ * @method        string       value()
+ * @method static static|mixed tryFromString(string $value, mixed $default = null)
+ *
  * @psalm-immutable
  */
 readonly class StringEmail extends StrType
@@ -62,12 +65,6 @@ readonly class StringEmail extends StrType
     public static function fromString(string $value): static
     {
         return new static($value);
-    }
-
-    /** @return non-empty-string */
-    public function value(): string
-    {
-        return $this->value;
     }
 
     public function jsonSerialize(): string

@@ -16,6 +16,9 @@ use PhpTypedValues\String\StringCountryCode;
  *  - $c = CountryCode::fromString('US');
  *    $c->toString(); // "US"
  *
+ * @method        string       value()
+ * @method static static|mixed tryFromString(string $value, mixed $default = null)
+ *
  * @psalm-immutable
  */
 final readonly class CountryCode extends StringCountryCode

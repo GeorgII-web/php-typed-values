@@ -15,6 +15,9 @@ use PhpTypedValues\String\StringPath;
  *  - $p = StringPath::fromString('/src/String');
  *  - $p = StringPath::fromString('src\String\');
  *
+ * @method        string       value()
+ * @method static static|mixed tryFromString(string $value, mixed $default = null)
+ *
  * @psalm-immutable
  */
 final readonly class Path extends StringPath

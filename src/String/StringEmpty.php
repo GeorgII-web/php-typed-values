@@ -21,6 +21,8 @@ use function sprintf;
  *    $v->value(); // ''
  *  - StringEmpty::fromString('hello'); // throws StringTypeException
  *
+ * @method static static|mixed tryFromString(string $value, mixed $default = null)
+ *
  * @psalm-immutable
  */
 readonly class StringEmpty extends StrType

@@ -22,6 +22,9 @@ use function sprintf;
  *    $v->value(); // 'hello'
  *  - StringNonEmpty::fromString(''); // throws StringTypeException
  *
+ * @method        non-empty-string value()
+ * @method static static|mixed     tryFromString(string $value, mixed $default = null)
+ *
  * @psalm-immutable
  */
 readonly class StringNonEmpty extends StrType
@@ -58,12 +61,6 @@ readonly class StringNonEmpty extends StrType
     public static function fromString(string $value): static
     {
         return new static($value);
-    }
-
-    /** @return non-empty-string */
-    public function value(): string
-    {
-        return $this->value;
     }
 
     public function jsonSerialize(): string

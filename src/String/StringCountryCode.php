@@ -25,6 +25,9 @@ use function sprintf;
  *    $c->toString(); // 'US'
  *  - StringCountryCode::fromString('us'); // throws CountryCodeStringTypeException
  *
+ * @method        string       value()
+ * @method static static|mixed tryFromString(string $value, mixed $default = null)
+ *
  * @psalm-immutable
  */
 readonly class StringCountryCode extends StrType
@@ -65,12 +68,6 @@ readonly class StringCountryCode extends StrType
     public static function fromString(string $value): static
     {
         return new static($value);
-    }
-
-    /** @return non-empty-string */
-    public function value(): string
-    {
-        return $this->value;
     }
 
     public function jsonSerialize(): string
