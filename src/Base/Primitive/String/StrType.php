@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace PhpTypedValues\Base\Primitive\String;
 
 use PhpTypedValues\Base\Primitive\PrimitiveType;
-use PhpTypedValues\Base\Shared\FromString;
+use PhpTypedValues\Base\Shared\FromStringInterface;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -26,7 +26,7 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  *
  * @psalm-immutable
  */
-abstract readonly class StrType extends PrimitiveType implements StrTypeInterface, FromString
+abstract readonly class StrType extends PrimitiveType implements StrTypeInterface, FromStringInterface
 {
     /**
      * @template T

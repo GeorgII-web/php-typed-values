@@ -9,7 +9,7 @@ namespace PhpTypedValues\Base\Shared;
  *
  * @psalm-immutable
  */
-interface FromArray
+interface FromArrayInterface
 {
     public static function fromArray(array $value): static;
 }

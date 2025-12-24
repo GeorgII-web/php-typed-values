@@ -11,7 +11,7 @@ use PhpTypedValues\Exception\TypeException;
  *
  * @psalm-immutable
  */
-interface FromString
+interface FromStringInterface
 {
     /**
      * Create an instance from a validated string representation.

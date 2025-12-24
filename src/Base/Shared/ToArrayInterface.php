@@ -9,7 +9,7 @@ namespace PhpTypedValues\Base\Shared;
  *
  * @psalm-immutable
  */
-interface ToArray
+interface ToArrayInterface
 {
     public function toArray(): array;
 }
