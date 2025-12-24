@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Usage\Primitive;
+namespace PhpTypedValues\Usage\Primitive;
 
 require_once 'vendor/autoload.php';
 
@@ -8,6 +8,7 @@ use const JSON_THROW_ON_ERROR;
 use const PHP_EOL;
 
 use PhpTypedValues\Exception\TypeException;
+use PhpTypedValues\Integer\Alias\Integer;
 use PhpTypedValues\String\Alias\CountryCode;
 use PhpTypedValues\String\Alias\Email;
 use PhpTypedValues\String\Alias\File;
