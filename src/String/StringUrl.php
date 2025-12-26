@@ -45,14 +45,21 @@ readonly class StringUrl extends StrType
         $this->value = $value;
     }
 
-    public static function tryFromMixed(mixed $value): static|Undefined
+    /**
+     * @template T
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromMixed(mixed $value, mixed $default = new Undefined()): mixed
     {
         try {
             return static::fromString(
                 static::convertMixedToString($value)
             );
         } catch (TypeException) {
-            return Undefined::create();
+            return $default;
         }
     }
 
@@ -64,12 +71,19 @@ readonly class StringUrl extends StrType
         return new static($value);
     }
 
-    public static function tryFromString(string $value): static|Undefined
+    /**
+     * @template T
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromString(string $value, mixed $default = new Undefined()): mixed
     {
         try {
             return static::fromString($value);
         } catch (TypeException) {
-            return Undefined::create();
+            return $default;
         }
     }
 
