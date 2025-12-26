@@ -6,8 +6,6 @@ namespace PhpTypedValues\Bool;
 
 use PhpTypedValues\Base\Primitive\Bool\BoolType;
 use PhpTypedValues\Exception\BoolTypeException;
-use PhpTypedValues\Exception\TypeException;
-use PhpTypedValues\Undefined\Alias\Undefined;
 
 use function sprintf;
 
@@ -32,15 +30,6 @@ readonly class BoolStandard extends BoolType
     public function __construct(bool $value)
     {
         $this->value = $value;
-    }
-
-    public static function tryFromInt(int $value): static|Undefined
-    {
-        try {
-            return static::fromInt($value);
-        } catch (TypeException) {
-            return Undefined::create();
-        }
     }
 
     /**
@@ -87,28 +76,8 @@ readonly class BoolStandard extends BoolType
         return $this->value();
     }
 
-    public function toString(): string
-    {
-        return $this->value() ? 'true' : 'false';
-    }
-
     public static function fromBool(bool $value): static
     {
         return new static($value);
-    }
-
-    public function __toString(): string
-    {
-        return $this->toString();
-    }
-
-    public function isEmpty(): bool
-    {
-        return false;
-    }
-
-    public function isUndefined(): bool
-    {
-        return false;
     }
 }

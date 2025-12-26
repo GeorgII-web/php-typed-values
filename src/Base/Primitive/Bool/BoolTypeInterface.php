@@ -59,7 +59,17 @@ interface BoolTypeInterface
         PrimitiveType $default = new Undefined(),
     ): mixed;
 
-    public static function tryFromInt(int $value): static|Undefined;
+    /**
+     * @template T of PrimitiveType
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromInt(
+        int $value,
+        PrimitiveType $default = new Undefined(),
+    ): mixed;
 
     /**
      * @throws BoolTypeException

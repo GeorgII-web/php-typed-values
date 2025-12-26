@@ -36,6 +36,25 @@ abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterf
      *
      * @return static|T
      */
+    public static function tryFromInt(
+        int $value,
+        PrimitiveType $default = new Undefined(),
+    ): mixed {
+        try {
+            /** @var static|T */
+            return static::fromInt($value);
+        } catch (TypeException) {
+            return $default;
+        }
+    }
+
+    /**
+     * @template T of PrimitiveType
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
     public static function tryFromMixed(
         mixed $value,
         PrimitiveType $default = new Undefined(),
@@ -71,5 +90,25 @@ abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterf
         } catch (TypeException) {
             return $default;
         }
+    }
+
+    public function toString(): string
+    {
+        return $this->value() ? 'true' : 'false';
+    }
+
+    public function __toString(): string
+    {
+        return $this->toString();
+    }
+
+    public function isEmpty(): bool
+    {
+        return false;
+    }
+
+    public function isUndefined(): bool
+    {
+        return false;
     }
 }
