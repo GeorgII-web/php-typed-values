@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PhpTypedValues\Base\Primitive\Bool;
 
 use PhpTypedValues\Base\Primitive\PrimitiveType;
+use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
  * Base implementation for boolean typed values.
@@ -25,4 +26,21 @@ use PhpTypedValues\Base\Primitive\PrimitiveType;
  */
 abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterface
 {
+    /**
+     * @template T
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    abstract public static function tryFromMixed(mixed $value, mixed $default = new Undefined()): mixed;
+
+    /**
+     * @template T
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    abstract public static function tryFromString(string $value, mixed $default = new Undefined()): mixed;
 }

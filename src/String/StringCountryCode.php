@@ -67,14 +67,6 @@ readonly class StringCountryCode extends StrType
     }
 
     /**
-     * @throws CountryCodeStringTypeException
-     */
-    public static function fromString(string $value): static
-    {
-        return new static($value);
-    }
-
-    /**
      * @template T
      *
      * @param T $default
@@ -88,6 +80,14 @@ readonly class StringCountryCode extends StrType
         } catch (TypeException) {
             return $default;
         }
+    }
+
+    /**
+     * @throws CountryCodeStringTypeException
+     */
+    public static function fromString(string $value): static
+    {
+        return new static($value);
     }
 
     /** @return non-empty-string */

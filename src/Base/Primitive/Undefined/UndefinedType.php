@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PhpTypedValues\Base\Primitive\Undefined;
 
 use PhpTypedValues\Base\Primitive\PrimitiveType;
+use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
  * Base implementation for a special "Undefined/Unknown" typed value.
@@ -25,4 +26,22 @@ use PhpTypedValues\Base\Primitive\PrimitiveType;
 abstract readonly class UndefinedType extends PrimitiveType implements UndefinedTypeInterface
 {
     abstract public static function fromString(string $value): static;
+
+    /**
+     * @template T
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    abstract public static function tryFromMixed(mixed $value, mixed $default = new Undefined()): mixed;
+
+    /**
+     * @template T
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    abstract public static function tryFromString(string $value, mixed $default = new Undefined()): mixed;
 }

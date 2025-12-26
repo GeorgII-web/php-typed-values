@@ -28,9 +28,33 @@ interface DateTimeTypeInterface
 
     public static function fromDateTime(DateTimeImmutable $value): static;
 
-    public static function tryFromMixed(mixed $value): static|Undefined;
+    /**
+     * @template T
+     *
+     * @param T                $default
+     * @param non-empty-string $timezone
+     *
+     * @return static|T
+     */
+    public static function tryFromMixed(
+        mixed $value,
+        string $timezone = self::DEFAULT_ZONE,
+        mixed $default = new Undefined(),
+    ): mixed;
 
-    public static function tryFromString(string $value): static|Undefined;
+    /**
+     * @template T
+     *
+     * @param T                $default
+     * @param non-empty-string $timezone
+     *
+     * @return static|T
+     */
+    public static function tryFromString(
+        string $value,
+        string $timezone = self::DEFAULT_ZONE,
+        mixed $default = new Undefined(),
+    ): mixed;
 
     /**
      * @param non-empty-string $timezone

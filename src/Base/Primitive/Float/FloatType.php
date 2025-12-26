@@ -6,6 +6,7 @@ namespace PhpTypedValues\Base\Primitive\Float;
 
 use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\FloatTypeException;
+use PhpTypedValues\Undefined\Alias\Undefined;
 
 use function sprintf;
 
@@ -58,4 +59,22 @@ abstract readonly class FloatType extends PrimitiveType implements FloatTypeInte
             throw new FloatTypeException(sprintf('String "%s" has invalid formatting (leading zeros or redundant characters)', $value));
         }
     }
+
+    /**
+     * @template T
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    abstract public static function tryFromMixed(mixed $value, mixed $default = new Undefined()): mixed;
+
+    /**
+     * @template T
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    abstract public static function tryFromString(string $value, mixed $default = new Undefined()): mixed;
 }

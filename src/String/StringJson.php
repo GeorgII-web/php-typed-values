@@ -62,14 +62,6 @@ readonly class StringJson extends StrType
     }
 
     /**
-     * @throws JsonStringTypeException
-     */
-    public static function fromString(string $value): static
-    {
-        return new static($value);
-    }
-
-    /**
      * @template T
      *
      * @param T $default
@@ -83,6 +75,14 @@ readonly class StringJson extends StrType
         } catch (TypeException) {
             return $default;
         }
+    }
+
+    /**
+     * @throws JsonStringTypeException
+     */
+    public static function fromString(string $value): static
+    {
+        return new static($value);
     }
 
     public function value(): string

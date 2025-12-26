@@ -36,7 +36,21 @@ interface FloatTypeInterface
 
     public static function fromFloat(float $value): static;
 
-    public static function tryFromMixed(mixed $value): static|Undefined;
+    /**
+     * @template T
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromMixed(mixed $value, mixed $default = new Undefined()): mixed;
 
-    public static function tryFromString(string $value): static|Undefined;
+    /**
+     * @template T
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromString(string $value, mixed $default = new Undefined()): mixed;
 }

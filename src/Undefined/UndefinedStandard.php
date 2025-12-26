@@ -27,7 +27,12 @@ readonly class UndefinedStandard extends UndefinedType
         return new static();
     }
 
-    public static function tryFromMixed(mixed $value): Undefined
+    public static function tryFromString(string $value, mixed $default = new Undefined()): Undefined
+    {
+        return Undefined::create();
+    }
+
+    public static function tryFromMixed(mixed $value, mixed $default = new Undefined()): Undefined
     {
         return Undefined::create();
     }

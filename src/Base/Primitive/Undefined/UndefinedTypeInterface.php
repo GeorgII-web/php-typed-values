@@ -24,9 +24,23 @@ interface UndefinedTypeInterface
 {
     public static function create(): static;
 
-    public static function fromString(string $value): static;
+    /**
+     * @template T
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromMixed(mixed $value, mixed $default = new Undefined()): mixed;
 
-    public static function tryFromMixed(mixed $value): Undefined;
+    /**
+     * @template T
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromString(string $value, mixed $default = new Undefined()): mixed;
 
     /**
      * @throws UndefinedTypeException

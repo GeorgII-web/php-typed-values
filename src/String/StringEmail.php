@@ -64,14 +64,6 @@ readonly class StringEmail extends StrType
     }
 
     /**
-     * @throws EmailStringTypeException
-     */
-    public static function fromString(string $value): static
-    {
-        return new static($value);
-    }
-
-    /**
      * @template T
      *
      * @param T $default
@@ -85,6 +77,14 @@ readonly class StringEmail extends StrType
         } catch (TypeException) {
             return $default;
         }
+    }
+
+    /**
+     * @throws EmailStringTypeException
+     */
+    public static function fromString(string $value): static
+    {
+        return new static($value);
     }
 
     /** @return non-empty-string */

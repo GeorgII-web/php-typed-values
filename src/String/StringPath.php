@@ -66,14 +66,6 @@ readonly class StringPath extends StrType
     }
 
     /**
-     * @throws PathStringTypeException
-     */
-    public static function fromString(string $value): static
-    {
-        return new static($value);
-    }
-
-    /**
      * @template T
      *
      * @param T $default
@@ -87,6 +79,14 @@ readonly class StringPath extends StrType
         } catch (TypeException) {
             return $default;
         }
+    }
+
+    /**
+     * @throws PathStringTypeException
+     */
+    public static function fromString(string $value): static
+    {
+        return new static($value);
     }
 
     /** @return non-empty-string */

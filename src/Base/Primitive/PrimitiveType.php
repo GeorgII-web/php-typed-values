@@ -34,6 +34,37 @@ use function is_scalar;
 abstract readonly class PrimitiveType implements PrimitiveTypeInterface
 {
     /**
+     * Returns true if the Object value is empty.
+     */
+    abstract public function isEmpty(): bool;
+
+    /**
+     * Returns if the Object value is an Undefined type class.
+     */
+    abstract public function isUndefined(): bool;
+
+    /**
+     * Returns a normalized string representation of the underlying value.
+     */
+    abstract public function toString(): string;
+
+    /**
+     * Alias of {@see toString} for convenient casting.
+     */
+    abstract public function __toString(): string;
+
+    /**
+     * JSON representation of the value.
+     *
+     * Marked as mutation-free so Psalm treats calls as pure in immutable contexts.
+     *
+     * @psalm-mutation-free
+     */
+    abstract public function jsonSerialize(): mixed;
+
+    /**
+     * todo refactor for each type separately.
+     *
      * Safely attempts to convert a mixed value to a string.
      * Returns null if conversion is impossible (array, resource, non-stringable object).
      *

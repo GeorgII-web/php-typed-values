@@ -6,6 +6,7 @@ namespace PhpTypedValues\Base\Primitive\Integer;
 
 use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\IntegerTypeException;
+use PhpTypedValues\Undefined\Alias\Undefined;
 
 use function sprintf;
 
@@ -39,4 +40,22 @@ abstract readonly class IntType extends PrimitiveType implements IntTypeInterfac
             throw new IntegerTypeException(sprintf('String "%s" has no valid strict integer value', $value));
         }
     }
+
+    /**
+     * @template T
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    abstract public static function tryFromMixed(mixed $value, mixed $default = new Undefined()): mixed;
+
+    /**
+     * @template T
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    abstract public static function tryFromString(string $value, mixed $default = new Undefined()): mixed;
 }

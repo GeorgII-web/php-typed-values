@@ -7,7 +7,6 @@ namespace PhpTypedValues\Base\ArrayType;
 use Countable;
 use IteratorAggregate;
 use JsonSerializable;
-use PhpTypedValues\Base\Shared\ArrayOfObjectsAndUndefinedInterface;
 use PhpTypedValues\Base\Shared\IsEmptyInterface;
 use PhpTypedValues\Base\Shared\IsUndefinedInterface;
 use PhpTypedValues\Base\TypeInterface;
@@ -27,11 +26,10 @@ use PhpTypedValues\Exception\ArrayTypeException;
  * @template TItem
  *
  * @extends IteratorAggregate<int, TItem>
- * @extends ArrayOfObjectsAndUndefinedInterface<TItem>
  *
  * @psalm-immutable
  */
-interface ArrayTypeInterface extends TypeInterface, JsonSerializable, IteratorAggregate, Countable, IsEmptyInterface, IsUndefinedInterface, ArrayOfObjectsAndUndefinedInterface
+interface ArrayTypeInterface extends TypeInterface, JsonSerializable, IteratorAggregate, Countable, IsEmptyInterface, IsUndefinedInterface
 {
     /**
      * Returns the underlying Objects array.
@@ -70,4 +68,16 @@ interface ArrayTypeInterface extends TypeInterface, JsonSerializable, IteratorAg
      * @psalm-mutation-free
      */
     public function toArray(): array;
+
+    /**
+     * Returns true if at least one item in the collection is Undefined.
+     */
+    public function hasUndefined(): bool;
+
+    /**
+     * Returns items excluding Undefined entries.
+     *
+     * @psalm-return list<TItem>
+     */
+    public function getDefinedItems(): array;
 }

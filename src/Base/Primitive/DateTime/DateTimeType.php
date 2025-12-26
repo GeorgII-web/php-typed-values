@@ -11,6 +11,7 @@ use DateTimeZone;
 use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\DateTimeTypeException;
 use PhpTypedValues\Exception\ReasonableRangeDateTimeTypeException;
+use PhpTypedValues\Undefined\Alias\Undefined;
 
 use function count;
 use function sprintf;
@@ -102,4 +103,32 @@ abstract readonly class DateTimeType extends PrimitiveType implements DateTimeTy
          */
         return $dt->setTimezone(new DateTimeZone(self::DEFAULT_ZONE));
     }
+
+    /**
+     * @template T
+     *
+     * @param T                $default
+     * @param non-empty-string $timezone
+     *
+     * @return static|T
+     */
+    abstract public static function tryFromMixed(
+        mixed $value,
+        string $timezone = self::DEFAULT_ZONE,
+        mixed $default = new Undefined(),
+    ): mixed;
+
+    /**
+     * @template T
+     *
+     * @param T                $default
+     * @param non-empty-string $timezone
+     *
+     * @return static|T
+     */
+    abstract public static function tryFromString(
+        string $value,
+        string $timezone = self::DEFAULT_ZONE,
+        mixed $default = new Undefined(),
+    ): mixed;
 }

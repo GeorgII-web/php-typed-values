@@ -12,12 +12,12 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  * Contract for boolean typed values.
  *
  * Describes the API that all bool-backed value objects must implement,
- * including factories, accessors and formatting helpers.
+ * including factories, accessors, and formatting helpers.
  *
  * Example
  *  - $v = MyBoolean::fromString('true');
- *  - $v->value();      // true
- *  - (string) $v;      // "true"
+ *  - $v->value(); // true
+ *  - (string) $v; // "true"
  *
  * @psalm-immutable
  */

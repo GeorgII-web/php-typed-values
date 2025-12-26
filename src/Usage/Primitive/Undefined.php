@@ -49,6 +49,13 @@ try {
     echo $e->getMessage() . PHP_EOL;
 }
 
+$undefined = Unknown::tryFromString('hi');
+try {
+    $undefined->toString();
+} catch (TypeException $e) {
+    echo $e->getMessage() . PHP_EOL;
+}
+
 $undefined = Unknown::tryFromMixed('hi');
 try {
     $undefined->toString();

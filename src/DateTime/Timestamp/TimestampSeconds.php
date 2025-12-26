@@ -43,17 +43,45 @@ readonly class TimestampSeconds extends DateTimeType
     }
 
     /**
+     * @template T
+     *
+     * @param T                $default
      * @param non-empty-string $timezone
+     *
+     * @return static|T
      */
-    public static function tryFromMixed(mixed $value, string $timezone = self::DEFAULT_ZONE): static|Undefined
-    {
+    public static function tryFromMixed(
+        mixed $value,
+        string $timezone = self::DEFAULT_ZONE,
+        mixed $default = new Undefined(),
+    ): mixed {
         try {
             return static::fromString(
                 static::convertMixedToString($value),
                 $timezone
             );
         } catch (TypeException) {
-            return Undefined::create();
+            return $default;
+        }
+    }
+
+    /**
+     * @template T
+     *
+     * @param T                $default
+     * @param non-empty-string $timezone
+     *
+     * @return static|T
+     */
+    public static function tryFromString(
+        string $value,
+        string $timezone = self::DEFAULT_ZONE,
+        mixed $default = new Undefined(),
+    ): mixed {
+        try {
+            return static::fromString($value, $timezone);
+        } catch (TypeException) {
+            return $default;
         }
     }
 
@@ -88,18 +116,6 @@ readonly class TimestampSeconds extends DateTimeType
     public static function fromDateTime(DateTimeImmutable $value): static
     {
         return new static($value);
-    }
-
-    /**
-     * @param non-empty-string $timezone
-     */
-    public static function tryFromString(string $value, string $timezone = self::DEFAULT_ZONE): static|Undefined
-    {
-        try {
-            return static::fromString($value, $timezone);
-        } catch (TypeException) {
-            return Undefined::create();
-        }
     }
 
     public function withTimeZone(string $timezone): static

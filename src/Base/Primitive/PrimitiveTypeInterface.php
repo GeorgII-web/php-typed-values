@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace PhpTypedValues\Base\Primitive;
 
 use JsonSerializable;
-use PhpTypedValues\Base\Shared\IsEmptyInterface;
-use PhpTypedValues\Base\Shared\IsUndefinedInterface;
 use PhpTypedValues\Base\TypeInterface;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -23,8 +21,18 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  *
  * @psalm-immutable
  */
-interface PrimitiveTypeInterface extends TypeInterface, JsonSerializable, IsEmptyInterface, IsUndefinedInterface
+interface PrimitiveTypeInterface extends TypeInterface, JsonSerializable
 {
+    /**
+     * Returns true if the Object value is empty.
+     */
+    public function isEmpty(): bool;
+
+    /**
+     * Returns if the Object value is an Undefined type class.
+     */
+    public function isUndefined(): bool;
+
     /**
      * Returns a normalized string representation of the underlying value.
      */
