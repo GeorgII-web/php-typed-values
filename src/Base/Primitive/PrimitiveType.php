@@ -76,8 +76,12 @@ abstract readonly class PrimitiveType implements PrimitiveTypeInterface
             return $value ? 'true' : 'false';
         }
 
-        if (is_scalar($value) || $value === null) {
+        if (is_scalar($value)) {
             return (string) $value;
+        }
+
+        if ($value === null) {
+            return '';
         }
 
         if ($value instanceof Stringable) {

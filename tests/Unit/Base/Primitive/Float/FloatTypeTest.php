@@ -74,6 +74,27 @@ it('exercises FloatType through a concrete stub', function (): void {
         ->and(FloatTypeTest::tryFromString('invalid', Undefined::create()))->toBeInstanceOf(Undefined::class);
 });
 
+it('tryFromMixed covers null and Stringable inputs', function (): void {
+    // covers line 83: $value === null
+    $fromNull = FloatTypeTest::tryFromMixed(null);
+    expect($fromNull)->toBeInstanceOf(Undefined::class);
+
+    // covers line 87: $value instanceof Stringable
+    $stringable = new class implements Stringable {
+        public function __toString(): string
+        {
+            return '3.14';
+        }
+    };
+    $fromStringable = FloatTypeTest::tryFromMixed($stringable);
+    expect($fromStringable)->toBeInstanceOf(FloatTypeTest::class)
+        ->and($fromStringable->value())->toBe(3.14);
+
+    // Cover Line 91: throw new TypeException
+    $fromArray = FloatTypeTest::tryFromMixed([1]);
+    expect($fromArray)->toBeInstanceOf(Undefined::class);
+});
+
 it('fromString parses valid float strings including negatives, decimals, and scientific', function (): void {
     expect(FloatStandard::fromString('-15.25')->value())->toBe(-15.25)
         ->and(FloatStandard::fromString('5')->value())->toBe(5.0)
