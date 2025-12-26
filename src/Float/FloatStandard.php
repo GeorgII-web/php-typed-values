@@ -6,7 +6,6 @@ namespace PhpTypedValues\Float;
 
 use PhpTypedValues\Base\Primitive\Float\FloatType;
 use PhpTypedValues\Exception\FloatTypeException;
-use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
  * Generic float-typed value.
@@ -36,11 +35,6 @@ readonly class FloatStandard extends FloatType
         return new static($value);
     }
 
-    public static function tryFromFloat(float $value): static|Undefined
-    {
-        return static::fromFloat($value);
-    }
-
     /**
      * String conversion uses a setting called serialize_precision
      * (usually 14 or 17, but often configured to round the last digit
@@ -62,26 +56,16 @@ readonly class FloatStandard extends FloatType
 
     public function jsonSerialize(): float
     {
-        return $this->value();
+        return $this->value;
     }
 
     public function toString(): string
     {
-        return (string) $this->value();
+        return (string) $this->value;
     }
 
     public function __toString(): string
     {
         return $this->toString();
-    }
-
-    public function isEmpty(): bool
-    {
-        return false;
-    }
-
-    public function isUndefined(): bool
-    {
-        return false;
     }
 }

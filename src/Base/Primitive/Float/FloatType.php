@@ -30,9 +30,10 @@ use function sprintf;
  */
 abstract readonly class FloatType extends PrimitiveType implements FloatTypeInterface
 {
-    /**
-     * @throws FloatTypeException
-     */
+    abstract public static function fromString(string $value): static;
+
+    abstract public static function fromFloat(float $value): static;
+
     abstract public function value(): float;
 
     protected static function assertFloatString(string $value): void
@@ -60,6 +61,25 @@ abstract readonly class FloatType extends PrimitiveType implements FloatTypeInte
             && $value !== $normalized . '.0'
         ) {
             throw new FloatTypeException(sprintf('String "%s" has invalid formatting (leading zeros or redundant characters)', $value));
+        }
+    }
+
+    /**
+     * @template T of PrimitiveType
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromFloat(
+        float $value,
+        PrimitiveType $default = new Undefined(),
+    ): mixed {
+        try {
+            /** @var static|T */
+            return static::fromFloat($value);
+        } catch (TypeException) {
+            return $default;
         }
     }
 
@@ -105,5 +125,15 @@ abstract readonly class FloatType extends PrimitiveType implements FloatTypeInte
         } catch (TypeException) {
             return $default;
         }
+    }
+
+    public function isEmpty(): bool
+    {
+        return false;
+    }
+
+    public function isUndefined(): bool
+    {
+        return false;
     }
 }
