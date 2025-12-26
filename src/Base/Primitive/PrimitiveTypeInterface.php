@@ -23,6 +23,8 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  */
 interface PrimitiveTypeInterface extends TypeInterface, JsonSerializable
 {
+    public function value(): mixed;
+
     /**
      * Returns true if the Object value is empty.
      */

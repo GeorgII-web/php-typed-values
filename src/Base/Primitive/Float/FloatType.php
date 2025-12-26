@@ -32,6 +32,8 @@ abstract readonly class FloatType extends PrimitiveType implements FloatTypeInte
     /**
      * @throws FloatTypeException
      */
+    abstract public function value(): float;
+
     protected static function assertFloatString(string $value): void
     {
         if (!is_numeric($value)) {

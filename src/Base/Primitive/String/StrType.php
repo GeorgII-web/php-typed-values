@@ -23,6 +23,8 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  */
 abstract readonly class StrType extends PrimitiveType implements StrTypeInterface
 {
+    abstract public function value(): string;
+
     /**
      * @template T
      *

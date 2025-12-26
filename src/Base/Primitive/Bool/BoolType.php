@@ -26,21 +26,15 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  */
 abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterface
 {
-    /**
-     * @template T
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
-    abstract public static function tryFromMixed(mixed $value, mixed $default = new Undefined()): mixed;
+    abstract public function value(): bool;
 
-    /**
-     * @template T
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
-    abstract public static function tryFromString(string $value, mixed $default = new Undefined()): mixed;
+    abstract public static function tryFromString(
+        string $value,
+        PrimitiveType $default = new Undefined(),
+    ): static|PrimitiveType|Undefined;
+
+    abstract public static function tryFromMixed(
+        mixed $value,
+        PrimitiveType $default = new Undefined(),
+    ): static|PrimitiveType|Undefined;
 }

@@ -29,6 +29,8 @@ use function sprintf;
  */
 abstract readonly class IntType extends PrimitiveType implements IntTypeInterface
 {
+    abstract public function value(): int;
+
     /**
      * @throws IntegerTypeException
      */

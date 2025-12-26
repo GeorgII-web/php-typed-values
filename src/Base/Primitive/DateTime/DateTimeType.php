@@ -44,6 +44,8 @@ abstract readonly class DateTimeType extends PrimitiveType implements DateTimeTy
      * @throws DateTimeTypeException
      * @throws ReasonableRangeDateTimeTypeException
      */
+    abstract public function value(): DateTimeImmutable;
+
     protected static function createFromFormat(
         string $value,
         string $format,
