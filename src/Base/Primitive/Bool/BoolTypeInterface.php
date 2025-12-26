@@ -44,11 +44,11 @@ interface BoolTypeInterface
      */
     public static function tryFromString(
         string $value,
-        PrimitiveType $default = new Undefined(),
+        mixed $default = new Undefined(),
     ): mixed;
 
     /**
-     * @template T of PrimitiveType
+     * @template T
      *
      * @param T $default
      *
@@ -56,11 +56,11 @@ interface BoolTypeInterface
      */
     public static function tryFromMixed(
         mixed $value,
-        PrimitiveType $default = new Undefined(),
+        mixed $default = new Undefined(),
     ): mixed;
 
     /**
-     * @template T of PrimitiveType
+     * @template T
      *
      * @param T $default
      *
@@ -68,7 +68,7 @@ interface BoolTypeInterface
      */
     public static function tryFromInt(
         int $value,
-        PrimitiveType $default = new Undefined(),
+        mixed $default = new Undefined(),
     ): mixed;
 
     /**

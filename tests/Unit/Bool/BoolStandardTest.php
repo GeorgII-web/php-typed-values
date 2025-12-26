@@ -115,6 +115,7 @@ it('tryFromMixed handles various inputs returning BoolStandard or Undefined', fu
     // invalid inputs
     $fromArray = BoolStandard::tryFromMixed(['x']);
     $fromNull = BoolStandard::tryFromMixed(null);
+    $fromObject = BoolStandard::tryFromMixed(new stdClass());
 
     // stringable object
     $stringable = new class {
@@ -134,7 +135,8 @@ it('tryFromMixed handles various inputs returning BoolStandard or Undefined', fu
         ->and($fromStringable)->toBeInstanceOf(BoolStandard::class)
         ->and($fromStringable->value())->toBeTrue()
         ->and($fromArray)->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class)
-        ->and($fromNull)->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class);
+        ->and($fromNull)->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class)
+        ->and($fromObject)->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class);
 });
 
 it('isEmpty is always false for BoolStandard', function (): void {

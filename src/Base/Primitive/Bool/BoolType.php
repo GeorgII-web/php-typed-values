@@ -34,7 +34,7 @@ abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterf
     abstract public function value(): bool;
 
     /**
-     * @template T of PrimitiveType
+     * @template T
      *
      * @param T $default
      *
@@ -42,7 +42,7 @@ abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterf
      */
     public static function tryFromInt(
         int $value,
-        PrimitiveType $default = new Undefined(),
+        mixed $default = new Undefined(),
     ): mixed {
         try {
             /** @var static|T */
@@ -53,7 +53,7 @@ abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterf
     }
 
     /**
-     * @template T of PrimitiveType
+     * @template T
      *
      * @param T $default
      *
@@ -61,7 +61,7 @@ abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterf
      */
     public static function tryFromMixed(
         mixed $value,
-        PrimitiveType $default = new Undefined(),
+        mixed $default = new Undefined(),
     ): mixed {
         try {
             $instance = static::fromString(
@@ -76,7 +76,7 @@ abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterf
     }
 
     /**
-     * @template T of PrimitiveType
+     * @template T
      *
      * @param T $default
      *
@@ -84,7 +84,7 @@ abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterf
      */
     public static function tryFromString(
         string $value,
-        PrimitiveType $default = new Undefined(),
+        mixed $default = new Undefined(),
     ): mixed {
         try {
             $instance = static::fromString($value);
@@ -108,8 +108,12 @@ abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterf
             return $value ? 'true' : 'false';
         }
 
-        if (is_scalar($value) || $value === null) {
+        if (is_scalar($value)) {
             return (string) $value;
+        }
+
+        if ($value === null) {
+            return '';
         }
 
         if ($value instanceof Stringable) {
