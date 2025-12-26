@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace PhpTypedValues\String;
 
 use PhpTypedValues\Base\Primitive\String\StrType;
-use PhpTypedValues\Exception\TypeException;
-use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
  * Generic string typed value.
@@ -28,38 +26,6 @@ readonly class StringStandard extends StrType
     public function __construct(string $value)
     {
         $this->value = $value;
-    }
-
-    /**
-     * @template T
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
-    public static function tryFromMixed(mixed $value, mixed $default = new Undefined()): mixed
-    {
-        try {
-            return static::fromString(
-                static::convertMixedToString($value)
-            );
-        } catch (TypeException) {
-            return $default;
-        }
-    }
-
-    /**
-     * @template T
-     *
-     * @param T $default
-     *
-     * @return static|T
-     *
-     * @throws TypeException
-     */
-    public static function tryFromString(string $value, mixed $default = new Undefined()): mixed
-    {
-        return static::fromString($value);
     }
 
     public static function fromString(string $value): static

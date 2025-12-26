@@ -8,8 +8,6 @@ use const FILTER_VALIDATE_EMAIL;
 
 use PhpTypedValues\Base\Primitive\String\StrType;
 use PhpTypedValues\Exception\EmailStringTypeException;
-use PhpTypedValues\Exception\TypeException;
-use PhpTypedValues\Undefined\Alias\Undefined;
 
 use function filter_var;
 use function sprintf;
@@ -43,40 +41,6 @@ readonly class StringEmail extends StrType
 
         /** @var non-empty-string $value */
         $this->value = $value;
-    }
-
-    /**
-     * @template T
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
-    public static function tryFromMixed(mixed $value, mixed $default = new Undefined()): mixed
-    {
-        try {
-            return static::fromString(
-                static::convertMixedToString($value)
-            );
-        } catch (TypeException) {
-            return $default;
-        }
-    }
-
-    /**
-     * @template T
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
-    public static function tryFromString(string $value, mixed $default = new Undefined()): mixed
-    {
-        try {
-            return static::fromString($value);
-        } catch (TypeException) {
-            return $default;
-        }
     }
 
     /**

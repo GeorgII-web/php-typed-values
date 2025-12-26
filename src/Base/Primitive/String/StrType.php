@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PhpTypedValues\Base\Primitive\String;
 
 use PhpTypedValues\Base\Primitive\PrimitiveType;
+use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
@@ -18,10 +19,6 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  *  - $v = MyString::fromString('hello');
  *  - $v->toString(); // "hello"
  *
- * @internal
- *
- * @psalm-internal PhpTypedValues
- *
  * @psalm-immutable
  */
 abstract readonly class StrType extends PrimitiveType implements StrTypeInterface
@@ -33,7 +30,19 @@ abstract readonly class StrType extends PrimitiveType implements StrTypeInterfac
      *
      * @return static|T
      */
-    abstract public static function tryFromMixed(mixed $value, mixed $default = new Undefined()): mixed;
+    public static function tryFromMixed(mixed $value, mixed $default = new Undefined()): mixed
+    {
+        try {
+            $instance = static::fromString(
+                static::convertMixedToString($value)
+            );
+
+            /** @var static|T */
+            return $instance;
+        } catch (TypeException) {
+            return $default;
+        }
+    }
 
     /**
      * @template T
@@ -42,5 +51,15 @@ abstract readonly class StrType extends PrimitiveType implements StrTypeInterfac
      *
      * @return static|T
      */
-    abstract public static function tryFromString(string $value, mixed $default = new Undefined()): mixed;
+    public static function tryFromString(string $value, mixed $default = new Undefined()): mixed
+    {
+        try {
+            $instance = static::fromString($value);
+
+            /** @var static|T */
+            return $instance;
+        } catch (TypeException) {
+            return $default;
+        }
+    }
 }

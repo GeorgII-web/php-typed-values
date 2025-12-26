@@ -9,8 +9,6 @@ use const JSON_THROW_ON_ERROR;
 use JsonException;
 use PhpTypedValues\Base\Primitive\String\StrType;
 use PhpTypedValues\Exception\JsonStringTypeException;
-use PhpTypedValues\Exception\TypeException;
-use PhpTypedValues\Undefined\Alias\Undefined;
 
 use function json_decode;
 use function sprintf;
@@ -41,40 +39,6 @@ readonly class StringJson extends StrType
         static::assertJsonString($value);
 
         $this->value = $value;
-    }
-
-    /**
-     * @template T
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
-    public static function tryFromMixed(mixed $value, mixed $default = new Undefined()): mixed
-    {
-        try {
-            return static::fromString(
-                static::convertMixedToString($value)
-            );
-        } catch (TypeException) {
-            return $default;
-        }
-    }
-
-    /**
-     * @template T
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
-    public static function tryFromString(string $value, mixed $default = new Undefined()): mixed
-    {
-        try {
-            return static::fromString($value);
-        } catch (TypeException) {
-            return $default;
-        }
     }
 
     /**

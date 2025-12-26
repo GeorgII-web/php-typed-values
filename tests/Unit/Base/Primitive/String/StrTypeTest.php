@@ -19,16 +19,6 @@ readonly class StrTypeTest extends StrType
     {
     }
 
-    public static function tryFromMixed(mixed $value, mixed $default = new Undefined()): mixed
-    {
-        return $default;
-    }
-
-    public static function tryFromString(string $value, mixed $default = new Undefined()): mixed
-    {
-        return $default;
-    }
-
     public static function fromString(string $value): static
     {
         return new static($value);
@@ -68,7 +58,26 @@ readonly class StrTypeTest extends StrType
 it('exercises StrType through a concrete stub', function (): void {
     $strType = new StrTypeTest('test');
 
-    expect($strType)->toBeInstanceOf(StrType::class);
+    expect($strType)->toBeInstanceOf(StrType::class)
+        ->and($strType->value())->toBe('test')
+        ->and($strType->toString())->toBe('test')
+        ->and((string) $strType)->toBe('test')
+        ->and($strType->jsonSerialize())->toBe('test')
+        ->and($strType->isEmpty())->toBeFalse()
+        ->and($strType->isUndefined())->toBeFalse();
+
+    $emptyStrType = new StrTypeTest('');
+    expect($emptyStrType->isEmpty())->toBeTrue();
+});
+
+it('exercises abstract static methods via stub', function (): void {
+    expect(StrTypeTest::tryFromMixed('hello'))->toBeInstanceOf(StrTypeTest::class)
+        ->and(StrTypeTest::tryFromMixed('hello')->value())->toBe('hello')
+        ->and(StrTypeTest::tryFromMixed(['invalid']))->toBeInstanceOf(Undefined::class)
+        ->and(StrTypeTest::tryFromMixed(['invalid'], 'default'))->toBe('default')
+        ->and(StrTypeTest::tryFromString('world'))->toBeInstanceOf(StrTypeTest::class)
+        ->and(StrTypeTest::tryFromString('world')->value())->toBe('world')
+        ->and(StrTypeTest::fromString('hello'))->toBeInstanceOf(StrTypeTest::class);
 });
 
 it('__toString proxies to toString for StrType', function (): void {
