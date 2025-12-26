@@ -37,13 +37,27 @@ interface FloatTypeInterface
 
     public static function fromFloat(float $value): static;
 
+    /**
+     * @template T of PrimitiveType
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
     public static function tryFromString(
         string $value,
         PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType|Undefined;
+    );
 
+    /**
+     * @template T of PrimitiveType
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
     public static function tryFromMixed(
         mixed $value,
         PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType|Undefined;
+    );
 }

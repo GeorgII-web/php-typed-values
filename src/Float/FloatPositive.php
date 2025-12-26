@@ -50,11 +50,19 @@ readonly class FloatPositive extends FloatType
         return new static($value);
     }
 
+    /**
+     * @template T of PrimitiveType
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
     public static function tryFromMixed(
         mixed $value,
         PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType|Undefined {
+    ) {
         try {
+            /** @var static */
             return static::fromString(
                 static::convertMixedToString($value)
             );
@@ -63,11 +71,19 @@ readonly class FloatPositive extends FloatType
         }
     }
 
+    /**
+     * @template T of PrimitiveType
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
     public static function tryFromString(
         string $value,
         PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType|Undefined {
+    ) {
         try {
+            /** @var static */
             return static::fromString($value);
         } catch (TypeException) {
             return $default;
