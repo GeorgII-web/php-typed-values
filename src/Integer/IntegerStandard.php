@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PhpTypedValues\Integer;
 
 use PhpTypedValues\Base\Primitive\Integer\IntType;
+use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\IntegerTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -32,15 +33,10 @@ readonly class IntegerStandard extends IntType
         $this->value = $value;
     }
 
-    /**
-     * @template T
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
-    public static function tryFromMixed(mixed $value, mixed $default = new Undefined()): mixed
-    {
+    public static function tryFromMixed(
+        mixed $value,
+        PrimitiveType $default = new Undefined(),
+    ): static|PrimitiveType|Undefined {
         try {
             return static::fromString(
                 static::convertMixedToString($value)
@@ -50,15 +46,10 @@ readonly class IntegerStandard extends IntType
         }
     }
 
-    /**
-     * @template T
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
-    public static function tryFromString(string $value, mixed $default = new Undefined()): mixed
-    {
+    public static function tryFromString(
+        string $value,
+        PrimitiveType $default = new Undefined(),
+    ): static|PrimitiveType|Undefined {
         try {
             return static::fromString($value);
         } catch (TypeException) {

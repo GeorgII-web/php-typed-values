@@ -43,21 +43,13 @@ abstract readonly class IntType extends PrimitiveType implements IntTypeInterfac
         }
     }
 
-    /**
-     * @template T
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
-    abstract public static function tryFromMixed(mixed $value, mixed $default = new Undefined()): mixed;
+    abstract public static function tryFromString(
+        string $value,
+        PrimitiveType $default = new Undefined(),
+    ): static|PrimitiveType|Undefined;
 
-    /**
-     * @template T
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
-    abstract public static function tryFromString(string $value, mixed $default = new Undefined()): mixed;
+    abstract public static function tryFromMixed(
+        mixed $value,
+        PrimitiveType $default = new Undefined(),
+    ): static|PrimitiveType|Undefined;
 }

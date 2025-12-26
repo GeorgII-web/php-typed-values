@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Base\Primitive\Integer;
 
+use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -38,21 +39,13 @@ interface IntTypeInterface
 
     public static function tryFromInt(int $value): static|Undefined;
 
-    /**
-     * @template T
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
-    public static function tryFromMixed(mixed $value, mixed $default = new Undefined()): mixed;
+    public static function tryFromString(
+        string $value,
+        PrimitiveType $default = new Undefined(),
+    ): static|PrimitiveType|Undefined;
 
-    /**
-     * @template T
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
-    public static function tryFromString(string $value, mixed $default = new Undefined()): mixed;
+    public static function tryFromMixed(
+        mixed $value,
+        PrimitiveType $default = new Undefined(),
+    ): static|PrimitiveType|Undefined;
 }
