@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace PhpTypedValues\Base\Primitive\Bool;
 
 use PhpTypedValues\Base\Primitive\PrimitiveType;
-use PhpTypedValues\Base\Shared\FromString;
 
 /**
  * Base implementation for boolean typed values.
@@ -24,6 +23,6 @@ use PhpTypedValues\Base\Shared\FromString;
  *
  * @psalm-immutable
  */
-abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterface, FromString
+abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterface
 {
 }

@@ -44,7 +44,7 @@ readonly class TimestampMilliseconds extends DateTimeType
     public function __construct(DateTimeImmutable $value)
     {
         // normalized time zone
-        $this->value = $value->setTimezone(new DateTimeZone(static::ZONE));
+        $this->value = $value->setTimezone(new DateTimeZone(static::DEFAULT_ZONE));
     }
 
     /**
@@ -52,7 +52,7 @@ readonly class TimestampMilliseconds extends DateTimeType
      *
      * @throws DateTimeTypeException
      */
-    public static function fromInt(int $value, string $timezone = self::ZONE): static
+    public static function fromInt(int $value, string $timezone = self::DEFAULT_ZONE): static
     {
         return static::fromString((string) $value, $timezone);
     }
@@ -60,7 +60,7 @@ readonly class TimestampMilliseconds extends DateTimeType
     /**
      * @param non-empty-string $timezone
      */
-    public static function tryFromMixed(mixed $value, string $timezone = self::ZONE): static|Undefined
+    public static function tryFromMixed(mixed $value, string $timezone = self::DEFAULT_ZONE): static|Undefined
     {
         try {
             return static::fromString(
@@ -79,7 +79,7 @@ readonly class TimestampMilliseconds extends DateTimeType
      *
      * @throws DateTimeTypeException
      */
-    public static function fromString(string $value, string $timezone = self::ZONE): static
+    public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE): static
     {
         if (!ctype_digit($value)) {
             throw new DateTimeTypeException(sprintf('Expected milliseconds timestamp as digits, got "%s"', $value));
@@ -108,7 +108,7 @@ readonly class TimestampMilliseconds extends DateTimeType
     /**
      * @param non-empty-string $timezone
      */
-    public static function tryFromString(string $value, string $timezone = self::ZONE): static|Undefined
+    public static function tryFromString(string $value, string $timezone = self::DEFAULT_ZONE): static|Undefined
     {
         try {
             return static::fromString($value, $timezone);

@@ -24,6 +24,8 @@ interface UndefinedTypeInterface
 {
     public static function create(): static;
 
+    public static function fromString(string $value): static;
+
     public static function tryFromMixed(mixed $value): Undefined;
 
     /**

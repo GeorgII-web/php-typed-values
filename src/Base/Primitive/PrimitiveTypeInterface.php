@@ -14,7 +14,6 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  * Base contract for all immutable typed values in this library.
  *
  * Responsibilities
- *  - Provide strict construction from a validated string via {@see FromString}.
  *  - Provide a lossless string representation via {@see toString} and {@see __toString}.
  *  - Concrete implementations may also provide tolerant factories like
  *    `tryFromMixed(mixed): static|Undefined` that return {@see Undefined} on failure.

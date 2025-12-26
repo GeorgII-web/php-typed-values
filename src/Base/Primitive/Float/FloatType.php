@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace PhpTypedValues\Base\Primitive\Float;
 
 use PhpTypedValues\Base\Primitive\PrimitiveType;
-use PhpTypedValues\Base\Shared\FromString;
 use PhpTypedValues\Exception\FloatTypeException;
 
 use function sprintf;
@@ -27,7 +26,7 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-abstract readonly class FloatType extends PrimitiveType implements FloatTypeInterface, FromString
+abstract readonly class FloatType extends PrimitiveType implements FloatTypeInterface
 {
     /**
      * @throws FloatTypeException

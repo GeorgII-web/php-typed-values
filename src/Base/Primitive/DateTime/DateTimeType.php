@@ -35,7 +35,7 @@ use function sprintf;
 abstract readonly class DateTimeType extends PrimitiveType implements DateTimeTypeInterface
 {
     protected const FORMAT = '';
-    public const ZONE = 'UTC';
+    public const DEFAULT_ZONE = 'UTC';
     protected const MIN_TIMESTAMP_SECONDS = -62135596800; // 0001-01-01
     protected const MAX_TIMESTAMP_SECONDS = 253402300799; // 9999-12-31 23:59:59
 
@@ -100,6 +100,6 @@ abstract readonly class DateTimeType extends PrimitiveType implements DateTimeTy
          *
          * @psalm-suppress FalsableReturnStatement
          */
-        return $dt->setTimezone(new DateTimeZone(self::ZONE));
+        return $dt->setTimezone(new DateTimeZone(self::DEFAULT_ZONE));
     }
 }

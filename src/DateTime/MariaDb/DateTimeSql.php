@@ -35,13 +35,13 @@ readonly class DateTimeSql extends DateTimeType
     public function __construct(DateTimeImmutable $value)
     {
         // normalized time zone
-        $this->value = $value->setTimezone(new DateTimeZone(static::ZONE));
+        $this->value = $value->setTimezone(new DateTimeZone(static::DEFAULT_ZONE));
     }
 
     /**
      * @param non-empty-string $timezone
      */
-    public static function tryFromMixed(mixed $value, string $timezone = self::ZONE): static|Undefined
+    public static function tryFromMixed(mixed $value, string $timezone = self::DEFAULT_ZONE): static|Undefined
     {
         try {
             return static::fromString(
@@ -58,7 +58,7 @@ readonly class DateTimeSql extends DateTimeType
      *
      * @throws DateTimeTypeException
      */
-    public static function fromString(string $value, string $timezone = self::ZONE): static
+    public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE): static
     {
         return new static(
             static::createFromFormat(
@@ -72,7 +72,7 @@ readonly class DateTimeSql extends DateTimeType
     /**
      * @param non-empty-string $timezone
      */
-    public static function tryFromString(string $value, string $timezone = self::ZONE): static|Undefined
+    public static function tryFromString(string $value, string $timezone = self::DEFAULT_ZONE): static|Undefined
     {
         try {
             return static::fromString($value, $timezone);

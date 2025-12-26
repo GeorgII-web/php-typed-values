@@ -42,6 +42,13 @@ NotFound::create();
 NotSet::create();
 Unknown::create();
 
+$undefined = Unknown::fromString('hi');
+try {
+    $undefined->toString();
+} catch (TypeException $e) {
+    echo $e->getMessage() . PHP_EOL;
+}
+
 $undefined = Unknown::tryFromMixed('hi');
 try {
     $undefined->toString();

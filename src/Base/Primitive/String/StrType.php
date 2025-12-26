@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace PhpTypedValues\Base\Primitive\String;
 
 use PhpTypedValues\Base\Primitive\PrimitiveType;
-use PhpTypedValues\Base\Shared\FromString;
 
 /**
  * Base implementation for string-typed values.
@@ -24,6 +23,6 @@ use PhpTypedValues\Base\Shared\FromString;
  *
  * @psalm-immutable
  */
-abstract readonly class StrType extends PrimitiveType implements StrTypeInterface, FromString
+abstract readonly class StrType extends PrimitiveType implements StrTypeInterface
 {
 }
