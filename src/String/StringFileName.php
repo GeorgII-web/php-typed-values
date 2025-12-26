@@ -28,6 +28,7 @@ use function sprintf;
  *
  * @method        false            isUndefined()
  * @method        non-empty-string value()
+ * @method        bool             isEmpty()
  * @method static static|mixed     tryFromString(string $value, mixed $default = null)
  * @method static static|mixed     tryFromMixed(mixed $value, mixed $default = null)
  *
@@ -92,10 +93,5 @@ readonly class StringFileName extends StrType
     public function __toString(): string
     {
         return $this->toString();
-    }
-
-    public function isEmpty(): bool
-    {
-        return false;
     }
 }

@@ -22,6 +22,10 @@ interface StrTypeInterface
 {
     public function value(): string;
 
+    public function isEmpty(): bool;
+
+    public function isUndefined(): false;
+
     /**
      * @template T
      *

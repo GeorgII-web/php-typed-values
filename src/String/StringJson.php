@@ -27,6 +27,7 @@ use function sprintf;
  *
  * @method        false        isUndefined()
  * @method        string       value()
+ * @method        bool         isEmpty()
  * @method static static|mixed tryFromString(string $value, mixed $default = null)
  * @method static static|mixed tryFromMixed(mixed $value, mixed $default = null)
  *
@@ -100,11 +101,5 @@ readonly class StringJson extends StrType
     public function __toString(): string
     {
         return $this->toString();
-    }
-
-    public function isEmpty(): bool
-    {
-        // JSON values are never empty by construction; constructor rejects empty strings
-        return false;
     }
 }

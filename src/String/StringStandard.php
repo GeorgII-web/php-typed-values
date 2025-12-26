@@ -17,10 +17,9 @@ use PhpTypedValues\Base\Primitive\String\StrType;
  *    $v->toString(); // "hello"
  *  - (string) StringStandard::fromString('x'); // "x"
  *
- * Methods
- *
  * @method        false        isUndefined()
  * @method        string       value()
+ * @method        bool         isEmpty()
  * @method static static|mixed tryFromString(string $value, mixed $default = null)
  * @method static static|mixed tryFromMixed(mixed $value, mixed $default = null)
  *
@@ -53,10 +52,5 @@ readonly class StringStandard extends StrType
     public function __toString(): string
     {
         return $this->toString();
-    }
-
-    public function isEmpty(): bool
-    {
-        return $this->value === '';
     }
 }

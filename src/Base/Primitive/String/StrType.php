@@ -71,6 +71,11 @@ abstract readonly class StrType extends PrimitiveType implements StrTypeInterfac
         return $this->value;
     }
 
+    public function isEmpty(): bool
+    {
+        return $this->value === '';
+    }
+
     public function isUndefined(): false
     {
         return false;

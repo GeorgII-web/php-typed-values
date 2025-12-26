@@ -20,6 +20,7 @@ use function sprintf;
  *  - StringEmpty::fromString('hello'); // throws StringTypeException
  *
  * @method        string       value()
+ * @method        bool         isEmpty()
  * @method        false        isUndefined()
  * @method static static|mixed tryFromString(string $value, mixed $default = null)
  * @method static static|mixed tryFromMixed(mixed $value, mixed $default = null)
@@ -63,10 +64,5 @@ readonly class StringEmpty extends StrType
     public function __toString(): string
     {
         return $this->toString();
-    }
-
-    public function isEmpty(): bool
-    {
-        return true;
     }
 }

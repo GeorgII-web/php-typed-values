@@ -27,9 +27,7 @@ function main(array $argv): int
     $n = parseN($argv, $defaultN);
 
     echo PHP_EOL;
-    echo '---------------------------------------------------------' . PHP_EOL;
-
-    echo 'PHP: ' . PHP_VERSION . ' Memory limit: ' . ((string) ini_get('memory_limit')) . ' Dataset N: ' . number_format($n) . PHP_EOL;
+    echo '> PHP: ' . PHP_VERSION . ' Memory limit: ' . ((string) ini_get('memory_limit')) . ' Dataset N: ' . number_format($n);
 
     // Ensure a clean baseline
     gc_collect_cycles();

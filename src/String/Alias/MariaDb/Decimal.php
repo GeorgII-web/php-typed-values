@@ -18,6 +18,7 @@ use PhpTypedValues\String\MariaDb\StringDecimal;
  *
  * @method        false        isUndefined()
  * @method        string       value()
+ * @method        bool         isEmpty()
  * @method static static|mixed tryFromString(string $value, mixed $default = null)
  * @method static static|mixed tryFromMixed(mixed $value, mixed $default = null)
  *
