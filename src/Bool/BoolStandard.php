@@ -34,26 +34,6 @@ readonly class BoolStandard extends BoolType
         $this->value = $value;
     }
 
-    public static function tryFromMixed(mixed $value): static|Undefined
-    {
-        try {
-            return static::fromString(
-                static::convertMixedToString($value)
-            );
-        } catch (TypeException) {
-            return Undefined::create();
-        }
-    }
-
-    public static function tryFromString(string $value): static|Undefined
-    {
-        try {
-            return static::fromString($value);
-        } catch (TypeException) {
-            return Undefined::create();
-        }
-    }
-
     public static function tryFromInt(int $value): static|Undefined
     {
         try {

@@ -35,4 +35,22 @@ interface PrimitiveTypeInterface extends TypeInterface, JsonSerializable, IsEmpt
      * Alias of {@see toString} for convenient casting.
      */
     public function __toString(): string;
+
+    /**
+     * @template T
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromString(string $value, mixed $default = new Undefined()): mixed;
+
+    /**
+     * @template T
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromMixed(mixed $value, mixed $default = new Undefined()): mixed;
 }

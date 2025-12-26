@@ -47,17 +47,6 @@ readonly class IntegerWeekDay extends IntType
         $this->value = $value;
     }
 
-    public static function tryFromMixed(mixed $value): static|Undefined
-    {
-        try {
-            return static::fromString(
-                static::convertMixedToString($value)
-            );
-        } catch (TypeException) {
-            return Undefined::create();
-        }
-    }
-
     /**
      * @return int<1, 7>
      */
@@ -72,15 +61,6 @@ readonly class IntegerWeekDay extends IntType
     public function value(): int
     {
         return $this->value;
-    }
-
-    public static function tryFromString(string $value): static|Undefined
-    {
-        try {
-            return static::fromString($value);
-        } catch (TypeException) {
-            return Undefined::create();
-        }
     }
 
     public static function tryFromInt(int $value): static|Undefined

@@ -6,8 +6,6 @@ namespace PhpTypedValues\Base\Primitive\String;
 
 use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Base\Shared\FromStringInterface;
-use PhpTypedValues\Exception\TypeException;
-use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
  * Base implementation for string-typed values.
@@ -26,44 +24,13 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  *
  * @psalm-immutable
  */
-abstract readonly class StrType extends PrimitiveType implements StrTypeInterface, FromStringInterface
+abstract readonly class StrType extends PrimitiveType implements StrTypeInterface
 {
     protected string $value;
 
-    /**
-     * @template T
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
-    public static function tryFromString(string $value, mixed $default = new Undefined()): mixed
+    public static function fromString(string $value): static
     {
-        try {
-            /** @var static */
-            return static::fromString($value);
-        } catch (TypeException) {
-            return $default;
-        }
-    }
-
-    /**
-     * @template T
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
-    public static function tryFromMixed(mixed $value, mixed $default = new Undefined()): mixed
-    {
-        try {
-            /** @var static */
-            return static::fromString(
-                static::convertMixedToString($value)
-            );
-        } catch (TypeException) {
-            return $default;
-        }
+        return new static($value);
     }
 
     public function value(): string
@@ -79,11 +46,6 @@ abstract readonly class StrType extends PrimitiveType implements StrTypeInterfac
     public function toString(): string
     {
         return $this->value();
-    }
-
-    public function __toString(): string
-    {
-        return $this->toString();
     }
 
     public function isEmpty(): bool

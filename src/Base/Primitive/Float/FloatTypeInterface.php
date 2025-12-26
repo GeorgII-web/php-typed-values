@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Base\Primitive\Float;
 
+use PhpTypedValues\Base\Primitive\PrimitiveTypeInterface;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
@@ -18,13 +19,9 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  *
  * @psalm-immutable
  */
-interface FloatTypeInterface
+interface FloatTypeInterface extends PrimitiveTypeInterface
 {
     public function value(): float;
 
     public static function fromFloat(float $value): static;
-
-    public static function tryFromMixed(mixed $value): static|Undefined;
-
-    public static function tryFromString(string $value): static|Undefined;
 }

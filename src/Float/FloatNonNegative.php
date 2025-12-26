@@ -41,32 +41,12 @@ readonly class FloatNonNegative extends FloatType
         $this->value = $value;
     }
 
-    public static function tryFromMixed(mixed $value): static|Undefined
-    {
-        try {
-            return static::fromString(
-                static::convertMixedToString($value)
-            );
-        } catch (TypeException) {
-            return Undefined::create();
-        }
-    }
-
     /**
      * @throws FloatTypeException
      */
     public static function fromFloat(float $value): static
     {
         return new static($value);
-    }
-
-    public static function tryFromString(string $value): static|Undefined
-    {
-        try {
-            return static::fromString($value);
-        } catch (TypeException) {
-            return Undefined::create();
-        }
     }
 
     public static function tryFromFloat(float $value): static|Undefined

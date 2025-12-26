@@ -40,21 +40,6 @@ readonly class DateTimeSql extends DateTimeType
 
     /**
      * @param non-empty-string $timezone
-     */
-    public static function tryFromMixed(mixed $value, string $timezone = self::ZONE): static|Undefined
-    {
-        try {
-            return static::fromString(
-                static::convertMixedToString($value),
-                $timezone
-            );
-        } catch (TypeException) {
-            return Undefined::create();
-        }
-    }
-
-    /**
-     * @param non-empty-string $timezone
      *
      * @throws DateTimeTypeException
      */
@@ -67,18 +52,6 @@ readonly class DateTimeSql extends DateTimeType
                 new DateTimeZone($timezone)
             )
         );
-    }
-
-    /**
-     * @param non-empty-string $timezone
-     */
-    public static function tryFromString(string $value, string $timezone = self::ZONE): static|Undefined
-    {
-        try {
-            return static::fromString($value, $timezone);
-        } catch (TypeException) {
-            return Undefined::create();
-        }
     }
 
     public function withTimeZone(string $timezone): static

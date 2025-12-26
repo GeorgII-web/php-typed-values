@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Base\Primitive\Bool;
 
+use PhpTypedValues\Base\Primitive\PrimitiveTypeInterface;
 use PhpTypedValues\Exception\BoolTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -20,13 +21,9 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  *
  * @psalm-immutable
  */
-interface BoolTypeInterface
+interface BoolTypeInterface extends PrimitiveTypeInterface
 {
-    public static function tryFromString(string $value): static|Undefined;
-
     public static function tryFromInt(int $value): static|Undefined;
-
-    public static function tryFromMixed(mixed $value): static|Undefined;
 
     /**
      * @throws BoolTypeException

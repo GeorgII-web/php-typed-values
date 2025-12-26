@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Base\Primitive\Integer;
 
+use PhpTypedValues\Base\Primitive\PrimitiveTypeInterface;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
@@ -18,15 +19,11 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  *
  * @psalm-immutable
  */
-interface IntTypeInterface
+interface IntTypeInterface extends PrimitiveTypeInterface
 {
     public function value(): int;
 
     public static function fromInt(int $value): static;
 
     public static function tryFromInt(int $value): static|Undefined;
-
-    public static function tryFromMixed(mixed $value): static|Undefined;
-
-    public static function tryFromString(string $value): static|Undefined;
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PhpTypedValues\Base\Primitive\DateTime;
 
 use DateTimeImmutable;
+use PhpTypedValues\Base\Primitive\PrimitiveTypeInterface;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
@@ -20,17 +21,13 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  *
  * @psalm-immutable
  */
-interface DateTimeTypeInterface
+interface DateTimeTypeInterface extends PrimitiveTypeInterface
 {
     public const ZONE = 'UTC';
 
     public function value(): DateTimeImmutable;
 
     public static function fromDateTime(DateTimeImmutable $value): static;
-
-    public static function tryFromMixed(mixed $value): static|Undefined;
-
-    public static function tryFromString(string $value): static|Undefined;
 
     /**
      * @param non-empty-string $timezone

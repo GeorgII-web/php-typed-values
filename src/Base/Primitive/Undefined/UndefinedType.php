@@ -6,6 +6,7 @@ namespace PhpTypedValues\Base\Primitive\Undefined;
 
 use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Base\Shared\FromStringInterface;
+use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
  * Base implementation for a special "Undefined/Unknown" typed value.
@@ -25,4 +26,8 @@ use PhpTypedValues\Base\Shared\FromStringInterface;
  */
 abstract readonly class UndefinedType extends PrimitiveType implements UndefinedTypeInterface, FromStringInterface
 {
+    public static function tryFromMixed(mixed $value, mixed $default = new Undefined()): Undefined
+    {
+        return Undefined::create();
+    }
 }

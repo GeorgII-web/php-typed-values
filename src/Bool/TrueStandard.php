@@ -44,26 +44,6 @@ readonly class TrueStandard extends BoolType
         $this->value = true;
     }
 
-    public static function tryFromMixed(mixed $value): static|Undefined
-    {
-        try {
-            return static::fromString(
-                static::convertMixedToString($value)
-            );
-        } catch (TypeException) {
-            return Undefined::create();
-        }
-    }
-
-    public static function tryFromString(string $value): static|Undefined
-    {
-        try {
-            return static::fromString($value);
-        } catch (TypeException) {
-            return Undefined::create();
-        }
-    }
-
     public static function tryFromInt(int $value): static|Undefined
     {
         try {

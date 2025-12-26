@@ -49,26 +49,6 @@ readonly class FloatPositive extends FloatType
         return new static($value);
     }
 
-    public static function tryFromString(string $value): static|Undefined
-    {
-        try {
-            return static::fromString($value);
-        } catch (TypeException) {
-            return Undefined::create();
-        }
-    }
-
-    public static function tryFromMixed(mixed $value): static|Undefined
-    {
-        try {
-            return static::fromString(
-                static::convertMixedToString($value)
-            );
-        } catch (TypeException) {
-            return Undefined::create();
-        }
-    }
-
     public static function tryFromFloat(float $value): static|Undefined
     {
         try {

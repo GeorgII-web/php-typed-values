@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PhpTypedValues\Base\Primitive;
 
 use PhpTypedValues\Exception\TypeException;
+use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
 
 use function is_scalar;
@@ -34,6 +35,45 @@ abstract readonly class PrimitiveType implements PrimitiveTypeInterface
 {
     abstract public function jsonSerialize(): mixed;
 
+    abstract public static function fromString(string $value, string $timezone = self::ZONE): static;
+    abstract public static function fromString(string $value): static;
+
+    /**
+     * @template T
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromString(string $value, mixed $default = new Undefined()): mixed
+    {
+        try {
+            /** @var static */
+            return static::fromString($value);
+        } catch (TypeException) {
+            return $default;
+        }
+    }
+
+    /**
+     * @template T
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromMixed(mixed $value, mixed $default = new Undefined()): mixed
+    {
+        try {
+            /** @var static */
+            return static::fromString(
+                static::convertMixedToString($value)
+            );
+        } catch (TypeException) {
+            return $default;
+        }
+    }
+
     /**
      * Safely attempts to convert a mixed value to a string.
      * Returns null if conversion is impossible (array, resource, non-stringable object).
@@ -51,5 +91,10 @@ abstract readonly class PrimitiveType implements PrimitiveTypeInterface
         }
 
         throw new TypeException('Value cannot be cast to string');
+    }
+
+    public function __toString(): string
+    {
+        return $this->toString();
     }
 }
