@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PhpTypedValues\Base\Primitive\Bool;
 
 use PhpTypedValues\Base\Primitive\PrimitiveType;
+use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
@@ -28,13 +29,47 @@ abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterf
 {
     abstract public function value(): bool;
 
-    abstract public static function tryFromString(
-        string $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType|Undefined;
-
-    abstract public static function tryFromMixed(
+    /**
+     * @template T of PrimitiveType
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromMixed(
         mixed $value,
         PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType|Undefined;
+    ): mixed {
+        try {
+            $instance = static::fromString(
+                static::convertMixedToString($value)
+            );
+
+            /** @var static|T */
+            return $instance;
+        } catch (TypeException) {
+            return $default;
+        }
+    }
+
+    /**
+     * @template T of PrimitiveType
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromString(
+        string $value,
+        PrimitiveType $default = new Undefined(),
+    ): mixed {
+        try {
+            $instance = static::fromString($value);
+
+            /** @var static|T */
+            return $instance;
+        } catch (TypeException) {
+            return $default;
+        }
+    }
 }

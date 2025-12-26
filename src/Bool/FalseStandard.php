@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace PhpTypedValues\Bool;
 
 use PhpTypedValues\Base\Primitive\Bool\BoolType;
-use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\BoolTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -43,30 +42,6 @@ readonly class FalseStandard extends BoolType
         }
 
         $this->value = false;
-    }
-
-    public static function tryFromMixed(
-        mixed $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
-        try {
-            return static::fromString(
-                static::convertMixedToString($value)
-            );
-        } catch (TypeException) {
-            return $default;
-        }
-    }
-
-    public static function tryFromString(
-        string $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
-        try {
-            return static::fromString($value);
-        } catch (TypeException) {
-            return $default;
-        }
     }
 
     public static function tryFromInt(int $value): static|Undefined
