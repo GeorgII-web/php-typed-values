@@ -75,6 +75,12 @@ it('tryFromMixed always returns Undefined', function (): void {
         ->toBeInstanceOf(Undefined::class);
 });
 
+it('tryFromString always returns Undefined', function (): void {
+    $v = UndefinedStandard::tryFromString('anything');
+
+    expect($v)->toBeInstanceOf(Undefined::class);
+});
+
 it('isEmpty returns true for UndefinedStandard', function (): void {
     $u1 = UndefinedStandard::create();
     $u2 = UndefinedStandard::fromString('ignored');
