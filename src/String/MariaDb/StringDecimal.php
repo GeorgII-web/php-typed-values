@@ -29,6 +29,7 @@ use function sprintf;
  * @method        false        isUndefined()
  * @method        string       value()
  * @method        bool         isEmpty()
+ * @method        string       toString()
  * @method static static|mixed tryFromString(string $value, mixed $default = null)
  * @method static static|mixed tryFromMixed(mixed $value, mixed $default = null)
  *
@@ -82,20 +83,5 @@ readonly class StringDecimal extends StrType
         if (preg_match('/^-?\d+(?:\.\d+)?$/', $value) !== 1) {
             throw new DecimalStringTypeException(sprintf('Expected decimal string (e.g., "123", "-1", "3.14"), got "%s"', $value));
         }
-    }
-
-    public function jsonSerialize(): string
-    {
-        return $this->toString();
-    }
-
-    public function toString(): string
-    {
-        return $this->value();
-    }
-
-    public function __toString(): string
-    {
-        return $this->toString();
     }
 }

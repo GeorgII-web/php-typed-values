@@ -24,6 +24,7 @@ use function trim;
  * @method        false            isUndefined()
  * @method        non-empty-string value()
  * @method        bool             isEmpty()
+ * @method        string           toString()
  * @method static static|mixed     tryFromString(string $value, mixed $default = null)
  * @method static static|mixed     tryFromMixed(mixed $value, mixed $default = null)
  *
@@ -53,20 +54,5 @@ readonly class StringNonBlank extends StrType
     public static function fromString(string $value): static
     {
         return new static($value);
-    }
-
-    public function jsonSerialize(): string
-    {
-        return $this->toString();
-    }
-
-    public function toString(): string
-    {
-        return $this->value();
-    }
-
-    public function __toString(): string
-    {
-        return $this->toString();
     }
 }

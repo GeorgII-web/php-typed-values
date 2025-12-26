@@ -35,13 +35,4 @@ interface PrimitiveTypeInterface extends TypeInterface, JsonSerializable, IsEmpt
      * Alias of {@see toString} for convenient casting.
      */
     public function __toString(): string;
-
-    /**
-     * JSON representation of the value.
-     *
-     * Marked as mutation-free so Psalm treats calls as pure in immutable contexts.
-     *
-     * @psalm-mutation-free
-     */
-    public function jsonSerialize(): mixed;
 }

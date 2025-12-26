@@ -32,6 +32,8 @@ use function is_scalar;
  */
 abstract readonly class PrimitiveType implements PrimitiveTypeInterface
 {
+    abstract public function jsonSerialize(): mixed;
+
     /**
      * Safely attempts to convert a mixed value to a string.
      * Returns null if conversion is impossible (array, resource, non-stringable object).

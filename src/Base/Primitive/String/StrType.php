@@ -71,6 +71,21 @@ abstract readonly class StrType extends PrimitiveType implements StrTypeInterfac
         return $this->value;
     }
 
+    public function jsonSerialize(): string
+    {
+        return $this->toString();
+    }
+
+    public function toString(): string
+    {
+        return $this->value();
+    }
+
+    public function __toString(): string
+    {
+        return $this->toString();
+    }
+
     public function isEmpty(): bool
     {
         return $this->value === '';

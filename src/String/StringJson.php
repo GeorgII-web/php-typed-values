@@ -28,6 +28,7 @@ use function sprintf;
  * @method        false        isUndefined()
  * @method        string       value()
  * @method        bool         isEmpty()
+ * @method        string       toString()
  * @method static static|mixed tryFromString(string $value, mixed $default = null)
  * @method static static|mixed tryFromMixed(mixed $value, mixed $default = null)
  *
@@ -86,20 +87,5 @@ readonly class StringJson extends StrType
         } catch (JsonException $e) {
             throw new JsonStringTypeException(sprintf('String "%s" has no valid JSON value', $value), 0, $e);
         }
-    }
-
-    public function jsonSerialize(): string
-    {
-        return $this->toString();
-    }
-
-    public function toString(): string
-    {
-        return $this->value();
-    }
-
-    public function __toString(): string
-    {
-        return $this->toString();
     }
 }
