@@ -57,7 +57,8 @@ it('FloatNonNegative::tryFromString returns value for >= 0.0 and Undefined other
         ->toBeInstanceOf(FloatNonNegative::class)
         ->and($ok->value())->toBe(0.5)
         ->and($bad)->toBeInstanceOf(Undefined::class)
-        ->and($badStr)->toBeInstanceOf(Undefined::class);
+        ->and($badStr)->toBeInstanceOf(Undefined::class)
+        ->and(FloatNonNegative::tryFromString('-0.1', Undefined::create()))->toBeInstanceOf(Undefined::class);
 });
 
 it('FloatNonNegative::tryFromFloat returns value for >= 0 and Undefined otherwise', function (): void {
@@ -135,7 +136,8 @@ it('tryFromMixed accepts numeric strings/ints/floats and returns Undefined for i
         ->and($bad1)->toBeInstanceOf(Undefined::class)
         ->and($bad2)->toBeInstanceOf(Undefined::class)
         ->and($bad3)->toBeInstanceOf(Undefined::class)
-        ->and($bad4)->toBeInstanceOf(Undefined::class);
+        ->and($bad4)->toBeInstanceOf(Undefined::class)
+        ->and(FloatNonNegative::tryFromMixed('-1', Undefined::create()))->toBeInstanceOf(Undefined::class);
 });
 
 it('jsonSerialize equals value() for valid instances', function (): void {

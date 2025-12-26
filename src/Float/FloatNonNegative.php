@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace PhpTypedValues\Float;
 
 use PhpTypedValues\Base\Primitive\Float\FloatType;
-use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\FloatTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -40,46 +39,6 @@ readonly class FloatNonNegative extends FloatType
         }
 
         $this->value = $value;
-    }
-
-    /**
-     * @template T of PrimitiveType
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
-    public static function tryFromMixed(
-        mixed $value,
-        PrimitiveType $default = new Undefined(),
-    ) {
-        try {
-            /** @var static */
-            return static::fromString(
-                static::convertMixedToString($value)
-            );
-        } catch (TypeException) {
-            return $default;
-        }
-    }
-
-    /**
-     * @template T of PrimitiveType
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
-    public static function tryFromString(
-        string $value,
-        PrimitiveType $default = new Undefined(),
-    ) {
-        try {
-            /** @var static */
-            return static::fromString($value);
-        } catch (TypeException) {
-            return $default;
-        }
     }
 
     /**

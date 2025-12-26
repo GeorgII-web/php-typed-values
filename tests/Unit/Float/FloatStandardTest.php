@@ -20,7 +20,8 @@ it('FloatStandard::tryFromString returns value on valid float string', function 
 it('FloatStandard::tryFromString returns Undefined on invalid float string', function (): void {
     $v = FloatStandard::tryFromString('abc');
 
-    expect($v)->toBeInstanceOf(Undefined::class);
+    expect($v)->toBeInstanceOf(Undefined::class)
+        ->and(FloatStandard::tryFromString('abc', Undefined::create()))->toBeInstanceOf(Undefined::class);
 });
 
 it('FloatStandard::tryFromFloat returns value for any int', function (): void {
@@ -85,7 +86,8 @@ it('tryFromMixed covers numeric, non-numeric, and stringable inputs', function (
         ->and($fromArray)->toBeInstanceOf(Undefined::class)
         ->and($fromNull)->toBeInstanceOf(Undefined::class)
         ->and($fromStringable)->toBeInstanceOf(FloatStandard::class)
-        ->and($fromStringable->value())->toBe(1.23);
+        ->and($fromStringable->value())->toBe(1.23)
+        ->and(FloatStandard::tryFromMixed([1], Undefined::create()))->toBeInstanceOf(Undefined::class);
 });
 
 it('isEmpty returns false for FloatStandard', function (): void {

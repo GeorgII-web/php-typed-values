@@ -59,7 +59,8 @@ it('FloatPositive::tryFromString returns value for > 0.0 and Undefined otherwise
         ->and($ok->value())->toBe(0.1)
         ->and($badZero)->toBeInstanceOf(Undefined::class)
         ->and($badNeg)->toBeInstanceOf(Undefined::class)
-        ->and($badStr)->toBeInstanceOf(Undefined::class);
+        ->and($badStr)->toBeInstanceOf(Undefined::class)
+        ->and(FloatPositive::tryFromString('0', Undefined::create()))->toBeInstanceOf(Undefined::class);
 });
 
 it('FloatPositive::tryFromFloat returns value for positive int and Undefined otherwise', function (): void {
@@ -144,7 +145,8 @@ it('tryFromMixed covers positive, non-positive, and non-numeric inputs', functio
         ->and($fromArray)->toBeInstanceOf(Undefined::class)
         ->and($fromNull)->toBeInstanceOf(Undefined::class)
         ->and($fromStringable)->toBeInstanceOf(FloatPositive::class)
-        ->and($fromStringable->value())->toBe(1.23);
+        ->and($fromStringable->value())->toBe(1.23)
+        ->and(FloatPositive::tryFromMixed(0, Undefined::create()))->toBeInstanceOf(Undefined::class);
 });
 
 it('isEmpty returns false for FloatPositive', function (): void {

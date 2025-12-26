@@ -47,7 +47,7 @@ interface FloatTypeInterface
     public static function tryFromString(
         string $value,
         PrimitiveType $default = new Undefined(),
-    );
+    ): mixed;
 
     /**
      * @template T of PrimitiveType
@@ -59,5 +59,5 @@ interface FloatTypeInterface
     public static function tryFromMixed(
         mixed $value,
         PrimitiveType $default = new Undefined(),
-    );
+    ): mixed;
 }
