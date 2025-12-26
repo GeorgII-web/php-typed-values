@@ -8,7 +8,9 @@ use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\FloatTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use Stringable;
 
+use function is_scalar;
 use function sprintf;
 
 /**
@@ -125,6 +127,25 @@ abstract readonly class FloatType extends PrimitiveType implements FloatTypeInte
         } catch (TypeException) {
             return $default;
         }
+    }
+
+    /**
+     * Safely attempts to convert a mixed value to a string.
+     * Returns null if conversion is impossible (array, resource, non-stringable object).
+     *
+     * @throws TypeException
+     */
+    protected static function convertMixedToString(mixed $value): string
+    {
+        if (is_scalar($value) || $value === null) {
+            return (string) $value;
+        }
+
+        if ($value instanceof Stringable) {
+            return (string) $value;
+        }
+
+        throw new TypeException('Value cannot be cast to string');
     }
 
     public function isEmpty(): bool

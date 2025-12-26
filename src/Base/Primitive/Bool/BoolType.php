@@ -7,6 +7,10 @@ namespace PhpTypedValues\Base\Primitive\Bool;
 use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use Stringable;
+
+use function is_bool;
+use function is_scalar;
 
 /**
  * Base implementation for boolean typed values.
@@ -90,6 +94,29 @@ abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterf
         } catch (TypeException) {
             return $default;
         }
+    }
+
+    /**
+     * Safely attempts to convert a mixed value to a string.
+     * Returns null if conversion is impossible (array, resource, non-stringable object).
+     *
+     * @throws TypeException
+     */
+    protected static function convertMixedToString(mixed $value): string
+    {
+        if (is_bool($value)) {
+            return $value ? 'true' : 'false';
+        }
+
+        if (is_scalar($value) || $value === null) {
+            return (string) $value;
+        }
+
+        if ($value instanceof Stringable) {
+            return (string) $value;
+        }
+
+        throw new TypeException('Value cannot be cast to string');
     }
 
     public function toString(): string
