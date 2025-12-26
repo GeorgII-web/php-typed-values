@@ -1,9 +1,10 @@
 ### Project Standards & Workflow
 
-**Tech Stack & Style**
+**Tech-Stack & Style**
 *   **Core:** PHP 8.2 with `declare(strict_types=1);`.
 *   **Standards:** Follow PSR-12. Use clean, meaningful naming conventions.
-*   **Static Analysis:** Psalm v6 (Level 1).
+*   **Static Analysis:** Psalm v6 (Level 3).
+*   **Environment:** Linux bash.
 
 **Testing Strategy**
 *   **Frameworks:** PEST v3 (use `it` syntax) & PHPUnit v11.

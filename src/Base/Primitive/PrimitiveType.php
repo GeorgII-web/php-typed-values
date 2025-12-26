@@ -7,6 +7,7 @@ namespace PhpTypedValues\Base\Primitive;
 use PhpTypedValues\Exception\TypeException;
 use Stringable;
 
+use function is_bool;
 use function is_scalar;
 
 /**
@@ -40,6 +41,10 @@ abstract readonly class PrimitiveType implements PrimitiveTypeInterface
      */
     protected static function convertMixedToString(mixed $value): string
     {
+        if (is_bool($value)) {
+            return $value ? 'true' : 'false';
+        }
+
         if (is_scalar($value) || $value === null) {
             return (string) $value;
         }

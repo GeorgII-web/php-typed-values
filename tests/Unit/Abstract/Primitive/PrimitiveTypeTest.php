@@ -23,8 +23,8 @@ it('convertMixedToString casts scalars and null to string', function (): void {
     expect(PrimitiveTypeTest::convert(123))->toBe('123')
         ->and(PrimitiveTypeTest::convert(1.5))->toBe('1.5')
         ->and(PrimitiveTypeTest::convert('foo'))->toBe('foo')
-        ->and(PrimitiveTypeTest::convert(true))->toBe('1')
-        ->and(PrimitiveTypeTest::convert(false))->toBe('')
+        ->and(PrimitiveTypeTest::convert(true))->toBe('true')
+        ->and(PrimitiveTypeTest::convert(false))->toBe('false')
         ->and(PrimitiveTypeTest::convert(null))->toBe('');
 });
 
