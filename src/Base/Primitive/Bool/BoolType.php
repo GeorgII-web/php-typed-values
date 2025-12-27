@@ -10,7 +10,8 @@ use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
 
 use function is_bool;
-use function is_scalar;
+use function is_int;
+use function is_string;
 
 /**
  * Base implementation for boolean typed values.
@@ -64,13 +65,21 @@ abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterf
         mixed $default = new Undefined(),
     ): mixed {
         try {
-            $instance = static::fromString(
-                static::convertMixedToString($value)
-            );
-
-            /** @var static|T */
-            return $instance;
+            /** @var static */
+            return match (true) {
+                is_bool($value) => static::fromBool($value), // Boolean true\false
+                is_int($value) => static::fromInt($value), // Integer 1\0
+                ($value === 0.0 || $value === 1.0) => static::fromInt((int) $value), // Floats 1.0\0.0
+                ($value instanceof self) => static::fromBool($value->value()), // BoolType Class
+                is_string($value) || $value instanceof Stringable => static::fromString((string) $value), // String "true","1","yes", etc.
+                default => throw new TypeException('Value cannot be cast to boolean'),
+            };
         } catch (TypeException) {
+            /**
+             * Fallback to a default value.
+             *
+             * @var T
+             */
             return $default;
         }
     }
@@ -94,33 +103,6 @@ abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterf
         } catch (TypeException) {
             return $default;
         }
-    }
-
-    /**
-     * Safely attempts to convert a mixed value to a string.
-     * Returns null if conversion is impossible (array, resource, non-stringable object).
-     *
-     * @throws TypeException
-     */
-    protected static function convertMixedToString(mixed $value): string
-    {
-        if (is_bool($value)) {
-            return $value ? 'true' : 'false';
-        }
-
-        if (is_scalar($value)) {
-            return (string) $value;
-        }
-
-        if ($value === null) {
-            return '';
-        }
-
-        if ($value instanceof Stringable) {
-            return (string) $value;
-        }
-
-        throw new TypeException('Value cannot be cast to string');
     }
 
     public function toString(): string
