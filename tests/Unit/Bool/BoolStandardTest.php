@@ -198,4 +198,8 @@ it('returns Undefined for invalid mixed inputs', function (mixed $input): void {
     ['input' => 'maybe'],         // String that isn't true-like or false-like
     ['input' => ''],              // Empty string
     ['input' => ' '],             // Blank string
+    ['input' => \INF],                          // Infinite value
+    ['input' => \NAN],                          // Not a Number
+    ['input' => fn() => 1.5],                  // Closure
+    ['input' => fopen('php://memory', 'r')],   // Resource
 ]);

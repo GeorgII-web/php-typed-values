@@ -75,11 +75,7 @@ abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterf
                 default => throw new TypeException('Value cannot be cast to boolean'),
             };
         } catch (TypeException) {
-            /**
-             * Fallback to a default value.
-             *
-             * @var T
-             */
+            /** @var T */
             return $default;
         }
     }

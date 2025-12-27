@@ -111,43 +111,66 @@ it('__toString mirrors toString and value', function (): void {
         ->toBe(3.14);
 });
 
-it('tryFromMixed covers positive, non-positive, and non-numeric inputs', function (): void {
-    // Positive inputs
-    $fromNumericString = FloatPositive::tryFromMixed('1.2');
-    $fromInt = FloatPositive::tryFromMixed(3);
-    $fromFloat = FloatPositive::tryFromMixed(2.5);
+it('converts mixed values to correct float state', function (mixed $input, float $expected): void {
+    $result = FloatPositive::tryFromMixed($input);
 
-    // Non-positive inputs
-    $zero = FloatPositive::tryFromMixed(0);
-    $negative = FloatPositive::tryFromMixed(-1);
-
-    // Non-numeric inputs
-    $fromArray = FloatPositive::tryFromMixed([1]);
-    $fromNull = FloatPositive::tryFromMixed(null);
-
-    // Stringable object
-    $stringable = new class {
+    expect($result)->toBeInstanceOf(FloatPositive::class)
+        ->and($result->value())->toBe($expected);
+})->with([
+    // Floats
+    ['input' => 1.5, 'expected' => 1.5],
+    ['input' => \PHP_FLOAT_MAX, 'expected' => \PHP_FLOAT_MAX],
+    ['input' => 1.234567890123456789, 'expected' => 1.234567890123456789],
+    ['input' => 2 / 3, 'expected' => 2 / 3],
+    ['input' => (string) (2 / 3), 'expected' => (float) (string) (2 / 3)],
+    // Type class
+    [
+        'input' => FloatPositive::fromFloat(1.234567890123456789),
+        'expected' => 1.234567890123456789,
+    ],
+    // Integers
+    ['input' => 1, 'expected' => 1.0],
+    ['input' => 111, 'expected' => 111.0],
+    // Booleans
+    ['input' => true, 'expected' => 1.0],
+    // Strings
+    ['input' => '1.5', 'expected' => 1.5],
+    // Stringable Object
+    ['input' => new class {
         public function __toString(): string
         {
-            return '1.23';
+            return '2.5';
         }
-    };
-    $fromStringable = FloatPositive::tryFromMixed($stringable);
+    }, 'expected' => 2.5],
+]);
 
-    expect($fromNumericString)->toBeInstanceOf(FloatPositive::class)
-        ->and($fromNumericString->value())->toBe(1.2)
-        ->and($fromInt)->toBeInstanceOf(FloatPositive::class)
-        ->and($fromInt->value())->toBe(3.0)
-        ->and($fromFloat)->toBeInstanceOf(FloatPositive::class)
-        ->and($fromFloat->value())->toBe(2.5)
-        ->and($zero)->toBeInstanceOf(Undefined::class)
-        ->and($negative)->toBeInstanceOf(Undefined::class)
-        ->and($fromArray)->toBeInstanceOf(Undefined::class)
-        ->and($fromNull)->toBeInstanceOf(Undefined::class)
-        ->and($fromStringable)->toBeInstanceOf(FloatPositive::class)
-        ->and($fromStringable->value())->toBe(1.23)
-        ->and(FloatPositive::tryFromMixed(0, Undefined::create()))->toBeInstanceOf(Undefined::class);
-});
+it('returns Undefined for invalid mixed inputs', function (mixed $input): void {
+    $result = FloatPositive::tryFromMixed($input);
+
+    expect($result)->toBeInstanceOf(Undefined::class)
+        ->and($result->isUndefined())->toBeTrue();
+})->with([
+    ['input' => null],
+    ['input' => []],
+    ['input' => new stdClass()],
+    ['input' => 'not-a-float'],
+    ['input' => '1.2.3'],
+    ['input' => '007'],
+    ['input' => fn() => 1.5],                  // Closure
+    ['input' => ['FloatPositive', 'fromInt']], // Callable array
+    ['input' => fopen('php://memory', 'r')],   // Resource
+    ['input' => [new stdClass()]],             // Array of objects
+    ['input' => \INF],                          // Infinite value
+    ['input' => \NAN],                          // Not a Number
+    ['input' => "\0"],                         // Null byte string
+    ['input' => 0.0],                          // Zero float
+    ['input' => 0],                            // Zero integer
+    ['input' => false],                        // False boolean (0.0)
+    ['input' => '0'],                          // Zero string
+    ['input' => -3.14],                        // Negative float
+    ['input' => -42],                          // Negative integer
+    ['input' => '-10.5'],                      // Negative string
+]);
 
 it('isEmpty returns false for FloatPositive', function (): void {
     $a = new FloatPositive(0.1);

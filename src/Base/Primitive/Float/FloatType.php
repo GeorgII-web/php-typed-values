@@ -10,7 +10,10 @@ use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
 
-use function is_scalar;
+use function is_bool;
+use function is_float;
+use function is_int;
+use function is_string;
 use function sprintf;
 
 /**
@@ -97,13 +100,16 @@ abstract readonly class FloatType extends PrimitiveType implements FloatTypeInte
         PrimitiveType $default = new Undefined(),
     ): mixed {
         try {
-            $instance = static::fromString(
-                static::convertMixedToString($value)
-            );
-
-            /** @var static|T */
-            return $instance;
+            /** @var static */
+            return match (true) {
+                is_float($value), is_int($value) => static::fromFloat($value),
+                ($value instanceof self) => static::fromFloat($value->value()),
+                is_bool($value) => static::fromFloat($value ? 1.0 : 0.0),
+                is_string($value) || $value instanceof Stringable => static::fromString((string) $value),
+                default => throw new TypeException('Value cannot be cast to float'),
+            };
         } catch (TypeException) {
+            /** @var T */
             return $default;
         }
     }
@@ -122,30 +128,12 @@ abstract readonly class FloatType extends PrimitiveType implements FloatTypeInte
         try {
             $instance = static::fromString($value);
 
-            /** @var static|T */
+            /** @var static */
             return $instance;
         } catch (TypeException) {
+            /** @var T */
             return $default;
         }
-    }
-
-    /**
-     * Safely attempts to convert a mixed value to a string.
-     * Returns null if conversion is impossible (array, resource, non-stringable object).
-     *
-     * @throws TypeException
-     */
-    protected static function convertMixedToString(mixed $value): string
-    {
-        if (is_scalar($value) || $value === null) {
-            return (string) $value;
-        }
-
-        if ($value instanceof Stringable) {
-            return (string) $value;
-        }
-
-        throw new TypeException('Value cannot be cast to string');
     }
 
     public function isEmpty(): bool

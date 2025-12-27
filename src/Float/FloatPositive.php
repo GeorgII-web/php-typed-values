@@ -36,6 +36,14 @@ readonly class FloatPositive extends FloatType
             throw new FloatTypeException(sprintf('Expected positive float, got "%s"', $value));
         }
 
+        if (is_infinite($value)) {
+            throw new FloatTypeException('Infinite float value');
+        }
+
+        if (is_nan($value)) {
+            throw new FloatTypeException('Not a number float value');
+        }
+
         $this->value = $value;
     }
 

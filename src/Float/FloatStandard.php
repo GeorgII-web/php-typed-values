@@ -25,11 +25,25 @@ readonly class FloatStandard extends FloatType
 {
     protected float $value;
 
+    /**
+     * @throws FloatTypeException
+     */
     public function __construct(float $value)
     {
+        if (is_infinite($value)) {
+            throw new FloatTypeException('Infinite float value');
+        }
+
+        if (is_nan($value)) {
+            throw new FloatTypeException('Not a number float value');
+        }
+
         $this->value = $value;
     }
 
+    /**
+     * @throws FloatTypeException
+     */
     public static function fromFloat(float $value): static
     {
         return new static($value);
