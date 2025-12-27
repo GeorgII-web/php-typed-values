@@ -70,7 +70,7 @@ abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterf
                 is_bool($value) => static::fromBool($value), // Boolean true\false
                 is_int($value) => static::fromInt($value), // Integer 1\0
                 ($value === 0.0 || $value === 1.0) => static::fromInt((int) $value), // Floats 1.0\0.0
-                ($value instanceof self) => static::fromBool($value->value()), // BoolType Class
+                //                ($value instanceof self) => static::fromBool($value->value()), // BoolType Class - toString() will care about this case
                 is_string($value) || $value instanceof Stringable => static::fromString((string) $value), // String "true","1","yes", etc.
                 default => throw new TypeException('Value cannot be cast to boolean'),
             };

@@ -148,3 +148,54 @@ it('isUndefined is always false for BoolStandard', function (): void {
     expect(BoolStandard::fromBool(true)->isUndefined())->toBeFalse()
         ->and(BoolStandard::fromBool(false)->isUndefined())->toBeFalse();
 });
+
+it('converts mixed values to correct boolean state', function (mixed $input, bool $expected): void {
+    $result = BoolStandard::tryFromMixed($input);
+
+    expect($result)->toBeInstanceOf(BoolStandard::class)
+        ->and($result->value())->toBe($expected);
+})->with([
+    // Booleans
+    ['input' => true, 'expected' => true],
+    ['input' => false, 'expected' => false],
+    // Integers
+    ['input' => 1, 'expected' => true],
+    ['input' => 0, 'expected' => false],
+    // Floats (Strict)
+    ['input' => 1.0, 'expected' => true],
+    ['input' => 0.0, 'expected' => false],
+    // Strings (True-like)
+    ['input' => 'true', 'expected' => true],
+    ['input' => '1', 'expected' => true],
+    ['input' => 'yes', 'expected' => true],
+    ['input' => 'on', 'expected' => true],
+    ['input' => 'y', 'expected' => true],
+    // Strings (False-like)
+    ['input' => 'false', 'expected' => false],
+    ['input' => '0', 'expected' => false],
+    ['input' => 'no', 'expected' => false],
+    ['input' => 'off', 'expected' => false],
+    ['input' => 'n', 'expected' => false],
+    // Value Objects
+    ['input' => BoolStandard::fromBool(true), 'expected' => true],
+    ['input' => BoolStandard::fromBool(false), 'expected' => false],
+]);
+
+it('returns Undefined for invalid mixed inputs', function (mixed $input): void {
+    $result = BoolStandard::tryFromMixed($input);
+
+    expect($result)->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class)
+        ->and($result->isUndefined())->toBeTrue();
+})->with([
+    ['input' => null],
+    ['input' => []],
+    ['input' => [1, 2, 3]],
+    ['input' => new stdClass()],
+    ['input' => 0.5],             // Float that isn't 1.0 or 0.0
+    ['input' => 1.1],             // Float that isn't 1.0 or 0.0
+    ['input' => 2],               // Integer that isn't 1 or 0
+    ['input' => -1],              // Integer that isn't 1 or 0
+    ['input' => 'maybe'],         // String that isn't true-like or false-like
+    ['input' => ''],              // Empty string
+    ['input' => ' '],             // Blank string
+]);
