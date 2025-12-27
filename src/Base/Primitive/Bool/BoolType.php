@@ -35,7 +35,7 @@ abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterf
     abstract public function value(): bool;
 
     /**
-     * @template T
+     * @template T of PrimitiveType
      *
      * @param T $default
      *
@@ -43,7 +43,7 @@ abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterf
      */
     public static function tryFromInt(
         int $value,
-        mixed $default = new Undefined(),
+        PrimitiveType $default = new Undefined(),
     ): mixed {
         try {
             /** @var static|T */
@@ -54,7 +54,7 @@ abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterf
     }
 
     /**
-     * @template T
+     * @template T of PrimitiveType
      *
      * @param T $default
      *
@@ -62,7 +62,7 @@ abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterf
      */
     public static function tryFromMixed(
         mixed $value,
-        mixed $default = new Undefined(),
+        PrimitiveType $default = new Undefined(),
     ): mixed {
         try {
             /** @var static */
@@ -81,7 +81,7 @@ abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterf
     }
 
     /**
-     * @template T
+     * @template T of PrimitiveType
      *
      * @param T $default
      *
@@ -89,14 +89,13 @@ abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterf
      */
     public static function tryFromString(
         string $value,
-        mixed $default = new Undefined(),
+        PrimitiveType $default = new Undefined(),
     ): mixed {
         try {
-            $instance = static::fromString($value);
-
-            /** @var static|T */
-            return $instance;
+            /** @var static */
+            return static::fromString($value);
         } catch (TypeException) {
+            /** @var T */
             return $default;
         }
     }

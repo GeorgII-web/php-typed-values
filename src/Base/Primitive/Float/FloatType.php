@@ -126,10 +126,8 @@ abstract readonly class FloatType extends PrimitiveType implements FloatTypeInte
         PrimitiveType $default = new Undefined(),
     ): mixed {
         try {
-            $instance = static::fromString($value);
-
             /** @var static */
-            return $instance;
+            return static::fromString($value);
         } catch (TypeException) {
             /** @var T */
             return $default;

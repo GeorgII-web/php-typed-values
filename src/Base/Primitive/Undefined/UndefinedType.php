@@ -30,20 +30,20 @@ abstract readonly class UndefinedType extends PrimitiveType implements Undefined
     abstract public static function fromString(string $value): static;
 
     /**
-     * @template T
+     * @template T of PrimitiveType
      *
      * @param T $default
      *
      * @return static|T
      */
-    abstract public static function tryFromMixed(mixed $value, mixed $default = new Undefined()): mixed;
+    abstract public static function tryFromMixed(mixed $value, PrimitiveType $default = new Undefined()): mixed;
 
     /**
-     * @template T
+     * @template T of PrimitiveType
      *
      * @param T $default
      *
      * @return static|T
      */
-    abstract public static function tryFromString(string $value, mixed $default = new Undefined()): mixed;
+    abstract public static function tryFromString(string $value, PrimitiveType $default = new Undefined()): mixed;
 }

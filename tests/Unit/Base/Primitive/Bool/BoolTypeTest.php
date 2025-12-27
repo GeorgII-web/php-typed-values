@@ -63,6 +63,6 @@ it('BoolType::convertMixedToString correctly handles Stringable', function (): v
 });
 
 it('BoolType::convertMixedToString throws TypeException for non-stringable objects', function (): void {
-    $result = BoolTypeTest::tryFromMixed(new stdClass(), 'default');
-    expect($result)->toBe('default');
+    $result = BoolTypeTest::tryFromMixed(new stdClass(), Undefined::create());
+    expect($result)->toBeInstanceOf(Undefined::class);
 });

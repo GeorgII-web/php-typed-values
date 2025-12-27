@@ -6,8 +6,13 @@ namespace PhpTypedValues\Base\Primitive\Integer;
 
 use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\IntegerTypeException;
+use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use Stringable;
 
+use function is_bool;
+use function is_int;
+use function is_string;
 use function sprintf;
 
 /**
@@ -43,13 +48,51 @@ abstract readonly class IntType extends PrimitiveType implements IntTypeInterfac
         }
     }
 
-    abstract public static function tryFromString(
+    /**
+     * @template T of PrimitiveType
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromString(
         string $value,
         PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType|Undefined;
+    ): mixed {
+        try {
+            $instance = static::fromString($value);
 
-    abstract public static function tryFromMixed(
+            /** @var static */
+            return $instance;
+        } catch (TypeException) {
+            /** @var T */
+            return $default;
+        }
+    }
+
+    /**
+     * @template T of PrimitiveType
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromMixed(
         mixed $value,
         PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType|Undefined;
+    ): mixed {
+        try {
+            /** @var static */
+            return match (true) {
+                is_int($value) => static::fromInt($value),
+                //                $value instanceof self => static::fromInt($value->value()),
+                is_bool($value) => static::fromInt($value ? 1 : 0),
+                is_string($value) || $value instanceof Stringable => static::fromString((string) $value),
+                default => throw new TypeException('Value cannot be cast to int'),
+            };
+        } catch (TypeException) {
+            /** @var T */
+            return $default;
+        }
+    }
 }
