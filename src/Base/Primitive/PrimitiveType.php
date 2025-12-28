@@ -4,12 +4,6 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Base\Primitive;
 
-use PhpTypedValues\Exception\TypeException;
-use Stringable;
-
-use function is_bool;
-use function is_scalar;
-
 /**
  * Base class for immutable typed values.
  *
@@ -51,7 +45,10 @@ abstract readonly class PrimitiveType implements PrimitiveTypeInterface
     /**
      * Alias of {@see toString} for convenient casting.
      */
-    abstract public function __toString(): string;
+    public function __toString(): string
+    {
+        return $this->toString();
+    }
 
     /**
      * JSON representation of the value.
@@ -61,33 +58,4 @@ abstract readonly class PrimitiveType implements PrimitiveTypeInterface
      * @psalm-mutation-free
      */
     abstract public function jsonSerialize(): mixed;
-
-    /**
-     * todo refactor for each type separately.
-     *
-     * Safely attempts to convert a mixed value to a string.
-     * Returns null if conversion is impossible (array, resource, non-stringable object).
-     *
-     * @throws TypeException
-     */
-    protected static function convertMixedToString(mixed $value): string
-    {
-        if (is_bool($value)) {
-            return $value ? 'true' : 'false';
-        }
-
-        if (is_scalar($value)) {
-            return (string) $value;
-        }
-
-        if ($value === null) {
-            return '';
-        }
-
-        if ($value instanceof Stringable) {
-            return (string) $value;
-        }
-
-        throw new TypeException('Value cannot be cast to string');
-    }
 }

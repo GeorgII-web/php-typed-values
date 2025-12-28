@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Base\Primitive\Bool;
 
+use Exception;
 use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -48,7 +49,7 @@ abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterf
         try {
             /** @var static */
             return static::fromInt($value);
-        } catch (TypeException) {
+        } catch (Exception) {
             /** @var T */
             return $default;
         }
@@ -75,7 +76,7 @@ abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterf
                 is_string($value) || $value instanceof Stringable => static::fromString((string) $value), // String "true","1","yes", etc.
                 default => throw new TypeException('Value cannot be cast to boolean'),
             };
-        } catch (TypeException) {
+        } catch (Exception) {
             /** @var T */
             return $default;
         }
@@ -95,7 +96,7 @@ abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterf
         try {
             /** @var static */
             return static::fromString($value);
-        } catch (TypeException) {
+        } catch (Exception) {
             /** @var T */
             return $default;
         }

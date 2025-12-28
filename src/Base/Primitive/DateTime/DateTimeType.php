@@ -8,12 +8,17 @@ use const PHP_EOL;
 
 use DateTimeImmutable;
 use DateTimeZone;
+use Exception;
 use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\DateTimeTypeException;
 use PhpTypedValues\Exception\ReasonableRangeDateTimeTypeException;
+use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use Stringable;
 
 use function count;
+use function is_scalar;
+use function is_string;
 use function sprintf;
 
 /**
@@ -46,6 +51,10 @@ abstract readonly class DateTimeType extends PrimitiveType implements DateTimeTy
      */
     abstract public function value(): DateTimeImmutable;
 
+    /**
+     * @throws ReasonableRangeDateTimeTypeException
+     * @throws DateTimeTypeException
+     */
     protected static function createFromFormat(
         string $value,
         string $format,
@@ -107,30 +116,59 @@ abstract readonly class DateTimeType extends PrimitiveType implements DateTimeTy
     }
 
     /**
-     * @template T
+     * @template T of PrimitiveType
      *
      * @param T                $default
      * @param non-empty-string $timezone
      *
      * @return static|T
      */
-    abstract public static function tryFromMixed(
+    public static function tryFromMixed(
         mixed $value,
         string $timezone = self::DEFAULT_ZONE,
-        mixed $default = new Undefined(),
-    ): mixed;
+        PrimitiveType $default = new Undefined(),
+    ): static|PrimitiveType {
+        try {
+            /** @var static $result */
+            $result = match (true) {
+                is_string($value) => static::fromString($value, $timezone),
+                ($value instanceof DateTimeImmutable) => static::fromDateTime($value),
+                ($value instanceof self) => static::fromDateTime($value->value()),
+                $value instanceof Stringable, is_scalar($value) => static::fromString((string) $value, $timezone),
+                null === $value => static::fromString('', $timezone),
+                default => throw new TypeException('Value cannot be cast to string'),
+            };
+
+            /** @var static */
+            return $result;
+        } catch (Exception) {
+            /* @var PrimitiveType */
+            return $default;
+        }
+    }
 
     /**
-     * @template T
+     * @template T of PrimitiveType
      *
      * @param T                $default
      * @param non-empty-string $timezone
      *
      * @return static|T
      */
-    abstract public static function tryFromString(
+    public static function tryFromString(
         string $value,
         string $timezone = self::DEFAULT_ZONE,
-        mixed $default = new Undefined(),
-    ): mixed;
+        PrimitiveType $default = new Undefined(),
+    ): static|PrimitiveType {
+        try {
+            /** @var static $result */
+            $result = static::fromString($value, $timezone);
+
+            /* @var static */
+            return $result;
+        } catch (Exception) {
+            /* @var PrimitiveType */
+            return $default;
+        }
+    }
 }

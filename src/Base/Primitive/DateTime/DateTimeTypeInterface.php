@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace PhpTypedValues\Base\Primitive\DateTime;
 
 use DateTimeImmutable;
+use PhpTypedValues\Base\Primitive\PrimitiveType;
+use PhpTypedValues\Exception\DateTimeTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
@@ -29,7 +31,7 @@ interface DateTimeTypeInterface
     public static function fromDateTime(DateTimeImmutable $value): static;
 
     /**
-     * @template T
+     * @template T of PrimitiveType
      *
      * @param T                $default
      * @param non-empty-string $timezone
@@ -39,11 +41,11 @@ interface DateTimeTypeInterface
     public static function tryFromMixed(
         mixed $value,
         string $timezone = self::DEFAULT_ZONE,
-        mixed $default = new Undefined(),
-    ): mixed;
+        PrimitiveType $default = new Undefined(),
+    ): static|PrimitiveType;
 
     /**
-     * @template T
+     * @template T of PrimitiveType
      *
      * @param T                $default
      * @param non-empty-string $timezone
@@ -53,11 +55,13 @@ interface DateTimeTypeInterface
     public static function tryFromString(
         string $value,
         string $timezone = self::DEFAULT_ZONE,
-        mixed $default = new Undefined(),
-    ): mixed;
+        PrimitiveType $default = new Undefined(),
+    ): static|PrimitiveType;
 
     /**
      * @param non-empty-string $timezone
+     *
+     * @throws DateTimeTypeException
      */
     public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE): static;
 

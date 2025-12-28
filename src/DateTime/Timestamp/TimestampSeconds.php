@@ -8,8 +8,6 @@ use DateTimeImmutable;
 use DateTimeZone;
 use PhpTypedValues\Base\Primitive\DateTime\DateTimeType;
 use PhpTypedValues\Exception\DateTimeTypeException;
-use PhpTypedValues\Exception\TypeException;
-use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
  * Unix timestamp value in whole seconds since the Unix epoch (UTC).
@@ -40,49 +38,6 @@ readonly class TimestampSeconds extends DateTimeType
     {
         // normalized time zone
         $this->value = $value->setTimezone(new DateTimeZone(static::DEFAULT_ZONE));
-    }
-
-    /**
-     * @template T
-     *
-     * @param T                $default
-     * @param non-empty-string $timezone
-     *
-     * @return static|T
-     */
-    public static function tryFromMixed(
-        mixed $value,
-        string $timezone = self::DEFAULT_ZONE,
-        mixed $default = new Undefined(),
-    ): mixed {
-        try {
-            return static::fromString(
-                static::convertMixedToString($value),
-                $timezone
-            );
-        } catch (TypeException) {
-            return $default;
-        }
-    }
-
-    /**
-     * @template T
-     *
-     * @param T                $default
-     * @param non-empty-string $timezone
-     *
-     * @return static|T
-     */
-    public static function tryFromString(
-        string $value,
-        string $timezone = self::DEFAULT_ZONE,
-        mixed $default = new Undefined(),
-    ): mixed {
-        try {
-            return static::fromString($value, $timezone);
-        } catch (TypeException) {
-            return $default;
-        }
     }
 
     /**

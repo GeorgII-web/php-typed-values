@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Base\Primitive\Integer;
 
+use Exception;
 use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\IntegerTypeException;
 use PhpTypedValues\Exception\TypeException;
@@ -62,7 +63,7 @@ abstract readonly class IntType extends PrimitiveType implements IntTypeInterfac
         try {
             /** @var static */
             return static::fromString($value);
-        } catch (TypeException) {
+        } catch (Exception) {
             /** @var T */
             return $default;
         }
@@ -88,7 +89,7 @@ abstract readonly class IntType extends PrimitiveType implements IntTypeInterfac
                 is_string($value) || $value instanceof Stringable => static::fromString((string) $value),
                 default => throw new TypeException('Value cannot be cast to int'),
             };
-        } catch (TypeException) {
+        } catch (Exception) {
             /** @var T */
             return $default;
         }

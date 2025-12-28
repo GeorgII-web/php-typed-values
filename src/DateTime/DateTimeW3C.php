@@ -10,8 +10,6 @@ use DateTimeImmutable;
 use DateTimeZone;
 use PhpTypedValues\Base\Primitive\DateTime\DateTimeType;
 use PhpTypedValues\Exception\DateTimeTypeException;
-use PhpTypedValues\Exception\TypeException;
-use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
  * Date-time value formatted using PHP's DATE_W3C (W3C profile of ISO 8601/RFC 3339).
@@ -41,55 +39,14 @@ readonly class DateTimeW3C extends DateTimeType
     }
 
     /**
-     * @template T
-     *
-     * @param T                $default
-     * @param non-empty-string $timezone
-     *
-     * @return static|T
-     */
-    public static function tryFromMixed(
-        mixed $value,
-        string $timezone = self::DEFAULT_ZONE,
-        mixed $default = new Undefined(),
-    ): mixed {
-        try {
-            return static::fromString(
-                static::convertMixedToString($value),
-                $timezone
-            );
-        } catch (TypeException) {
-            return $default;
-        }
-    }
-
-    /**
-     * @template T
-     *
-     * @param T                $default
-     * @param non-empty-string $timezone
-     *
-     * @return static|T
-     */
-    public static function tryFromString(
-        string $value,
-        string $timezone = self::DEFAULT_ZONE,
-        mixed $default = new Undefined(),
-    ): mixed {
-        try {
-            return static::fromString($value, $timezone);
-        } catch (TypeException) {
-            return $default;
-        }
-    }
-
-    /**
      * @param non-empty-string $timezone
      *
      * @throws DateTimeTypeException
      */
-    public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE): static
-    {
+    public static function fromString(
+        string $value,
+        string $timezone = self::DEFAULT_ZONE,
+    ): static {
         return new static(
             static::createFromFormat(
                 $value,

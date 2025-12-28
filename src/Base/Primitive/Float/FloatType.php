@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Base\Primitive\Float;
 
+use Exception;
 use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\FloatTypeException;
 use PhpTypedValues\Exception\TypeException;
@@ -92,7 +93,7 @@ abstract readonly class FloatType extends PrimitiveType implements FloatTypeInte
         try {
             /** @var static */
             return static::fromFloat($value);
-        } catch (TypeException) {
+        } catch (Exception) {
             /** @var T */
             return $default;
         }
@@ -118,7 +119,7 @@ abstract readonly class FloatType extends PrimitiveType implements FloatTypeInte
                 is_string($value) || $value instanceof Stringable => static::fromString((string) $value),
                 default => throw new TypeException('Value cannot be cast to float'),
             };
-        } catch (TypeException) {
+        } catch (Exception) {
             /** @var T */
             return $default;
         }
@@ -138,7 +139,7 @@ abstract readonly class FloatType extends PrimitiveType implements FloatTypeInte
         try {
             /** @var static */
             return static::fromString($value);
-        } catch (TypeException) {
+        } catch (Exception) {
             /** @var T */
             return $default;
         }

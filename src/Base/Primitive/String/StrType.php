@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Base\Primitive\String;
 
+use Exception;
 use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -22,6 +23,10 @@ use function is_string;
  * Example
  *  - $v = MyString::fromString('hello');
  *  - $v->toString(); // "hello"
+ *
+ * @internal
+ *
+ * @psalm-internal PhpTypedValues
  *
  * @psalm-immutable
  */
@@ -49,7 +54,7 @@ abstract readonly class StrType extends PrimitiveType implements StrTypeInterfac
                 null === $value => static::fromString(''),
                 default => throw new TypeException('Value cannot be cast to string'),
             };
-        } catch (TypeException) {
+        } catch (Exception) {
             /** @var T */
             return $default;
         }
@@ -69,7 +74,7 @@ abstract readonly class StrType extends PrimitiveType implements StrTypeInterfac
         try {
             /** @var static */
             return static::fromString($value);
-        } catch (TypeException) {
+        } catch (Exception) {
             /** @var T */
             return $default;
         }
