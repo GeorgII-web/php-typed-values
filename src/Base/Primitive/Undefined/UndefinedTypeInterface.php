@@ -62,5 +62,5 @@ interface UndefinedTypeInterface
     /**
      * @throws UndefinedTypeException
      */
-    public function value(): never;
+    public function value(): array;
 }

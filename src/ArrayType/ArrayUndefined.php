@@ -27,7 +27,7 @@ readonly class ArrayUndefined extends ArrayType implements UndefinedTypeInterfac
     /**
      * @throws ArrayUndefinedTypeException
      */
-    public function value(): never
+    public function value(): array
     {
         throw new ArrayUndefinedTypeException('Undefined array has no value');
     }
@@ -48,7 +48,7 @@ readonly class ArrayUndefined extends ArrayType implements UndefinedTypeInterfac
     /**
      * @throws ArrayUndefinedTypeException
      */
-    public function toArray(): never
+    public function toArray(): array
     {
         throw new ArrayUndefinedTypeException('Undefined array cannot be converted to array');
     }
@@ -77,11 +77,11 @@ readonly class ArrayUndefined extends ArrayType implements UndefinedTypeInterfac
     }
 
     /**
-     * @psalm-return never
+     * @psalm-suppress PossiblyUnusedReturnValue
      *
      * @throws ArrayUndefinedTypeException
      */
-    public function getDefinedItems(): never
+    public function getDefinedItems(): array
     {
         throw new ArrayUndefinedTypeException('Undefined array has no defined items');
     }
