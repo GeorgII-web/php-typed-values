@@ -4,6 +4,7 @@ namespace PhpTypedValues\Usage\Primitive;
 
 require_once 'vendor/autoload.php';
 
+use PhpTypedValues\String\Alias\NonEmpty;
 use const JSON_THROW_ON_ERROR;
 use const PHP_EOL;
 
@@ -49,9 +50,9 @@ foreach ($collection->value() as $item) {
 }
 
 $collection = ArrayOfObjects::tryFromArray([1, 2, 3]);
-echo $collection->isUndefined() ? 'Undefined array' : 'ERROR' . PHP_EOL;
+echo $collection->isUndefined() ? 'Undefined array' . PHP_EOL : 'ERROR' . PHP_EOL;
 
-echo ArrayUndefined::create()->isUndefined() ? 'Undefined array' : 'ERROR' . PHP_EOL;
+echo ArrayUndefined::create()->isUndefined() ? 'Undefined array' . PHP_EOL : 'ERROR' . PHP_EOL;
 
 try {
     ArrayUndefined::create()->getDefinedItems();
@@ -70,3 +71,9 @@ try {
 } catch (ArrayUndefinedTypeException) {
     // suppress
 }
+
+echo (ArrayOfObjects::tryFromArray(
+        [1, 2],
+        ArrayOfObjects::tryFromArray([NonEmpty::fromString('One typed item in array as fallback')])
+    )->isUndefined() ? 'Error' : 'ArrayOfObjects fallback: yes') . PHP_EOL;
+
