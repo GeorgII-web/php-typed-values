@@ -41,17 +41,6 @@ readonly class ArrayEmpty extends ArrayType
     }
 
     /**
-     * @param list<mixed> $value
-     *
-     * @throws ArrayTypeException
-     */
-    public static function tryFromArray(array $value): static
-    {
-        /** @var array $value */
-        return new static($value);
-    }
-
-    /**
      * @return list<never>
      */
     public function value(): array

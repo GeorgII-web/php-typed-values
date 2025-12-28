@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace PhpTypedValues\Tests\Unit\Array\ArrayOfObjects;
 
 use PhpTypedValues\ArrayType\ArrayOfObjects;
+use PhpTypedValues\ArrayType\ArrayUndefined;
 use PhpTypedValues\Exception\ArrayTypeException;
 use PhpTypedValues\Integer\IntegerNonNegative;
 use PhpTypedValues\String\StringNonEmpty;
-use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 
 use function array_map;
@@ -25,15 +25,9 @@ it('constructs from a valid list of PrimitiveType objects and preserves order', 
         ->and($c->value()[1])->toBe($s1);
 });
 
-it('tryFromArray converts non-objects to Undefined, keeps objects intact', function (): void {
-    $i1 = IntegerNonNegative::fromInt(1);
-    $c = ArrayOfObjects::tryFromArray([$i1, 5, 'x']);
-
-    $items = $c->value();
-    expect($items)->toHaveCount(3)
-        ->and($items[0])->toBe($i1)
-        ->and($items[1])->toBeInstanceOf(Undefined::class)
-        ->and($items[2])->toBeInstanceOf(Undefined::class);
+it('tryFromArray on ivalid array to get EmptyArray', function (): void {
+    expect(ArrayOfObjects::tryFromArray([IntegerNonNegative::fromInt(1), 5, 'x'])->value())
+        ->toBeInstanceOf(ArrayUndefined::class);
 });
 
 it('isEmpty, count and iteration behave correctly', function (): void {

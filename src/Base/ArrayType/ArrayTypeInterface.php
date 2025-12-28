@@ -7,6 +7,7 @@ namespace PhpTypedValues\Base\ArrayType;
 use Countable;
 use IteratorAggregate;
 use JsonSerializable;
+use PhpTypedValues\ArrayType\ArrayUndefined;
 use PhpTypedValues\Base\Shared\IsEmptyInterface;
 use PhpTypedValues\Base\Shared\IsUndefinedInterface;
 use PhpTypedValues\Base\TypeInterface;
@@ -53,11 +54,21 @@ interface ArrayTypeInterface extends TypeInterface, JsonSerializable, IteratorAg
      * will be converted to Undefined type class), allowing late/optional
      * failure semantics via `Undefined` where applicable.
      *
+     * @template T of ArrayTypeInterface
+     *
      * @param list<mixed> $value
+     * @param T           $default
+     *
+     * @return static|T
+     *
+     * @psalm-return ($default is ArrayUndefined ? static : static|T)
      *
      * @throws ArrayTypeException
      */
-    public static function tryFromArray(array $value): static;
+    public static function tryFromArray(
+        array $value,
+        self $default = new ArrayUndefined(),
+    ): static|self;
 
     /**
      * Convert to an array of scalars from an array of Objects.

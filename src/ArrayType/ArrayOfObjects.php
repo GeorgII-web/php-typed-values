@@ -57,26 +57,6 @@ readonly class ArrayOfObjects extends ArrayType
     }
 
     /**
-     * @param list<mixed> $value
-     *
-     * @throws ArrayTypeException
-     */
-    public static function tryFromArray(array $value): static
-    {
-        $valueWithUndefined = [];
-        foreach ($value as $item) {
-            if (is_object($item)) {
-                $valueWithUndefined[] = $item;
-            } else {
-                $valueWithUndefined[] = Undefined::create();
-            }
-        }
-
-        /** @var list<TItem> $valueWithUndefined */
-        return new static($valueWithUndefined);
-    }
-
-    /**
      * @no-named-arguments
      *
      * @throws ArrayTypeException
