@@ -21,8 +21,11 @@ use PhpTypedValues\Exception\IntegerTypeException;
  *
  * @psalm-immutable
  */
-readonly class IntegerStandard extends IntType
+class IntegerStandard extends IntType
 {
+    /**
+     * @readonly
+     */
     protected int $value;
 
     public function __construct(int $value)
@@ -30,15 +33,19 @@ readonly class IntegerStandard extends IntType
         $this->value = $value;
     }
 
-    public static function fromInt(int $value): static
+    /**
+     * @return static
+     */
+    public static function fromInt(int $value)
     {
         return new static($value);
     }
 
     /**
      * @throws IntegerTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         parent::assertIntegerString($value);
 

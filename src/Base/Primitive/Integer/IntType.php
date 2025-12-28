@@ -33,7 +33,7 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-abstract readonly class IntType extends PrimitiveType implements IntTypeInterface
+abstract class IntType extends PrimitiveType implements IntTypeInterface
 {
     abstract public function value(): int;
 
@@ -60,12 +60,13 @@ abstract readonly class IntType extends PrimitiveType implements IntTypeInterfac
      */
     public static function tryFromInt(
         int $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
+        PrimitiveType $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static&IntType */
             return static::fromInt($value);
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             /* @var T $default */
             return $default;
         }
@@ -80,12 +81,13 @@ abstract readonly class IntType extends PrimitiveType implements IntTypeInterfac
      */
     public static function tryFromString(
         string $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
+        PrimitiveType $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromString($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -97,21 +99,25 @@ abstract readonly class IntType extends PrimitiveType implements IntTypeInterfac
      * @param T $default
      *
      * @return static|T
+     * @param mixed $value
      */
     public static function tryFromMixed(
-        mixed $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
+        $value,
+        PrimitiveType $default = null
+    ) {
+        $default ??= new Undefined();
         try {
-            /** @var static */
-            return match (true) {
-                is_int($value) => static::fromInt($value),
-                //                $value instanceof self => static::fromInt($value->value()),
-                is_bool($value) => static::fromInt($value ? 1 : 0),
-                is_string($value) || $value instanceof Stringable => static::fromString((string) $value),
-                default => throw new TypeException('Value cannot be cast to int'),
-            };
-        } catch (Exception) {
+            switch (true) {
+                case is_int($value):
+                    return static::fromInt($value);
+                case is_bool($value):
+                    return static::fromInt($value ? 1 : 0);
+                case is_string($value) || is_object($value) && method_exists($value, '__toString'):
+                    return static::fromString((string) $value);
+                default:
+                    throw new TypeException('Value cannot be cast to int');
+            }
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }

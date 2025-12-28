@@ -23,7 +23,10 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  */
 interface UndefinedTypeInterface
 {
-    public static function create(): static;
+    /**
+     * @return static
+     */
+    public static function create();
 
     /**
      * @template T of PrimitiveType
@@ -31,11 +34,12 @@ interface UndefinedTypeInterface
      * @param T $default
      *
      * @return static|T
+     * @param mixed $value
      */
     public static function tryFromMixed(
-        mixed $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+        $value,
+        PrimitiveType $default = null
+    );
 
     /**
      * @template T of PrimitiveType
@@ -46,21 +50,24 @@ interface UndefinedTypeInterface
      */
     public static function tryFromString(
         string $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+        PrimitiveType $default = null
+    );
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    public function toInt(): never;
+    public function toInt();
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    public function toFloat(): never;
+    public function toFloat();
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    public function value(): never;
+    public function value();
 }

@@ -28,8 +28,11 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class StringDecimal extends StrType
+class StringDecimal extends StrType
 {
+    /**
+     * @readonly
+     */
     protected string $value;
 
     /**
@@ -43,8 +46,9 @@ readonly class StringDecimal extends StrType
 
     /**
      * @throws DecimalStringTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         return new static($value);
     }

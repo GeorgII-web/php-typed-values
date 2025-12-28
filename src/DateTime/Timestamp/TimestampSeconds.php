@@ -23,7 +23,7 @@ use PhpTypedValues\Exception\DateTimeTypeException;
  *
  * @psalm-immutable
  */
-readonly class TimestampSeconds extends DateTimeType
+class TimestampSeconds extends DateTimeType
 {
     /**
      * DateTime::format() pattern for Unix timestamp.
@@ -32,6 +32,9 @@ readonly class TimestampSeconds extends DateTimeType
      */
     protected const FORMAT = 'U';
 
+    /**
+     * @readonly
+     */
     protected DateTimeImmutable $value;
 
     public function __construct(DateTimeImmutable $value)
@@ -44,8 +47,9 @@ readonly class TimestampSeconds extends DateTimeType
      * @param non-empty-string $timezone
      *
      * @throws DateTimeTypeException
+     * @return static
      */
-    public static function fromInt(int $value, string $timezone = self::DEFAULT_ZONE): static
+    public static function fromInt(int $value, string $timezone = self::DEFAULT_ZONE)
     {
         return static::fromString((string) $value, $timezone);
     }
@@ -56,8 +60,9 @@ readonly class TimestampSeconds extends DateTimeType
      * @param non-empty-string $timezone
      *
      * @throws DateTimeTypeException
+     * @return static
      */
-    public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE): static
+    public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE)
     {
         return new static(
             static::createFromFormat(
@@ -68,12 +73,18 @@ readonly class TimestampSeconds extends DateTimeType
         );
     }
 
-    public static function fromDateTime(DateTimeImmutable $value): static
+    /**
+     * @return static
+     */
+    public static function fromDateTime(DateTimeImmutable $value)
     {
         return new static($value);
     }
 
-    public function withTimeZone(string $timezone): static
+    /**
+     * @return static
+     */
+    public function withTimeZone(string $timezone)
     {
         return new static(
             $this->value()->setTimezone(new DateTimeZone($timezone))

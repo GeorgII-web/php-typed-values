@@ -38,7 +38,7 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-abstract readonly class DateTimeType extends PrimitiveType implements DateTimeTypeInterface
+abstract class DateTimeType extends PrimitiveType implements DateTimeTypeInterface
 {
     protected const FORMAT = '';
     public const DEFAULT_ZONE = 'UTC';
@@ -58,9 +58,9 @@ abstract readonly class DateTimeType extends PrimitiveType implements DateTimeTy
     protected static function createFromFormat(
         string $value,
         string $format,
-        ?DateTimeZone $timezone = null,
+        ?DateTimeZone $timezone = null
     ): DateTimeImmutable {
-        if (str_contains($value, "\0")) {
+        if (strpos($value, "\0") !== false) {
             throw new DateTimeTypeException('Date time string must not contain null bytes');
         }
 
@@ -130,25 +130,33 @@ abstract readonly class DateTimeType extends PrimitiveType implements DateTimeTy
      * @param non-empty-string $timezone
      *
      * @return static|T
+     * @param mixed $value
      */
     public static function tryFromMixed(
-        mixed $value,
+        $value,
         string $timezone = self::DEFAULT_ZONE,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
+        PrimitiveType $default = null
+    ) {
+        $default ??= new Undefined();
         try {
-            /** @var static $result */
-            $result = match (true) {
-                is_string($value) => static::fromString($value, $timezone),
-                ($value instanceof DateTimeImmutable) => static::fromDateTime($value),
-                //                ($value instanceof self) => static::fromDateTime($value->value()),
-                $value instanceof Stringable, is_scalar($value) => static::fromString((string) $value, $timezone),
-                default => throw new TypeException('Value cannot be cast to date time'),
-            };
+            switch (true) {
+                case is_string($value):
+                    $result = static::fromString($value, $timezone);
+                    break;
+                case $value instanceof DateTimeImmutable:
+                    $result = static::fromDateTime($value);
+                    break;
+                case is_object($value) && method_exists($value, '__toString'):
+                case is_scalar($value):
+                    $result = static::fromString((string) $value, $timezone);
+                    break;
+                default:
+                    throw new TypeException('Value cannot be cast to date time');
+            }
 
             /** @var static */
             return $result;
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /* @var PrimitiveType */
             return $default;
         }
@@ -165,15 +173,16 @@ abstract readonly class DateTimeType extends PrimitiveType implements DateTimeTy
     public static function tryFromString(
         string $value,
         string $timezone = self::DEFAULT_ZONE,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
+        PrimitiveType $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static $result */
             $result = static::fromString($value, $timezone);
 
             /* @var static */
             return $result;
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /* @var PrimitiveType */
             return $default;
         }
