@@ -26,10 +26,13 @@ use PhpTypedValues\Exception\DateTimeTypeException;
  *
  * @psalm-immutable
  */
-readonly class DateTimeW3C extends DateTimeType
+class DateTimeW3C extends DateTimeType
 {
     protected const FORMAT = DATE_W3C;
 
+    /**
+     * @readonly
+     */
     protected DateTimeImmutable $value;
 
     public function __construct(DateTimeImmutable $value)
@@ -42,11 +45,12 @@ readonly class DateTimeW3C extends DateTimeType
      * @param non-empty-string $timezone
      *
      * @throws DateTimeTypeException
+     * @return static
      */
     public static function fromString(
         string $value,
-        string $timezone = self::DEFAULT_ZONE,
-    ): static {
+        string $timezone = self::DEFAULT_ZONE
+    ) {
         return new static(
             static::createFromFormat(
                 $value,
@@ -56,7 +60,10 @@ readonly class DateTimeW3C extends DateTimeType
         );
     }
 
-    public function withTimeZone(string $timezone): static
+    /**
+     * @return static
+     */
+    public function withTimeZone(string $timezone)
     {
         return new static(
             $this->value->setTimezone(new DateTimeZone($timezone))
@@ -68,7 +75,10 @@ readonly class DateTimeW3C extends DateTimeType
         return $this->value()->format(static::FORMAT);
     }
 
-    public static function fromDateTime(DateTimeImmutable $value): static
+    /**
+     * @return static
+     */
+    public static function fromDateTime(DateTimeImmutable $value)
     {
         return new static($value);
     }

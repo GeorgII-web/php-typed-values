@@ -23,7 +23,7 @@ echo PHP_EOL . '> ARRAY' . PHP_EOL;
 
 try {
     throw new ArrayTypeException('Array type exception occurred');
-} catch (ArrayTypeException) {
+} catch (ArrayTypeException $exception) {
     // suppress
 }
 
@@ -31,7 +31,7 @@ try {
 $collection = ArrayOfObjects::fromArray(
     [
         IntegerNonNegative::fromInt(1), // Primitive
-        OptionalFail::fromScalars(id: 1, firstName: 'Foobar', height: 170), // value object
+        OptionalFail::fromScalars(1, 'Foobar', 170), // value object
     ],
 );
 echo json_encode($collection->toArray(), JSON_THROW_ON_ERROR) . PHP_EOL;
@@ -55,18 +55,18 @@ echo ArrayUndefined::create()->isUndefined() ? 'Undefined array' : 'ERROR' . PHP
 
 try {
     ArrayUndefined::create()->getDefinedItems();
-} catch (ArrayUndefinedTypeException) {
+} catch (ArrayUndefinedTypeException $exception) {
     // suppress
 }
 
 try {
     ArrayUndefined::create()->toInt();
-} catch (ArrayUndefinedTypeException) {
+} catch (ArrayUndefinedTypeException $exception) {
     // suppress
 }
 
 try {
     ArrayUndefined::create()->toFloat();
-} catch (ArrayUndefinedTypeException) {
+} catch (ArrayUndefinedTypeException $exception) {
     // suppress
 }

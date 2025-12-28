@@ -18,6 +18,6 @@ use PhpTypedValues\String\StringStandard;
  *
  * @psalm-immutable
  */
-final readonly class StrType extends StringStandard
+final class StrType extends StringStandard
 {
 }

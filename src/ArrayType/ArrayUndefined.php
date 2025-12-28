@@ -17,9 +17,12 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  *
  * @psalm-immutable
  */
-readonly class ArrayUndefined extends ArrayType implements UndefinedTypeInterface
+class ArrayUndefined extends ArrayType implements UndefinedTypeInterface
 {
-    public static function fromArray(array $value): static
+    /**
+     * @return static
+     */
+    public static function fromArray(array $value)
     {
         return new static();
     }
@@ -32,15 +35,19 @@ readonly class ArrayUndefined extends ArrayType implements UndefinedTypeInterfac
         throw new ArrayUndefinedTypeException('Undefined array has no value');
     }
 
-    public function getIterator(): never
+    /**
+     * @return never
+     */
+    public function getIterator()
     {
         throw new ArrayUndefinedTypeException('Undefined array has no items for iterator');
     }
 
     /**
      * @throws ArrayUndefinedTypeException
+     * @return never
      */
-    public function count(): never
+    public function count()
     {
         throw new ArrayUndefinedTypeException('Undefined array has no items to count');
     }
@@ -55,8 +62,9 @@ readonly class ArrayUndefined extends ArrayType implements UndefinedTypeInterfac
 
     /**
      * @throws ArrayUndefinedTypeException
+     * @return never
      */
-    public function jsonSerialize(): never
+    public function jsonSerialize()
     {
         throw new ArrayUndefinedTypeException('Undefined array cannot be converted to Json');
     }
@@ -86,34 +94,48 @@ readonly class ArrayUndefined extends ArrayType implements UndefinedTypeInterfac
         throw new ArrayUndefinedTypeException('Undefined array has no defined items');
     }
 
-    public static function create(): static
+    /**
+     * @return static
+     */
+    public static function create()
     {
         return new static();
     }
 
     /**
      * @throws ArrayUndefinedTypeException
+     * @return never
      */
-    public function toInt(): never
+    public function toInt()
     {
         throw new ArrayUndefinedTypeException('Undefined array cannot be converted to integer');
     }
 
     /**
      * @throws ArrayUndefinedTypeException
+     * @return never
      */
-    public function toFloat(): never
+    public function toFloat()
     {
         throw new ArrayUndefinedTypeException('Undefined array cannot be converted to float');
     }
 
-    public static function tryFromMixed(mixed $value, PrimitiveType $default = new Undefined()): static|PrimitiveType
+    /**
+     * @return static|\PhpTypedValues\Base\Primitive\PrimitiveType
+     * @param mixed $value
+     */
+    public static function tryFromMixed($value, PrimitiveType $default = null)
     {
+        $default ??= new Undefined();
         return new static();
     }
 
-    public static function tryFromString(string $value, PrimitiveType $default = new Undefined()): static|PrimitiveType
+    /**
+     * @return static|\PhpTypedValues\Base\Primitive\PrimitiveType
+     */
+    public static function tryFromString(string $value, PrimitiveType $default = null)
     {
+        $default ??= new Undefined();
         return new static();
     }
 }

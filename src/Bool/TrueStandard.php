@@ -26,10 +26,11 @@ use function trim;
  *
  * @psalm-immutable
  */
-readonly class TrueStandard extends BoolType
+class TrueStandard extends BoolType
 {
     /**
      * @var true
+     * @readonly
      */
     protected bool $value;
 
@@ -47,8 +48,9 @@ readonly class TrueStandard extends BoolType
 
     /**
      * @throws BoolTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         $v = strtolower(trim($value));
         if ($v === 'true' || $v === '1' || $v === 'yes' || $v === 'on' || $v === 'y') {
@@ -60,8 +62,9 @@ readonly class TrueStandard extends BoolType
 
     /**
      * @throws BoolTypeException
+     * @return static
      */
-    public static function fromInt(int $value): static
+    public static function fromInt(int $value)
     {
         if ($value === 1) {
             return new static(true);
@@ -70,20 +73,27 @@ readonly class TrueStandard extends BoolType
         throw new BoolTypeException(sprintf('Expected int "1" for true, got "%s"', $value));
     }
 
-    public function value(): true
+    /**
+     * @return true
+     */
+    public function value(): bool
     {
         return $this->value;
     }
 
-    public function jsonSerialize(): true
+    /**
+     * @return true
+     */
+    public function jsonSerialize(): bool
     {
         return $this->value();
     }
 
     /**
      * @throws BoolTypeException
+     * @return static
      */
-    public static function fromBool(bool $value): static
+    public static function fromBool(bool $value)
     {
         return new static($value);
     }

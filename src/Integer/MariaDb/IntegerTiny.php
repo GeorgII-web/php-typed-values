@@ -24,9 +24,10 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class IntegerTiny extends IntType
+class IntegerTiny extends IntType
 {
-    /** @var int<-128, 127> */
+    /** @var int<-128, 127>
+     * @readonly */
     protected int $value;
 
     /**
@@ -43,16 +44,18 @@ readonly class IntegerTiny extends IntType
 
     /**
      * @throws IntegerTypeException
+     * @return static
      */
-    public static function fromInt(int $value): static
+    public static function fromInt(int $value)
     {
         return new static($value);
     }
 
     /**
      * @throws IntegerTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         parent::assertIntegerString($value);
 
