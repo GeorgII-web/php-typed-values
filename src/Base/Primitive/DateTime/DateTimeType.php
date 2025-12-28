@@ -141,10 +141,9 @@ abstract readonly class DateTimeType extends PrimitiveType implements DateTimeTy
             $result = match (true) {
                 is_string($value) => static::fromString($value, $timezone),
                 ($value instanceof DateTimeImmutable) => static::fromDateTime($value),
-                ($value instanceof self) => static::fromDateTime($value->value()),
+                //                ($value instanceof self) => static::fromDateTime($value->value()),
                 $value instanceof Stringable, is_scalar($value) => static::fromString((string) $value, $timezone),
-                null === $value => static::fromString('', $timezone),
-                default => throw new TypeException('Value cannot be cast to string'),
+                default => throw new TypeException('Value cannot be cast to date time'),
             };
 
             /** @var static */
