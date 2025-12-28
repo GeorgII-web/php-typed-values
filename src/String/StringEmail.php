@@ -25,9 +25,10 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class StringEmail extends StrType
+class StringEmail extends StrType
 {
-    /** @var non-empty-string */
+    /** @var non-empty-string
+     * @readonly */
     protected string $value;
 
     /**
@@ -45,8 +46,9 @@ readonly class StringEmail extends StrType
 
     /**
      * @throws EmailStringTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         return new static($value);
     }

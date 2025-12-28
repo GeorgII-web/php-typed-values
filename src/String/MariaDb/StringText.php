@@ -22,8 +22,11 @@ use function mb_strlen;
  *
  * @psalm-immutable
  */
-readonly class StringText extends StrType
+class StringText extends StrType
 {
+    /**
+     * @readonly
+     */
     protected string $value;
 
     /**
@@ -40,8 +43,9 @@ readonly class StringText extends StrType
 
     /**
      * @throws StringTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         return new static($value);
     }
