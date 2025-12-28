@@ -8,11 +8,17 @@ use const PHP_EOL;
 
 use DateTimeImmutable;
 use DateTimeZone;
+use Exception;
 use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\DateTimeTypeException;
 use PhpTypedValues\Exception\ReasonableRangeDateTimeTypeException;
+use PhpTypedValues\Exception\TypeException;
+use PhpTypedValues\Undefined\Alias\Undefined;
+use Stringable;
 
 use function count;
+use function is_scalar;
+use function is_string;
 use function sprintf;
 
 /**
@@ -35,7 +41,7 @@ use function sprintf;
 abstract readonly class DateTimeType extends PrimitiveType implements DateTimeTypeInterface
 {
     protected const FORMAT = '';
-    public const ZONE = 'UTC';
+    public const DEFAULT_ZONE = 'UTC';
     protected const MIN_TIMESTAMP_SECONDS = -62135596800; // 0001-01-01
     protected const MAX_TIMESTAMP_SECONDS = 253402300799; // 9999-12-31 23:59:59
 
@@ -43,11 +49,25 @@ abstract readonly class DateTimeType extends PrimitiveType implements DateTimeTy
      * @throws DateTimeTypeException
      * @throws ReasonableRangeDateTimeTypeException
      */
+    abstract public function value(): DateTimeImmutable;
+
+    /**
+     * @throws ReasonableRangeDateTimeTypeException
+     * @throws DateTimeTypeException
+     */
     protected static function createFromFormat(
         string $value,
         string $format,
         ?DateTimeZone $timezone = null,
     ): DateTimeImmutable {
+        if (str_contains($value, "\0")) {
+            throw new DateTimeTypeException('Date time string must not contain null bytes');
+        }
+
+        if (trim($value) === '') {
+            throw new DateTimeTypeException('Date time string must not be blank');
+        }
+
         /**
          * Collect errors and throw exception with all of them.
          */
@@ -100,6 +120,62 @@ abstract readonly class DateTimeType extends PrimitiveType implements DateTimeTy
          *
          * @psalm-suppress FalsableReturnStatement
          */
-        return $dt->setTimezone(new DateTimeZone(self::ZONE));
+        return $dt->setTimezone(new DateTimeZone(self::DEFAULT_ZONE));
+    }
+
+    /**
+     * @template T of PrimitiveType
+     *
+     * @param T                $default
+     * @param non-empty-string $timezone
+     *
+     * @return static|T
+     */
+    public static function tryFromMixed(
+        mixed $value,
+        string $timezone = self::DEFAULT_ZONE,
+        PrimitiveType $default = new Undefined(),
+    ): static|PrimitiveType {
+        try {
+            /** @var static $result */
+            $result = match (true) {
+                is_string($value) => static::fromString($value, $timezone),
+                ($value instanceof DateTimeImmutable) => static::fromDateTime($value),
+                //                ($value instanceof self) => static::fromDateTime($value->value()),
+                $value instanceof Stringable, is_scalar($value) => static::fromString((string) $value, $timezone),
+                default => throw new TypeException('Value cannot be cast to date time'),
+            };
+
+            /** @var static */
+            return $result;
+        } catch (Exception) {
+            /* @var PrimitiveType */
+            return $default;
+        }
+    }
+
+    /**
+     * @template T of PrimitiveType
+     *
+     * @param T                $default
+     * @param non-empty-string $timezone
+     *
+     * @return static|T
+     */
+    public static function tryFromString(
+        string $value,
+        string $timezone = self::DEFAULT_ZONE,
+        PrimitiveType $default = new Undefined(),
+    ): static|PrimitiveType {
+        try {
+            /** @var static $result */
+            $result = static::fromString($value, $timezone);
+
+            /* @var static */
+            return $result;
+        } catch (Exception) {
+            /* @var PrimitiveType */
+            return $default;
+        }
     }
 }

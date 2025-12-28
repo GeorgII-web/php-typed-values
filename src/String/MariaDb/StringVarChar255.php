@@ -6,8 +6,6 @@ namespace PhpTypedValues\String\MariaDb;
 
 use PhpTypedValues\Base\Primitive\String\StrType;
 use PhpTypedValues\Exception\StringTypeException;
-use PhpTypedValues\Exception\TypeException;
-use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
  * MariaDB VARCHAR(255) string.
@@ -36,26 +34,6 @@ readonly class StringVarChar255 extends StrType
         }
 
         $this->value = $value;
-    }
-
-    public static function tryFromMixed(mixed $value): static|Undefined
-    {
-        try {
-            return static::fromString(
-                static::convertMixedToString($value)
-            );
-        } catch (TypeException) {
-            return Undefined::create();
-        }
-    }
-
-    public static function tryFromString(string $value): static|Undefined
-    {
-        try {
-            return static::fromString($value);
-        } catch (TypeException) {
-            return Undefined::create();
-        }
     }
 
     /**

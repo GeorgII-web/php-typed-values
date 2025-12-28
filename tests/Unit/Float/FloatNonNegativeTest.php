@@ -57,7 +57,8 @@ it('FloatNonNegative::tryFromString returns value for >= 0.0 and Undefined other
         ->toBeInstanceOf(FloatNonNegative::class)
         ->and($ok->value())->toBe(0.5)
         ->and($bad)->toBeInstanceOf(Undefined::class)
-        ->and($badStr)->toBeInstanceOf(Undefined::class);
+        ->and($badStr)->toBeInstanceOf(Undefined::class)
+        ->and(FloatNonNegative::tryFromString('-0.1', Undefined::create()))->toBeInstanceOf(Undefined::class);
 });
 
 it('FloatNonNegative::tryFromFloat returns value for >= 0 and Undefined otherwise', function (): void {
@@ -116,27 +117,66 @@ it('accepts negative zero and normalizes to "-0" in toString', function (): void
         ->toBe('-0');
 });
 
-it('tryFromMixed accepts numeric strings/ints/floats and returns Undefined for invalid', function (): void {
-    $s = FloatNonNegative::tryFromMixed('3.5');
-    $i = FloatNonNegative::tryFromMixed(2);
-    $f = FloatNonNegative::tryFromMixed(4.25);
-    $bad1 = FloatNonNegative::tryFromMixed('-1');
-    $bad2 = FloatNonNegative::tryFromMixed('abc');
-    $bad3 = FloatNonNegative::tryFromMixed(['x']);
-    $bad4 = FloatNonNegative::tryFromMixed(new stdClass());
+it('converts mixed values to correct float state', function (mixed $input, float $expected): void {
+    $result = FloatNonNegative::tryFromMixed($input);
 
-    expect($s)
-        ->toBeInstanceOf(FloatNonNegative::class)
-        ->and($s->value())->toBe(3.5)
-        ->and($i)->toBeInstanceOf(FloatNonNegative::class)
-        ->and($i->value())->toBe(2.0)
-        ->and($f)->toBeInstanceOf(FloatNonNegative::class)
-        ->and($f->value())->toBe(4.25)
-        ->and($bad1)->toBeInstanceOf(Undefined::class)
-        ->and($bad2)->toBeInstanceOf(Undefined::class)
-        ->and($bad3)->toBeInstanceOf(Undefined::class)
-        ->and($bad4)->toBeInstanceOf(Undefined::class);
-});
+    expect($result)->toBeInstanceOf(FloatNonNegative::class)
+        ->and($result->value())->toBe($expected);
+})->with([
+    // Floats
+    ['input' => 1.5, 'expected' => 1.5],
+    ['input' => 0.0, 'expected' => 0.0],
+    ['input' => \PHP_FLOAT_MAX, 'expected' => \PHP_FLOAT_MAX],
+    ['input' => 1.234567890123456789, 'expected' => 1.234567890123456789],
+    ['input' => 2 / 3, 'expected' => 2 / 3],
+    ['input' => (string) (2 / 3), 'expected' => (float) (string) (2 / 3)],
+    // Type class
+    [
+        'input' => FloatNonNegative::fromFloat(1.234567890123456789),
+        'expected' => 1.234567890123456789,
+    ],
+    // Integers
+    ['input' => 1, 'expected' => 1.0],
+    ['input' => 0, 'expected' => 0.0],
+    ['input' => 111, 'expected' => 111.0],
+    // Booleans
+    ['input' => true, 'expected' => 1.0],
+    ['input' => false, 'expected' => 0.0],
+    // Strings
+    ['input' => '1.5', 'expected' => 1.5],
+    ['input' => '0', 'expected' => 0.0],
+    // Stringable Object
+    ['input' => new class {
+        public function __toString(): string
+        {
+            return '2.5';
+        }
+    }, 'expected' => 2.5],
+]);
+
+it('returns Undefined for invalid mixed inputs', function (mixed $input): void {
+    $result = FloatNonNegative::tryFromMixed($input);
+
+    expect($result)->toBeInstanceOf(Undefined::class)
+        ->and($result->isUndefined())->toBeTrue();
+})->with([
+    ['input' => null],
+    ['input' => []],
+    ['input' => new stdClass()],
+    ['input' => 'not-a-float'],
+    ['input' => '1.2.3'],
+    ['input' => '007'],
+    ['input' => fn() => 1.5],                  // Closure
+    ['input' => ['FloatNonNegative', 'fromInt']], // Callable array
+    ['input' => fopen('php://memory', 'r')],   // Resource
+    ['input' => [new stdClass()]],             // Array of objects
+    ['input' => \INF],                          // Infinite value
+    ['input' => \NAN],                          // Not a Number
+    ['input' => "\0"],                         // Null byte string
+    ['input' => -3.14],                        // Negative float
+    ['input' => -42],                          // Negative integer
+    ['input' => '-10.5'],                      // Negative string
+]);
 
 it('jsonSerialize equals value() for valid instances', function (): void {
     $v = FloatNonNegative::fromString('10.5');

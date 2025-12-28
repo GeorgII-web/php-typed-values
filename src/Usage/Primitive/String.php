@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Usage\Primitive;
+namespace PhpTypedValues\Usage\Primitive;
 
 require_once 'vendor/autoload.php';
 
@@ -98,7 +98,10 @@ echo Json::tryFromString('{}')->toString() . PHP_EOL;
 echo Email::fromString('User@Example.COM')->toString() . PHP_EOL; // normalized to lowercase
 echo StringEmail::fromString('User@Example.COM')->toString() . PHP_EOL; // normalized to lowercase
 $em = StringEmail::tryFromString('not-an-email');
-if (!($em instanceof Undefined)) {
+if (!$em->isUndefined()) {
+    echo $em->toString() . PHP_EOL;
+}
+if (!$em->isEmpty()) {
     echo $em->toString() . PHP_EOL;
 }
 

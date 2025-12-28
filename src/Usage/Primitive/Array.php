@@ -8,13 +8,13 @@ use const JSON_THROW_ON_ERROR;
 use const PHP_EOL;
 
 use PhpTypedValues\ArrayType\ArrayOfObjects;
+use PhpTypedValues\ArrayType\ArrayUndefined;
 use PhpTypedValues\Bool\Alias\Boolean;
 use PhpTypedValues\Exception\ArrayTypeException;
+use PhpTypedValues\Exception\ArrayUndefinedTypeException;
 use PhpTypedValues\Integer\IntegerNonNegative;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use PhpTypedValues\Usage\Example\OptionalFail;
-
-use function count;
 
 /**
  * Array.
@@ -35,15 +35,6 @@ $collection = ArrayOfObjects::fromArray(
     ],
 );
 echo json_encode($collection->toArray(), JSON_THROW_ON_ERROR) . PHP_EOL;
-
-// Undefined item
-$collection = ArrayOfObjects::tryFromArray(
-    [
-        IntegerNonNegative::fromInt(1), // Primitive
-        OptionalFail::fromScalars(id: 1, firstName: 'Foobar', height: 170), // value object
-        1, // scalar > Undefined
-    ],
-);
 echo $collection->count() . PHP_EOL;
 echo Boolean::fromBool($collection->hasUndefined())->toString() . PHP_EOL;
 echo Boolean::fromBool($collection->isEmpty())->toString() . PHP_EOL;
@@ -57,6 +48,25 @@ foreach ($collection->value() as $item) {
     }
 }
 
-// Demonstrate usage of getDefinedItems() to exclude Undefined values
-$defined = $collection->getDefinedItems();
-echo 'Defined items count: ' . count($defined) . PHP_EOL;
+$collection = ArrayOfObjects::tryFromArray([1, 2, 3]);
+echo $collection->isUndefined() ? 'Undefined array' : 'ERROR' . PHP_EOL;
+
+echo ArrayUndefined::create()->isUndefined() ? 'Undefined array' : 'ERROR' . PHP_EOL;
+
+try {
+    ArrayUndefined::create()->getDefinedItems();
+} catch (ArrayUndefinedTypeException) {
+    // suppress
+}
+
+try {
+    ArrayUndefined::create()->toInt();
+} catch (ArrayUndefinedTypeException) {
+    // suppress
+}
+
+try {
+    ArrayUndefined::create()->toFloat();
+} catch (ArrayUndefinedTypeException) {
+    // suppress
+}

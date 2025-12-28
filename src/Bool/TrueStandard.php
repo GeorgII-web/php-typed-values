@@ -6,8 +6,6 @@ namespace PhpTypedValues\Bool;
 
 use PhpTypedValues\Base\Primitive\Bool\BoolType;
 use PhpTypedValues\Exception\BoolTypeException;
-use PhpTypedValues\Exception\TypeException;
-use PhpTypedValues\Undefined\Alias\Undefined;
 
 use function sprintf;
 use function strtolower;
@@ -30,6 +28,9 @@ use function trim;
  */
 readonly class TrueStandard extends BoolType
 {
+    /**
+     * @var true
+     */
     protected bool $value;
 
     /**
@@ -42,35 +43,6 @@ readonly class TrueStandard extends BoolType
         }
 
         $this->value = true;
-    }
-
-    public static function tryFromMixed(mixed $value): static|Undefined
-    {
-        try {
-            return static::fromString(
-                static::convertMixedToString($value)
-            );
-        } catch (TypeException) {
-            return Undefined::create();
-        }
-    }
-
-    public static function tryFromString(string $value): static|Undefined
-    {
-        try {
-            return static::fromString($value);
-        } catch (TypeException) {
-            return Undefined::create();
-        }
-    }
-
-    public static function tryFromInt(int $value): static|Undefined
-    {
-        try {
-            return static::fromInt($value);
-        } catch (TypeException) {
-            return Undefined::create();
-        }
     }
 
     /**
@@ -98,19 +70,14 @@ readonly class TrueStandard extends BoolType
         throw new BoolTypeException(sprintf('Expected int "1" for true, got "%s"', $value));
     }
 
-    public function value(): bool
+    public function value(): true
     {
         return $this->value;
     }
 
-    public function jsonSerialize(): bool
+    public function jsonSerialize(): true
     {
         return $this->value();
-    }
-
-    public function toString(): string
-    {
-        return $this->value() ? 'true' : 'false';
     }
 
     /**
@@ -119,20 +86,5 @@ readonly class TrueStandard extends BoolType
     public static function fromBool(bool $value): static
     {
         return new static($value);
-    }
-
-    public function __toString(): string
-    {
-        return $this->toString();
-    }
-
-    public function isEmpty(): bool
-    {
-        return false;
-    }
-
-    public function isUndefined(): bool
-    {
-        return false;
     }
 }

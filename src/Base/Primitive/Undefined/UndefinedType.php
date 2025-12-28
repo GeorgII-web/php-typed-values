@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace PhpTypedValues\Base\Primitive\Undefined;
 
 use PhpTypedValues\Base\Primitive\PrimitiveType;
-use PhpTypedValues\Base\Shared\FromString;
+use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
  * Base implementation for a special "Undefined/Unknown" typed value.
@@ -23,6 +23,33 @@ use PhpTypedValues\Base\Shared\FromString;
  *
  * @psalm-immutable
  */
-abstract readonly class UndefinedType extends PrimitiveType implements UndefinedTypeInterface, FromString
+abstract readonly class UndefinedType extends PrimitiveType implements UndefinedTypeInterface
 {
+    abstract public function value(): never;
+
+    abstract public static function fromString(string $value): static;
+
+    /**
+     * @template T of PrimitiveType
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    abstract public static function tryFromMixed(
+        mixed $value,
+        PrimitiveType $default = new Undefined(),
+    ): static|PrimitiveType;
+
+    /**
+     * @template T of PrimitiveType
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    abstract public static function tryFromString(
+        string $value,
+        PrimitiveType $default = new Undefined(),
+    ): static|PrimitiveType;
 }

@@ -94,7 +94,7 @@ it('tryFromMixed handles various inputs returning FalseStandard or Undefined', f
         ->and($fromInt)->toBeInstanceOf(FalseStandard::class)
         ->and($fromInt->value())->toBeFalse()
         // bool(false) is converted to empty string by convertMixedToString and is not accepted -> Undefined
-        ->and($fromBool)->toBeInstanceOf(Undefined::class)
+        ->and($fromBool)->toBeInstanceOf(FalseStandard::class)
         ->and($fromStringable)->toBeInstanceOf(FalseStandard::class)
         ->and($fromStringable->value())->toBeFalse()
         ->and($fromArray)->toBeInstanceOf(Undefined::class)

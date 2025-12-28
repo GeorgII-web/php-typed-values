@@ -10,8 +10,7 @@ use DateTimeImmutable;
 use DateTimeZone;
 use PhpTypedValues\Base\Primitive\DateTime\DateTimeType;
 use PhpTypedValues\Exception\DateTimeTypeException;
-use PhpTypedValues\Exception\TypeException;
-use PhpTypedValues\Undefined\Alias\Undefined;
+use PhpTypedValues\Exception\ReasonableRangeDateTimeTypeException;
 
 /**
  * Date-time value formatted using PHP's DATE_ATOM (RFC 3339 based on ISO 8601).
@@ -37,22 +36,7 @@ readonly class DateTimeAtom extends DateTimeType
     public function __construct(DateTimeImmutable $value)
     {
         // normalized time zone
-        $this->value = $value->setTimezone(new DateTimeZone(static::ZONE));
-    }
-
-    /**
-     * @param non-empty-string $timezone
-     */
-    public static function tryFromMixed(mixed $value, string $timezone = self::ZONE): static|Undefined
-    {
-        try {
-            return static::fromString(
-                static::convertMixedToString($value),
-                $timezone
-            );
-        } catch (TypeException) {
-            return Undefined::create();
-        }
+        $this->value = $value->setTimezone(new DateTimeZone(static::DEFAULT_ZONE));
     }
 
     /**
@@ -60,7 +44,7 @@ readonly class DateTimeAtom extends DateTimeType
      *
      * @throws DateTimeTypeException
      */
-    public static function fromString(string $value, string $timezone = self::ZONE): static
+    public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE): static
     {
         return new static(
             static::createFromFormat(
@@ -72,17 +56,9 @@ readonly class DateTimeAtom extends DateTimeType
     }
 
     /**
-     * @param non-empty-string $timezone
+     * @throws ReasonableRangeDateTimeTypeException
+     * @throws DateTimeTypeException
      */
-    public static function tryFromString(string $value, string $timezone = self::ZONE): static|Undefined
-    {
-        try {
-            return static::fromString($value, $timezone);
-        } catch (TypeException) {
-            return Undefined::create();
-        }
-    }
-
     public function withTimeZone(string $timezone): static
     {
         return new static(
@@ -90,6 +66,10 @@ readonly class DateTimeAtom extends DateTimeType
         );
     }
 
+    /**
+     * @throws ReasonableRangeDateTimeTypeException
+     * @throws DateTimeTypeException
+     */
     public function toString(): string
     {
         return $this->value()->format(static::FORMAT);
@@ -100,11 +80,19 @@ readonly class DateTimeAtom extends DateTimeType
         return new static($value);
     }
 
+    /**
+     * @throws ReasonableRangeDateTimeTypeException
+     * @throws DateTimeTypeException
+     */
     public function jsonSerialize(): string
     {
         return $this->toString();
     }
 
+    /**
+     * @throws ReasonableRangeDateTimeTypeException
+     * @throws DateTimeTypeException
+     */
     public function __toString(): string
     {
         return $this->toString();

@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace PhpTypedValues\Base\Primitive;
 
 use JsonSerializable;
-use PhpTypedValues\Base\Shared\IsEmptyInterface;
-use PhpTypedValues\Base\Shared\IsUndefinedInterface;
 use PhpTypedValues\Base\TypeInterface;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -14,7 +12,6 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  * Base contract for all immutable typed values in this library.
  *
  * Responsibilities
- *  - Provide strict construction from a validated string via {@see FromString}.
  *  - Provide a lossless string representation via {@see toString} and {@see __toString}.
  *  - Concrete implementations may also provide tolerant factories like
  *    `tryFromMixed(mixed): static|Undefined` that return {@see Undefined} on failure.
@@ -24,8 +21,20 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  *
  * @psalm-immutable
  */
-interface PrimitiveTypeInterface extends TypeInterface, JsonSerializable, IsEmptyInterface, IsUndefinedInterface
+interface PrimitiveTypeInterface extends TypeInterface, JsonSerializable
 {
+    public function value(): mixed;
+
+    /**
+     * Returns true if the Object value is empty.
+     */
+    public function isEmpty(): bool;
+
+    /**
+     * Returns if the Object value is an Undefined type class.
+     */
+    public function isUndefined(): bool;
+
     /**
      * Returns a normalized string representation of the underlying value.
      */

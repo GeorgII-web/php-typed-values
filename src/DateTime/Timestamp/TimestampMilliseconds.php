@@ -8,8 +8,6 @@ use DateTimeImmutable;
 use DateTimeZone;
 use PhpTypedValues\Base\Primitive\DateTime\DateTimeType;
 use PhpTypedValues\Exception\DateTimeTypeException;
-use PhpTypedValues\Exception\TypeException;
-use PhpTypedValues\Undefined\Alias\Undefined;
 
 use function intdiv;
 use function sprintf;
@@ -44,7 +42,7 @@ readonly class TimestampMilliseconds extends DateTimeType
     public function __construct(DateTimeImmutable $value)
     {
         // normalized time zone
-        $this->value = $value->setTimezone(new DateTimeZone(static::ZONE));
+        $this->value = $value->setTimezone(new DateTimeZone(static::DEFAULT_ZONE));
     }
 
     /**
@@ -52,24 +50,9 @@ readonly class TimestampMilliseconds extends DateTimeType
      *
      * @throws DateTimeTypeException
      */
-    public static function fromInt(int $value, string $timezone = self::ZONE): static
+    public static function fromInt(int $value, string $timezone = self::DEFAULT_ZONE): static
     {
         return static::fromString((string) $value, $timezone);
-    }
-
-    /**
-     * @param non-empty-string $timezone
-     */
-    public static function tryFromMixed(mixed $value, string $timezone = self::ZONE): static|Undefined
-    {
-        try {
-            return static::fromString(
-                static::convertMixedToString($value),
-                $timezone
-            );
-        } catch (TypeException) {
-            return Undefined::create();
-        }
     }
 
     /**
@@ -79,7 +62,7 @@ readonly class TimestampMilliseconds extends DateTimeType
      *
      * @throws DateTimeTypeException
      */
-    public static function fromString(string $value, string $timezone = self::ZONE): static
+    public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE): static
     {
         if (!ctype_digit($value)) {
             throw new DateTimeTypeException(sprintf('Expected milliseconds timestamp as digits, got "%s"', $value));
@@ -103,18 +86,6 @@ readonly class TimestampMilliseconds extends DateTimeType
                 new DateTimeZone($timezone)
             )
         );
-    }
-
-    /**
-     * @param non-empty-string $timezone
-     */
-    public static function tryFromString(string $value, string $timezone = self::ZONE): static|Undefined
-    {
-        try {
-            return static::fromString($value, $timezone);
-        } catch (TypeException) {
-            return Undefined::create();
-        }
     }
 
     public static function fromDateTime(DateTimeImmutable $value): static

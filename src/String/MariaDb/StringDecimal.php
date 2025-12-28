@@ -6,8 +6,6 @@ namespace PhpTypedValues\String\MariaDb;
 
 use PhpTypedValues\Base\Primitive\String\StrType;
 use PhpTypedValues\Exception\DecimalStringTypeException;
-use PhpTypedValues\Exception\TypeException;
-use PhpTypedValues\Undefined\Alias\Undefined;
 
 use function preg_match;
 use function sprintf;
@@ -43,32 +41,12 @@ readonly class StringDecimal extends StrType
         $this->value = $value;
     }
 
-    public static function tryFromMixed(mixed $value): static|Undefined
-    {
-        try {
-            return static::fromString(
-                static::convertMixedToString($value)
-            );
-        } catch (TypeException) {
-            return Undefined::create();
-        }
-    }
-
     /**
      * @throws DecimalStringTypeException
      */
     public static function fromString(string $value): static
     {
         return new static($value);
-    }
-
-    public static function tryFromString(string $value): static|Undefined
-    {
-        try {
-            return static::fromString($value);
-        } catch (TypeException) {
-            return Undefined::create();
-        }
     }
 
     public function value(): string

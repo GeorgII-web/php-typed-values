@@ -6,8 +6,6 @@ namespace PhpTypedValues\String;
 
 use PhpTypedValues\Base\Primitive\String\StrType;
 use PhpTypedValues\Exception\StringTypeException;
-use PhpTypedValues\Exception\TypeException;
-use PhpTypedValues\Undefined\Alias\Undefined;
 
 use function sprintf;
 
@@ -32,26 +30,6 @@ readonly class StringEmpty extends StrType
     {
         if ($value !== '') {
             throw new StringTypeException(sprintf('Expected empty string, got "%s"', $value));
-        }
-    }
-
-    public static function tryFromMixed(mixed $value): static|Undefined
-    {
-        try {
-            return static::fromString(
-                static::convertMixedToString($value)
-            );
-        } catch (TypeException) {
-            return Undefined::create();
-        }
-    }
-
-    public static function tryFromString(string $value): static|Undefined
-    {
-        try {
-            return static::fromString($value);
-        } catch (TypeException) {
-            return Undefined::create();
         }
     }
 

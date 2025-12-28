@@ -38,7 +38,7 @@ readonly class ArrayNonEmpty extends ArrayType
      */
     public function __construct(array $value)
     {
-        if (count($value) === 0) {
+        if ($value === []) {
             throw new ArrayTypeException('Expected non-empty array');
         }
 
@@ -51,17 +51,6 @@ readonly class ArrayNonEmpty extends ArrayType
      * @throws ArrayTypeException
      */
     public static function fromArray(array $value): static
-    {
-        /** @var list<TItem> $value */
-        return new static($value);
-    }
-
-    /**
-     * @param list<mixed> $value
-     *
-     * @throws ArrayTypeException
-     */
-    public static function tryFromArray(array $value): static
     {
         /** @var list<TItem> $value */
         return new static($value);

@@ -6,8 +6,6 @@ namespace PhpTypedValues\Bool;
 
 use PhpTypedValues\Base\Primitive\Bool\BoolType;
 use PhpTypedValues\Exception\BoolTypeException;
-use PhpTypedValues\Exception\TypeException;
-use PhpTypedValues\Undefined\Alias\Undefined;
 
 use function sprintf;
 use function strtolower;
@@ -44,35 +42,6 @@ readonly class FalseStandard extends BoolType
         $this->value = false;
     }
 
-    public static function tryFromMixed(mixed $value): static|Undefined
-    {
-        try {
-            return static::fromString(
-                static::convertMixedToString($value)
-            );
-        } catch (TypeException) {
-            return Undefined::create();
-        }
-    }
-
-    public static function tryFromString(string $value): static|Undefined
-    {
-        try {
-            return static::fromString($value);
-        } catch (TypeException) {
-            return Undefined::create();
-        }
-    }
-
-    public static function tryFromInt(int $value): static|Undefined
-    {
-        try {
-            return static::fromInt($value);
-        } catch (TypeException) {
-            return Undefined::create();
-        }
-    }
-
     /**
      * @throws BoolTypeException
      */
@@ -98,19 +67,14 @@ readonly class FalseStandard extends BoolType
         throw new BoolTypeException(sprintf('Expected int "0" for false, got "%s"', $value));
     }
 
-    public function value(): bool
+    public function value(): false
     {
         return $this->value;
     }
 
-    public function jsonSerialize(): bool
+    public function jsonSerialize(): false
     {
         return $this->value();
-    }
-
-    public function toString(): string
-    {
-        return $this->value() ? 'true' : 'false';
     }
 
     /**
@@ -119,20 +83,5 @@ readonly class FalseStandard extends BoolType
     public static function fromBool(bool $value): static
     {
         return new static($value);
-    }
-
-    public function __toString(): string
-    {
-        return $this->toString();
-    }
-
-    public function isEmpty(): bool
-    {
-        return false;
-    }
-
-    public function isUndefined(): bool
-    {
-        return false;
     }
 }

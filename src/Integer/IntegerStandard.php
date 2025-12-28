@@ -6,8 +6,6 @@ namespace PhpTypedValues\Integer;
 
 use PhpTypedValues\Base\Primitive\Integer\IntType;
 use PhpTypedValues\Exception\IntegerTypeException;
-use PhpTypedValues\Exception\TypeException;
-use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
  * Generic integer-typed value.
@@ -30,32 +28,6 @@ readonly class IntegerStandard extends IntType
     public function __construct(int $value)
     {
         $this->value = $value;
-    }
-
-    public static function tryFromMixed(mixed $value): static|Undefined
-    {
-        try {
-            return static::fromString(
-                static::convertMixedToString($value)
-            );
-        } catch (TypeException) {
-            return Undefined::create();
-        }
-    }
-
-    public static function tryFromString(string $value): static|Undefined
-    {
-        try {
-            return static::fromString($value);
-        } catch (TypeException) {
-            return Undefined::create();
-        }
-    }
-
-    public static function tryFromInt(int $value): static|Undefined
-    {
-        // IntegerStandard accepts any PHP int, so construction cannot fail.
-        return new static($value);
     }
 
     public static function fromInt(int $value): static

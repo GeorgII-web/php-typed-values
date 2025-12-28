@@ -9,8 +9,6 @@ use const PATHINFO_FILENAME;
 
 use PhpTypedValues\Base\Primitive\String\StrType;
 use PhpTypedValues\Exception\FileNameStringTypeException;
-use PhpTypedValues\Exception\TypeException;
-use PhpTypedValues\Undefined\Alias\Undefined;
 
 use function pathinfo;
 use function preg_match;
@@ -52,32 +50,12 @@ readonly class StringFileName extends StrType
         $this->value = $value;
     }
 
-    public static function tryFromMixed(mixed $value): static|Undefined
-    {
-        try {
-            return static::fromString(
-                static::convertMixedToString($value)
-            );
-        } catch (TypeException) {
-            return Undefined::create();
-        }
-    }
-
     /**
      * @throws FileNameStringTypeException
      */
     public static function fromString(string $value): static
     {
         return new static($value);
-    }
-
-    public static function tryFromString(string $value): static|Undefined
-    {
-        try {
-            return static::fromString($value);
-        } catch (TypeException) {
-            return Undefined::create();
-        }
     }
 
     /**

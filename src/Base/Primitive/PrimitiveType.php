@@ -4,11 +4,6 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Base\Primitive;
 
-use PhpTypedValues\Exception\TypeException;
-use Stringable;
-
-use function is_scalar;
-
 /**
  * Base class for immutable typed values.
  *
@@ -33,21 +28,34 @@ use function is_scalar;
 abstract readonly class PrimitiveType implements PrimitiveTypeInterface
 {
     /**
-     * Safely attempts to convert a mixed value to a string.
-     * Returns null if conversion is impossible (array, resource, non-stringable object).
-     *
-     * @throws TypeException
+     * Returns true if the Object value is empty.
      */
-    protected static function convertMixedToString(mixed $value): string
+    abstract public function isEmpty(): bool;
+
+    /**
+     * Returns if the Object value is an Undefined type class.
+     */
+    abstract public function isUndefined(): bool;
+
+    /**
+     * Returns a normalized string representation of the underlying value.
+     */
+    abstract public function toString(): string;
+
+    /**
+     * Alias of {@see toString} for convenient casting.
+     */
+    public function __toString(): string
     {
-        if (is_scalar($value) || $value === null) {
-            return (string) $value;
-        }
-
-        if ($value instanceof Stringable) {
-            return (string) $value;
-        }
-
-        throw new TypeException('Value cannot be cast to string');
+        return $this->toString();
     }
+
+    /**
+     * JSON representation of the value.
+     *
+     * Marked as mutation-free so Psalm treats calls as pure in immutable contexts.
+     *
+     * @psalm-mutation-free
+     */
+    abstract public function jsonSerialize(): mixed;
 }

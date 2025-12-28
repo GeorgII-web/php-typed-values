@@ -6,8 +6,6 @@ namespace PhpTypedValues\Float;
 
 use PhpTypedValues\Base\Primitive\Float\FloatType;
 use PhpTypedValues\Exception\FloatTypeException;
-use PhpTypedValues\Exception\TypeException;
-use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
  * Generic float-typed value.
@@ -27,39 +25,28 @@ readonly class FloatStandard extends FloatType
 {
     protected float $value;
 
+    /**
+     * @throws FloatTypeException
+     */
     public function __construct(float $value)
     {
+        if (is_infinite($value)) {
+            throw new FloatTypeException('Infinite float value');
+        }
+
+        if (is_nan($value)) {
+            throw new FloatTypeException('Not a number float value');
+        }
+
         $this->value = $value;
     }
 
+    /**
+     * @throws FloatTypeException
+     */
     public static function fromFloat(float $value): static
     {
         return new static($value);
-    }
-
-    public static function tryFromMixed(mixed $value): static|Undefined
-    {
-        try {
-            return static::fromString(
-                static::convertMixedToString($value)
-            );
-        } catch (TypeException) {
-            return Undefined::create();
-        }
-    }
-
-    public static function tryFromString(string $value): static|Undefined
-    {
-        try {
-            return static::fromString($value);
-        } catch (TypeException) {
-            return Undefined::create();
-        }
-    }
-
-    public static function tryFromFloat(float $value): static|Undefined
-    {
-        return static::fromFloat($value);
     }
 
     /**
@@ -83,26 +70,16 @@ readonly class FloatStandard extends FloatType
 
     public function jsonSerialize(): float
     {
-        return $this->value();
+        return $this->value;
     }
 
     public function toString(): string
     {
-        return (string) $this->value();
+        return (string) $this->value;
     }
 
     public function __toString(): string
     {
         return $this->toString();
-    }
-
-    public function isEmpty(): bool
-    {
-        return false;
-    }
-
-    public function isUndefined(): bool
-    {
-        return false;
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Undefined;
 
+use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Base\Primitive\Undefined\UndefinedType;
 use PhpTypedValues\Exception\UndefinedTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -27,8 +28,17 @@ readonly class UndefinedStandard extends UndefinedType
         return new static();
     }
 
-    public static function tryFromMixed(mixed $value): Undefined
-    {
+    public static function tryFromString(
+        string $value,
+        PrimitiveType $default = new Undefined(),
+    ): Undefined {
+        return Undefined::create();
+    }
+
+    public static function tryFromMixed(
+        mixed $value,
+        PrimitiveType $default = new Undefined(),
+    ): Undefined {
         return Undefined::create();
     }
 

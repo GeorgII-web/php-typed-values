@@ -7,9 +7,7 @@ namespace PhpTypedValues\String;
 use const FILTER_VALIDATE_URL;
 
 use PhpTypedValues\Base\Primitive\String\StrType;
-use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Exception\UrlStringTypeException;
-use PhpTypedValues\Undefined\Alias\Undefined;
 
 use function filter_var;
 use function sprintf;
@@ -45,32 +43,12 @@ readonly class StringUrl extends StrType
         $this->value = $value;
     }
 
-    public static function tryFromMixed(mixed $value): static|Undefined
-    {
-        try {
-            return static::fromString(
-                static::convertMixedToString($value)
-            );
-        } catch (TypeException) {
-            return Undefined::create();
-        }
-    }
-
     /**
      * @throws UrlStringTypeException
      */
     public static function fromString(string $value): static
     {
         return new static($value);
-    }
-
-    public static function tryFromString(string $value): static|Undefined
-    {
-        try {
-            return static::fromString($value);
-        } catch (TypeException) {
-            return Undefined::create();
-        }
     }
 
     /** @return non-empty-string */

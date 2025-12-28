@@ -138,3 +138,56 @@ it('isUndefined is always false', function (): void {
     expect(IntegerStandard::fromInt(0)->isUndefined())->toBeFalse()
         ->and(IntegerStandard::fromInt(1)->isUndefined())->toBeFalse();
 });
+
+it('converts mixed values to correct integer state', function (mixed $input, int $expected): void {
+    $result = IntegerStandard::tryFromMixed($input);
+
+    expect($result)->toBeInstanceOf(IntegerStandard::class)
+        ->and($result->value())->toBe($expected);
+})->with([
+    // Integers
+    ['input' => 1, 'expected' => 1],
+    ['input' => 0, 'expected' => 0],
+    ['input' => -42, 'expected' => -42],
+    ['input' => \PHP_INT_MAX, 'expected' => \PHP_INT_MAX],
+    ['input' => \PHP_INT_MIN, 'expected' => \PHP_INT_MIN],
+    // Type class
+    [
+        'input' => IntegerStandard::fromInt(123),
+        'expected' => 123,
+    ],
+    // Booleans
+    ['input' => true, 'expected' => 1],
+    ['input' => false, 'expected' => 0],
+    // Strings
+    ['input' => '15', 'expected' => 15],
+    ['input' => '0', 'expected' => 0],
+    ['input' => '-10', 'expected' => -10],
+    // Stringable Object
+    ['input' => new class {
+        public function __toString(): string
+        {
+            return '25';
+        }
+    }, 'expected' => 25],
+]);
+
+it('returns Undefined for invalid mixed integer inputs', function (mixed $input): void {
+    $result = IntegerStandard::tryFromMixed($input);
+
+    expect($result)->toBeInstanceOf(Undefined::class)
+        ->and($result->isUndefined())->toBeTrue();
+})->with([
+    ['input' => null],
+    ['input' => []],
+    ['input' => 1.5],                  // Float
+    ['input' => 0.0],                  // Float
+    ['input' => new stdClass()],
+    ['input' => 'not-an-int'],
+    ['input' => '1.0'],                // Float string
+    ['input' => '01'],                 // Invalid format (leading zero)
+    ['input' => fn() => 1],            // Closure
+    ['input' => fopen('php://memory', 'r')], // Resource
+    ['input' => \INF],                 // Infinite
+    ['input' => \NAN],                 // NaN
+]);
