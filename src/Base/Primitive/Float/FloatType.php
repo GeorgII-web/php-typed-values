@@ -35,12 +35,21 @@ use function sprintf;
  */
 abstract readonly class FloatType extends PrimitiveType implements FloatTypeInterface
 {
+    /**
+     * @throws FloatTypeException
+     */
     abstract public static function fromString(string $value): static;
 
+    /**
+     * @throws FloatTypeException
+     */
     abstract public static function fromFloat(float $value): static;
 
     abstract public function value(): float;
 
+    /**
+     * @throws FloatTypeException
+     */
     protected static function assertFloatString(string $value): void
     {
         if (!is_numeric($value)) {

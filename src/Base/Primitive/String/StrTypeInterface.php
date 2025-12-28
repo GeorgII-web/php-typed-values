@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Base\Primitive\String;
 
+use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -35,20 +36,26 @@ interface StrTypeInterface
     public function value(): string;
 
     /**
-     * @template T
+     * @template T of PrimitiveType
      *
      * @param T $default
      *
      * @return static|T
      */
-    public static function tryFromMixed(mixed $value, mixed $default = new Undefined()): mixed;
+    public static function tryFromMixed(
+        mixed $value,
+        PrimitiveType $default = new Undefined(),
+    ): mixed;
 
     /**
-     * @template T
+     * @template T of PrimitiveType
      *
      * @param T $default
      *
      * @return static|T
      */
-    public static function tryFromString(string $value, mixed $default = new Undefined()): mixed;
+    public static function tryFromString(
+        string $value,
+        PrimitiveType $default = new Undefined(),
+    ): mixed;
 }

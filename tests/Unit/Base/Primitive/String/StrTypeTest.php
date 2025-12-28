@@ -74,7 +74,7 @@ it('exercises abstract static methods via stub', function (): void {
     expect(StrTypeTest::tryFromMixed('hello'))->toBeInstanceOf(StrTypeTest::class)
         ->and(StrTypeTest::tryFromMixed('hello')->value())->toBe('hello')
         ->and(StrTypeTest::tryFromMixed(['invalid']))->toBeInstanceOf(Undefined::class)
-        ->and(StrTypeTest::tryFromMixed(['invalid'], 'default'))->toBe('default')
+        ->and(StrTypeTest::tryFromMixed(['invalid'], Undefined::create()))->toBeInstanceOf(Undefined::class)
         ->and(StrTypeTest::tryFromString('world'))->toBeInstanceOf(StrTypeTest::class)
         ->and(StrTypeTest::tryFromString('world')->value())->toBe('world')
         ->and(StrTypeTest::fromString('hello'))->toBeInstanceOf(StrTypeTest::class);
@@ -100,9 +100,9 @@ it('fromString returns exact value and toString matches', function (): void {
 });
 
 it('handles unicode and whitespace transparently', function (): void {
-    $unicode = StringStandard::fromString('Привет 🌟');
-    expect($unicode->value())->toBe('Привет 🌟')
-        ->and($unicode->toString())->toBe('Привет 🌟');
+    $unicode = StringStandard::fromString('hi 🌟');
+    expect($unicode->value())->toBe('hi 🌟')
+        ->and($unicode->toString())->toBe('hi 🌟');
 
     $ws = StringStandard::fromString('  spaced  ');
     expect($ws->value())->toBe('  spaced  ')
