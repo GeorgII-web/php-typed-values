@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace PhpTypedValues\ArrayType;
 
 use PhpTypedValues\Base\ArrayType\ArrayType;
-use PhpTypedValues\Exception\UndefinedTypeException;
-use Traversable;
+use PhpTypedValues\Base\Primitive\PrimitiveType;
+use PhpTypedValues\Base\Primitive\Undefined\UndefinedTypeInterface;
+use PhpTypedValues\Exception\ArrayUndefinedTypeException;
+use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
  * Immutable undefined collection.
@@ -15,7 +17,7 @@ use Traversable;
  *
  * @psalm-immutable
  */
-readonly class ArrayUndefined extends ArrayType
+readonly class ArrayUndefined extends ArrayType implements UndefinedTypeInterface
 {
     public static function fromArray(array $value): static
     {
@@ -23,40 +25,40 @@ readonly class ArrayUndefined extends ArrayType
     }
 
     /**
-     * @throws UndefinedTypeException
+     * @throws ArrayUndefinedTypeException
      */
     public function value(): never
     {
-        throw new UndefinedTypeException('Undefined array has no value');
+        throw new ArrayUndefinedTypeException('Undefined array has no value');
     }
 
-    public function getIterator(): Traversable
+    public function getIterator(): never
     {
-        throw new UndefinedTypeException('Undefined array has no items for iterator');
-    }
-
-    /**
-     * @throws UndefinedTypeException
-     */
-    public function count(): int
-    {
-        throw new UndefinedTypeException('Undefined array has no items');
+        throw new ArrayUndefinedTypeException('Undefined array has no items for iterator');
     }
 
     /**
-     * @throws UndefinedTypeException
+     * @throws ArrayUndefinedTypeException
      */
-    public function toArray(): array
+    public function count(): never
     {
-        throw new UndefinedTypeException('Undefined array cannot be converted to array');
+        throw new ArrayUndefinedTypeException('Undefined array has no items to count');
     }
 
     /**
-     * @throws UndefinedTypeException
+     * @throws ArrayUndefinedTypeException
      */
-    public function jsonSerialize(): array
+    public function toArray(): never
     {
-        throw new UndefinedTypeException('Undefined array cannot be converted to Json');
+        throw new ArrayUndefinedTypeException('Undefined array cannot be converted to array');
+    }
+
+    /**
+     * @throws ArrayUndefinedTypeException
+     */
+    public function jsonSerialize(): never
+    {
+        throw new ArrayUndefinedTypeException('Undefined array cannot be converted to Json');
     }
 
     public function isEmpty(): bool
@@ -75,11 +77,13 @@ readonly class ArrayUndefined extends ArrayType
     }
 
     /**
-     * @throws UndefinedTypeException
+     * @psalm-return never
+     *
+     * @throws ArrayUndefinedTypeException
      */
-    public function getDefinedItems(): array
+    public function getDefinedItems(): never
     {
-        throw new UndefinedTypeException('Undefined array has no defined items');
+        throw new ArrayUndefinedTypeException('Undefined array has no defined items');
     }
 
     public static function create(): static
@@ -88,18 +92,28 @@ readonly class ArrayUndefined extends ArrayType
     }
 
     /**
-     * @throws UndefinedTypeException
+     * @throws ArrayUndefinedTypeException
      */
     public function toInt(): never
     {
-        throw new UndefinedTypeException('Undefined array cannot be converted to integer');
+        throw new ArrayUndefinedTypeException('Undefined array cannot be converted to integer');
     }
 
     /**
-     * @throws UndefinedTypeException
+     * @throws ArrayUndefinedTypeException
      */
     public function toFloat(): never
     {
-        throw new UndefinedTypeException('Undefined array cannot be converted to float');
+        throw new ArrayUndefinedTypeException('Undefined array cannot be converted to float');
+    }
+
+    public static function tryFromMixed(mixed $value, PrimitiveType $default = new Undefined()): static|PrimitiveType
+    {
+        return new static();
+    }
+
+    public static function tryFromString(string $value, PrimitiveType $default = new Undefined()): static|PrimitiveType
+    {
+        return new static();
     }
 }

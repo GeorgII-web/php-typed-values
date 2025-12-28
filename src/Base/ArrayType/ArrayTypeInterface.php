@@ -62,8 +62,6 @@ interface ArrayTypeInterface extends TypeInterface, JsonSerializable, IteratorAg
      * @return static|T
      *
      * @psalm-return ($default is ArrayUndefined ? static : static|T)
-     *
-     * @throws ArrayTypeException
      */
     public static function tryFromArray(
         array $value,
@@ -86,9 +84,15 @@ interface ArrayTypeInterface extends TypeInterface, JsonSerializable, IteratorAg
     public function hasUndefined(): bool;
 
     /**
+     * @template TSelf of ArrayTypeInterface
+     *
      * Returns items excluding Undefined entries.
      *
-     * @psalm-return list<TItem>
+     * @phpstan-return list<TItem>
+     *
+     * @psalm-return (TSelf is ArrayUndefined ? never : list<TItem>)
+     *
+     * @psalm-suppress PossiblyUnusedReturnValue
      */
     public function getDefinedItems(): array;
 }

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace PhpTypedValues\Base\ArrayType;
 
 use PhpTypedValues\ArrayType\ArrayUndefined;
-use PhpTypedValues\Exception\ArrayTypeException;
 use PhpTypedValues\Exception\TypeException;
 
 /**
@@ -36,8 +35,6 @@ abstract readonly class ArrayType implements ArrayTypeInterface
      * @return static|T
      *
      * @psalm-return ($default is ArrayUndefined ? static : static|T)
-     *
-     * @throws ArrayTypeException
      */
     public static function tryFromArray(
         array $value,
