@@ -2,10 +2,79 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Base\Primitive\DateTime\DateTimeType;
 use PhpTypedValues\DateTime\DateTimeAtom;
 use PhpTypedValues\Exception\DateTimeTypeException;
+use PhpTypedValues\Float\Alias\Positive;
 use PhpTypedValues\Undefined\Alias\Undefined;
+
+// Test 1: Kills "InstanceOfToFalse - self check" mutation
+it('kills self instanceof mutation by verifying self instance returns DateTimeAtom not Undefined', function () {
+    // Create a DateTimeAtom instance
+    $dateTimeAtom = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
+
+    // This should use the "self" branch and return DateTimeAtom
+    $result = DateTimeAtom::tryFromMixed($dateTimeAtom);
+
+    // If mutation changes to false, this would throw/return Undefined
+    expect($result)
+        ->toBeInstanceOf(DateTimeAtom::class)
+        ->and($result->isUndefined())->toBeFalse()
+        ->and($result->toString())->toBe('2025-01-02T03:04:05+00:00');
+});
+
+// Test 2: Kills "IdenticalToNotIdentical - null check" mutation
+it('kills null identical mutation by verifying null returns Undefined but non-null does not', function () {
+    // Test null - should return Undefined
+    $nullResult = DateTimeAtom::tryFromMixed(null);
+    expect($nullResult)
+        ->toBeInstanceOf(Undefined::class)
+        ->and($nullResult->isUndefined())->toBeTrue();
+
+    // Test non-null string - should return DateTimeAtom
+    $notNullResult = DateTimeAtom::tryFromMixed('2025-01-02T03:04:05+00:00');
+    expect($notNullResult)
+        ->toBeInstanceOf(DateTimeAtom::class)
+        ->and($notNullResult->isUndefined())->toBeFalse();
+
+    // Test that they're different types
+    expect($nullResult)->not->toBeInstanceOf(DateTimeAtom::class);
+    expect($notNullResult)->not->toBeInstanceOf(Undefined::class);
+});
+
+// Test 3: Kills "EmptyStringToNotEmpty - null branch" mutation
+it('kills empty string mutation by verifying fromString with empty string throws but null returns Undefined', function () {
+    // Test null - should return Undefined (not throw)
+    $nullResult = DateTimeAtom::tryFromMixed(null);
+    expect($nullResult)->toBeInstanceOf(Undefined::class);
+
+    // Test empty string directly with fromString - should throw
+    // This verifies that '' in the null branch would throw if used
+    expect(fn() => DateTimeAtom::fromString(''))
+        ->toThrow(Exception::class);
+
+    // Test the mutation string - should also throw/return Undefined
+    $mutationResult = DateTimeAtom::tryFromMixed('PEST Mutator was here!');
+    // This should be Undefined because the string doesn't parse as a valid date
+    expect($mutationResult)->toBeInstanceOf(Undefined::class);
+
+    // Verify null result and mutation string result are both Undefined
+    expect($nullResult)->toBeInstanceOf(Undefined::class);
+    expect($mutationResult)->toBeInstanceOf(Undefined::class);
+});
+
+it('from other instance', function (): void {
+    $vo = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
+    $test = DateTimeAtom::tryFromMixed($vo);
+
+    expect($test->isUndefined())->toBeFalse()
+        ->and($test->toString())->toBe('2025-01-02T03:04:05+00:00');
+});
+
+it('from null', function (): void {
+    $test = DateTimeAtom::tryFromMixed(null);
+
+    expect($test->isUndefined())->toBeTrue();
+});
 
 it('fromDateTime returns same instant and toString is ISO 8601', function (): void {
     $dt = new DateTimeImmutable('2025-01-02T03:04:05+00:00');
@@ -62,6 +131,9 @@ it('returns Undefined for invalid mixed datetime inputs', function (mixed $input
     // Objects without __toString
     ['input' => new stdClass()],
     ['input' => (object) ['date' => '2024-01-01']],
+
+    // primitiveType
+    ['input' => Positive::fromFloat(1.0)],
 
     // Invalid date strings
     ['input' => 'not-a-date'],
