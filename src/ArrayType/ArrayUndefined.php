@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace PhpTypedValues\ArrayType;
 
 use PhpTypedValues\Base\ArrayType\ArrayType;
-use PhpTypedValues\Base\Primitive\PrimitiveType;
-use PhpTypedValues\Base\Primitive\Undefined\UndefinedTypeInterface;
+use PhpTypedValues\Base\ArrayType\ArrayUndefinedTypeInterface;
 use PhpTypedValues\Exception\ArrayUndefinedTypeException;
-use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
  * Immutable undefined collection.
@@ -17,7 +15,7 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  *
  * @psalm-immutable
  */
-readonly class ArrayUndefined extends ArrayType implements UndefinedTypeInterface
+readonly class ArrayUndefined extends ArrayType implements ArrayUndefinedTypeInterface
 {
     public static function fromArray(array $value): static
     {
@@ -105,15 +103,5 @@ readonly class ArrayUndefined extends ArrayType implements UndefinedTypeInterfac
     public function toFloat(): never
     {
         throw new ArrayUndefinedTypeException('Undefined array cannot be converted to float');
-    }
-
-    public static function tryFromMixed(mixed $value, PrimitiveType $default = new Undefined()): static|PrimitiveType
-    {
-        return new static();
-    }
-
-    public static function tryFromString(string $value, PrimitiveType $default = new Undefined()): static|PrimitiveType
-    {
-        return new static();
     }
 }

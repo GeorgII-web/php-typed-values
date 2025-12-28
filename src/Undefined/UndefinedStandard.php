@@ -82,7 +82,7 @@ readonly class UndefinedStandard extends UndefinedType
     /**
      * @throws UndefinedTypeException
      */
-    public function value(): never
+    public function value(): string
     {
         throw new UndefinedTypeException('UndefinedType has no value.');
     }

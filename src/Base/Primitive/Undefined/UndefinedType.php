@@ -25,7 +25,7 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  */
 abstract readonly class UndefinedType extends PrimitiveType implements UndefinedTypeInterface
 {
-    abstract public function value(): never;
+    abstract public function value(): string;
 
     abstract public static function fromString(string $value): static;
 

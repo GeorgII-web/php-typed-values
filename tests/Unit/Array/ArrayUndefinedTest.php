@@ -7,7 +7,6 @@ namespace PhpTypedValues\Tests\Unit\Array\ArrayOfObjects;
 use PhpTypedValues\ArrayType\ArrayUndefined;
 use PhpTypedValues\Exception\ArrayUndefinedTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
-use stdClass;
 
 use function count;
 
@@ -138,67 +137,6 @@ describe('ArrayUndefined specific tests', function () {
 
         expect(fn() => $array->toFloat())
             ->toThrow(ArrayUndefinedTypeException::class, 'float');
-    });
-
-    // Test lines 98-101: tryFromMixed() always returns new instance
-    it('tryFromMixed() returns new ArrayUndefined regardless of input', function () {
-        $testCases = [
-            null,
-            [],
-            'string',
-            123,
-            new stdClass(),
-            ['array', 'of', 'items'],
-            fn() => 'closure',
-        ];
-
-        foreach ($testCases as $input) {
-            $result = ArrayUndefined::tryFromMixed($input);
-
-            expect($result)->toBeInstanceOf(ArrayUndefined::class)
-                ->and($result->isEmpty())->toBeTrue()
-                ->and($result->isUndefined())->toBeTrue();
-        }
-
-        // Test with custom default (should be ignored since it always returns ArrayUndefined)
-        $default = new Undefined();
-        $result = ArrayUndefined::tryFromMixed('anything', $default);
-
-        expect($result)->toBeInstanceOf(ArrayUndefined::class)
-            ->and($result)->not->toBe($default);
-    });
-
-    // Test lines 104-107: tryFromString() always returns new instance
-    it('tryFromString() returns new ArrayUndefined regardless of input', function () {
-        $testCases = [
-            '',
-            'valid string',
-            '123',
-            '{"json": "data"}',
-            'array-like: [1,2,3]',
-        ];
-
-        foreach ($testCases as $input) {
-            $result = ArrayUndefined::tryFromString($input);
-
-            expect($result)->toBeInstanceOf(ArrayUndefined::class)
-                ->and($result->isEmpty())->toBeTrue()
-                ->and($result->isUndefined())->toBeTrue();
-        }
-
-        // Test with custom default (should be ignored)
-        $default = new Undefined();
-        $result = ArrayUndefined::tryFromString('anything', $default);
-
-        expect($result)->toBeInstanceOf(ArrayUndefined::class)
-            ->and($result)->not->toBe($default);
-    });
-
-    // Test the UndefinedTypeInterface implementation
-    it('implements UndefinedTypeInterface correctly', function () {
-        $array = new ArrayUndefined();
-
-        expect($array)->toBeInstanceOf(\PhpTypedValues\Base\Primitive\Undefined\UndefinedTypeInterface::class);
     });
 
     // Test constructor works without arguments
