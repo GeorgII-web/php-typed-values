@@ -55,6 +55,28 @@ abstract readonly class IntType extends PrimitiveType implements IntTypeInterfac
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-return (static&IntType)|T
+     */
+    public static function tryFromInt(
+        int $value,
+        PrimitiveType $default = new Undefined(),
+    ): static|PrimitiveType {
+        try {
+            /** @var static&IntType */
+            return static::fromInt($value);
+        } catch (TypeException) {
+            /* @var T $default */
+            return $default;
+        }
+    }
+
+    /**
+     * @template T of PrimitiveType
+     *
+     * @param T $default
+     *
+     * @return static|T
      */
     public static function tryFromString(
         string $value,

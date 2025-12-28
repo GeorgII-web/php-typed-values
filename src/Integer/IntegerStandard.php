@@ -6,7 +6,6 @@ namespace PhpTypedValues\Integer;
 
 use PhpTypedValues\Base\Primitive\Integer\IntType;
 use PhpTypedValues\Exception\IntegerTypeException;
-use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
  * Generic integer-typed value.
@@ -29,11 +28,6 @@ readonly class IntegerStandard extends IntType
     public function __construct(int $value)
     {
         $this->value = $value;
-    }
-
-    public static function tryFromInt(int $value): static|Undefined
-    {
-        return new static($value);
     }
 
     public static function fromInt(int $value): static

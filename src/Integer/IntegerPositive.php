@@ -6,8 +6,6 @@ namespace PhpTypedValues\Integer;
 
 use PhpTypedValues\Base\Primitive\Integer\IntType;
 use PhpTypedValues\Exception\IntegerTypeException;
-use PhpTypedValues\Exception\TypeException;
-use PhpTypedValues\Undefined\Alias\Undefined;
 
 use function sprintf;
 
@@ -40,15 +38,6 @@ readonly class IntegerPositive extends IntType
         }
 
         $this->value = $value;
-    }
-
-    public static function tryFromInt(int $value): static|Undefined
-    {
-        try {
-            return static::fromInt($value);
-        } catch (TypeException) {
-            return Undefined::create();
-        }
     }
 
     /**

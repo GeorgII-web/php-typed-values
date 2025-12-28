@@ -60,6 +60,14 @@ abstract readonly class DateTimeType extends PrimitiveType implements DateTimeTy
         string $format,
         ?DateTimeZone $timezone = null,
     ): DateTimeImmutable {
+        if (str_contains($value, "\0")) {
+            throw new DateTimeTypeException('Date time string must not contain null bytes');
+        }
+
+        if (trim($value) === '') {
+            throw new DateTimeTypeException('Date time string must not be blank');
+        }
+
         /**
          * Collect errors and throw exception with all of them.
          */

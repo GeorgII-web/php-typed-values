@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PhpTypedValues\Base\Primitive\Integer;
 
 use PhpTypedValues\Base\Primitive\PrimitiveType;
+use PhpTypedValues\Exception\IntegerTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -35,9 +36,22 @@ interface IntTypeInterface
 
     public function value(): int;
 
+    /**
+     * @throws IntegerTypeException
+     */
     public static function fromInt(int $value): static;
 
-    public static function tryFromInt(int $value): static|Undefined;
+    /**
+     * @template T of PrimitiveType
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromInt(
+        int $value,
+        PrimitiveType $default = new Undefined(),
+    ): static|PrimitiveType;
 
     /**
      * @template T of PrimitiveType
