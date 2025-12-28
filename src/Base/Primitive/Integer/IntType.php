@@ -58,12 +58,10 @@ abstract readonly class IntType extends PrimitiveType implements IntTypeInterfac
     public static function tryFromString(
         string $value,
         PrimitiveType $default = new Undefined(),
-    ): mixed {
+    ): static|PrimitiveType {
         try {
-            $instance = static::fromString($value);
-
             /** @var static */
-            return $instance;
+            return static::fromString($value);
         } catch (TypeException) {
             /** @var T */
             return $default;
@@ -80,7 +78,7 @@ abstract readonly class IntType extends PrimitiveType implements IntTypeInterfac
     public static function tryFromMixed(
         mixed $value,
         PrimitiveType $default = new Undefined(),
-    ): mixed {
+    ): static|PrimitiveType {
         try {
             /** @var static */
             return match (true) {

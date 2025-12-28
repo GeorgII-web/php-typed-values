@@ -44,11 +44,12 @@ abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterf
     public static function tryFromInt(
         int $value,
         PrimitiveType $default = new Undefined(),
-    ): mixed {
+    ): static|PrimitiveType {
         try {
-            /** @var static|T */
+            /** @var static */
             return static::fromInt($value);
         } catch (TypeException) {
+            /** @var T */
             return $default;
         }
     }
@@ -63,7 +64,7 @@ abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterf
     public static function tryFromMixed(
         mixed $value,
         PrimitiveType $default = new Undefined(),
-    ): mixed {
+    ): static|PrimitiveType {
         try {
             /** @var static */
             return match (true) {
@@ -90,7 +91,7 @@ abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterf
     public static function tryFromString(
         string $value,
         PrimitiveType $default = new Undefined(),
-    ): mixed {
+    ): static|PrimitiveType {
         try {
             /** @var static */
             return static::fromString($value);

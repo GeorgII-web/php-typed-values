@@ -39,7 +39,7 @@ abstract readonly class StrType extends PrimitiveType implements StrTypeInterfac
     public static function tryFromMixed(
         mixed $value,
         PrimitiveType $default = new Undefined(),
-    ): mixed {
+    ): static|PrimitiveType {
         try {
             /** @var static */
             return match (true) {
@@ -65,7 +65,7 @@ abstract readonly class StrType extends PrimitiveType implements StrTypeInterfac
     public static function tryFromString(
         string $value,
         PrimitiveType $default = new Undefined(),
-    ): mixed {
+    ): static|PrimitiveType {
         try {
             /** @var static */
             return static::fromString($value);

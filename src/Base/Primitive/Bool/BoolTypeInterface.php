@@ -45,7 +45,7 @@ interface BoolTypeInterface
     public static function tryFromString(
         string $value,
         PrimitiveType $default = new Undefined(),
-    ): mixed;
+    ): static|PrimitiveType;
 
     /**
      * @template T of PrimitiveType
@@ -57,7 +57,7 @@ interface BoolTypeInterface
     public static function tryFromMixed(
         mixed $value,
         PrimitiveType $default = new Undefined(),
-    ): mixed;
+    ): static|PrimitiveType;
 
     /**
      * @template T of PrimitiveType
@@ -69,7 +69,7 @@ interface BoolTypeInterface
     public static function tryFromInt(
         int $value,
         PrimitiveType $default = new Undefined(),
-    ): mixed;
+    ): static|PrimitiveType;
 
     /**
      * @throws BoolTypeException

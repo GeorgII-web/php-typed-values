@@ -45,7 +45,7 @@ interface StrTypeInterface
     public static function tryFromMixed(
         mixed $value,
         PrimitiveType $default = new Undefined(),
-    ): mixed;
+    ): static|PrimitiveType;
 
     /**
      * @template T of PrimitiveType
@@ -57,5 +57,5 @@ interface StrTypeInterface
     public static function tryFromString(
         string $value,
         PrimitiveType $default = new Undefined(),
-    ): mixed;
+    ): static|PrimitiveType;
 }

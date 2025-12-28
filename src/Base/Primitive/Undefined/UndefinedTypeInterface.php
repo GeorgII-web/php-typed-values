@@ -32,7 +32,10 @@ interface UndefinedTypeInterface
      *
      * @return static|T
      */
-    public static function tryFromMixed(mixed $value, PrimitiveType $default = new Undefined()): mixed;
+    public static function tryFromMixed(
+        mixed $value,
+        PrimitiveType $default = new Undefined(),
+    ): static|PrimitiveType;
 
     /**
      * @template T of PrimitiveType
@@ -41,7 +44,10 @@ interface UndefinedTypeInterface
      *
      * @return static|T
      */
-    public static function tryFromString(string $value, PrimitiveType $default = new Undefined()): mixed;
+    public static function tryFromString(
+        string $value,
+        PrimitiveType $default = new Undefined(),
+    ): static|PrimitiveType;
 
     /**
      * @throws UndefinedTypeException

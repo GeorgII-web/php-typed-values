@@ -28,13 +28,17 @@ readonly class UndefinedStandard extends UndefinedType
         return new static();
     }
 
-    public static function tryFromString(string $value, PrimitiveType $default = new Undefined()): Undefined
-    {
+    public static function tryFromString(
+        string $value,
+        PrimitiveType $default = new Undefined(),
+    ): Undefined {
         return Undefined::create();
     }
 
-    public static function tryFromMixed(mixed $value, PrimitiveType $default = new Undefined()): Undefined
-    {
+    public static function tryFromMixed(
+        mixed $value,
+        PrimitiveType $default = new Undefined(),
+    ): Undefined {
         return Undefined::create();
     }
 
