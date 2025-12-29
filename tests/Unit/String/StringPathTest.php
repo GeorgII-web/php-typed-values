@@ -71,6 +71,7 @@ it('tryFromMixed returns instance for valid paths and Undefined for invalid or n
     });
     $fromInvalidType = StringPath::tryFromMixed([]);
     $fromInvalidValue = StringPath::tryFromMixed('path*');
+    $fromNull = StringPath::tryFromMixed(null);
 
     expect($fromString)
         ->toBeInstanceOf(StringPath::class)
@@ -83,6 +84,8 @@ it('tryFromMixed returns instance for valid paths and Undefined for invalid or n
         ->and($fromInvalidType)
         ->toBeInstanceOf(Undefined::class)
         ->and($fromInvalidValue)
+        ->toBeInstanceOf(Undefined::class)
+        ->and($fromNull)
         ->toBeInstanceOf(Undefined::class);
 });
 

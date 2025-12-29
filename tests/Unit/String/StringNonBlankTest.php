@@ -69,7 +69,8 @@ it('tryFromMixed handles non-blank strings, stringable, and invalid mixed inputs
         ->and($fromStringable->value())->toBe('world')
         ->and($blank)->toBeInstanceOf(Undefined::class)
         ->and($fromArray)->toBeInstanceOf(Undefined::class)
-        ->and($fromNull)->toBeInstanceOf(Undefined::class);
+        ->and($fromNull)->toBeInstanceOf(Undefined::class)
+        ->and(StringNonBlank::tryFromMixed(null))->toBeInstanceOf(Undefined::class);
 });
 
 it('isEmpty is always false for StringNonBlank', function (): void {

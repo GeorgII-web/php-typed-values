@@ -23,6 +23,15 @@ it('tryFromMixed returns instance for valid string-convertible values', function
     $fromString = StringStandard::tryFromMixed('world');
     $fromInt = StringStandard::tryFromMixed(123);
     $fromFloat = StringStandard::tryFromMixed(45.67);
+    $fromNull = StringStandard::tryFromMixed(null);
+
+    $stringable = new class implements Stringable {
+        public function __toString(): string
+        {
+            return 'stringable-content';
+        }
+    };
+    $fromStringable = StringStandard::tryFromMixed($stringable);
 
     expect($fromString)
         ->toBeInstanceOf(StringStandard::class)
@@ -35,7 +44,15 @@ it('tryFromMixed returns instance for valid string-convertible values', function
         ->and($fromFloat)
         ->toBeInstanceOf(StringStandard::class)
         ->and($fromFloat->value())
-        ->toBe('45.67');
+        ->toBe('45.67')
+        ->and($fromNull)
+        ->toBeInstanceOf(StringStandard::class)
+        ->and($fromNull->value())
+        ->toBe('')
+        ->and($fromStringable)
+        ->toBeInstanceOf(StringStandard::class)
+        ->and($fromStringable->value())
+        ->toBe('stringable-content');
 });
 
 it('tryFromMixed returns Undefined for non-convertible values', function (): void {

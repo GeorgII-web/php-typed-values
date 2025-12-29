@@ -108,6 +108,7 @@ it('tryFromMixed handles valid country codes and invalid mixed inputs', function
     $badUnknown = StringCountryCode::tryFromMixed('ZZ');
     $fromArray = StringCountryCode::tryFromMixed(['US']);
     $fromNull = StringCountryCode::tryFromMixed(null);
+    $fromScalar = StringCountryCode::tryFromMixed(123); // invalid code but covers scalar check
 
     expect($ok)->toBeInstanceOf(StringCountryCode::class)
         ->and($ok->value())->toBe('US')
@@ -116,7 +117,8 @@ it('tryFromMixed handles valid country codes and invalid mixed inputs', function
         ->and($badLower)->toBeInstanceOf(Undefined::class)
         ->and($badUnknown)->toBeInstanceOf(Undefined::class)
         ->and($fromArray)->toBeInstanceOf(Undefined::class)
-        ->and($fromNull)->toBeInstanceOf(Undefined::class);
+        ->and($fromNull)->toBeInstanceOf(Undefined::class)
+        ->and($fromScalar)->toBeInstanceOf(Undefined::class);
 });
 
 it('isEmpty is always false for StringCountryCode', function (): void {

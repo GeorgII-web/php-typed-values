@@ -6,7 +6,6 @@ use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Base\Primitive\String\StrType;
 use PhpTypedValues\String\StringStandard;
 use PhpTypedValues\Undefined\Alias\Undefined;
-use Stringable;
 
 covers(StrType::class);
 

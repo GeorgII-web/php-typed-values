@@ -127,7 +127,6 @@ readonly class IntegerWeekDay extends IntType
                 is_int($value) => static::fromInt($value),
                 //                $value instanceof self => static::fromInt($value->value()),
                 $value === true => static::fromInt(1),
-                $value === false => static::fromInt(0),
                 is_string($value) || $value instanceof Stringable => static::fromString((string) $value),
                 default => throw new TypeException('Value cannot be cast to int'),
             };

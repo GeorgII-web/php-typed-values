@@ -59,6 +59,7 @@ it('tryFromMixed handles valid/invalid emails, stringable, and invalid mixed inp
     $bad = StringEmail::tryFromMixed('not-an-email');
     $fromArray = StringEmail::tryFromMixed(['x']);
     $fromNull = StringEmail::tryFromMixed(null);
+    $fromScalar = StringEmail::tryFromMixed(123);
 
     expect($ok)->toBeInstanceOf(StringEmail::class)
         ->and($ok->value())->toBe('admin@example.org')
@@ -66,7 +67,8 @@ it('tryFromMixed handles valid/invalid emails, stringable, and invalid mixed inp
         ->and($fromStringable->value())->toBe('user@domain.com')
         ->and($bad)->toBeInstanceOf(Undefined::class)
         ->and($fromArray)->toBeInstanceOf(Undefined::class)
-        ->and($fromNull)->toBeInstanceOf(Undefined::class);
+        ->and($fromNull)->toBeInstanceOf(Undefined::class)
+        ->and($fromScalar)->toBeInstanceOf(Undefined::class);
 });
 
 it('isEmpty is always false for StringEmail', function (): void {
