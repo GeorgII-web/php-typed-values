@@ -136,11 +136,14 @@ it('jsonSerialize returns native int', function (): void {
 it('tryFromMixed returns instance for integer-like inputs within range and Undefined otherwise', function (): void {
     $okInt = IntegerTiny::tryFromMixed(-1);
     $okStr = IntegerTiny::tryFromMixed('127');
+    $fromTrue = IntegerTiny::tryFromMixed(true);
+    $fromFalse = IntegerTiny::tryFromMixed(false);
     $badLow = IntegerTiny::tryFromMixed(-129);
     $badHigh = IntegerTiny::tryFromMixed(128);
     $badFloatish = IntegerTiny::tryFromMixed('1.0');
     $badArr = IntegerTiny::tryFromMixed(['x']);
     $badNull = IntegerTiny::tryFromMixed(null);
+    $badObj = IntegerTiny::tryFromMixed(new stdClass());
 
     $stringable = new class implements Stringable {
         public function __toString(): string
@@ -154,13 +157,18 @@ it('tryFromMixed returns instance for integer-like inputs within range and Undef
         ->and($okInt->value())->toBe(-1)
         ->and($okStr)->toBeInstanceOf(IntegerTiny::class)
         ->and($okStr->value())->toBe(127)
+        ->and($fromTrue)->toBeInstanceOf(IntegerTiny::class)
+        ->and($fromTrue->value())->toBe(1)
+        ->and($fromFalse)->toBeInstanceOf(IntegerTiny::class)
+        ->and($fromFalse->value())->toBe(0)
         ->and($okStringable)->toBeInstanceOf(IntegerTiny::class)
         ->and($okStringable->value())->toBe(0)
         ->and($badLow)->toBeInstanceOf(Undefined::class)
         ->and($badHigh)->toBeInstanceOf(Undefined::class)
         ->and($badFloatish)->toBeInstanceOf(Undefined::class)
         ->and($badArr)->toBeInstanceOf(Undefined::class)
-        ->and($badNull)->toBeInstanceOf(Undefined::class);
+        ->and($badNull)->toBeInstanceOf(Undefined::class)
+        ->and($badObj)->toBeInstanceOf(Undefined::class);
 });
 
 it('isEmpty returns false for IntegerTiny', function (): void {
