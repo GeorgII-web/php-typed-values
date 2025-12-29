@@ -4,7 +4,6 @@ namespace PhpTypedValues\Usage\Primitive;
 
 require_once 'vendor/autoload.php';
 
-use PhpTypedValues\String\Alias\NonEmpty;
 use const JSON_THROW_ON_ERROR;
 use const PHP_EOL;
 
@@ -14,6 +13,7 @@ use PhpTypedValues\Bool\Alias\Boolean;
 use PhpTypedValues\Exception\ArrayTypeException;
 use PhpTypedValues\Exception\ArrayUndefinedTypeException;
 use PhpTypedValues\Integer\IntegerNonNegative;
+use PhpTypedValues\String\Alias\NonEmpty;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use PhpTypedValues\Usage\Example\OptionalFail;
 
@@ -73,7 +73,6 @@ try {
 }
 
 echo (ArrayOfObjects::tryFromArray(
-        [1, 2],
-        ArrayOfObjects::tryFromArray([NonEmpty::fromString('One typed item in array as fallback')])
-    )->isUndefined() ? 'Error' : 'ArrayOfObjects fallback: yes') . PHP_EOL;
-
+    [1, 2],
+    ArrayOfObjects::tryFromArray([NonEmpty::fromString('One typed item in array as fallback')])
+)->isUndefined() ? 'Error' : 'ArrayOfObjects fallback: yes') . PHP_EOL;
