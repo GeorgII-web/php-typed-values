@@ -79,9 +79,10 @@ it('tryFromMixed handles various inputs returning FalseStandard or Undefined', f
     // invalid inputs
     $fromArray = FalseStandard::tryFromMixed(['x']);
     $fromNull = FalseStandard::tryFromMixed(null);
+    $fromObject = FalseStandard::tryFromMixed(new stdClass());
 
     // stringable object
-    $stringable = new class {
+    $stringable = new class implements Stringable {
         public function __toString(): string
         {
             return 'off';
@@ -98,7 +99,23 @@ it('tryFromMixed handles various inputs returning FalseStandard or Undefined', f
         ->and($fromStringable)->toBeInstanceOf(FalseStandard::class)
         ->and($fromStringable->value())->toBeFalse()
         ->and($fromArray)->toBeInstanceOf(Undefined::class)
-        ->and($fromNull)->toBeInstanceOf(Undefined::class);
+        ->and($fromNull)->toBeInstanceOf(Undefined::class)
+        ->and($fromObject)->toBeInstanceOf(Undefined::class);
+});
+
+it('tryFromMixed handles floats 0.0 and 1.0', function (): void {
+    $zero = FalseStandard::tryFromMixed(0.0);
+    $one = FalseStandard::tryFromMixed(1.0);
+    $minusOne = FalseStandard::tryFromMixed(-1.0);
+    $two = FalseStandard::tryFromMixed(2.0);
+    $pointFive = FalseStandard::tryFromMixed(0.5);
+
+    expect($zero)->toBeInstanceOf(FalseStandard::class)
+        ->and($zero->value())->toBeFalse()
+        ->and($one)->toBeInstanceOf(Undefined::class)
+        ->and($minusOne)->toBeInstanceOf(Undefined::class)
+        ->and($two)->toBeInstanceOf(Undefined::class)
+        ->and($pointFive)->toBeInstanceOf(Undefined::class);
 });
 
 it('isEmpty is always false for FalseStandard', function (): void {

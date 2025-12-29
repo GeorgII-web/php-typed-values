@@ -40,6 +40,54 @@ readonly class BoolTypeTest extends BoolType
         return true;
     }
 
+    public static function tryFromInt(
+        int $value,
+        \PhpTypedValues\Base\Primitive\PrimitiveType $default = new Undefined(),
+    ): static|\PhpTypedValues\Base\Primitive\PrimitiveType {
+        return new self();
+    }
+
+    public static function tryFromMixed(
+        mixed $value,
+        \PhpTypedValues\Base\Primitive\PrimitiveType $default = new Undefined(),
+    ): static|\PhpTypedValues\Base\Primitive\PrimitiveType {
+        if ($value === null) {
+            return $default;
+        }
+
+        if ($value instanceof Stringable) {
+            return new self((string) $value);
+        }
+
+        if ($value instanceof stdClass) {
+            return $default;
+        }
+
+        return new self();
+    }
+
+    public static function tryFromString(
+        string $value,
+        \PhpTypedValues\Base\Primitive\PrimitiveType $default = new Undefined(),
+    ): static|\PhpTypedValues\Base\Primitive\PrimitiveType {
+        return new self($value);
+    }
+
+    public function toString(): string
+    {
+        return 'true';
+    }
+
+    public function isEmpty(): bool
+    {
+        return false;
+    }
+
+    public function isUndefined(): bool
+    {
+        return false;
+    }
+
     public function jsonSerialize(): bool
     {
         return true;
@@ -49,6 +97,11 @@ readonly class BoolTypeTest extends BoolType
 it('BoolType::convertMixedToString correctly handles null', function (): void {
     $instance = BoolTypeTest::tryFromMixed(null);
     expect($instance)->toBeInstanceOf(Undefined::class);
+});
+
+it('BoolType __toString()', function (): void {
+    $instance = BoolTypeTest::tryFromMixed(true);
+    expect((string) $instance)->toBe('true');
 });
 
 it('BoolType::convertMixedToString correctly handles Stringable', function (): void {
