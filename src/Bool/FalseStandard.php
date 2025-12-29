@@ -34,8 +34,11 @@ use function trim;
  *
  * @psalm-immutable
  */
-readonly class FalseStandard extends BoolType
+class FalseStandard extends BoolType
 {
+    /**
+     * @readonly
+     */
     protected false $value;
 
     /**
@@ -52,8 +55,9 @@ readonly class FalseStandard extends BoolType
 
     /**
      * @throws BoolTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         $v = strtolower(trim($value));
         if ($v === 'false' || $v === '0' || $v === 'no' || $v === 'off' || $v === 'n') {
@@ -65,8 +69,9 @@ readonly class FalseStandard extends BoolType
 
     /**
      * @throws BoolTypeException
+     * @return static
      */
-    public static function fromInt(int $value): static
+    public static function fromInt(int $value)
     {
         if ($value === 0) {
             return new static(false);
@@ -75,7 +80,10 @@ readonly class FalseStandard extends BoolType
         throw new BoolTypeException(sprintf('Expected int "0" for false, got "%s"', $value));
     }
 
-    public function value(): false
+    /**
+     * @return false
+     */
+    public function value(): bool
     {
         return $this->value;
     }
@@ -89,12 +97,13 @@ readonly class FalseStandard extends BoolType
      */
     public static function tryFromInt(
         int $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
+        PrimitiveType $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromInt($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -106,22 +115,27 @@ readonly class FalseStandard extends BoolType
      * @param T $default
      *
      * @return static|T
+     * @param mixed $value
      */
     public static function tryFromMixed(
-        mixed $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
+        $value,
+        PrimitiveType $default = null
+    ) {
+        $default ??= new Undefined();
         try {
-            /** @var static */
-            return match (true) {
-                is_bool($value) => static::fromBool($value), // Boolean true\false
-                is_int($value) => static::fromInt($value), // Integer 1\0
-                $value === 0.0 => static::fromInt((int) $value), // Floats 0.0
-                //                ($value instanceof self) => static::fromBool($value->value()), // BoolType Class - toString() will care about this case
-                is_string($value) || $value instanceof Stringable => static::fromString((string) $value), // String "true","1","yes", etc.
-                default => throw new TypeException('Value cannot be cast to boolean'),
-            };
-        } catch (Exception) {
+            switch (true) {
+                case is_bool($value):
+                    return static::fromBool($value);
+                case is_int($value):
+                    return static::fromInt($value);
+                case $value === 0.0:
+                    return static::fromInt((int) $value);
+                case is_string($value) || is_object($value) && method_exists($value, '__toString'):
+                    return static::fromString((string) $value);
+                default:
+                    throw new TypeException('Value cannot be cast to boolean');
+            }
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -136,12 +150,13 @@ readonly class FalseStandard extends BoolType
      */
     public static function tryFromString(
         string $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
+        PrimitiveType $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromString($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -167,15 +182,19 @@ readonly class FalseStandard extends BoolType
         return false;
     }
 
-    public function jsonSerialize(): false
+    /**
+     * @return false
+     */
+    public function jsonSerialize(): bool
     {
         return $this->value();
     }
 
     /**
      * @throws BoolTypeException
+     * @return static
      */
-    public static function fromBool(bool $value): static
+    public static function fromBool(bool $value)
     {
         return new static($value);
     }

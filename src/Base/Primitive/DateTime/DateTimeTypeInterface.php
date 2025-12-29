@@ -28,7 +28,10 @@ interface DateTimeTypeInterface
 
     public function value(): DateTimeImmutable;
 
-    public static function fromDateTime(DateTimeImmutable $value): static;
+    /**
+     * @return static
+     */
+    public static function fromDateTime(DateTimeImmutable $value);
 
     /**
      * @template T of PrimitiveType
@@ -37,12 +40,13 @@ interface DateTimeTypeInterface
      * @param non-empty-string $timezone
      *
      * @return static|T
+     * @param mixed $value
      */
     public static function tryFromMixed(
-        mixed $value,
+        $value,
         string $timezone = self::DEFAULT_ZONE,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+        PrimitiveType $default = null
+    );
 
     /**
      * @template T of PrimitiveType
@@ -55,20 +59,22 @@ interface DateTimeTypeInterface
     public static function tryFromString(
         string $value,
         string $timezone = self::DEFAULT_ZONE,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+        PrimitiveType $default = null
+    );
 
     /**
      * @param non-empty-string $timezone
      *
      * @throws DateTimeTypeException
+     * @return static
      */
-    public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE): static;
+    public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE);
 
     /**
      * @param non-empty-string $timezone
+     * @return static
      */
-    public function withTimeZone(string $timezone): static;
+    public function withTimeZone(string $timezone);
 
     public static function getFormat(): string;
 

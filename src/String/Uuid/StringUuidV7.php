@@ -25,9 +25,10 @@ use function strtolower;
  *
  * @psalm-immutable
  */
-readonly class StringUuidV7 extends StrType
+class StringUuidV7 extends StrType
 {
-    /** @var non-empty-string */
+    /** @var non-empty-string
+     * @readonly */
     protected string $value;
 
     /**
@@ -54,8 +55,9 @@ readonly class StringUuidV7 extends StrType
 
     /**
      * @throws UuidStringTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         return new static($value);
     }

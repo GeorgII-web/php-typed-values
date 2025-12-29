@@ -19,8 +19,11 @@ use PhpTypedValues\Base\Primitive\String\StrType;
  *
  * @psalm-immutable
  */
-readonly class StringStandard extends StrType
+class StringStandard extends StrType
 {
+    /**
+     * @readonly
+     */
     protected string $value;
 
     public function __construct(string $value)
@@ -28,7 +31,10 @@ readonly class StringStandard extends StrType
         $this->value = $value;
     }
 
-    public static function fromString(string $value): static
+    /**
+     * @return static
+     */
+    public static function fromString(string $value)
     {
         return new static($value);
     }

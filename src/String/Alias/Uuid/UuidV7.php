@@ -18,6 +18,6 @@ use PhpTypedValues\String\Uuid\StringUuidV7;
  *
  * @psalm-immutable
  */
-final readonly class UuidV7 extends StringUuidV7
+final class UuidV7 extends StringUuidV7
 {
 }

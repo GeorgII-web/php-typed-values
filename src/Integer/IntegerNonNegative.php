@@ -23,9 +23,10 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class IntegerNonNegative extends IntType
+class IntegerNonNegative extends IntType
 {
-    /** @var non-negative-int */
+    /** @var non-negative-int
+     * @readonly */
     protected int $value;
 
     /**
@@ -42,16 +43,18 @@ readonly class IntegerNonNegative extends IntType
 
     /**
      * @throws IntegerTypeException
+     * @return static
      */
-    public static function fromInt(int $value): static
+    public static function fromInt(int $value)
     {
         return new static($value);
     }
 
     /**
      * @throws IntegerTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         parent::assertIntegerString($value);
 
