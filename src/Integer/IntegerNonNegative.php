@@ -12,7 +12,6 @@ use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
 
-use function is_bool;
 use function is_int;
 use function is_string;
 use function sprintf;
@@ -132,7 +131,8 @@ readonly class IntegerNonNegative extends IntType
             return match (true) {
                 is_int($value) => static::fromInt($value),
                 //                $value instanceof self => static::fromInt($value->value()),
-                is_bool($value) => static::fromInt($value ? 1 : 0),
+                $value === true => static::fromInt(1),
+                $value === false => static::fromInt(0),
                 is_string($value) || $value instanceof Stringable => static::fromString((string) $value),
                 default => throw new TypeException('Value cannot be cast to int'),
             };
@@ -158,11 +158,6 @@ readonly class IntegerNonNegative extends IntType
     public function toString(): string
     {
         return (string) $this->value();
-    }
-
-    public function __toString(): string
-    {
-        return $this->toString();
     }
 
     public function isEmpty(): bool

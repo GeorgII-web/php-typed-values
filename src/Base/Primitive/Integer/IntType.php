@@ -31,6 +31,11 @@ abstract readonly class IntType extends PrimitiveType implements IntTypeInterfac
 {
     abstract public function value(): int;
 
+    public function __toString(): string
+    {
+        return $this->toString();
+    }
+
     /**
      * @throws IntegerTypeException
      */
