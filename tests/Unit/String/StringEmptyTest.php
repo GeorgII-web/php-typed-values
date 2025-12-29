@@ -7,6 +7,7 @@ namespace PhpTypedValues\Tests\Unit\String;
 use PhpTypedValues\Exception\StringTypeException;
 use PhpTypedValues\String\StringEmpty;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use stdClass;
 use Stringable;
 
 covers(StringEmpty::class);
@@ -54,7 +55,8 @@ it('tryFromMixed returns Undefined for non-empty string', function (): void {
 
 it('tryFromMixed returns Undefined for non-stringable mixed', function (): void {
     $c = StringEmpty::tryFromMixed([]);
-    expect($c)->toBeInstanceOf(Undefined::class);
+    expect($c)->toBeInstanceOf(Undefined::class)
+        ->and(StringEmpty::tryFromMixed(new stdClass()))->toBeInstanceOf(Undefined::class);
 });
 
 it('tryFromMixed handles various inputs for StringEmpty', function (): void {

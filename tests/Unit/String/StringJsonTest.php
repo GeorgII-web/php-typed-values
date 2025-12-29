@@ -99,6 +99,7 @@ it('tryFromMixed handles valid JSON text, stringable, and invalid mixed inputs',
     $fromArray = StringJson::tryFromMixed(['x']);
     $fromNull = StringJson::tryFromMixed(null);
     $fromScalar = StringJson::tryFromMixed(123)->toString();
+    $fromObject = StringJson::tryFromMixed(new stdClass());
 
     expect($ok)->toBeInstanceOf(StringJson::class)
         ->and($ok->value())->toBe('{"a":1}')
@@ -107,7 +108,8 @@ it('tryFromMixed handles valid JSON text, stringable, and invalid mixed inputs',
         ->and($bad)->toBeInstanceOf(Undefined::class)
         ->and($fromArray)->toBeInstanceOf(Undefined::class)
         ->and($fromNull)->toBeInstanceOf(Undefined::class)
-        ->and($fromScalar)->toBe('123');
+        ->and($fromScalar)->toBe('123')
+        ->and($fromObject)->toBeInstanceOf(Undefined::class);
 });
 
 it('isEmpty is always false for StringJson', function (): void {

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use PhpTypedValues\String\StringStandard;
+use stdClass;
 
 it('StringStandard::tryFromString returns instance for any string', function (): void {
     $v = StringStandard::tryFromString('hello');
@@ -73,6 +74,13 @@ it('tryFromMixed returns Undefined for non-convertible values', function (): voi
         ->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class)
         ->and($fromError)
         ->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class);
+});
+
+it('tryFromMixed handles non-stringable objects and non-scalar types explicitly', function (): void {
+    // stdClass is not Stringable and not scalar
+    expect(StringStandard::tryFromMixed(new stdClass()))->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class)
+        ->and(StringStandard::tryFromMixed([]))->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class)
+        ->and(StringStandard::tryFromMixed(\STDOUT))->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class);
 });
 
 /**

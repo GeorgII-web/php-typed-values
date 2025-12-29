@@ -5,6 +5,8 @@ declare(strict_types=1);
 use PhpTypedValues\Exception\StringTypeException;
 use PhpTypedValues\String\StringNonEmpty;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use stdClass;
+use Stringable;
 
 it('StringNonEmpty::tryFromString returns value for non-empty string', function (): void {
     $v = StringNonEmpty::tryFromString('abc');
@@ -69,6 +71,7 @@ it('tryFromMixed handles various inputs for StringNonEmpty', function (): void {
     $fromInt = StringNonEmpty::tryFromMixed(123);
     $fromNull = StringNonEmpty::tryFromMixed(null);
     $fromArray = StringNonEmpty::tryFromMixed(['x']);
+    $fromObject = StringNonEmpty::tryFromMixed(new stdClass());
 
     $stringable = new class implements Stringable {
         public function __toString(): string
@@ -84,6 +87,7 @@ it('tryFromMixed handles various inputs for StringNonEmpty', function (): void {
         ->and($fromInt->value())->toBe('123')
         ->and($fromNull)->toBeInstanceOf(Undefined::class)
         ->and($fromArray)->toBeInstanceOf(Undefined::class)
+        ->and($fromObject)->toBeInstanceOf(Undefined::class)
         ->and($fromStringable)->toBeInstanceOf(StringNonEmpty::class)
         ->and($fromStringable->value())->toBe('stringable-content');
 });

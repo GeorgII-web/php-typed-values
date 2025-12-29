@@ -66,6 +66,7 @@ it('tryFromMixed returns instance for valid filenames and Undefined for invalid 
     $fromInvalidType = StringFileName::tryFromMixed([]);
     $fromInvalidValue = StringFileName::tryFromMixed('invalid/path.txt');
     $fromNull = StringFileName::tryFromMixed(null);
+    $fromObject = StringFileName::tryFromMixed(new stdClass());
 
     expect($fromString)
         ->toBeInstanceOf(StringFileName::class)
@@ -80,6 +81,8 @@ it('tryFromMixed returns instance for valid filenames and Undefined for invalid 
         ->and($fromInvalidValue)
         ->toBeInstanceOf(Undefined::class)
         ->and($fromNull)
+        ->toBeInstanceOf(Undefined::class)
+        ->and($fromObject)
         ->toBeInstanceOf(Undefined::class);
 });
 
