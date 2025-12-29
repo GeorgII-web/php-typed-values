@@ -23,7 +23,10 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  */
 interface PrimitiveTypeInterface extends TypeInterface, JsonSerializable
 {
-    public function value(): mixed;
+    /**
+     * @return mixed
+     */
+    public function value();
 
     /**
      * Returns true if the Object value is empty.
@@ -51,6 +54,7 @@ interface PrimitiveTypeInterface extends TypeInterface, JsonSerializable
      * Marked as mutation-free so Psalm treats calls as pure in immutable contexts.
      *
      * @psalm-mutation-free
+     * @return mixed
      */
-    public function jsonSerialize(): mixed;
+    public function jsonSerialize();
 }

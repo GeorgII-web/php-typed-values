@@ -22,9 +22,10 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class StringNonEmpty extends StrType
+class StringNonEmpty extends StrType
 {
-    /** @var non-empty-string */
+    /** @var non-empty-string
+     * @readonly */
     protected string $value;
 
     /**
@@ -41,8 +42,9 @@ readonly class StringNonEmpty extends StrType
 
     /**
      * @throws StringTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         return new static($value);
     }
