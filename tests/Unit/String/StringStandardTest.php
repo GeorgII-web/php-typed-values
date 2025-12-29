@@ -42,10 +42,41 @@ it('tryFromMixed returns Undefined for non-convertible values', function (): voi
     $fromArray = StringStandard::tryFromMixed([]);
     $fromObject = StringStandard::tryFromMixed(new stdClass());
 
+    $stringableWithError = new class implements Stringable {
+        public function __toString(): string
+        {
+            throw new Exception('Simulated error during string conversion');
+        }
+    };
+    $fromError = StringStandard::tryFromMixed($stringableWithError);
+
     expect($fromArray)
         ->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class)
         ->and($fromObject)
+        ->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class)
+        ->and($fromError)
         ->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class);
+});
+
+/**
+ * @internal
+ *
+ * @psalm-immutable
+ *
+ * @coversNothing
+ */
+readonly class StringStandardTest extends StringStandard
+{
+    /** @psalm-suppress LessSpecificReturnType */
+    public static function fromString(string $value): static
+    {
+        throw new Exception('Simulated error');
+    }
+}
+
+it('StringStandard::tryFromString returns Undefined when fromString throws', function (): void {
+    $result = StringStandardTest::tryFromString('fail');
+    expect($result)->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class);
 });
 
 it('fromString creates instance with correct value', function (): void {

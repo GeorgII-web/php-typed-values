@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Base\Primitive\String\StrType;
 use PhpTypedValues\String\StringStandard;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use Stringable;
 
 covers(StrType::class);
 
@@ -34,11 +36,6 @@ readonly class StrTypeTest extends StrType
         return $this->val;
     }
 
-    public function __toString(): string
-    {
-        return $this->val;
-    }
-
     public function jsonSerialize(): string
     {
         return $this->val;
@@ -52,6 +49,28 @@ readonly class StrTypeTest extends StrType
     public function isUndefined(): bool
     {
         return false;
+    }
+
+    public static function tryFromMixed(
+        mixed $value,
+        PrimitiveType $default = new Undefined(),
+    ): static|PrimitiveType {
+        if ($value === null) {
+            return new static('');
+        }
+
+        if (\is_string($value) || $value instanceof Stringable || \is_scalar($value)) {
+            return new static((string) $value);
+        }
+
+        return $default;
+    }
+
+    public static function tryFromString(
+        string $value,
+        PrimitiveType $default = new Undefined(),
+    ): static|PrimitiveType {
+        return new static($value);
     }
 }
 
