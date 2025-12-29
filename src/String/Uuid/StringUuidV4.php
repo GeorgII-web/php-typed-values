@@ -4,9 +4,16 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\String\Uuid;
 
+use Exception;
+use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Base\Primitive\String\StrType;
+use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Exception\UuidStringTypeException;
+use PhpTypedValues\Undefined\Alias\Undefined;
+use Stringable;
 
+use function is_scalar;
+use function is_string;
 use function preg_match;
 use function sprintf;
 use function strtolower;
@@ -89,5 +96,51 @@ readonly class StringUuidV4 extends StrType
     public function isUndefined(): bool
     {
         return false;
+    }
+
+    /**
+     * @template T of PrimitiveType
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromMixed(
+        mixed $value,
+        PrimitiveType $default = new Undefined(),
+    ): static|PrimitiveType {
+        try {
+            /** @var static */
+            return match (true) {
+                is_string($value) => static::fromString($value),
+                //                ($value instanceof self) => static::fromString($value->value()),
+                $value instanceof Stringable, is_scalar($value) => static::fromString((string) $value),
+                null === $value => static::fromString(''),
+                default => throw new TypeException('Value cannot be cast to string'),
+            };
+        } catch (Exception) {
+            /** @var T */
+            return $default;
+        }
+    }
+
+    /**
+     * @template T of PrimitiveType
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromString(
+        string $value,
+        PrimitiveType $default = new Undefined(),
+    ): static|PrimitiveType {
+        try {
+            /** @var static */
+            return static::fromString($value);
+        } catch (Exception) {
+            /** @var T */
+            return $default;
+        }
     }
 }
