@@ -129,8 +129,8 @@ $profile->getHeight()->value(); // throws an exception on access the Undefined v
 ### Performance note
 
 - Objects vs scalars:
-    - ~3× slower for large arrays of objects
-    - ~2× higher memory usage
+    - ~2.3× slower for large arrays of objects
+    - ~1.5× higher memory usage
 - Use value objects for domain boundaries, validation, and clarity
 - Use raw scalars in hot loops or large data processing paths
 
