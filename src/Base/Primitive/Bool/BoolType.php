@@ -4,15 +4,8 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Base\Primitive\Bool;
 
-use Exception;
 use PhpTypedValues\Base\Primitive\PrimitiveType;
-use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
-use Stringable;
-
-use function is_bool;
-use function is_int;
-use function is_string;
 
 /**
  * Base implementation for boolean typed values.
@@ -33,6 +26,9 @@ use function is_string;
  */
 abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterface
 {
+    /**
+     * DO NOT IMPLEMENT ANY PUBLIC METHODS IN INTERNAL CLASS!
+     */
     abstract public function value(): bool;
 
     /**
@@ -42,18 +38,10 @@ abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterf
      *
      * @return static|T
      */
-    public static function tryFromInt(
+    abstract public static function tryFromInt(
         int $value,
         PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
-        try {
-            /** @var static */
-            return static::fromInt($value);
-        } catch (Exception) {
-            /** @var T */
-            return $default;
-        }
-    }
+    ): static|PrimitiveType;
 
     /**
      * @template T of PrimitiveType
@@ -62,25 +50,10 @@ abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterf
      *
      * @return static|T
      */
-    public static function tryFromMixed(
+    abstract public static function tryFromMixed(
         mixed $value,
         PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
-        try {
-            /** @var static */
-            return match (true) {
-                is_bool($value) => static::fromBool($value), // Boolean true\false
-                is_int($value) => static::fromInt($value), // Integer 1\0
-                ($value === 0.0 || $value === 1.0) => static::fromInt((int) $value), // Floats 1.0\0.0
-                //                ($value instanceof self) => static::fromBool($value->value()), // BoolType Class - toString() will care about this case
-                is_string($value) || $value instanceof Stringable => static::fromString((string) $value), // String "true","1","yes", etc.
-                default => throw new TypeException('Value cannot be cast to boolean'),
-            };
-        } catch (Exception) {
-            /** @var T */
-            return $default;
-        }
-    }
+    ): static|PrimitiveType;
 
     /**
      * @template T of PrimitiveType
@@ -89,36 +62,19 @@ abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterf
      *
      * @return static|T
      */
-    public static function tryFromString(
+    abstract public static function tryFromString(
         string $value,
         PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
-        try {
-            /** @var static */
-            return static::fromString($value);
-        } catch (Exception) {
-            /** @var T */
-            return $default;
-        }
-    }
+    ): static|PrimitiveType;
 
-    public function toString(): string
-    {
-        return $this->value() ? 'true' : 'false';
-    }
+    abstract public function toString(): string;
 
     public function __toString(): string
     {
         return $this->toString();
     }
 
-    public function isEmpty(): bool
-    {
-        return false;
-    }
+    abstract public function isEmpty(): bool;
 
-    public function isUndefined(): bool
-    {
-        return false;
-    }
+    abstract public function isUndefined(): bool;
 }
