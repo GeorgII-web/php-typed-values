@@ -2,10 +2,77 @@
 
 declare(strict_types=1);
 
+use PhpTypedValues\Base\Primitive\DateTime\DateTimeType;
 use PhpTypedValues\DateTime\DateTimeAtom;
 use PhpTypedValues\Exception\DateTimeTypeException;
 use PhpTypedValues\Float\Alias\Positive;
 use PhpTypedValues\Undefined\Alias\Undefined;
+
+/**
+ * @internal
+ *
+ * @covers \PhpTypedValues\Base\Primitive\DateTime\DateTimeType
+ */
+readonly class DateTimeTypeTest extends DateTimeType
+{
+    public function __construct(private DateTimeImmutable $dt)
+    {
+    }
+
+    public function value(): DateTimeImmutable
+    {
+        return $this->dt;
+    }
+
+    public function toString(): string
+    {
+        return $this->dt->format('Y-m-d');
+    }
+
+    public function jsonSerialize(): string
+    {
+        return $this->toString();
+    }
+
+    public function isEmpty(): bool
+    {
+        return false;
+    }
+
+    public function isUndefined(): bool
+    {
+        return false;
+    }
+
+    public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE): static
+    {
+        return new self(new DateTimeImmutable($value, new DateTimeZone($timezone)));
+    }
+
+    public static function fromDateTime(DateTimeImmutable $value): static
+    {
+        return new self($value);
+    }
+
+    public function withTimeZone(string $timezone): static
+    {
+        return new self(new DateTimeImmutable());
+    }
+
+    public static function getFormat(): string
+    {
+        return '';
+    }
+}
+
+it('exercises abstract __toString through stub', function (): void {
+    $dt = new DateTimeImmutable('2025-01-01');
+    $stub = new DateTimeTypeTest($dt);
+
+    // This directly calls DateTimeType::__toString because the stub doesn't override it
+    expect((string) $stub)->toBe($stub->toString())
+        ->and((string) $stub)->toBe('2025-01-01');
+});
 
 // Test 1: Kills "InstanceOfToFalse - self check" mutation
 it('kills self instanceof mutation by verifying self instance returns DateTimeAtom not Undefined', function () {
@@ -76,6 +143,36 @@ it('from null', function (): void {
     expect($test->isUndefined())->toBeTrue();
 });
 
+it('tryFromString returns value on valid string', function (): void {
+    $result = DateTimeAtom::tryFromString('2025-01-02T03:04:05+00:00');
+
+    expect($result)->toBeInstanceOf(DateTimeAtom::class)
+        ->and($result->toString())->toBe('2025-01-02T03:04:05+00:00');
+});
+
+it('tryFromString returns Undefined on invalid string', function (): void {
+    $result = DateTimeAtom::tryFromString('invalid-date');
+
+    expect($result)->toBeInstanceOf(Undefined::class)
+        ->and($result->isUndefined())->toBeTrue();
+});
+
+it('tryFromString uses custom default on failure', function (): void {
+    $customDefault = Undefined::create();
+    $result = DateTimeAtom::tryFromString('invalid-date', DateTimeAtom::DEFAULT_ZONE, $customDefault);
+
+    expect($result)->toBeInstanceOf(Undefined::class)
+        ->and($result)->toBe($customDefault);
+});
+
+it('tryFromMixed uses custom default on failure', function (): void {
+    $customDefault = Undefined::create();
+    $result = DateTimeAtom::tryFromMixed(['invalid'], DateTimeAtom::DEFAULT_ZONE, $customDefault);
+
+    expect($result)->toBeInstanceOf(Undefined::class)
+        ->and($result)->toBe($customDefault);
+});
+
 it('fromDateTime returns same instant and toString is ISO 8601', function (): void {
     $dt = new DateTimeImmutable('2025-01-02T03:04:05+00:00');
     $vo = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
@@ -96,17 +193,12 @@ it('throws DateTimeTypeException on unexpected conversion when input uses Z inst
 });
 
 it('__toString proxies to toString for DateTimeType', function (): void {
-    $dt = new DateTimeImmutable('2025-01-02T03:04:05+00:00');
-
-    // Ensure UTC timezone as used by DateTimeType::fromDateTime by default
-    $dt = $dt->setTimezone(new DateTimeZone('UTC'));
-
-    $typed = DateTimeAtom::fromDateTime($dt);
+    $typed = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
 
     expect((string) $typed)
         ->toBe($typed->toString())
         ->and((string) $typed)
-        ->toBe($dt->format(DateTimeAtom::getFormat()));
+        ->toBe('2025-01-02T03:04:05+00:00');
 });
 
 it('handles null value by creating empty string DateTime', function () {

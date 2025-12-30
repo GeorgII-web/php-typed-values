@@ -12,7 +12,6 @@ use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
 
-use function is_bool;
 use function is_float;
 use function is_int;
 use function is_string;
@@ -135,7 +134,7 @@ readonly class FloatPositive extends FloatType
             return match (true) {
                 is_float($value), is_int($value) => static::fromFloat($value),
                 ($value instanceof self) => static::fromFloat($value->value()),
-                is_bool($value) => static::fromFloat($value ? 1.0 : 0.0),
+                $value === true => static::fromFloat(1.0),
                 is_string($value) || $value instanceof Stringable => static::fromString((string) $value),
                 default => throw new TypeException('Value cannot be cast to float'),
             };
