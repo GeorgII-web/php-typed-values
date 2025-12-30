@@ -28,7 +28,7 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class TimestampMilliseconds extends DateTimeType
+class TimestampMilliseconds extends DateTimeType
 {
     /**
      * Internal formatting pattern for seconds + microseconds.
@@ -37,6 +37,9 @@ readonly class TimestampMilliseconds extends DateTimeType
      */
     protected const FORMAT = 'U.u';
 
+    /**
+     * @readonly
+     */
     protected DateTimeImmutable $value;
 
     public function __construct(DateTimeImmutable $value)
@@ -49,8 +52,9 @@ readonly class TimestampMilliseconds extends DateTimeType
      * @param non-empty-string $timezone
      *
      * @throws DateTimeTypeException
+     * @return static
      */
-    public static function fromInt(int $value, string $timezone = self::DEFAULT_ZONE): static
+    public static function fromInt(int $value, string $timezone = self::DEFAULT_ZONE)
     {
         return static::fromString((string) $value, $timezone);
     }
@@ -61,8 +65,9 @@ readonly class TimestampMilliseconds extends DateTimeType
      * @param non-empty-string $timezone
      *
      * @throws DateTimeTypeException
+     * @return static
      */
-    public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE): static
+    public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE)
     {
         if (!ctype_digit($value)) {
             throw new DateTimeTypeException(sprintf('Expected milliseconds timestamp as digits, got "%s"', $value));
@@ -88,12 +93,18 @@ readonly class TimestampMilliseconds extends DateTimeType
         );
     }
 
-    public static function fromDateTime(DateTimeImmutable $value): static
+    /**
+     * @return static
+     */
+    public static function fromDateTime(DateTimeImmutable $value)
     {
         return new static($value);
     }
 
-    public function withTimeZone(string $timezone): static
+    /**
+     * @return static
+     */
+    public function withTimeZone(string $timezone)
     {
         return new static(
             $this->value()->setTimezone(new DateTimeZone($timezone))

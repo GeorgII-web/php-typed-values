@@ -25,7 +25,7 @@ namespace PhpTypedValues\Base\Primitive;
  *
  * @psalm-immutable
  */
-abstract readonly class PrimitiveType implements PrimitiveTypeInterface
+abstract class PrimitiveType implements PrimitiveTypeInterface
 {
     /**
      * Returns true if the Object value is empty.
@@ -56,6 +56,7 @@ abstract readonly class PrimitiveType implements PrimitiveTypeInterface
      * Marked as mutation-free so Psalm treats calls as pure in immutable contexts.
      *
      * @psalm-mutation-free
+     * @return mixed
      */
-    abstract public function jsonSerialize(): mixed;
+    abstract public function jsonSerialize();
 }

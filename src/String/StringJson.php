@@ -34,8 +34,11 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class StringJson extends StrType
+class StringJson extends StrType
 {
+    /**
+     * @readonly
+     */
     protected string $value;
 
     /**
@@ -50,8 +53,9 @@ readonly class StringJson extends StrType
 
     /**
      * @throws JsonStringTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         return new static($value);
     }
@@ -66,7 +70,7 @@ readonly class StringJson extends StrType
      */
     public function toObject(): object
     {
-        return json_decode(json: $this->value, associative: false, flags: JSON_THROW_ON_ERROR);
+        return json_decode($this->value, false, 512, JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -74,7 +78,7 @@ readonly class StringJson extends StrType
      */
     public function toArray(): array
     {
-        return json_decode(json: $this->value, associative: true, flags: JSON_THROW_ON_ERROR);
+        return json_decode($this->value, true, 512, JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -88,7 +92,7 @@ readonly class StringJson extends StrType
              *
              * @psalm-suppress UnusedFunctionCall
              */
-            json_decode(json: $value, flags: JSON_THROW_ON_ERROR);
+            json_decode($value, null, 512, JSON_THROW_ON_ERROR);
         } catch (JsonException $e) {
             throw new JsonStringTypeException(sprintf('String "%s" has no valid JSON value', $value), 0, $e);
         }
@@ -126,21 +130,26 @@ readonly class StringJson extends StrType
      * @param T $default
      *
      * @return static|T
+     * @param mixed $value
      */
     public static function tryFromMixed(
-        mixed $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
+        $value,
+        PrimitiveType $default = null
+    ) {
+        $default ??= new Undefined();
         try {
-            /** @var static */
-            return match (true) {
-                is_string($value) => static::fromString($value),
-                //                ($value instanceof self) => static::fromString($value->value()),
-                $value instanceof Stringable, is_scalar($value) => static::fromString((string) $value),
-                null === $value => static::fromString('{}'),
-                default => throw new TypeException('Value cannot be cast to string'),
-            };
-        } catch (Exception) {
+            switch (true) {
+                case is_string($value):
+                    return static::fromString($value);
+                case is_object($value) && method_exists($value, '__toString'):
+                case is_scalar($value):
+                    return static::fromString((string) $value);
+                case null === $value:
+                    return static::fromString('{}');
+                default:
+                    throw new TypeException('Value cannot be cast to string');
+            }
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -155,12 +164,13 @@ readonly class StringJson extends StrType
      */
     public static function tryFromString(
         string $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
+        PrimitiveType $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromString($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }

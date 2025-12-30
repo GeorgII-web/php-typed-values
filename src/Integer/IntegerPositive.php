@@ -30,9 +30,10 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class IntegerPositive extends IntType
+class IntegerPositive extends IntType
 {
-    /** @var positive-int */
+    /** @var positive-int
+     * @readonly */
     protected int $value;
 
     /**
@@ -49,16 +50,18 @@ readonly class IntegerPositive extends IntType
 
     /**
      * @throws IntegerTypeException
+     * @return static
      */
-    public static function fromInt(int $value): static
+    public static function fromInt(int $value)
     {
         return new static($value);
     }
 
     /**
      * @throws IntegerTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         parent::assertIntegerString($value);
 
@@ -92,12 +95,13 @@ readonly class IntegerPositive extends IntType
      */
     public static function tryFromInt(
         int $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
+        PrimitiveType $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static&IntType */
             return static::fromInt($value);
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             /* @var T $default */
             return $default;
         }
@@ -112,12 +116,13 @@ readonly class IntegerPositive extends IntType
      */
     public static function tryFromString(
         string $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
+        PrimitiveType $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromString($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -129,21 +134,25 @@ readonly class IntegerPositive extends IntType
      * @param T $default
      *
      * @return static|T
+     * @param mixed $value
      */
     public static function tryFromMixed(
-        mixed $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
+        $value,
+        PrimitiveType $default = null
+    ) {
+        $default ??= new Undefined();
         try {
-            /** @var static */
-            return match (true) {
-                is_int($value) => static::fromInt($value),
-                //                $value instanceof self => static::fromInt($value->value()),
-                $value === true => static::fromInt(1),
-                is_string($value) || $value instanceof Stringable => static::fromString((string) $value),
-                default => throw new TypeException('Value cannot be cast to int'),
-            };
-        } catch (Exception) {
+            switch (true) {
+                case is_int($value):
+                    return static::fromInt($value);
+                case $value === true:
+                    return static::fromInt(1);
+                case is_string($value) || is_object($value) && method_exists($value, '__toString'):
+                    return static::fromString((string) $value);
+                default:
+                    throw new TypeException('Value cannot be cast to int');
+            }
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }

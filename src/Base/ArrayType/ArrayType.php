@@ -24,7 +24,7 @@ use PhpTypedValues\Exception\TypeException;
  *
  * @psalm-immutable
  */
-abstract readonly class ArrayType implements ArrayTypeInterface
+abstract class ArrayType implements ArrayTypeInterface
 {
     /**
      * @template T of ArrayTypeInterface
@@ -38,12 +38,13 @@ abstract readonly class ArrayType implements ArrayTypeInterface
      */
     public static function tryFromArray(
         array $value,
-        ArrayTypeInterface $default = new ArrayUndefined(),
-    ): static|ArrayTypeInterface {
+        ArrayTypeInterface $default = null
+    ) {
+        $default ??= new ArrayUndefined();
         try {
             /** @var static */
             return static::fromArray($value);
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             /* @var T $default */
             return $default;
         }
