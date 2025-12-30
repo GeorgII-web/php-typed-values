@@ -90,3 +90,34 @@ it('tryFromString and tryFromMixed accept custom timezone', function (): void {
         ->and($vo2->toString())->toBe('2025-01-02 03:04:05')
         ->and($vo2->value()->getOffset())->toBe(0);
 });
+
+it('tryFromMixed handles DateTimeImmutable instance', function (): void {
+    $dt = new DateTimeImmutable('2025-01-02 03:04:05');
+    $result = DateTimeSql::tryFromMixed($dt);
+
+    expect($result)->toBeInstanceOf(DateTimeSql::class)
+        ->and($result->toString())->toBe('2025-01-02 03:04:05')
+        ->and($result->isUndefined())->toBeFalse();
+});
+
+it('tryFromMixed handles Stringable object', function (): void {
+    $stringable = new class implements Stringable {
+        public function __toString(): string
+        {
+            return '2025-01-02 03:04:05';
+        }
+    };
+    $result = DateTimeSql::tryFromMixed($stringable);
+
+    expect($result)->toBeInstanceOf(DateTimeSql::class)
+        ->and($result->toString())->toBe('2025-01-02 03:04:05')
+        ->and($result->isUndefined())->toBeFalse();
+});
+
+it('tryFromMixed returns Undefined for non-Stringable objects', function (): void {
+    $obj = new stdClass();
+    $result = DateTimeSql::tryFromMixed($obj);
+
+    expect($result)->toBeInstanceOf(Undefined::class)
+        ->and($result->isUndefined())->toBeTrue();
+});

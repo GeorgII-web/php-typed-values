@@ -205,3 +205,34 @@ it('isUndefined is always false for DateTimeW3C', function (): void {
     $vo = DateTimeW3C::fromString('2025-01-02T03:04:05+00:00');
     expect($vo->isUndefined())->toBeFalse();
 });
+
+it('tryFromMixed handles DateTimeImmutable instance', function (): void {
+    $dt = new DateTimeImmutable('2025-01-02T03:04:05+00:00');
+    $result = DateTimeW3C::tryFromMixed($dt);
+
+    expect($result)->toBeInstanceOf(DateTimeW3C::class)
+        ->and($result->toString())->toBe('2025-01-02T03:04:05+00:00')
+        ->and($result->isUndefined())->toBeFalse();
+});
+
+it('tryFromMixed handles Stringable object', function (): void {
+    $stringable = new class implements Stringable {
+        public function __toString(): string
+        {
+            return '2025-01-02T03:04:05+00:00';
+        }
+    };
+    $result = DateTimeW3C::tryFromMixed($stringable);
+
+    expect($result)->toBeInstanceOf(DateTimeW3C::class)
+        ->and($result->toString())->toBe('2025-01-02T03:04:05+00:00')
+        ->and($result->isUndefined())->toBeFalse();
+});
+
+it('tryFromMixed returns Undefined for non-Stringable objects', function (): void {
+    $obj = new stdClass();
+    $result = DateTimeW3C::tryFromMixed($obj);
+
+    expect($result)->toBeInstanceOf(Undefined::class)
+        ->and($result->isUndefined())->toBeTrue();
+});

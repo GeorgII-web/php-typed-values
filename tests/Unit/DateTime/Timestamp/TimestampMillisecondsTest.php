@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use PhpTypedValues\DateTime\Timestamp\TimestampMilliseconds;
+use PhpTypedValues\Undefined\Alias\Undefined;
 
 it('fromString returns same instant and toString is milliseconds', function (): void {
     // 1,000,000,000,000 ms == 1,000,000,000 sec == 2001-09-09 01:46:40 UTC
@@ -112,7 +113,7 @@ it('TimestampMilliseconds::tryFromString returns value for numeric milliseconds'
 
 it('TimestampMilliseconds::tryFromString returns Undefined for non-digit input', function (): void {
     $u = TimestampMilliseconds::tryFromString('abc');
-    expect($u)->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class);
+    expect($u)->toBeInstanceOf(Undefined::class);
 });
 
 it('jsonSerialize and toInt return integer', function (): void {
@@ -139,6 +140,32 @@ it('fromString accepts zero and round-trips to "0"', function (): void {
         ->and($vo->value()->format('U.u'))->toBe('0.000000');
 });
 
+it('kills Stringable mutation in tryFromMixed', function () {
+    // Create a unique default value to distinguish between "successful catch" and "incorrect branch"
+    $customDefault = Undefined::create();
+
+    // 1. Pass a value that is NOT Stringable, NOT string, and NOT int
+    $invalidValue = [];
+
+    // Original: Should hit 'default', throw TypeException, return $customDefault
+    // Mutated: Hits 'true', tries (string)[], which might throw a TypeError
+    // depending on PHP version/strict types, or just fail in fromString.
+
+    expect(TimestampMilliseconds::tryFromMixed($invalidValue, 'UTC', $customDefault))
+        ->toBe($customDefault);
+
+    // 2. Explicitly test a Stringable object to ensure the branch works when NOT mutated
+    $stringable = new class implements Stringable {
+        public function __toString(): string
+        {
+            return '1704067200000';
+        }
+    };
+
+    expect(TimestampMilliseconds::tryFromMixed($stringable))
+        ->toBeInstanceOf(TimestampMilliseconds::class);
+});
+
 it('tryFromMixed handles valid numeric strings/ints and invalid mixed inputs', function (): void {
     // valid inputs
     $fromString = TimestampMilliseconds::tryFromMixed('1732445696123');
@@ -163,8 +190,8 @@ it('tryFromMixed handles valid numeric strings/ints and invalid mixed inputs', f
         ->and($fromInt)->toBeInstanceOf(TimestampMilliseconds::class)
         ->and($fromInt->toString())->toBe('1732445696123')
         ->and($fromStringable)->toBeInstanceOf(TimestampMilliseconds::class)
-        ->and($fromArray)->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class)
-        ->and($fromNull)->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class);
+        ->and($fromArray)->toBeInstanceOf(Undefined::class)
+        ->and($fromNull)->toBeInstanceOf(Undefined::class);
 });
 
 it('isEmpty is always false for TimestampMilliseconds', function (): void {
@@ -202,6 +229,28 @@ it('tryFromString and tryFromMixed accept custom timezone', function (): void {
     expect($vo2)->toBeInstanceOf(TimestampMilliseconds::class)
         ->and($vo2->toString())->toBe($s)
         ->and($vo2->value()->getOffset())->toBe(0);
+});
+
+it('tryFromMixed handles Stringable object correctly', function (): void {
+    $stringable = new class implements Stringable {
+        public function __toString(): string
+        {
+            return '1732445696123';
+        }
+    };
+    $result = TimestampMilliseconds::tryFromMixed($stringable);
+
+    expect($result)->toBeInstanceOf(TimestampMilliseconds::class)
+        ->and($result->toString())->toBe('1732445696123')
+        ->and($result->isUndefined())->toBeFalse();
+});
+
+it('tryFromMixed returns Undefined for non-Stringable non-numeric objects', function (): void {
+    $obj = new stdClass();
+    $result = TimestampMilliseconds::tryFromMixed($obj);
+
+    expect($result)->toBeInstanceOf(Undefined::class)
+        ->and($result->isUndefined())->toBeTrue();
 });
 
 it('isUndefined is always false for TimestampMilliseconds', function (): void {
