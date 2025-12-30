@@ -4,9 +4,18 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Float;
 
+use Exception;
 use PhpTypedValues\Base\Primitive\Float\FloatType;
+use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\FloatTypeException;
+use PhpTypedValues\Exception\TypeException;
+use PhpTypedValues\Undefined\Alias\Undefined;
+use Stringable;
 
+use function is_bool;
+use function is_float;
+use function is_int;
+use function is_string;
 use function sprintf;
 
 /**
@@ -80,8 +89,79 @@ readonly class FloatNonNegative extends FloatType
         return (string) $this->value;
     }
 
-    public function __toString(): string
+    public function isEmpty(): bool
     {
-        return $this->toString();
+        return false;
+    }
+
+    public function isUndefined(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @template T of PrimitiveType
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromFloat(
+        float $value,
+        PrimitiveType $default = new Undefined(),
+    ): static|PrimitiveType {
+        try {
+            /** @var static */
+            return static::fromFloat($value);
+        } catch (Exception) {
+            /** @var T */
+            return $default;
+        }
+    }
+
+    /**
+     * @template T of PrimitiveType
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromMixed(
+        mixed $value,
+        PrimitiveType $default = new Undefined(),
+    ): static|PrimitiveType {
+        try {
+            /** @var static */
+            return match (true) {
+                is_float($value), is_int($value) => static::fromFloat($value),
+                ($value instanceof self) => static::fromFloat($value->value()),
+                is_bool($value) => static::fromFloat($value ? 1.0 : 0.0),
+                is_string($value) || $value instanceof Stringable => static::fromString((string) $value),
+                default => throw new TypeException('Value cannot be cast to float'),
+            };
+        } catch (Exception) {
+            /** @var T */
+            return $default;
+        }
+    }
+
+    /**
+     * @template T of PrimitiveType
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromString(
+        string $value,
+        PrimitiveType $default = new Undefined(),
+    ): static|PrimitiveType {
+        try {
+            /** @var static */
+            return static::fromString($value);
+        } catch (Exception) {
+            /** @var T */
+            return $default;
+        }
     }
 }

@@ -33,6 +33,16 @@ it('FloatStandard::tryFromFloat returns value for any int', function (): void {
         ->toBe(2.0);
 });
 
+it('FloatStandard::tryFromFloat returns Undefined for invalid values', function (): void {
+    $inf = FloatStandard::tryFromFloat(\INF);
+    $nan = FloatStandard::tryFromFloat(\NAN);
+    $customDefault = FloatStandard::tryFromFloat(\INF, Undefined::create());
+
+    expect($inf)->toBeInstanceOf(Undefined::class)
+        ->and($nan)->toBeInstanceOf(Undefined::class)
+        ->and($customDefault)->toBeInstanceOf(Undefined::class);
+});
+
 it('FloatStandard::fromString throws on non-numeric strings', function (): void {
     expect(fn() => FloatStandard::fromString('NaN'))
         ->toThrow(FloatTypeException::class, 'String "NaN" has no valid float value');
