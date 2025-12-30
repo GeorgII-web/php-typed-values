@@ -139,9 +139,6 @@ it('__toString returns the seconds string', function (): void {
 });
 
 it('tryFromMixed handles valid numeric strings/ints and invalid mixed inputs', function (): void {
-    // valid inputs
-    $fromString = TimestampSeconds::tryFromMixed('1735787045');
-    $fromIntMixed = TimestampSeconds::tryFromMixed(1735787045);
     $fromInt = TimestampSeconds::fromInt(1735787045);
 
     // invalid inputs
@@ -157,8 +154,8 @@ it('tryFromMixed handles valid numeric strings/ints and invalid mixed inputs', f
     };
     $fromStringable = TimestampSeconds::tryFromMixed($stringable);
 
-    expect($fromString)->toBeInstanceOf(TimestampSeconds::class)
-        ->and($fromIntMixed)->toBeInstanceOf(TimestampSeconds::class)
+    expect(TimestampSeconds::tryFromMixed('1735787045'))->toBeInstanceOf(TimestampSeconds::class)
+        ->and(TimestampSeconds::tryFromMixed(1735787045))->toBeInstanceOf(TimestampSeconds::class)
         ->and($fromInt)->toBeInstanceOf(TimestampSeconds::class)
         ->and($fromInt->toString())->toBe('1735787045')
         ->and($fromStringable)->toBeInstanceOf(TimestampSeconds::class)

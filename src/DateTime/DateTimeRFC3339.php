@@ -8,8 +8,15 @@ use const DATE_RFC3339;
 
 use DateTimeImmutable;
 use DateTimeZone;
+use Exception;
 use PhpTypedValues\Base\Primitive\DateTime\DateTimeType;
+use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\DateTimeTypeException;
+use PhpTypedValues\Exception\TypeException;
+use PhpTypedValues\Undefined\Alias\Undefined;
+use Stringable;
+
+use function is_string;
 
 /**
  * Date-time value formatted using PHP's DATE_RFC3339 (RFC 3339 based on ISO 8601).
@@ -99,5 +106,54 @@ readonly class DateTimeRFC3339 extends DateTimeType
     public function isUndefined(): bool
     {
         return false;
+    }
+
+    /**
+     * @template T of PrimitiveType
+     *
+     * @param T                $default
+     * @param non-empty-string $timezone
+     *
+     * @return static|T
+     */
+    public static function tryFromMixed(
+        mixed $value,
+        string $timezone = self::DEFAULT_ZONE,
+        PrimitiveType $default = new Undefined(),
+    ): static|PrimitiveType {
+        try {
+            /** @var static $result */
+            return match (true) {
+                is_string($value) => static::fromString($value, $timezone),
+                ($value instanceof DateTimeImmutable) => static::fromDateTime($value),
+                $value instanceof Stringable => static::fromString((string) $value, $timezone),
+                default => throw new TypeException('Value cannot be cast to date time'),
+            };
+        } catch (Exception) {
+            /* @var PrimitiveType */
+            return $default;
+        }
+    }
+
+    /**
+     * @template T of PrimitiveType
+     *
+     * @param T                $default
+     * @param non-empty-string $timezone
+     *
+     * @return static|T
+     */
+    public static function tryFromString(
+        string $value,
+        string $timezone = self::DEFAULT_ZONE,
+        PrimitiveType $default = new Undefined(),
+    ): static|PrimitiveType {
+        try {
+            /** @var static $result */
+            return static::fromString($value, $timezone);
+        } catch (Exception) {
+            /* @var PrimitiveType */
+            return $default;
+        }
     }
 }

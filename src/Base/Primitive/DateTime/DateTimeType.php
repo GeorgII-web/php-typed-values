@@ -12,13 +12,9 @@ use Exception;
 use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\DateTimeTypeException;
 use PhpTypedValues\Exception\ReasonableRangeDateTimeTypeException;
-use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
-use Stringable;
 
 use function count;
-use function is_scalar;
-use function is_string;
 use function sprintf;
 
 /**
@@ -135,28 +131,11 @@ abstract readonly class DateTimeType extends PrimitiveType implements DateTimeTy
      *
      * @return static|T
      */
-    public static function tryFromMixed(
+    abstract public static function tryFromMixed(
         mixed $value,
         string $timezone = self::DEFAULT_ZONE,
         PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
-        try {
-            /** @var static $result */
-            $result = match (true) {
-                is_string($value) => static::fromString($value, $timezone),
-                ($value instanceof DateTimeImmutable) => static::fromDateTime($value),
-                //                ($value instanceof self) => static::fromDateTime($value->value()),
-                $value instanceof Stringable, is_scalar($value) => static::fromString((string) $value, $timezone),
-                default => throw new TypeException('Value cannot be cast to date time'),
-            };
-
-            /** @var static */
-            return $result;
-        } catch (Exception) {
-            /* @var PrimitiveType */
-            return $default;
-        }
-    }
+    ): static|PrimitiveType;
 
     /**
      * @template T of PrimitiveType
@@ -166,20 +145,9 @@ abstract readonly class DateTimeType extends PrimitiveType implements DateTimeTy
      *
      * @return static|T
      */
-    public static function tryFromString(
+    abstract public static function tryFromString(
         string $value,
         string $timezone = self::DEFAULT_ZONE,
         PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
-        try {
-            /** @var static $result */
-            $result = static::fromString($value, $timezone);
-
-            /* @var static */
-            return $result;
-        } catch (Exception) {
-            /* @var PrimitiveType */
-            return $default;
-        }
-    }
+    ): static|PrimitiveType;
 }
