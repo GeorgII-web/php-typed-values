@@ -6,6 +6,13 @@ use PhpTypedValues\Exception\FloatTypeException;
 use PhpTypedValues\Float\FloatPositive;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
+it('kills the bool decrement mutant in tryFromMixed', function () {
+    expect(FloatPositive::tryFromMixed(true))->toBeInstanceOf(FloatPositive::class)
+        ->and(FloatPositive::tryFromMixed(true)->value())->toBe(1.0)
+        ->and(FloatPositive::tryFromMixed(false))
+        ->toBeInstanceOf(Undefined::class);
+});
+
 it('constructs positive float via constructor', function (): void {
     $v = new FloatPositive(0.1);
     expect($v->value())->toBe(0.1)

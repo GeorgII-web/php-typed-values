@@ -3,7 +3,9 @@
 declare(strict_types=1);
 
 use PhpTypedValues\Base\Primitive\Float\FloatType;
+use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\FloatTypeException;
+use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Float\FloatStandard;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -42,11 +44,6 @@ readonly class FloatTypeTest extends FloatType
         return (string) $this->val;
     }
 
-    public function __toString(): string
-    {
-        return $this->toString();
-    }
-
     public function jsonSerialize(): float
     {
         return $this->val;
@@ -60,6 +57,45 @@ readonly class FloatTypeTest extends FloatType
     public function isUndefined(): bool
     {
         return false;
+    }
+
+    public static function tryFromFloat(
+        float $value,
+        PrimitiveType $default = new Undefined(),
+    ): static|PrimitiveType {
+        try {
+            return static::fromFloat($value);
+        } catch (Exception) {
+            return $default;
+        }
+    }
+
+    public static function tryFromMixed(
+        mixed $value,
+        PrimitiveType $default = new Undefined(),
+    ): static|PrimitiveType {
+        try {
+            return match (true) {
+                \is_float($value), \is_int($value) => static::fromFloat($value),
+                ($value instanceof self) => static::fromFloat($value->value()),
+                \is_bool($value) => static::fromFloat($value ? 1.0 : 0.0),
+                \is_string($value) || $value instanceof Stringable => static::fromString((string) $value),
+                default => throw new TypeException('Value cannot be cast to float'),
+            };
+        } catch (Exception) {
+            return $default;
+        }
+    }
+
+    public static function tryFromString(
+        string $value,
+        PrimitiveType $default = new Undefined(),
+    ): static|PrimitiveType {
+        try {
+            return static::fromString($value);
+        } catch (Exception) {
+            return $default;
+        }
     }
 }
 
