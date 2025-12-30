@@ -146,8 +146,8 @@ readonly class TimestampSeconds extends DateTimeType
             return match (true) {
                 is_string($value) => static::fromString($value, $timezone),
                 is_int($value) => static::fromInt($value, $timezone),
-                ($value instanceof DateTimeImmutable) => static::fromDateTime($value),
                 $value instanceof Stringable => static::fromString((string) $value, $timezone),
+                ($value instanceof DateTimeImmutable) => static::fromDateTime($value),
                 default => throw new TypeException('Value cannot be cast to date time'),
             };
         } catch (Exception) {
