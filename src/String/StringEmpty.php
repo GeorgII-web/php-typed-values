@@ -21,7 +21,7 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class StringEmpty extends StrType
+class StringEmpty extends StrType
 {
     /**
      * @throws StringTypeException
@@ -35,8 +35,9 @@ readonly class StringEmpty extends StrType
 
     /**
      * @throws StringTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         return new static($value);
     }
