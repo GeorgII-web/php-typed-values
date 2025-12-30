@@ -63,6 +63,18 @@ readonly class DateTimeTypeTest extends DateTimeType
     {
         return '';
     }
+
+    public static function tryFromMixed(mixed $value, string $timezone = self::DEFAULT_ZONE,
+        PhpTypedValues\Base\Primitive\PrimitiveType $default = new Undefined(), ): static|PhpTypedValues\Base\Primitive\PrimitiveType
+    {
+        return static::fromDateTime(new DateTimeImmutable());
+    }
+
+    public static function tryFromString(string $value, string $timezone = self::DEFAULT_ZONE,
+        PhpTypedValues\Base\Primitive\PrimitiveType $default = new Undefined(), ): static|PhpTypedValues\Base\Primitive\PrimitiveType
+    {
+        return static::fromDateTime(new DateTimeImmutable());
+    }
 }
 
 it('exercises abstract __toString through stub', function (): void {

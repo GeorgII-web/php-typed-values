@@ -206,3 +206,32 @@ it('isUndefined is always false for DateTimeRFC3339Extended', function (): void 
     $vo = DateTimeRFC3339Extended::fromString('2025-01-02T03:04:05.000+00:00');
     expect($vo->isUndefined())->toBeFalse();
 });
+
+it('tryFromMixed handles DateTimeImmutable instance', function (): void {
+    $dt = new DateTimeImmutable('2025-01-02T03:04:05.123456+00:00');
+    $result = DateTimeRFC3339Extended::tryFromMixed($dt);
+
+    expect($result)->toBeInstanceOf(DateTimeRFC3339Extended::class)
+        ->and($result->isUndefined())->toBeFalse();
+});
+
+it('tryFromMixed handles Stringable object', function (): void {
+    $stringable = new class implements Stringable {
+        public function __toString(): string
+        {
+            return '2025-01-02T03:04:05.123+00:00';
+        }
+    };
+    $result = DateTimeRFC3339Extended::tryFromMixed($stringable);
+
+    expect($result)->toBeInstanceOf(DateTimeRFC3339Extended::class)
+        ->and($result->isUndefined())->toBeFalse();
+});
+
+it('tryFromMixed returns Undefined for non-Stringable objects', function (): void {
+    $obj = new stdClass();
+    $result = DateTimeRFC3339Extended::tryFromMixed($obj);
+
+    expect($result)->toBeInstanceOf(Undefined::class)
+        ->and($result->isUndefined())->toBeTrue();
+});
