@@ -34,7 +34,7 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-abstract readonly class DateTimeType extends PrimitiveType implements DateTimeTypeInterface
+abstract class DateTimeType extends PrimitiveType implements DateTimeTypeInterface
 {
     protected const FORMAT = '';
     protected const MIN_TIMESTAMP_SECONDS = -62135596800; // 0001-01-01
@@ -58,9 +58,9 @@ abstract readonly class DateTimeType extends PrimitiveType implements DateTimeTy
     protected static function createFromFormat(
         string $value,
         string $format,
-        ?DateTimeZone $timezone = null,
+        ?DateTimeZone $timezone = null
     ): DateTimeImmutable {
-        if (str_contains($value, "\0")) {
+        if (strpos($value, "\0") !== false) {
             throw new DateTimeTypeException('Date time string must not contain null bytes');
         }
 
@@ -130,12 +130,13 @@ abstract readonly class DateTimeType extends PrimitiveType implements DateTimeTy
      * @param non-empty-string $timezone
      *
      * @return static|T
+     * @param mixed $value
      */
     abstract public static function tryFromMixed(
-        mixed $value,
+        $value,
         string $timezone = self::DEFAULT_ZONE,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+        PrimitiveType $default = null
+    );
 
     /**
      * @template T of PrimitiveType
@@ -148,6 +149,6 @@ abstract readonly class DateTimeType extends PrimitiveType implements DateTimeTy
     abstract public static function tryFromString(
         string $value,
         string $timezone = self::DEFAULT_ZONE,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+        PrimitiveType $default = null
+    );
 }
