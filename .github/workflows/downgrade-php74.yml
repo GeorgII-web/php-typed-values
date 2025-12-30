@@ -123,4 +123,5 @@ jobs:
             git tag -d "$NEW_TAG"
           fi
           git tag "$NEW_TAG"
-          git push origin "$NEW_TAG"
+          # Force push the tag to update it if it already exists on remote
+          git push --force origin "$NEW_TAG"
