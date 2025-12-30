@@ -100,6 +100,7 @@ it('tryFromMixed returns Undefined for invalid or non-convertible values', funct
     $fromArray = StringUuidV7::tryFromMixed([]);
     $fromObject = StringUuidV7::tryFromMixed(new stdClass());
     $fromInt = StringUuidV7::tryFromMixed(123);
+    $fromNull = StringUuidV7::tryFromMixed(null);
 
     expect($fromInvalidUuid)
         ->toBeInstanceOf(Undefined::class)
@@ -108,6 +109,8 @@ it('tryFromMixed returns Undefined for invalid or non-convertible values', funct
         ->and($fromObject)
         ->toBeInstanceOf(Undefined::class)
         ->and($fromInt)
+        ->toBeInstanceOf(Undefined::class)
+        ->and($fromNull)
         ->toBeInstanceOf(Undefined::class);
 });
 

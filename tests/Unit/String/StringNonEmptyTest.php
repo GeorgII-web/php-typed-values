@@ -63,3 +63,29 @@ it('isUndefined is always false for StringNonEmpty', function (): void {
     $s = new StringNonEmpty('x');
     expect($s->isUndefined())->toBeFalse();
 });
+
+it('tryFromMixed handles various inputs for StringNonEmpty', function (): void {
+    $fromString = StringNonEmpty::tryFromMixed('hello');
+    $fromInt = StringNonEmpty::tryFromMixed(123);
+    $fromNull = StringNonEmpty::tryFromMixed(null);
+    $fromArray = StringNonEmpty::tryFromMixed(['x']);
+    $fromObject = StringNonEmpty::tryFromMixed(new stdClass());
+
+    $stringable = new class implements Stringable {
+        public function __toString(): string
+        {
+            return 'stringable-content';
+        }
+    };
+    $fromStringable = StringNonEmpty::tryFromMixed($stringable);
+
+    expect($fromString)->toBeInstanceOf(StringNonEmpty::class)
+        ->and($fromString->value())->toBe('hello')
+        ->and($fromInt)->toBeInstanceOf(StringNonEmpty::class)
+        ->and($fromInt->value())->toBe('123')
+        ->and($fromNull)->toBeInstanceOf(Undefined::class)
+        ->and($fromArray)->toBeInstanceOf(Undefined::class)
+        ->and($fromObject)->toBeInstanceOf(Undefined::class)
+        ->and($fromStringable)->toBeInstanceOf(StringNonEmpty::class)
+        ->and($fromStringable->value())->toBe('stringable-content');
+});

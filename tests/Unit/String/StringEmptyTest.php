@@ -7,6 +7,8 @@ namespace PhpTypedValues\Tests\Unit\String;
 use PhpTypedValues\Exception\StringTypeException;
 use PhpTypedValues\String\StringEmpty;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use stdClass;
+use Stringable;
 
 covers(StringEmpty::class);
 
@@ -53,7 +55,32 @@ it('tryFromMixed returns Undefined for non-empty string', function (): void {
 
 it('tryFromMixed returns Undefined for non-stringable mixed', function (): void {
     $c = StringEmpty::tryFromMixed([]);
-    expect($c)->toBeInstanceOf(Undefined::class);
+    expect($c)->toBeInstanceOf(Undefined::class)
+        ->and(StringEmpty::tryFromMixed(new stdClass()))->toBeInstanceOf(Undefined::class);
+});
+
+it('tryFromMixed handles various inputs for StringEmpty', function (): void {
+    $fromNull = StringEmpty::tryFromMixed(null);
+    $fromInt = StringEmpty::tryFromMixed(0);
+    $fromEmptyStringable = StringEmpty::tryFromMixed(new class implements Stringable {
+        public function __toString(): string
+        {
+            return '';
+        }
+    });
+    $fromNonEmptyStringable = StringEmpty::tryFromMixed(new class implements Stringable {
+        public function __toString(): string
+        {
+            return 'not-empty';
+        }
+    });
+
+    expect($fromNull)->toBeInstanceOf(StringEmpty::class)
+        ->and($fromNull->value())->toBe('')
+        ->and($fromInt)->toBeInstanceOf(Undefined::class)
+        ->and($fromEmptyStringable)->toBeInstanceOf(StringEmpty::class)
+        ->and($fromEmptyStringable->value())->toBe('')
+        ->and($fromNonEmptyStringable)->toBeInstanceOf(Undefined::class);
 });
 
 it('jsonSerialize returns empty string', function (): void {

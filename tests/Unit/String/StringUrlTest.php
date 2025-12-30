@@ -63,12 +63,15 @@ it('tryFromMixed returns Undefined for invalid or non-convertible values', funct
     $fromInvalidUrl = StringUrl::tryFromMixed('not-a-url');
     $fromArray = StringUrl::tryFromMixed([]);
     $fromObject = StringUrl::tryFromMixed(new stdClass());
+    $fromNull = StringUrl::tryFromMixed(null);
 
     expect($fromInvalidUrl)
         ->toBeInstanceOf(Undefined::class)
         ->and($fromArray)
         ->toBeInstanceOf(Undefined::class)
         ->and($fromObject)
+        ->toBeInstanceOf(Undefined::class)
+        ->and($fromNull)
         ->toBeInstanceOf(Undefined::class);
 });
 
