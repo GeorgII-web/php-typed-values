@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use PhpTypedValues\String\StringStandard;
-use stdClass;
 
 it('StringStandard::tryFromString returns instance for any string', function (): void {
     $v = StringStandard::tryFromString('hello');

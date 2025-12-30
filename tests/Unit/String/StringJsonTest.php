@@ -107,7 +107,7 @@ it('tryFromMixed handles valid JSON text, stringable, and invalid mixed inputs',
         ->and($fromStringable->value())->toBe($json)
         ->and($bad)->toBeInstanceOf(Undefined::class)
         ->and($fromArray)->toBeInstanceOf(Undefined::class)
-        ->and($fromNull)->toBeInstanceOf(Undefined::class)
+        ->and($fromNull)->toBeInstanceOf(StringJson::class)
         ->and($fromScalar)->toBe('123')
         ->and($fromObject)->toBeInstanceOf(Undefined::class);
 });

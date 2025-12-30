@@ -5,7 +5,6 @@ declare(strict_types=1);
 use PhpTypedValues\Exception\UuidStringTypeException;
 use PhpTypedValues\String\Uuid\StringUuidV4;
 use PhpTypedValues\Undefined\Alias\Undefined;
-use stdClass;
 
 it('accepts a valid lowercase UUID v4 and preserves value', function (): void {
     $uuid = '550e8400-e29b-41d4-a716-446655440000';

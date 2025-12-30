@@ -5,8 +5,6 @@ declare(strict_types=1);
 use PhpTypedValues\Exception\StringTypeException;
 use PhpTypedValues\String\StringNonEmpty;
 use PhpTypedValues\Undefined\Alias\Undefined;
-use stdClass;
-use Stringable;
 
 it('StringNonEmpty::tryFromString returns value for non-empty string', function (): void {
     $v = StringNonEmpty::tryFromString('abc');

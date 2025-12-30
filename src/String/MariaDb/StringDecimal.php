@@ -133,7 +133,6 @@ readonly class StringDecimal extends StrType
                 is_string($value) => static::fromString($value),
                 //                ($value instanceof self) => static::fromString($value->value()),
                 $value instanceof Stringable, is_scalar($value) => static::fromString((string) $value),
-                null === $value => static::fromString(''),
                 default => throw new TypeException('Value cannot be cast to string'),
             };
         } catch (Exception) {
