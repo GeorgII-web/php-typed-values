@@ -187,3 +187,21 @@ it('isUndefined is always false', function (): void {
     expect(IntegerNonNegative::fromInt(0)->isUndefined())->toBeFalse()
         ->and(IntegerNonNegative::fromInt(1)->isUndefined())->toBeFalse();
 });
+
+it('fromFloat creates instance from float with exact integer value', function (): void {
+    $v = IntegerNonNegative::fromFloat(5.0);
+    expect($v->value())->toBe(5);
+});
+
+it('toFloat converts to float', function (): void {
+    $v = new IntegerNonNegative(42);
+    expect($v->toFloat())->toBe(42.0)
+        ->and($v->toFloat())->toBeFloat();
+});
+
+it('toBool converts to bool', function (): void {
+    $zero = new IntegerNonNegative(0);
+    $positive = new IntegerNonNegative(5);
+    expect($zero->toBool())->toBeFalse()
+        ->and($positive->toBool())->toBeTrue();
+});
