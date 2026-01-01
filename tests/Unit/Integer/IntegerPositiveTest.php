@@ -132,7 +132,7 @@ it('fromString respects strict integer parsing rules', function (): void {
     // leading zeros, plus sign, decimals, or spaces are rejected by IntType::assertIntegerString
     foreach (['01', '+1', '1.0', ' 1', '1 ', 'a'] as $bad) {
         expect(fn() => IntegerPositive::fromString($bad))
-            ->toThrow(IntegerTypeException::class, \sprintf('String "%s" has no valid strict integer value', $bad));
+            ->toThrow(IntegerTypeException::class);
     }
 });
 

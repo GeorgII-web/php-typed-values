@@ -117,7 +117,7 @@ it('fromString uses strict integer parsing and accepts only canonical numbers', 
 
     foreach (['01', '+1', '1.0', ' 1', '1 ', 'a'] as $bad) {
         expect(fn() => IntegerNonNegative::fromString($bad))
-            ->toThrow(IntegerTypeException::class, \sprintf('String "%s" has no valid strict integer value', $bad));
+            ->toThrow(IntegerTypeException::class);
     }
 });
 

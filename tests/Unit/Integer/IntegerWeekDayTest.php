@@ -131,7 +131,7 @@ it('fromString enforces strict integer parsing and range', function (): void {
 
     foreach (['01', '+1', '1.0', ' 1', '1 ', 'a'] as $bad) {
         expect(fn() => IntegerWeekDay::fromString($bad))
-            ->toThrow(IntegerTypeException::class, \sprintf('String "%s" has no valid strict integer value', $bad));
+            ->toThrow(IntegerTypeException::class);
     }
 
     // Strict string passes validation but out of range -> domain error

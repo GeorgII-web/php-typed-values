@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use PhpTypedValues\Exception\IntegerTypeException;
+use PhpTypedValues\Exception\ReasonableRangeIntegerTypeException;
 use PhpTypedValues\Integer\IntegerStandard;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -92,7 +93,7 @@ it('fromString uses strict integer parsing', function (): void {
 
     foreach (['01', '+1', '1.0', ' 1', '1 ', 'a'] as $bad) {
         expect(fn() => IntegerStandard::fromString($bad))
-            ->toThrow(IntegerTypeException::class, \sprintf('String "%s" has no valid strict integer value', $bad));
+            ->toThrow(IntegerTypeException::class);
     }
 });
 
@@ -190,4 +191,55 @@ it('returns Undefined for invalid mixed integer inputs', function (mixed $input)
     ['input' => fopen('php://memory', 'r')], // Resource
     ['input' => \INF],                 // Infinite
     ['input' => \NAN],                 // NaN
+]);
+
+it('IntegerStandard::fromString validates various edge cases', function (
+    string $input,
+    int|array $expected,
+): void {
+    if (\is_int($expected)) {
+        expect(IntegerStandard::fromString($input)->value())->toBe($expected);
+    } else {
+        [$exceptionClass, $message] = $expected;
+        expect(fn() => IntegerStandard::fromString($input))
+            ->toThrow($exceptionClass, $message);
+    }
+})->with([
+    // --- 1. Valid Decimals (Standard) ---
+    'valid_int' => ['42', 42],
+    'valid_negative' => ['-42', -42],
+    'int_max' => [(string) \PHP_INT_MAX, \PHP_INT_MAX],
+    'int_min' => [(string) \PHP_INT_MIN, \PHP_INT_MIN],
+
+    // --- 2. Range & Precision Issues ---
+    'str_overflow' => ['9223372036854775808', [ReasonableRangeIntegerTypeException::class, 'no reasonable range integer value']],
+    'str_too_long' => ['123456789012345678901234567890', [ReasonableRangeIntegerTypeException::class, 'no reasonable range integer value']],
+    'str_huge' => ['123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890', [ReasonableRangeIntegerTypeException::class, 'no reasonable range integer value']],
+
+    // --- 3. Notation & Formatting ---
+    'str_plus_sign' => ['+42', [IntegerTypeException::class, 'is not in canonical form ("42")']],
+    'str_leading_zero' => ['012', [IntegerTypeException::class, 'has no valid strict integer value']],
+    'str_scientific' => ['1e2', [IntegerTypeException::class, 'has no valid strict integer value']],
+    'str_comma' => ['1,000', [IntegerTypeException::class, 'has no valid strict integer value']],
+    'str_decimal_dot' => ['42.0', [IntegerTypeException::class, 'has no valid strict integer value']],
+    'str_dot_start' => ['.42', [IntegerTypeException::class, 'has no valid strict integer value']],
+    'str_dot_end' => ['42.', [IntegerTypeException::class, 'has no valid strict integer value']],
+
+    // --- 4. Alternative Bases ---
+    'str_hex' => ['0x1A', [IntegerTypeException::class, 'has no valid strict integer value']],
+    'str_octal_pref' => ['0o10', [IntegerTypeException::class, 'has no valid strict integer value']],
+    'str_bin_pref' => ['0b1101', [IntegerTypeException::class, 'has no valid strict integer value']],
+
+    // --- 5. Whitespace & Control Characters ---
+    'str_space_lead' => [' 42', [IntegerTypeException::class, 'is not in canonical form ("42")']],
+    'str_newline_end' => ["42\n", [IntegerTypeException::class, 'is not in canonical form ("42")']],
+    'str_whitespace' => [" \t\n\r ", [IntegerTypeException::class, 'has no valid strict integer value']],
+    'str_null_byte' => ["42\0junk", [IntegerTypeException::class, 'has no valid strict integer value']],
+    'str_invisible' => ["42\u{200B}", [IntegerTypeException::class, 'has no valid strict integer value']],
+
+    // --- 6. Non-Numeric Types & Garbage ---
+    'str_empty' => ['', [IntegerTypeException::class, 'has no valid strict integer value']],
+    'str_text_suffix' => ['42 units', [IntegerTypeException::class, 'has no valid strict integer value']],
+    'str_bool_true' => ['true', [IntegerTypeException::class, 'has no valid strict integer value']],
+    'str_neg_inf' => ['-INF', [IntegerTypeException::class, 'has no valid strict integer value']],
 ]);

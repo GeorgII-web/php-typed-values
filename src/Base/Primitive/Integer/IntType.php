@@ -54,7 +54,7 @@ abstract readonly class IntType extends PrimitiveType implements IntTypeInterfac
                 throw new ReasonableRangeIntegerTypeException(sprintf('String "%s" has no reasonable range integer value', $value));
             }
 
-            throw new IntegerTypeException(sprintf('String "%s" has no valid integer value', $value));
+            throw new IntegerTypeException(sprintf('String "%s" has no valid strict integer value', $value));
         }
 
         return $filtered;

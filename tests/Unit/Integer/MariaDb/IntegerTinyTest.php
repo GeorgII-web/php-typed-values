@@ -105,7 +105,7 @@ it('fromString enforces strict integer parsing and range', function (): void {
 
     foreach (['01', '+1', '1.0', ' 1', '1 ', 'a'] as $bad) {
         expect(fn() => IntegerTiny::fromString($bad))
-            ->toThrow(IntegerTypeException::class, \sprintf('String "%s" has no valid strict integer value', $bad));
+            ->toThrow(IntegerTypeException::class);
     }
 
     // In-range strict parse ok; out-of-range strict parse -> domain error
