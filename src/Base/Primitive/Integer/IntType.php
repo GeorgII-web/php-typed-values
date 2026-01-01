@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace PhpTypedValues\Base\Primitive\Integer;
 
 use const FILTER_VALIDATE_INT;
+use const PHP_INT_MAX;
+use const PHP_INT_MIN;
 
 use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\IntegerTypeException;
@@ -32,11 +34,37 @@ use function sprintf;
  */
 abstract readonly class IntType extends PrimitiveType implements IntTypeInterface
 {
-    abstract public function value(): int;
-
     public function __toString(): string
     {
         return $this->toString();
+    }
+
+    abstract public static function fromString(string $value): static;
+
+    abstract public static function fromInt(int $value): static;
+
+    abstract public static function fromFloat(float $value): static;
+
+    abstract public static function fromBool(bool $value): static;
+
+    /**
+     * @throws ReasonableRangeIntegerTypeException
+     * @throws IntegerTypeException
+     */
+    protected static function getIntegerFromFloat(float $value): int
+    {
+        if ($value > PHP_INT_MAX || $value < PHP_INT_MIN) {
+            throw new ReasonableRangeIntegerTypeException(sprintf('Float %s is out of range for a system integer', $value));
+        }
+
+        $intValue = (int) $value;
+
+        // Check if the float had a fractional part by comparing back
+        if ((float) $intValue !== $value) {
+            throw new IntegerTypeException(sprintf('Float %s cannot be converted to integer without losing precision', $value));
+        }
+
+        return $intValue;
     }
 
     /**
@@ -103,4 +131,14 @@ abstract readonly class IntType extends PrimitiveType implements IntTypeInterfac
         mixed $value,
         PrimitiveType $default = new Undefined(),
     ): static|PrimitiveType;
+
+    abstract public function value(): int;
+
+    abstract public function toInt(): int;
+
+    abstract public function toFloat(): float;
+
+    abstract public function toBool(): bool;
+
+    abstract public function toString(): string;
 }

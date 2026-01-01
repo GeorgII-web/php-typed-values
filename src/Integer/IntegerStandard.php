@@ -8,11 +8,13 @@ use Exception;
 use PhpTypedValues\Base\Primitive\Integer\IntType;
 use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\IntegerTypeException;
+use PhpTypedValues\Exception\ReasonableRangeIntegerTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
 
 use function is_bool;
+use function is_float;
 use function is_int;
 use function is_string;
 
@@ -52,14 +54,18 @@ readonly class IntegerStandard extends IntType
         return new static(parent::getIntegerFromString($value));
     }
 
-    public function toInt(): int
+    /**
+     * @throws IntegerTypeException
+     * @throws ReasonableRangeIntegerTypeException
+     */
+    public static function fromFloat(float $value): static
     {
-        return $this->value;
+        return new static(parent::getIntegerFromFloat($value));
     }
 
-    public function value(): int
+    public static function fromBool(bool $value): static
     {
-        return $this->value;
+        return new static((int) $value);
     }
 
     /**
@@ -114,8 +120,8 @@ readonly class IntegerStandard extends IntType
             /** @var static */
             return match (true) {
                 is_int($value) => static::fromInt($value),
-                //                $value instanceof self => static::fromInt($value->value()),
-                is_bool($value) => static::fromInt($value ? 1 : 0),
+                is_float($value) => static::fromFloat($value),
+                is_bool($value) => static::fromBool($value),
                 is_string($value) || $value instanceof Stringable => static::fromString((string) $value),
                 default => throw new TypeException('Value cannot be cast to int'),
             };
@@ -125,12 +131,32 @@ readonly class IntegerStandard extends IntType
         }
     }
 
+    public function value(): int
+    {
+        return $this->value;
+    }
+
     /**
      * @return non-empty-string
      */
     public function toString(): string
     {
         return (string) $this->value();
+    }
+
+    public function toInt(): int
+    {
+        return $this->value;
+    }
+
+    public function toFloat(): float
+    {
+        return (float) $this->value();
+    }
+
+    public function toBool(): bool
+    {
+        return (bool) $this->value();
     }
 
     public function jsonSerialize(): int

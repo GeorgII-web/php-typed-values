@@ -157,6 +157,8 @@ it('converts mixed values to correct integer state', function (mixed $input, int
         'input' => IntegerStandard::fromInt(123),
         'expected' => 123,
     ],
+    // Float
+    ['input' => 55.0, 'expected' => 55],
     // Booleans
     ['input' => true, 'expected' => 1],
     ['input' => false, 'expected' => 0],
@@ -182,7 +184,6 @@ it('returns Undefined for invalid mixed integer inputs', function (mixed $input)
     ['input' => null],
     ['input' => []],
     ['input' => 1.5],                  // Float
-    ['input' => 0.0],                  // Float
     ['input' => new stdClass()],
     ['input' => 'not-an-int'],
     ['input' => '1.0'],                // Float string

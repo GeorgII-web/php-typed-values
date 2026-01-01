@@ -29,8 +29,6 @@ testPositiveInt(IntegerPositive::fromInt(10)->value());
 testNonNegativeInt(IntegerNonNegative::fromInt(10)->value());
 testWeekDayInt(IntegerWeekDay::fromInt(7)->value());
 echo WeekDay::fromInt(7)->value() . PHP_EOL;
-
-// DB tinyint usage
 echo Tiny::tryFromMixed(-5)->toString() . PHP_EOL;
 echo Tiny::fromInt(-5)->toString() . PHP_EOL;
 echo Tiny::fromInt(-5)->jsonSerialize() . PHP_EOL;
@@ -53,6 +51,8 @@ echo IntegerNonNegative::tryFromString('10')->toString() . PHP_EOL;
 echo IntegerPositive::tryFromString('10')->toString() . PHP_EOL;
 echo IntegerWeekDay::tryFromString('5')->toString() . PHP_EOL;
 echo IntegerTiny::tryFromString('1')->toString() . PHP_EOL;
+echo (string) IntegerStandard::fromInt(42)->toFloat() . PHP_EOL;
+echo (string) IntegerStandard::fromInt(42)->toBool() . PHP_EOL;
 
 /**
  * Artificial functions.

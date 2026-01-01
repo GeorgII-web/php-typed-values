@@ -8,10 +8,13 @@ use Exception;
 use PhpTypedValues\Base\Primitive\Integer\IntType;
 use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\IntegerTypeException;
+use PhpTypedValues\Exception\ReasonableRangeIntegerTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
 
+use function is_bool;
+use function is_float;
 use function is_int;
 use function is_string;
 use function sprintf;
@@ -53,6 +56,23 @@ readonly class IntegerPositive extends IntType
     public static function fromInt(int $value): static
     {
         return new static($value);
+    }
+
+    /**
+     * @throws IntegerTypeException
+     * @throws ReasonableRangeIntegerTypeException
+     */
+    public static function fromFloat(float $value): static
+    {
+        return new static(parent::getIntegerFromFloat($value));
+    }
+
+    /**
+     * @throws IntegerTypeException
+     */
+    public static function fromBool(bool $value): static
+    {
+        return new static((int) $value);
     }
 
     /**
@@ -136,8 +156,8 @@ readonly class IntegerPositive extends IntType
             /** @var static */
             return match (true) {
                 is_int($value) => static::fromInt($value),
-                //                $value instanceof self => static::fromInt($value->value()),
-                $value === true => static::fromInt(1),
+                is_float($value) => static::fromFloat($value),
+                is_bool($value) => static::fromBool($value),
                 is_string($value) || $value instanceof Stringable => static::fromString((string) $value),
                 default => throw new TypeException('Value cannot be cast to int'),
             };
@@ -161,6 +181,16 @@ readonly class IntegerPositive extends IntType
     public function toString(): string
     {
         return (string) $this->value();
+    }
+
+    public function toFloat(): float
+    {
+        return (float) $this->value();
+    }
+
+    public function toBool(): bool
+    {
+        return (bool) $this->value();
     }
 
     public function isEmpty(): false

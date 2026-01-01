@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace PhpTypedValues\Base\Primitive\Integer;
 
 use PhpTypedValues\Base\Primitive\PrimitiveType;
-use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
@@ -22,18 +21,13 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  */
 interface IntTypeInterface
 {
-    /**
-     * Create an instance from a validated string representation.
-     *
-     * Implementations should perform strict validation and may throw a
-     * domain-specific subtype of {@see TypeException}
-     * when the provided value is invalid.
-     */
     public static function fromString(string $value): static;
 
-    public function value(): int;
-
     public static function fromInt(int $value): static;
+
+    public static function fromFloat(float $value): static;
+
+    public static function fromBool(bool $value): static;
 
     /**
      * @template T of PrimitiveType
@@ -70,4 +64,14 @@ interface IntTypeInterface
         string $value,
         PrimitiveType $default = new Undefined(),
     ): static|PrimitiveType;
+
+    public function value(): int;
+
+    public function toInt(): int;
+
+    public function toFloat(): float;
+
+    public function toBool(): bool;
+
+    public function toString(): string;
 }
