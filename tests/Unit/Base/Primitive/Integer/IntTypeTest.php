@@ -33,3 +33,63 @@ it('fromString parses valid integer strings including negatives and leading zero
 it('fromString rejects non-integer or non-canonical strings', function (string $input): void {
     expect(fn() => IntegerStandard::fromString($input))->toThrow(IntegerTypeException::class);
 })->with(['5a', 'a5', '', 'abc', ' 5', '5 ', '+5', '05', '--5', '3.14']);
+
+it('fromFloat handles boundary values and precision', function (): void {
+    // Exact representable integers as floats
+    expect(IntegerStandard::fromFloat(0.0)->value())->toBe(0)
+        ->and(IntegerStandard::fromFloat(1.0)->value())->toBe(1)
+        ->and(IntegerStandard::fromFloat(-1.0)->value())->toBe(-1);
+
+    // PHP_INT_MIN is usually exactly representable as a float (power of 2)
+    $minFloat = (float) \PHP_INT_MIN;
+    expect(IntegerStandard::fromFloat($minFloat)->value())->toBe(\PHP_INT_MIN);
+
+    // PHP_INT_MAX is usually NOT exactly representable as a float on 64-bit systems
+    // But we test the boundary logic anyway.
+    // We need a float that is out of range.
+    // On 64-bit, (float)PHP_INT_MAX is typically PHP_INT_MAX + 1
+    $outOfRangeUpper = (float) \PHP_INT_MAX;
+    if ($outOfRangeUpper > \PHP_INT_MAX) {
+        expect(fn() => IntegerStandard::fromFloat($outOfRangeUpper))
+            ->toThrow(PhpTypedValues\Exception\ReasonableRangeIntegerTypeException::class);
+    }
+
+    $outOfRangeLower = (float) \PHP_INT_MIN - 1024.0; // Subtracting enough to reach next representable float
+    expect(fn() => IntegerStandard::fromFloat($outOfRangeLower))
+        ->toThrow(PhpTypedValues\Exception\ReasonableRangeIntegerTypeException::class);
+});
+
+it('fromFloat kills BooleanOrToBooleanAnd mutation', function (): void {
+    // Both sides of || must be tested to ensure it's not &&
+    // Case 1: value > PHP_INT_MAX (only first part is true)
+    $tooBig = (float) \PHP_INT_MAX + 2048.0;
+    expect(fn() => IntegerStandard::fromFloat($tooBig))
+        ->toThrow(PhpTypedValues\Exception\ReasonableRangeIntegerTypeException::class);
+
+    // Case 2: value < PHP_INT_MIN (only second part is true)
+    $tooSmall = (float) \PHP_INT_MIN - 2048.0;
+    expect(fn() => IntegerStandard::fromFloat($tooSmall))
+        ->toThrow(PhpTypedValues\Exception\ReasonableRangeIntegerTypeException::class);
+});
+
+it('fromFloat rejects non-integer floats and kills precision check mutation', function (): void {
+    expect(fn() => IntegerStandard::fromFloat(1.1))
+        ->toThrow(IntegerTypeException::class, 'cannot be converted to integer without losing precision');
+
+    expect(fn() => IntegerStandard::fromFloat(-0.1))
+        ->toThrow(IntegerTypeException::class);
+
+    expect(fn() => IntegerStandard::fromFloat(1e20)) // Too big for int, should be caught by range check
+        ->toThrow(PhpTypedValues\Exception\ReasonableRangeIntegerTypeException::class);
+});
+
+it('toFloat returns strictly float values', function (): void {
+    $v = new IntegerStandard(123);
+    $f = $v->toFloat();
+    expect($f)->toBe(123.0)
+        ->and($f)->toBeFloat();
+
+    // Boundary value where int and float representations might differ
+    $maxV = new IntegerStandard(\PHP_INT_MAX);
+    expect($maxV->toFloat())->toBe((float) \PHP_INT_MAX);
+});

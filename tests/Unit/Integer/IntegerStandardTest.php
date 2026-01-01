@@ -252,8 +252,9 @@ it('fromFloat creates instance from float with exact integer value', function ()
 
 it('toFloat converts to float', function (): void {
     $v = new IntegerStandard(42);
-    expect($v->toFloat())->toBe(42.0)
-        ->and($v->toFloat())->toBeFloat();
+    $f = $v->toFloat();
+    expect($f)->toBe(42.0)
+        ->and($f)->toBeFloat();
 });
 
 it('toBool converts to bool', function (): void {
