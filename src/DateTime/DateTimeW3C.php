@@ -55,7 +55,7 @@ readonly class DateTimeW3C extends DateTimeType
         string $timezone = self::DEFAULT_ZONE,
     ): static {
         return new static(
-            static::createFromFormat(
+            static::getDateTimeFromFormatedString(
                 $value,
                 static::FORMAT,
                 new DateTimeZone($timezone)

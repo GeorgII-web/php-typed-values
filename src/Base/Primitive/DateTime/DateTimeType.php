@@ -55,7 +55,7 @@ abstract readonly class DateTimeType extends PrimitiveType implements DateTimeTy
      * @throws ReasonableRangeDateTimeTypeException
      * @throws DateTimeTypeException
      */
-    protected static function createFromFormat(
+    protected static function getDateTimeFromFormatedString(
         string $value,
         string $format,
         ?DateTimeZone $timezone = null,

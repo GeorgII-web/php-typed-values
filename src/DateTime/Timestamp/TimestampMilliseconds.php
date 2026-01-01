@@ -87,7 +87,7 @@ readonly class TimestampMilliseconds extends DateTimeType
         $secondsWithMicro = sprintf('%d.%06d', $seconds, $microseconds);
 
         return new static(
-            static::createFromFormat(
+            static::getDateTimeFromFormatedString(
                 $secondsWithMicro,
                 static::FORMAT,
                 new DateTimeZone($timezone)

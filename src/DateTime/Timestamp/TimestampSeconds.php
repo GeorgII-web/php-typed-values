@@ -68,7 +68,7 @@ readonly class TimestampSeconds extends DateTimeType
     public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE): static
     {
         return new static(
-            static::createFromFormat(
+            static::getDateTimeFromFormatedString(
                 $value,
                 static::FORMAT,
                 new DateTimeZone($timezone)
