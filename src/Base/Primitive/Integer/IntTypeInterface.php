@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace PhpTypedValues\Base\Primitive\Integer;
 
 use PhpTypedValues\Base\Primitive\PrimitiveType;
-use PhpTypedValues\Exception\IntegerTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -29,16 +28,11 @@ interface IntTypeInterface
      * Implementations should perform strict validation and may throw a
      * domain-specific subtype of {@see TypeException}
      * when the provided value is invalid.
-     *
-     * @throws TypeException
      */
     public static function fromString(string $value): static;
 
     public function value(): int;
 
-    /**
-     * @throws IntegerTypeException
-     */
     public static function fromInt(int $value): static;
 
     /**

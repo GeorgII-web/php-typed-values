@@ -147,22 +147,28 @@ readonly class IntegerPositive extends IntType
         }
     }
 
+    /**
+     * @return positive-int
+     */
     public function jsonSerialize(): int
     {
         return $this->value();
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function toString(): string
     {
         return (string) $this->value();
     }
 
-    public function isEmpty(): bool
+    public function isEmpty(): false
     {
         return false;
     }
 
-    public function isUndefined(): bool
+    public function isUndefined(): false
     {
         return false;
     }

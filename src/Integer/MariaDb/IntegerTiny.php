@@ -149,22 +149,28 @@ readonly class IntegerTiny extends IntType
         return $this->value;
     }
 
+    /**
+     * @return int<-128, 127>
+     */
     public function jsonSerialize(): int
     {
         return $this->value();
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function toString(): string
     {
         return (string) $this->value();
     }
 
-    public function isEmpty(): bool
+    public function isEmpty(): false
     {
         return false;
     }
 
-    public function isUndefined(): bool
+    public function isUndefined(): false
     {
         return false;
     }

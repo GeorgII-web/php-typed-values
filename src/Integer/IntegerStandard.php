@@ -125,6 +125,9 @@ readonly class IntegerStandard extends IntType
         }
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function toString(): string
     {
         return (string) $this->value();
@@ -135,12 +138,12 @@ readonly class IntegerStandard extends IntType
         return $this->value();
     }
 
-    public function isEmpty(): bool
+    public function isEmpty(): false
     {
         return false;
     }
 
-    public function isUndefined(): bool
+    public function isUndefined(): false
     {
         return false;
     }

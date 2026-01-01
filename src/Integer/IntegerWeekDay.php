@@ -152,22 +152,28 @@ readonly class IntegerWeekDay extends IntType
         return new static(parent::getIntegerFromString($value));
     }
 
+    /**
+     * @return int<1, 7>
+     */
     public function jsonSerialize(): int
     {
         return $this->value();
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function toString(): string
     {
         return (string) $this->value();
     }
 
-    public function isEmpty(): bool
+    public function isEmpty(): false
     {
         return false;
     }
 
-    public function isUndefined(): bool
+    public function isUndefined(): false
     {
         return false;
     }
