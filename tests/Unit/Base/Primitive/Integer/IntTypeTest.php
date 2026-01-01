@@ -30,9 +30,6 @@ it('fromString parses valid integer strings including negatives and leading zero
         ->and(IntegerStandard::fromString('42')->toString())->toBe('42');
 });
 
-it('fromString rejects non-integer or non-canonical strings', function (): void {
-    $invalid = ['5a', 'a5', '', 'abc', ' 5', '5 ', '+5', '05', '--5', '3.14'];
-    foreach ($invalid as $str) {
-        expect(fn() => IntegerStandard::fromString($str))->toThrow(IntegerTypeException::class);
-    }
-});
+it('fromString rejects non-integer or non-canonical strings', function (string $input): void {
+    expect(fn() => IntegerStandard::fromString($input))->toThrow(IntegerTypeException::class);
+})->with(['5a', 'a5', '', 'abc', ' 5', '5 ', '+5', '05', '--5', '3.14']);

@@ -57,6 +57,12 @@ abstract readonly class IntType extends PrimitiveType implements IntTypeInterfac
             throw new IntegerTypeException(sprintf('String "%s" has no valid strict integer value', $value));
         }
 
+        // Strict check, avoid unexpected string conversion
+        $convertedValue = (string) $filtered;
+        if ($value !== $convertedValue) {
+            throw new IntegerTypeException(sprintf('String "%s" is not in canonical form ("%s")', $value, $filtered));
+        }
+
         return $filtered;
     }
 
