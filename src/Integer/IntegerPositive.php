@@ -60,9 +60,7 @@ readonly class IntegerPositive extends IntType
      */
     public static function fromString(string $value): static
     {
-        parent::assertIntegerString($value);
-
-        return new static((int) $value);
+        return new static(parent::getIntegerFromString($value));
     }
 
     /**

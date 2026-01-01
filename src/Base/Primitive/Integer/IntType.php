@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Base\Primitive\Integer;
 
+use const FILTER_VALIDATE_INT;
+
 use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\IntegerTypeException;
+use PhpTypedValues\Exception\ReasonableRangeIntegerTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 use function sprintf;
@@ -38,14 +41,23 @@ abstract readonly class IntType extends PrimitiveType implements IntTypeInterfac
 
     /**
      * @throws IntegerTypeException
+     * @throws ReasonableRangeIntegerTypeException
      */
-    protected static function assertIntegerString(string $value): void
+    protected static function getIntegerFromString(string $value): int
     {
-        // Strict check, avoid unexpected string conversion
-        $convertedValue = (string) ((int) $value);
-        if ($value !== $convertedValue) {
-            throw new IntegerTypeException(sprintf('String "%s" has no valid strict integer value', $value));
+        // First, check if filter_var even considers it an integer in range
+        $filtered = filter_var($value, FILTER_VALIDATE_INT);
+        if ($filtered === false) {
+            // If it looks like a canonical decimal integer but filter_var failed, it's an overflow.
+            // Regex matches: 0, -0 (canonical 0), or non-zero numbers without leading zeros.
+            if (preg_match('/^-?(?:0|[1-9]\d*)$/', $value)) {
+                throw new ReasonableRangeIntegerTypeException(sprintf('String "%s" has no reasonable range integer value', $value));
+            }
+
+            throw new IntegerTypeException(sprintf('String "%s" has no valid integer value', $value));
         }
+
+        return $filtered;
     }
 
     /**
