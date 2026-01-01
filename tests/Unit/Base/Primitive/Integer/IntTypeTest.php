@@ -54,7 +54,7 @@ it('fromFloat handles boundary values and precision', function (): void {
             ->toThrow(PhpTypedValues\Exception\ReasonableRangeIntegerTypeException::class);
     }
 
-    $outOfRangeLower = (float) \PHP_INT_MIN - 1024.0; // Subtracting enough to reach next representable float
+    $outOfRangeLower = (float) \PHP_INT_MIN - 4096.0; // Subtracting enough to reach next representable float
     expect(fn() => IntegerStandard::fromFloat($outOfRangeLower))
         ->toThrow(PhpTypedValues\Exception\ReasonableRangeIntegerTypeException::class);
 });
