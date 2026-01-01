@@ -214,11 +214,15 @@ it('fromFloat creates instance from float with exact integer value', function ()
     expect($v->value())->toBe(5);
 });
 
-it('toFloat converts to float', function (): void {
+it('toFloat converts to float and kills RemoveDoubleCast mutant', function (): void {
     $v = new IntegerPositive(42);
     $f = $v->toFloat();
     expect($f)->toBe(42.0)
         ->and($f)->toBeFloat();
+
+    // Secondary check to ensure it's not an integer, even if return type is float.
+    // This helps in some mutation testing environments.
+    expect(\is_float($v->toFloat()))->toBeTrue();
 });
 
 it('toBool converts to bool', function (): void {

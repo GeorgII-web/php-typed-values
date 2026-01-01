@@ -250,11 +250,13 @@ it('fromFloat creates instance from float with exact integer value', function ()
     expect($v->value())->toBe(5);
 });
 
-it('toFloat converts to float', function (): void {
+it('toFloat converts to float and kills RemoveDoubleCast mutant', function (): void {
     $v = new IntegerStandard(42);
     $f = $v->toFloat();
     expect($f)->toBe(42.0)
         ->and($f)->toBeFloat();
+
+    expect(\is_float($v->toFloat()))->toBeTrue();
 });
 
 it('toBool converts to bool', function (): void {

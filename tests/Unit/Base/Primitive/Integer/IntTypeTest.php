@@ -48,11 +48,8 @@ it('fromFloat handles boundary values and precision', function (): void {
     // But we test the boundary logic anyway.
     // We need a float that is out of range.
     // On 64-bit, (float)PHP_INT_MAX is typically PHP_INT_MAX + 1
-    $outOfRangeUpper = (float) \PHP_INT_MAX;
-    if ($outOfRangeUpper > \PHP_INT_MAX) {
-        expect(fn() => IntegerStandard::fromFloat($outOfRangeUpper))
-            ->toThrow(PhpTypedValues\Exception\ReasonableRangeIntegerTypeException::class);
-    }
+    expect(fn() => IntegerStandard::fromFloat((float) \PHP_INT_MAX))
+        ->toThrow(IntegerTypeException::class);
 
     $outOfRangeLower = (float) \PHP_INT_MIN - 4096.0; // Subtracting enough to reach next representable float
     expect(fn() => IntegerStandard::fromFloat($outOfRangeLower))
