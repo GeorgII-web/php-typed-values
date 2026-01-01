@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use PhpTypedValues\Exception\IntegerTypeException;
-use PhpTypedValues\Integer\IntegerNonNegative;
 use PhpTypedValues\Integer\IntegerWeekDay;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -211,19 +210,17 @@ it('isUndefined is always false', function (): void {
 });
 
 it('fromFloat creates instance from float with exact integer value', function (): void {
-    $v = IntegerNonNegative::fromFloat(5.0);
+    $v = IntegerWeekDay::fromFloat(5.0);
     expect($v->value())->toBe(5);
 });
 
 it('toFloat converts to float', function (): void {
-    $v = new IntegerNonNegative(42);
-    expect($v->toFloat())->toBe(42.0)
+    $v = new IntegerWeekDay(3);
+    expect($v->toFloat())->toBe(3.0)
         ->and($v->toFloat())->toBeFloat();
 });
 
 it('toBool converts to bool', function (): void {
-    $zero = new IntegerNonNegative(0);
-    $positive = new IntegerNonNegative(5);
-    expect($zero->toBool())->toBeFalse()
-        ->and($positive->toBool())->toBeTrue();
+    $positive = new IntegerWeekDay(5);
+    expect($positive->toBool())->toBeTrue();
 });
