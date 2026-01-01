@@ -30,8 +30,9 @@ interface StrTypeInterface
      * when the provided value is invalid.
      *
      * @throws TypeException
+     * @return static
      */
-    public static function fromString(string $value): static;
+    public static function fromString(string $value);
 
     public function value(): string;
 
@@ -41,11 +42,12 @@ interface StrTypeInterface
      * @param T $default
      *
      * @return static|T
+     * @param mixed $value
      */
     public static function tryFromMixed(
-        mixed $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+        $value,
+        PrimitiveType $default = null
+    );
 
     /**
      * @template T of PrimitiveType
@@ -56,6 +58,6 @@ interface StrTypeInterface
      */
     public static function tryFromString(
         string $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+        PrimitiveType $default = null
+    );
 }

@@ -30,7 +30,7 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-abstract readonly class IntType extends PrimitiveType implements IntTypeInterface
+abstract class IntType extends PrimitiveType implements IntTypeInterface
 {
     abstract public function value(): int;
 
@@ -77,8 +77,8 @@ abstract readonly class IntType extends PrimitiveType implements IntTypeInterfac
      */
     abstract public static function tryFromInt(
         int $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+        PrimitiveType $default = null
+    );
 
     /**
      * @template T of PrimitiveType
@@ -89,8 +89,8 @@ abstract readonly class IntType extends PrimitiveType implements IntTypeInterfac
      */
     abstract public static function tryFromString(
         string $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+        PrimitiveType $default = null
+    );
 
     /**
      * @template T of PrimitiveType
@@ -98,9 +98,10 @@ abstract readonly class IntType extends PrimitiveType implements IntTypeInterfac
      * @param T $default
      *
      * @return static|T
+     * @param mixed $value
      */
     abstract public static function tryFromMixed(
-        mixed $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+        $value,
+        PrimitiveType $default = null
+    );
 }
