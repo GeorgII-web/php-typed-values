@@ -24,7 +24,7 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  *
  * @psalm-immutable
  */
-abstract readonly class StrType extends PrimitiveType implements StrTypeInterface
+abstract class StrType extends PrimitiveType implements StrTypeInterface
 {
     abstract public function value(): string;
 
@@ -45,11 +45,12 @@ abstract readonly class StrType extends PrimitiveType implements StrTypeInterfac
      * @param T $default
      *
      * @return static|T
+     * @param mixed $value
      */
     abstract public static function tryFromMixed(
-        mixed $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+        $value,
+        PrimitiveType $default = null
+    );
 
     /**
      * @template T of PrimitiveType
@@ -60,6 +61,6 @@ abstract readonly class StrType extends PrimitiveType implements StrTypeInterfac
      */
     abstract public static function tryFromString(
         string $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+        PrimitiveType $default = null
+    );
 }

@@ -24,7 +24,7 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  *
  * @psalm-immutable
  */
-abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterface
+abstract class BoolType extends PrimitiveType implements BoolTypeInterface
 {
     /**
      * DO NOT IMPLEMENT ANY PUBLIC METHODS IN INTERNAL CLASS!
@@ -40,8 +40,8 @@ abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterf
      */
     abstract public static function tryFromInt(
         int $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+        PrimitiveType $default = null
+    );
 
     /**
      * @template T of PrimitiveType
@@ -49,11 +49,12 @@ abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterf
      * @param T $default
      *
      * @return static|T
+     * @param mixed $value
      */
     abstract public static function tryFromMixed(
-        mixed $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+        $value,
+        PrimitiveType $default = null
+    );
 
     /**
      * @template T of PrimitiveType
@@ -64,8 +65,8 @@ abstract readonly class BoolType extends PrimitiveType implements BoolTypeInterf
      */
     abstract public static function tryFromString(
         string $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+        PrimitiveType $default = null
+    );
 
     abstract public function toString(): string;
 
