@@ -186,7 +186,7 @@ readonly class IntegerTiny extends IntType
 
     public function toFloat(): float
     {
-        return (float) $this->value();
+        return $this->value();
     }
 
     public function toBool(): bool

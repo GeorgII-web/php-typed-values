@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace PhpTypedValues\Base\Primitive\Integer;
 
 use const FILTER_VALIDATE_INT;
-use const PHP_INT_MAX;
-use const PHP_INT_MIN;
 
 use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Exception\IntegerTypeException;
@@ -48,15 +46,10 @@ abstract readonly class IntType extends PrimitiveType implements IntTypeInterfac
     abstract public static function fromBool(bool $value): static;
 
     /**
-     * @throws ReasonableRangeIntegerTypeException
      * @throws IntegerTypeException
      */
     protected static function getIntegerFromFloat(float $value): int
     {
-        if ($value > PHP_INT_MAX || $value < PHP_INT_MIN) {
-            throw new ReasonableRangeIntegerTypeException(sprintf('Float %s is out of range for a system integer', $value));
-        }
-
         $intValue = (int) $value;
 
         // Check if the float had a fractional part by comparing back

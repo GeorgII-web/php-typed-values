@@ -43,6 +43,8 @@ it('fromFloat handles boundary values and precision', function (): void {
     // PHP_INT_MIN is usually exactly representable as a float (power of 2)
     $minFloat = (float) \PHP_INT_MIN;
     expect(IntegerStandard::fromFloat($minFloat)->value())->toBe(\PHP_INT_MIN);
+    expect(fn() => IntegerStandard::fromFloat((float) \PHP_INT_MAX))
+        ->toThrow(IntegerTypeException::class);
 
     // PHP_INT_MAX is usually NOT exactly representable as a float on 64-bit systems
     // But we test the boundary logic anyway.
@@ -53,7 +55,7 @@ it('fromFloat handles boundary values and precision', function (): void {
 
     $outOfRangeLower = (float) \PHP_INT_MIN - 4096.0; // Subtracting enough to reach next representable float
     expect(fn() => IntegerStandard::fromFloat($outOfRangeLower))
-        ->toThrow(PhpTypedValues\Exception\ReasonableRangeIntegerTypeException::class);
+        ->toThrow(IntegerTypeException::class);
 });
 
 it('fromFloat kills BooleanOrToBooleanAnd mutation', function (): void {
@@ -61,12 +63,12 @@ it('fromFloat kills BooleanOrToBooleanAnd mutation', function (): void {
     // Case 1: value > PHP_INT_MAX (only first part is true)
     $tooBig = (float) \PHP_INT_MAX + 2048.0;
     expect(fn() => IntegerStandard::fromFloat($tooBig))
-        ->toThrow(PhpTypedValues\Exception\ReasonableRangeIntegerTypeException::class);
+        ->toThrow(IntegerTypeException::class);
 
     // Case 2: value < PHP_INT_MIN (only second part is true)
     $tooSmall = (float) \PHP_INT_MIN - 2048.0;
     expect(fn() => IntegerStandard::fromFloat($tooSmall))
-        ->toThrow(PhpTypedValues\Exception\ReasonableRangeIntegerTypeException::class);
+        ->toThrow(IntegerTypeException::class);
 });
 
 it('fromFloat rejects non-integer floats and kills precision check mutation', function (): void {
@@ -77,7 +79,7 @@ it('fromFloat rejects non-integer floats and kills precision check mutation', fu
         ->toThrow(IntegerTypeException::class);
 
     expect(fn() => IntegerStandard::fromFloat(1e20)) // Too big for int, should be caught by range check
-        ->toThrow(PhpTypedValues\Exception\ReasonableRangeIntegerTypeException::class);
+        ->toThrow(IntegerTypeException::class);
 });
 
 it('toFloat returns strictly float values', function (): void {
@@ -86,7 +88,18 @@ it('toFloat returns strictly float values', function (): void {
     expect($f)->toBe(123.0)
         ->and($f)->toBeFloat();
 
+    // This is the critical check for the mutation:
+    // Identical (===) check will fail if the cast is removed and strict types are on
+    expect($f === 123.0)->toBeTrue();
+
     // Boundary value where int and float representations might differ
     $maxV = new IntegerStandard(\PHP_INT_MAX);
     expect($maxV->toFloat())->toBe((float) \PHP_INT_MAX);
+});
+
+it('fromFloat handles the PHP_INT_MAX boundary precision loss', function () {
+    $maxFloat = (float) \PHP_INT_MAX;
+    // This value is actually > PHP_INT_MAX on most systems
+    expect(fn() => IntegerStandard::fromFloat($maxFloat))
+        ->toThrow(IntegerTypeException::class);
 });

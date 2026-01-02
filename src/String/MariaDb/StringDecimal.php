@@ -62,7 +62,7 @@ readonly class StringDecimal extends StrType
     }
 
     /**
-     * Convert to float only if the string representation matches exactly string-casted float.
+     * Convert to float only if the string representation exactly matches string-casted float.
      *
      * @throws DecimalStringTypeException
      */
