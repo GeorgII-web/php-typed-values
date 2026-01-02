@@ -30,6 +30,7 @@ use PhpTypedValues\String\StringCountryCode;
 use PhpTypedValues\String\StringEmail;
 use PhpTypedValues\String\StringEmpty;
 use PhpTypedValues\String\StringFileName;
+use PhpTypedValues\String\StringMd5;
 use PhpTypedValues\String\StringNonBlank;
 use PhpTypedValues\String\StringNonEmpty;
 use PhpTypedValues\String\StringPath;
@@ -48,6 +49,7 @@ testString(StringStandard::fromString('hi')->value());
 testNonEmptyString(StringNonEmpty::fromString('hi')->value());
 testEmptyString(StringEmpty::fromString('')->value());
 
+echo StringMd5::hash('hi')->toString() . PHP_EOL;
 echo StringStandard::fromString('hi')->toString() . PHP_EOL;
 echo NonEmpty::fromString('hi')->toString() . PHP_EOL;
 echo StrType::fromString('hi')->toString() . PHP_EOL;
