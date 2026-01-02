@@ -21,13 +21,25 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  */
 interface IntTypeInterface
 {
-    public static function fromString(string $value): static;
+    /**
+     * @return static
+     */
+    public static function fromString(string $value);
 
-    public static function fromInt(int $value): static;
+    /**
+     * @return static
+     */
+    public static function fromInt(int $value);
 
-    public static function fromFloat(float $value): static;
+    /**
+     * @return static
+     */
+    public static function fromFloat(float $value);
 
-    public static function fromBool(bool $value): static;
+    /**
+     * @return static
+     */
+    public static function fromBool(bool $value);
 
     /**
      * @template T of PrimitiveType
@@ -38,8 +50,8 @@ interface IntTypeInterface
      */
     public static function tryFromInt(
         int $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+        PrimitiveType $default = null
+    );
 
     /**
      * @template T of PrimitiveType
@@ -47,11 +59,12 @@ interface IntTypeInterface
      * @param T $default
      *
      * @return static|T
+     * @param mixed $value
      */
     public static function tryFromMixed(
-        mixed $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+        $value,
+        PrimitiveType $default = null
+    );
 
     /**
      * @template T of PrimitiveType
@@ -62,8 +75,8 @@ interface IntTypeInterface
      */
     public static function tryFromString(
         string $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+        PrimitiveType $default = null
+    );
 
     public function value(): int;
 

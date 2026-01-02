@@ -18,5 +18,8 @@ interface ValueObjectInterface extends JsonSerializable, IsUndefinedInterface, I
 {
     public function toArray(): array;
 
-    public static function fromArray(array $value): static;
+    /**
+     * @return static
+     */
+    public static function fromArray(array $value);
 }

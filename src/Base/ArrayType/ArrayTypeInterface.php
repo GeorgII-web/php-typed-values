@@ -46,8 +46,9 @@ interface ArrayTypeInterface extends TypeInterface, JsonSerializable, IteratorAg
      * @param list<mixed> $value
      *
      * @throws ArrayTypeException
+     * @return static
      */
-    public static function fromArray(array $value): static;
+    public static function fromArray(array $value);
 
     /**
      * Creates a new collection from a list of Objects or scalars (which
@@ -65,8 +66,8 @@ interface ArrayTypeInterface extends TypeInterface, JsonSerializable, IteratorAg
      */
     public static function tryFromArray(
         array $value,
-        self $default = new ArrayUndefined(),
-    ): static|self;
+        self $default = null
+    );
 
     /**
      * Convert to an array of scalars from an array of Objects.

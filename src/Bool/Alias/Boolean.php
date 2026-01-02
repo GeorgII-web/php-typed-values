@@ -18,6 +18,6 @@ use PhpTypedValues\Bool\BoolStandard;
  *
  * @psalm-immutable
  */
-final readonly class Boolean extends BoolStandard
+final class Boolean extends BoolStandard
 {
 }
