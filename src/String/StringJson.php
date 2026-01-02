@@ -21,11 +21,10 @@ use function json_decode;
 use function sprintf;
 
 /**
- * JSON text string.
+ * Valid JSON string.
  *
- * Validates the input using json_decode with JSON_THROW_ON_ERROR and stores
- * the original string on success. Helpers provide convenient decoding to
- * an object or array while reusing the same strict validation path.
+ * Validates input using json_decode with JSON_THROW_ON_ERROR. The original
+ * string is preserved and must be non-empty and syntactically valid JSON.
  *
  * Example
  *  - $j = StringJson::fromString('{"a":1}');

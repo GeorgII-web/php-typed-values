@@ -21,8 +21,8 @@ use function sprintf;
 /**
  * MD5 hash string (32 hexadecimal characters).
  *
- * Validates and stores a 32-character lowercase hexadecimal MD5 hash.
- * The value keeps its case on construction to ensure consistency.
+ * Validates that the string is exactly 32 hexadecimal characters (case-insensitive).
+ * The original case is preserved on successful validation.
  *
  * Example
  *  - $h = StringMd5::fromString('5d41402abc4b2a76b9719d911017c592');

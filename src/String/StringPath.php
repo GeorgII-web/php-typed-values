@@ -18,13 +18,15 @@ use function preg_match;
 use function sprintf;
 
 /**
- * Path string.
+ * Path string (file or directory path).
  *
- * Validates that the string is a valid path.
+ * Validates basic path syntax and rejects control characters and invalid symbols.
+ * Allows both forward and backslash separators for cross-platform compatibility.
  *
  * Example
  *  - $p = StringPath::fromString('/src/String');
- *  - $p = StringPath::fromString('src\String\');
+ *    $p->toString(); // '/src/String'
+ *  - StringPath::fromString(''); // throws PathStringTypeException
  *
  * @psalm-immutable
  */

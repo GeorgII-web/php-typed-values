@@ -22,16 +22,15 @@ use function preg_match;
 use function sprintf;
 
 /**
- * File name string.
+ * File name string (no path separators).
  *
- * Validates that the string is a valid file name (not a path).
- * Rejects path separators and characters that are typically invalid in file names
- * across major operating systems.
+ * Validates that the string is a valid file name without path separators.
+ * Rejects characters typically invalid across major operating systems.
  *
  * Example
  *  - $f = StringFileName::fromString('image.jpg');
- *    $f->getFileNameOnly(); // "image"
- *    $f->getExtension(); // "jpg"
+ *    $f->getFileNameOnly(); // 'image'
+ *  - StringFileName::fromString('/path/file.txt'); // throws FileNameStringTypeException
  *
  * @psalm-immutable
  */

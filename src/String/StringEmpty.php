@@ -19,7 +19,8 @@ use function sprintf;
 /**
  * Empty string typed value.
  *
- * Ensures the wrapped string is empty (length == 0).
+ * Validates that the string has zero length and rejects any non-empty input.
+ * Useful for enforcing empty state in type-safe contexts.
  *
  * Example
  *  - $v = StringEmpty::fromString('');
