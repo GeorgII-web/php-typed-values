@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use PhpTypedValues\String\StringMd5;
+
 arch('strict types')
     ->expect('App')
     ->toUseStrictTypes();
@@ -12,4 +14,7 @@ arch('no debug')
 
 arch()->preset()->php();
 
-arch()->preset()->security();
+arch()
+    ->preset()
+    ->security()
+    ->ignoring(StringMd5::class); // md5 weak algorithm

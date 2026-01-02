@@ -6,7 +6,7 @@ use PhpTypedValues\Exception\Md5StringTypeException;
 use PhpTypedValues\String\StringMd5;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
-it('accepts valid MD5 hash and normalizes to lowercase', function (): void {
+it('accepts valid MD5 hash and preserves case', function (): void {
     $lowercase = new StringMd5('5d41402abc4b2a76b9719d911017c592');
     $uppercase = new StringMd5('5D41402ABC4B2A76B9719D911017C592');
     $mixed = new StringMd5('5d41402AbC4b2A76B9719d911017c592');
@@ -14,9 +14,9 @@ it('accepts valid MD5 hash and normalizes to lowercase', function (): void {
     expect($lowercase->value())
         ->toBe('5d41402abc4b2a76b9719d911017c592')
         ->and($uppercase->value())
-        ->toBe('5d41402abc4b2a76b9719d911017c592')
+        ->toBe('5D41402ABC4B2A76B9719D911017C592')
         ->and($mixed->value())
-        ->toBe('5d41402abc4b2a76b9719d911017c592');
+        ->toBe('5d41402AbC4b2A76B9719d911017c592');
 });
 
 it('throws on invalid MD5 format', function (): void {
@@ -38,14 +38,14 @@ it('throws on invalid MD5 format', function (): void {
 });
 
 it('fromHash creates MD5 from input string', function (): void {
-    $hash = StringMd5::fromHash('hello');
+    $hash = StringMd5::hash('hello');
 
     expect($hash->value())->toBe('5d41402abc4b2a76b9719d911017c592')
         ->and($hash->toString())->toBe('5d41402abc4b2a76b9719d911017c592');
 });
 
 it('fromHash with various inputs produces correct hashes', function (string $input, string $expectedHash): void {
-    $hash = StringMd5::fromHash($input);
+    $hash = StringMd5::hash($input);
     expect($hash->value())->toBe($expectedHash);
 })->with([
     ['hello', '5d41402abc4b2a76b9719d911017c592'],
@@ -55,32 +55,26 @@ it('fromHash with various inputs produces correct hashes', function (string $inp
     ['123', '202cb962ac59075b964b07152d234b70'],
 ]);
 
-it('fromHash handles binary parameter', function (): void {
-    // Binary mode should fail validation (not 32 hex chars)
-    expect(fn() => StringMd5::fromHash('hello', true))
-        ->toThrow(Md5StringTypeException::class);
-});
-
 it('fromString and fromHash produce same result', function (): void {
     $input = 'test';
     $expectedHash = md5($input);
 
     $fromString = StringMd5::fromString($expectedHash);
-    $fromHash = StringMd5::fromHash($input);
+    $fromHash = StringMd5::hash($input);
 
     expect($fromString->value())->toBe($fromHash->value())
         ->and($fromString->value())->toBe($expectedHash);
 });
 
 it('toString returns the MD5 hash', function (): void {
-    $hash = StringMd5::fromHash('example');
+    $hash = StringMd5::hash('example');
 
     expect($hash->toString())->toBe($hash->value())
         ->and($hash->toString())->toBe('1a79a4d60de6718e8e5b326e338ae533');
 });
 
 it('__toString magic method works correctly', function (): void {
-    $hash = StringMd5::fromHash('test');
+    $hash = StringMd5::hash('test');
 
     expect((string) $hash)->toBe('098f6bcd4621d373cade4e832627b4f6')
         ->and($hash . ' suffix')->toBe('098f6bcd4621d373cade4e832627b4f6 suffix');
@@ -102,8 +96,11 @@ it('tryFromString returns instance for valid hash and Undefined for invalid', fu
 });
 
 it('tryFromMixed handles valid MD5 hashes and invalid mixed inputs', function (): void {
-    // valid hash as string
+    // valid hash as string (lowercase)
     $ok = StringMd5::tryFromMixed('5d41402abc4b2a76b9719d911017c592');
+
+    // valid hash as string (uppercase)
+    $okUpper = StringMd5::tryFromMixed('5D41402ABC4B2A76B9719D911017C592');
 
     // stringable producing a valid hash
     $stringable = new class {
@@ -123,6 +120,8 @@ it('tryFromMixed handles valid MD5 hashes and invalid mixed inputs', function ()
 
     expect($ok)->toBeInstanceOf(StringMd5::class)
         ->and($ok->value())->toBe('5d41402abc4b2a76b9719d911017c592')
+        ->and($okUpper)->toBeInstanceOf(StringMd5::class)
+        ->and($okUpper->value())->toBe('5D41402ABC4B2A76B9719D911017C592')
         ->and($fromStringable)->toBeInstanceOf(StringMd5::class)
         ->and($fromStringable->value())->toBe('098f6bcd4621d373cade4e832627b4f6')
         ->and($badFormat)->toBeInstanceOf(Undefined::class)
@@ -133,7 +132,7 @@ it('tryFromMixed handles valid MD5 hashes and invalid mixed inputs', function ()
 });
 
 it('jsonSerialize returns the hash string', function (): void {
-    $hash = StringMd5::fromHash('json');
+    $hash = StringMd5::hash('json');
 
     expect($hash->jsonSerialize())->toBeString()
         ->and($hash->jsonSerialize())->toBe($hash->value())
@@ -141,7 +140,7 @@ it('jsonSerialize returns the hash string', function (): void {
 });
 
 it('isEmpty is always false for StringMd5', function (): void {
-    $hash = StringMd5::fromHash('test');
+    $hash = StringMd5::hash('test');
     expect($hash->isEmpty())->toBeFalse();
 });
 
@@ -160,7 +159,7 @@ it('isUndefined returns false for instances and true for Undefined results', fun
 
 it('round-trip conversion preserves hash: string → hash → string', function (): void {
     $input = 'round-trip-test';
-    $hash = StringMd5::fromHash($input);
+    $hash = StringMd5::hash($input);
     $hashString = $hash->toString();
     $reconstructed = StringMd5::fromString($hashString);
 
@@ -169,41 +168,46 @@ it('round-trip conversion preserves hash: string → hash → string', function 
 });
 
 it('value and toString return the same string', function (): void {
-    $hash = StringMd5::fromHash('consistency');
+    $hash = StringMd5::hash('consistency');
 
     expect($hash->value())->toBe($hash->toString());
 });
 
-it('handles uppercase input and normalizes to lowercase', function (): void {
+it('handles uppercase input and preserves case', function (): void {
     $uppercase = 'D41D8CD98F00B204E9800998ECF8427E';
     $hash = StringMd5::fromString($uppercase);
 
-    expect($hash->value())->toBe('d41d8cd98f00b204e9800998ecf8427e')
-        ->and($hash->toString())->toBe('d41d8cd98f00b204e9800998ecf8427e');
+    expect($hash->value())->toBe('D41D8CD98F00B204E9800998ECF8427E')
+        ->and($hash->toString())->toBe('D41D8CD98F00B204E9800998ECF8427E');
 });
 
 it('multiple fromHash calls with same input produce identical results', function (): void {
     $input = 'duplicate';
-    $hash1 = StringMd5::fromHash($input);
-    $hash2 = StringMd5::fromHash($input);
+    $hash1 = StringMd5::hash($input);
+    $hash2 = StringMd5::hash($input);
 
     expect($hash1->value())->toBe($hash2->value());
 });
 
 it('fromHash handles special characters and unicode', function (): void {
     $special = 'Hello, 世界! @#$%^&*()';
-    $hash = StringMd5::fromHash($special);
+    $hash = StringMd5::hash($special);
 
     expect($hash->value())->toMatch('/^[a-f0-9]{32}$/')
         ->and($hash->value())->toBe(md5($special));
 });
 
 it('validates all hexadecimal characters are accepted', function (): void {
-    // All hex digits present
-    $allHex = 'abcdef0123456789abcdef0123456789';
-    $hash = StringMd5::fromString($allHex);
+    // All hex digits present (lowercase)
+    $allHexLower = 'abcdef0123456789abcdef0123456789';
+    $hashLower = StringMd5::fromString($allHexLower);
 
-    expect($hash->value())->toBe($allHex);
+    // All hex digits present (uppercase)
+    $allHexUpper = 'ABCDEF0123456789ABCDEF0123456789';
+    $hashUpper = StringMd5::fromString($allHexUpper);
+
+    expect($hashLower->value())->toBe($allHexLower)
+        ->and($hashUpper->value())->toBe($allHexUpper);
 });
 
 it('rejects hashes with invalid hex characters', function (string $invalidHash): void {
@@ -218,7 +222,7 @@ it('rejects hashes with invalid hex characters', function (string $invalidHash):
 
 it('round-trip: hash input → get string → hash again produces same result', function (): void {
     $input = 'cycle-test';
-    $hash1 = StringMd5::fromHash($input);
+    $hash1 = StringMd5::hash($input);
     $retrieved = $hash1->value();
     $hash2 = StringMd5::fromString($retrieved);
 
