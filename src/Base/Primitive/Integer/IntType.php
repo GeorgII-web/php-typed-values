@@ -30,20 +30,32 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-abstract readonly class IntType extends PrimitiveType implements IntTypeInterface
+abstract class IntType extends PrimitiveType implements IntTypeInterface
 {
     public function __toString(): string
     {
         return $this->toString();
     }
 
-    abstract public static function fromString(string $value): static;
+    /**
+     * @return static
+     */
+    abstract public static function fromString(string $value);
 
-    abstract public static function fromInt(int $value): static;
+    /**
+     * @return static
+     */
+    abstract public static function fromInt(int $value);
 
-    abstract public static function fromFloat(float $value): static;
+    /**
+     * @return static
+     */
+    abstract public static function fromFloat(float $value);
 
-    abstract public static function fromBool(bool $value): static;
+    /**
+     * @return static
+     */
+    abstract public static function fromBool(bool $value);
 
     /**
      * @throws IntegerTypeException
@@ -98,8 +110,8 @@ abstract readonly class IntType extends PrimitiveType implements IntTypeInterfac
      */
     abstract public static function tryFromInt(
         int $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+        PrimitiveType $default = null
+    );
 
     /**
      * @template T of PrimitiveType
@@ -110,8 +122,8 @@ abstract readonly class IntType extends PrimitiveType implements IntTypeInterfac
      */
     abstract public static function tryFromString(
         string $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+        PrimitiveType $default = null
+    );
 
     /**
      * @template T of PrimitiveType
@@ -119,11 +131,12 @@ abstract readonly class IntType extends PrimitiveType implements IntTypeInterfac
      * @param T $default
      *
      * @return static|T
+     * @param mixed $value
      */
     abstract public static function tryFromMixed(
-        mixed $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+        $value,
+        PrimitiveType $default = null
+    );
 
     abstract public function value(): int;
 

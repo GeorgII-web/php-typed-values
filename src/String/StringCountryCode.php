@@ -32,9 +32,10 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class StringCountryCode extends StrType
+class StringCountryCode extends StrType
 {
-    /** @var non-empty-string */
+    /** @var non-empty-string
+     * @readonly */
     protected string $value;
 
     /**
@@ -55,8 +56,9 @@ readonly class StringCountryCode extends StrType
 
     /**
      * @throws CountryCodeStringTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         return new static($value);
     }
@@ -98,20 +100,24 @@ readonly class StringCountryCode extends StrType
      * @param T $default
      *
      * @return static|T
+     * @param mixed $value
      */
     public static function tryFromMixed(
-        mixed $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
+        $value,
+        PrimitiveType $default = null
+    ) {
+        $default ??= new Undefined();
         try {
-            /** @var static */
-            return match (true) {
-                is_string($value) => static::fromString($value),
-                //                ($value instanceof self) => static::fromString($value->value()),
-                $value instanceof Stringable, is_scalar($value) => static::fromString((string) $value),
-                default => throw new TypeException('Value cannot be cast to string'),
-            };
-        } catch (Exception) {
+            switch (true) {
+                case is_string($value):
+                    return static::fromString($value);
+                case is_object($value) && method_exists($value, '__toString'):
+                case is_scalar($value):
+                    return static::fromString((string) $value);
+                default:
+                    throw new TypeException('Value cannot be cast to string');
+            }
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -126,12 +132,13 @@ readonly class StringCountryCode extends StrType
      */
     public static function tryFromString(
         string $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
+        PrimitiveType $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromString($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
