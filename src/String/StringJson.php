@@ -36,6 +36,9 @@ use function sprintf;
  */
 readonly class StringJson extends StrType
 {
+    /**
+     * @var non-empty-string
+     */
     protected string $value;
 
     /**
@@ -43,9 +46,7 @@ readonly class StringJson extends StrType
      */
     public function __construct(string $value)
     {
-        static::assertJsonString($value);
-
-        $this->value = $value;
+        $this->value = static::getJsonStringFromString($value);
     }
 
     /**
@@ -56,6 +57,9 @@ readonly class StringJson extends StrType
         return new static($value);
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function value(): string
     {
         return $this->value;
@@ -64,7 +68,7 @@ readonly class StringJson extends StrType
     /**
      * @throws JsonException
      */
-    public function toObject(): object
+    public function toObject(): mixed
     {
         return json_decode(json: $this->value, associative: false, flags: JSON_THROW_ON_ERROR);
     }
@@ -78,11 +82,17 @@ readonly class StringJson extends StrType
     }
 
     /**
+     * @return non-empty-string
+     *
      * @throws JsonStringTypeException
      */
-    protected static function assertJsonString(string $value): void
+    protected static function getJsonStringFromString(string $value): string
     {
         try {
+            if ($value === '') {
+                throw new JsonStringTypeException('Empty string cannot be a valid JSON');
+            }
+
             /**
              * Only validate; ignore the decoded result. Exceptions signal invalid JSON.
              *
@@ -92,6 +102,8 @@ readonly class StringJson extends StrType
         } catch (JsonException $e) {
             throw new JsonStringTypeException(sprintf('String "%s" has no valid JSON value', $value), 0, $e);
         }
+
+        return $value;
     }
 
     public function jsonSerialize(): string

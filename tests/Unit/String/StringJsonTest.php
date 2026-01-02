@@ -129,3 +129,69 @@ it('isUndefined returns false for instances and true for Undefined results', fun
         ->and($u1->isUndefined())->toBeTrue()
         ->and($u2->isUndefined())->toBeTrue();
 });
+
+it('throws on empty string', function (): void {
+    expect(fn() => new StringJson(''))
+        ->toThrow(JsonStringTypeException::class, 'Empty string cannot be a valid JSON');
+});
+
+it('fromString throws on empty string', function (): void {
+    expect(fn() => StringJson::fromString(''))
+        ->toThrow(JsonStringTypeException::class, 'Empty string cannot be a valid JSON');
+});
+
+it('tryFromMixed converts null to JSON "null" string', function (): void {
+    $result = StringJson::tryFromMixed(null);
+
+    expect($result)->toBeInstanceOf(StringJson::class)
+        ->and($result->value())->toBe('null')
+        ->and($result->toString())->toBe('null');
+});
+
+it('toObject and toArray handle various JSON types', function (): void {
+    // Array
+    $jsonArray = StringJson::fromString('[1,2,3]');
+    expect($jsonArray->toArray())->toBe([1, 2, 3]);
+
+    // Boolean
+    $jsonTrue = StringJson::fromString('true');
+    expect($jsonTrue->toObject())->toBeTrue();
+
+    // Number
+    $jsonNum = StringJson::fromString('42');
+    expect($jsonNum->toObject())->toBe(42);
+
+    // String
+    $jsonStr = StringJson::fromString('"hello"');
+    expect($jsonStr->toObject())->toBe('hello');
+
+    // Null
+    $jsonNull = StringJson::fromString('null');
+    expect($jsonNull->toObject())->toBeNull();
+});
+
+it('round-trip conversion preserves JSON structure', function (): void {
+    $original = '{"name":"John","age":30,"active":true}';
+    $json = StringJson::fromString($original);
+    $decoded = $json->toArray();
+    $reencoded = json_encode($decoded);
+
+    expect($reencoded)->toBe($original);
+});
+
+it('handles nested JSON structures', function (): void {
+    $nested = '{"user":{"name":"Alice","tags":["admin","user"]}}';
+    $json = StringJson::fromString($nested);
+    $arr = $json->toArray();
+
+    expect($arr['user']['name'])->toBe('Alice')
+        ->and($arr['user']['tags'])->toBe(['admin', 'user']);
+});
+
+it('value and toString return the same string', function (): void {
+    $jsonText = '{"test":true}';
+    $json = StringJson::fromString($jsonText);
+
+    expect($json->value())->toBe($json->toString())
+        ->and($json->value())->toBe($jsonText);
+});
