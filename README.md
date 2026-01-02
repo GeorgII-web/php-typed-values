@@ -119,7 +119,7 @@ $profile->getHeight()->value(); // throws an exception on access the Undefined v
 
 ### Key features
 
-- Idempotent conversion: "1" > 1 > "1" on fromString() to String()
+- Idempotent conversion on fromString() > toString(): "1" > 1 > "1"
 - Static analysis friendly (Psalm/PHPStan-ready types)
 - Strict types with `declare(strict_types=1);`
 - Validation on construction; no invalid state

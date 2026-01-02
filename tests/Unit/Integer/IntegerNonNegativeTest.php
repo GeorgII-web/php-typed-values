@@ -208,3 +208,51 @@ it('toBool converts to bool', function (): void {
     expect($zero->toBool())->toBeFalse()
         ->and($positive->toBool())->toBeTrue();
 });
+
+it('fromBool creates instance from boolean value', function (): void {
+    $fromTrue = IntegerNonNegative::fromBool(true);
+    $fromFalse = IntegerNonNegative::fromBool(false);
+    expect($fromTrue->value())->toBe(1)
+        ->and($fromFalse->value())->toBe(0);
+});
+
+it('toFloat throws when precision would be lost', function (): void {
+    $largeValue = new IntegerNonNegative(\PHP_INT_MAX);
+    expect(fn() => $largeValue->toFloat())
+        ->toThrow(IntegerTypeException::class, 'cannot be converted to float without losing precision');
+});
+
+it('round-trip conversion preserves value: int → string → int', function (): void {
+    $original = 42;
+    $v1 = IntegerNonNegative::fromInt($original);
+    $str = $v1->toString();
+    $v2 = IntegerNonNegative::fromString($str);
+
+    expect($v2->value())->toBe($original);
+});
+
+it('round-trip conversion preserves value: string → int → string', function (): void {
+    $original = '123';
+    $v1 = IntegerNonNegative::fromString($original);
+    $int = $v1->toInt();
+    $v2 = IntegerNonNegative::fromInt($int);
+
+    expect($v2->toString())->toBe($original);
+});
+
+it('multiple round-trips preserve value integrity', function (): void {
+    $values = [0, 1, 42, 100, 999];
+
+    foreach ($values as $original) {
+        // int → string → int → string → int
+        $result = IntegerNonNegative::fromString(
+            IntegerNonNegative::fromInt(
+                IntegerNonNegative::fromString(
+                    IntegerNonNegative::fromInt($original)->toString()
+                )->toInt()
+            )->toString()
+        )->value();
+
+        expect($result)->toBe($original);
+    }
+});

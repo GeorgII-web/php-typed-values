@@ -69,6 +69,10 @@ it('fromFloat kills BooleanOrToBooleanAnd mutation', function (): void {
     $tooSmall = (float) \PHP_INT_MIN - 2048.0;
     expect(fn() => IntegerStandard::fromFloat($tooSmall))
         ->toThrow(IntegerTypeException::class);
+
+    $tooBig = (float) \PHP_INT_MAX;
+    expect(fn() => IntegerStandard::fromFloat($tooBig))
+        ->toThrow(IntegerTypeException::class);
 });
 
 it('fromFloat rejects non-integer floats and kills precision check mutation', function (): void {
@@ -94,7 +98,7 @@ it('toFloat returns strictly float values', function (): void {
 
     // Boundary value where int and float representations might differ
     $maxV = new IntegerStandard(\PHP_INT_MAX);
-    expect($maxV->toFloat())->toBe((float) \PHP_INT_MAX);
+    expect(fn() => $maxV->toFloat())->toThrow(IntegerTypeException::class);
 });
 
 it('fromFloat handles the PHP_INT_MAX boundary precision loss', function () {

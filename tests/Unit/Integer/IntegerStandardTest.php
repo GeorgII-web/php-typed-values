@@ -265,3 +265,51 @@ it('toBool converts to bool', function (): void {
     expect($zero->toBool())->toBeFalse()
         ->and($positive->toBool())->toBeTrue();
 });
+
+it('round-trip conversion preserves value: float → int → float', function (): void {
+    $original = 42.0;
+    $v1 = IntegerStandard::fromFloat($original);
+    $int = $v1->toInt();
+    $float = IntegerStandard::fromInt($int)->toFloat();
+
+    expect($float)->toBe($original);
+});
+
+it('round-trip conversion preserves value: int → float → int', function (): void {
+    $original = 123;
+    $v1 = IntegerStandard::fromInt($original);
+    $float = $v1->toFloat();
+    $v2 = IntegerStandard::fromFloat($float);
+
+    expect($v2->value())->toBe($original);
+});
+
+it('multiple round-trips preserve value integrity: float → int → float → int', function (): void {
+    $values = [0.0, 1.0, -42.0, 100.0, 999.0];
+
+    foreach ($values as $original) {
+        // float → int → float → int → float
+        $result = IntegerStandard::fromInt(
+            IntegerStandard::fromFloat(
+                IntegerStandard::fromInt(
+                    IntegerStandard::fromFloat($original)->toInt()
+                )->toFloat()
+            )->value()
+        )->toFloat();
+
+        expect($result)->toBe($original);
+    }
+});
+
+it('round-trip conversion with all formats: string → int → float → int → string', function (): void {
+    $original = '256';
+
+    // string → int → float → int → string
+    $result = IntegerStandard::fromInt(
+        IntegerStandard::fromFloat(
+            IntegerStandard::fromString($original)->toFloat()
+        )->toInt()
+    )->toString();
+
+    expect($result)->toBe($original);
+});

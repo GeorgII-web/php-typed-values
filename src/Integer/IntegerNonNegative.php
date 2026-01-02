@@ -183,9 +183,18 @@ readonly class IntegerNonNegative extends IntType
         return (string) $this->value();
     }
 
+    /**
+     * @throws IntegerTypeException
+     */
     public function toFloat(): float
     {
-        return $this->value();
+        $toFloatValue = (float) $this->value;
+
+        if ($this->value !== (int) $toFloatValue) {
+            throw new IntegerTypeException(sprintf('Integer %s cannot be converted to float without losing precision', $this->value));
+        }
+
+        return $toFloatValue;
     }
 
     public function toBool(): bool

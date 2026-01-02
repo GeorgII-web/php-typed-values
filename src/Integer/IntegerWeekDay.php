@@ -207,4 +207,36 @@ readonly class IntegerWeekDay extends IntType
     {
         return false;
     }
+
+    /**
+     * @throws IntegerTypeException
+     */
+    public static function fromLabel(string $label): static
+    {
+        $value = match ($label) {
+            'Monday' => 1,
+            'Tuesday' => 2,
+            'Wednesday' => 3,
+            'Thursday' => 4,
+            'Friday' => 5,
+            'Saturday' => 6,
+            'Sunday' => 7,
+            default => throw new IntegerTypeException(sprintf('Invalid weekday label "%s"', $label)),
+        };
+
+        return new static($value);
+    }
+
+    public function toLabel(): string
+    {
+        return match ($this->value) {
+            1 => 'Monday',
+            2 => 'Tuesday',
+            3 => 'Wednesday',
+            4 => 'Thursday',
+            5 => 'Friday',
+            6 => 'Saturday',
+            7 => 'Sunday',
+        };
+    }
 }

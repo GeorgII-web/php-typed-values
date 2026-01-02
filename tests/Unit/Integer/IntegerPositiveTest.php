@@ -229,3 +229,54 @@ it('toBool converts to bool', function (): void {
     $positive = new IntegerPositive(5);
     expect($positive->toBool())->toBeTrue();
 });
+
+it('fromBool creates instance from boolean value', function (): void {
+    $fromTrue = IntegerPositive::fromBool(true);
+    expect($fromTrue->value())->toBe(1);
+});
+
+it('fromBool throws on false', function (): void {
+    expect(fn() => IntegerPositive::fromBool(false))
+        ->toThrow(IntegerTypeException::class, 'Expected positive integer, got "0"');
+});
+
+it('toFloat throws when precision would be lost', function (): void {
+    $largeValue = new IntegerPositive(\PHP_INT_MAX);
+    expect(fn() => $largeValue->toFloat())
+        ->toThrow(IntegerTypeException::class, 'cannot be converted to float without losing precision');
+});
+
+it('round-trip conversion preserves value: int → string → int', function (): void {
+    $original = 7;
+    $v1 = IntegerPositive::fromInt($original);
+    $str = $v1->toString();
+    $v2 = IntegerPositive::fromString($str);
+
+    expect($v2->value())->toBe($original);
+});
+
+it('round-trip conversion preserves value: string → int → string', function (): void {
+    $original = '99';
+    $v1 = IntegerPositive::fromString($original);
+    $int = $v1->toInt();
+    $v2 = IntegerPositive::fromInt($int);
+
+    expect($v2->toString())->toBe($original);
+});
+
+it('multiple round-trips preserve value integrity', function (): void {
+    $values = [1, 2, 42, 100, 999];
+
+    foreach ($values as $original) {
+        // int → string → int → string → int
+        $result = IntegerPositive::fromString(
+            IntegerPositive::fromInt(
+                IntegerPositive::fromString(
+                    IntegerPositive::fromInt($original)->toString()
+                )->toInt()
+            )->toString()
+        )->value();
+
+        expect($result)->toBe($original);
+    }
+});

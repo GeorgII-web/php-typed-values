@@ -221,9 +221,157 @@ it('toFloat converts to float and kills RemoveDoubleCast mutant', function (): v
         ->and($f)->toBeFloat();
 
     expect(\is_float($v->toFloat()))->toBeTrue();
+
+    // Test all valid weekday values to ensure precision check logic is covered
+    foreach ([1, 2, 3, 4, 5, 6, 7] as $day) {
+        $weekday = new IntegerWeekDay($day);
+        expect($weekday->toFloat())->toBe((float) $day);
+    }
 });
 
 it('toBool converts to bool', function (): void {
     $positive = new IntegerWeekDay(5);
     expect($positive->toBool())->toBeTrue();
+});
+
+it('fromBool creates instance from boolean value', function (): void {
+    $fromTrue = IntegerWeekDay::fromBool(true);
+    expect($fromTrue->value())->toBe(1);
+});
+
+it('fromBool throws on false', function (): void {
+    expect(fn() => IntegerWeekDay::fromBool(false))
+        ->toThrow(IntegerTypeException::class, 'Expected value between 1-7, got "0"');
+});
+
+it('fromFloat throws on out of range value', function (): void {
+    expect(fn() => IntegerWeekDay::fromFloat(8.0))
+        ->toThrow(IntegerTypeException::class, 'Expected value between 1-7, got "8"');
+});
+
+it('round-trip conversion preserves value: int → string → int', function (): void {
+    $original = 5;
+    $v1 = IntegerWeekDay::fromInt($original);
+    $str = $v1->toString();
+    $v2 = IntegerWeekDay::fromString($str);
+
+    expect($v2->value())->toBe($original);
+});
+
+it('round-trip conversion preserves value: string → int → string', function (): void {
+    $original = '3';
+    $v1 = IntegerWeekDay::fromString($original);
+    $int = $v1->toInt();
+    $v2 = IntegerWeekDay::fromInt($int);
+
+    expect($v2->toString())->toBe($original);
+});
+
+it('multiple round-trips preserve value integrity for all valid weekdays', function (): void {
+    $values = [1, 2, 3, 4, 5, 6, 7];
+
+    foreach ($values as $original) {
+        // int → string → int → string → int
+        $result = IntegerWeekDay::fromString(
+            IntegerWeekDay::fromInt(
+                IntegerWeekDay::fromString(
+                    IntegerWeekDay::fromInt($original)->toString()
+                )->toInt()
+            )->toString()
+        )->value();
+
+        expect($result)->toBe($original);
+    }
+});
+
+it('fromLabel creates instance from valid weekday names', function (): void {
+    $monday = IntegerWeekDay::fromLabel('Monday');
+    $friday = IntegerWeekDay::fromLabel('Friday');
+    $sunday = IntegerWeekDay::fromLabel('Sunday');
+
+    expect($monday->value())->toBe(1)
+        ->and($friday->value())->toBe(5)
+        ->and($sunday->value())->toBe(7);
+});
+
+it('fromLabel handles all weekday names correctly', function (string $label, int $expectedValue): void {
+    $weekday = IntegerWeekDay::fromLabel($label);
+    expect($weekday->value())->toBe($expectedValue);
+})->with([
+    ['Monday', 1],
+    ['Tuesday', 2],
+    ['Wednesday', 3],
+    ['Thursday', 4],
+    ['Friday', 5],
+    ['Saturday', 6],
+    ['Sunday', 7],
+]);
+
+it('fromLabel throws on invalid weekday labels', function (): void {
+    expect(fn() => IntegerWeekDay::fromLabel('monday'))
+        ->toThrow(IntegerTypeException::class, 'Invalid weekday label "monday"')
+        ->and(fn() => IntegerWeekDay::fromLabel('Mon'))
+        ->toThrow(IntegerTypeException::class, 'Invalid weekday label "Mon"')
+        ->and(fn() => IntegerWeekDay::fromLabel(''))
+        ->toThrow(IntegerTypeException::class, 'Invalid weekday label ""')
+        ->and(fn() => IntegerWeekDay::fromLabel('InvalidDay'))
+        ->toThrow(IntegerTypeException::class, 'Invalid weekday label "InvalidDay"');
+});
+
+it('toLabel returns correct weekday name', function (): void {
+    $monday = new IntegerWeekDay(1);
+    $wednesday = new IntegerWeekDay(3);
+    $sunday = new IntegerWeekDay(7);
+
+    expect($monday->toLabel())->toBe('Monday')
+        ->and($wednesday->toLabel())->toBe('Wednesday')
+        ->and($sunday->toLabel())->toBe('Sunday');
+});
+
+it('toLabel returns correct names for all weekdays', function (int $value, string $expectedLabel): void {
+    $weekday = new IntegerWeekDay($value);
+    expect($weekday->toLabel())->toBe($expectedLabel);
+})->with([
+    [1, 'Monday'],
+    [2, 'Tuesday'],
+    [3, 'Wednesday'],
+    [4, 'Thursday'],
+    [5, 'Friday'],
+    [6, 'Saturday'],
+    [7, 'Sunday'],
+]);
+
+it('round-trip conversion preserves value: label → int → label', function (): void {
+    $original = 'Wednesday';
+    $weekday = IntegerWeekDay::fromLabel($original);
+    $value = $weekday->value();
+    $label = IntegerWeekDay::fromInt($value)->toLabel();
+
+    expect($label)->toBe($original);
+});
+
+it('round-trip conversion preserves value: int → label → int', function (): void {
+    $original = 5;
+    $weekday = IntegerWeekDay::fromInt($original);
+    $label = $weekday->toLabel();
+    $value = IntegerWeekDay::fromLabel($label)->value();
+
+    expect($value)->toBe($original);
+});
+
+it('multiple round-trips preserve integrity: label → int → label → int', function (): void {
+    $labels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+    foreach ($labels as $original) {
+        // label → int → label → int → label
+        $result = IntegerWeekDay::fromInt(
+            IntegerWeekDay::fromLabel(
+                IntegerWeekDay::fromInt(
+                    IntegerWeekDay::fromLabel($original)->value()
+                )->toLabel()
+            )->value()
+        )->toLabel();
+
+        expect($result)->toBe($original);
+    }
 });
