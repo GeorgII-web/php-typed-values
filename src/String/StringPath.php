@@ -71,6 +71,9 @@ readonly class StringPath extends StrType
         return $this->toString();
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function toString(): string
     {
         return $this->value();

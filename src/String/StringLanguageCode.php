@@ -7,7 +7,7 @@ namespace PhpTypedValues\String;
 use Exception;
 use PhpTypedValues\Base\Primitive\PrimitiveType;
 use PhpTypedValues\Base\Primitive\String\StrType;
-use PhpTypedValues\Exception\CountryCodeStringTypeException;
+use PhpTypedValues\Exception\LanguageCodeStringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
@@ -19,42 +19,42 @@ use function preg_match;
 use function sprintf;
 
 /**
- * ISO 3166-1 alpha‑2 country code.
+ * ISO 639-1 two‑letter language code.
  *
- * Accepts a two‑letter uppercase country code and verifies it against a
+ * Accepts a two‑letter lowercase language code and verifies it against a
  * curated allow‑list. The value is stored as provided; callers must supply
- * uppercase input (no implicit normalization).
+ * lowercase input (no implicit normalization).
  *
  * Example
- *  - $c = StringCountryCode::fromString('US');
- *    $c->toString(); // 'US'
- *  - StringCountryCode::fromString('us'); // throws CountryCodeStringTypeException
+ *  - $l = StringLanguageCode::fromString('en');
+ *    $l->toString(); // 'en'
+ *  - StringLanguageCode::fromString('EN'); // throws LanguageCodeStringTypeException
  *
  * @psalm-immutable
  */
-readonly class StringCountryCode extends StrType
+readonly class StringLanguageCode extends StrType
 {
     /** @var non-empty-string */
     protected string $value;
 
     /**
-     * @throws CountryCodeStringTypeException
+     * @throws LanguageCodeStringTypeException
      */
     public function __construct(string $value)
     {
-        if (preg_match('/^[A-Z]{2}$/', $value) !== 1) {
-            throw new CountryCodeStringTypeException(sprintf('Expected ISO 3166-1 alpha-2 country code (AA), got "%s"', $value));
+        if (preg_match('/^[a-z]{2}$/', $value) !== 1) {
+            throw new LanguageCodeStringTypeException(sprintf('Expected ISO 639-1 language code (aa), got "%s"', $value));
         }
 
         if (!in_array($value, self::listAllowed(), true)) {
-            throw new CountryCodeStringTypeException(sprintf('Unknown ISO 3166-1 alpha-2 country code "%s"', $value));
+            throw new LanguageCodeStringTypeException(sprintf('Unknown ISO 639-1 language code "%s"', $value));
         }
 
         $this->value = $value;
     }
 
     /**
-     * @throws CountryCodeStringTypeException
+     * @throws LanguageCodeStringTypeException
      */
     public static function fromString(string $value): static
     {
@@ -110,7 +110,6 @@ readonly class StringCountryCode extends StrType
             /** @var static */
             return match (true) {
                 is_string($value) => static::fromString($value),
-                //                ($value instanceof self) => static::fromString($value->value()),
                 $value instanceof Stringable, is_scalar($value) => static::fromString((string) $value),
                 default => throw new TypeException('Value cannot be cast to string'),
             };
@@ -141,7 +140,7 @@ readonly class StringCountryCode extends StrType
     }
 
     /**
-     * ISO 3166-1 alpha-2 codes used for validation.
+     * ISO 639-1 two-letter language codes used for validation.
      *
      * @pest-mutate-ignore
      *
@@ -150,31 +149,32 @@ readonly class StringCountryCode extends StrType
     private static function listAllowed(): array
     {
         return [
-            'AD', 'AE', 'AF', 'AG', 'AI', 'AL', 'AM', 'AO', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AW', 'AX', 'AZ',
-            'BA', 'BB', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ', 'BL', 'BM', 'BN', 'BO', 'BQ', 'BR', 'BS', 'BT', 'BV', 'BW', 'BY', 'BZ',
-            'CA', 'CC', 'CD', 'CF', 'CG', 'CH', 'CI', 'CK', 'CL', 'CM', 'CN', 'CO', 'CR', 'CU', 'CV', 'CW', 'CX', 'CY', 'CZ',
-            'DE', 'DJ', 'DK', 'DM', 'DO', 'DZ',
-            'EC', 'EE', 'EG', 'EH', 'ER', 'ES', 'ET',
-            'FI', 'FJ', 'FK', 'FM', 'FO', 'FR',
-            'GA', 'GB', 'GD', 'GE', 'GF', 'GG', 'GH', 'GI', 'GL', 'GM', 'GN', 'GP', 'GQ', 'GR', 'GS', 'GT', 'GU', 'GW', 'GY',
-            'HK', 'HM', 'HN', 'HR', 'HT', 'HU',
-            'ID', 'IE', 'IL', 'IM', 'IN', 'IO', 'IQ', 'IR', 'IS', 'IT',
-            'JE', 'JM', 'JO', 'JP',
-            'KE', 'KG', 'KH', 'KI', 'KM', 'KN', 'KP', 'KR', 'KW', 'KY', 'KZ',
-            'LA', 'LB', 'LC', 'LI', 'LK', 'LR', 'LS', 'LT', 'LU', 'LV', 'LY',
-            'MA', 'MC', 'MD', 'ME', 'MF', 'MG', 'MH', 'MK', 'ML', 'MM', 'MN', 'MO', 'MP', 'MQ', 'MR', 'MS', 'MT', 'MU', 'MV', 'MW', 'MX', 'MY', 'MZ',
-            'NA', 'NC', 'NE', 'NF', 'NG', 'NI', 'NL', 'NO', 'NP', 'NR', 'NU', 'NZ',
-            'OM',
-            'PA', 'PE', 'PF', 'PG', 'PH', 'PK', 'PL', 'PM', 'PN', 'PR', 'PS', 'PT', 'PW', 'PY',
-            'QA',
-            'RE', 'RO', 'RS', 'RU', 'RW',
-            'SA', 'SB', 'SC', 'SD', 'SE', 'SG', 'SH', 'SI', 'SJ', 'SK', 'SL', 'SM', 'SN', 'SO', 'SR', 'SS', 'ST', 'SV', 'SX', 'SY', 'SZ',
-            'TC', 'TD', 'TF', 'TG', 'TH', 'TJ', 'TK', 'TL', 'TM', 'TN', 'TO', 'TR', 'TT', 'TV', 'TW', 'TZ',
-            'UA', 'UG', 'UM', 'US', 'UY', 'UZ',
-            'VA', 'VC', 'VE', 'VG', 'VI', 'VN', 'VU',
-            'WF', 'WS',
-            'YE', 'YT',
-            'ZA', 'ZM', 'ZW',
+            'aa', 'ab', 'ae', 'af', 'ak', 'am', 'an', 'ar', 'as', 'av', 'ay', 'az',
+            'ba', 'be', 'bg', 'bh', 'bi', 'bm', 'bn', 'bo', 'br', 'bs',
+            'ca', 'ce', 'ch', 'co', 'cr', 'cs', 'cu', 'cv', 'cy',
+            'da', 'de', 'dv', 'dz',
+            'ee', 'el', 'en', 'eo', 'es', 'et', 'eu',
+            'fa', 'ff', 'fi', 'fj', 'fo', 'fr', 'fy',
+            'ga', 'gd', 'gl', 'gn', 'gu', 'gv',
+            'ha', 'he', 'hi', 'ho', 'hr', 'ht', 'hu', 'hy', 'hz',
+            'ia', 'id', 'ie', 'ig', 'ii', 'ik', 'io', 'is', 'it', 'iu',
+            'ja', 'jv',
+            'ka', 'kg', 'ki', 'kj', 'kk', 'kl', 'km', 'kn', 'ko', 'kr', 'ks', 'ku', 'kv', 'kw', 'ky',
+            'la', 'lb', 'lg', 'li', 'ln', 'lo', 'lt', 'lu', 'lv',
+            'mg', 'mh', 'mi', 'mk', 'ml', 'mn', 'mr', 'ms', 'mt', 'my',
+            'na', 'nb', 'nd', 'ne', 'ng', 'nl', 'nn', 'no', 'nr', 'nv', 'ny',
+            'oc', 'oj', 'om', 'or', 'os',
+            'pa', 'pi', 'pl', 'ps', 'pt',
+            'qu',
+            'rm', 'rn', 'ro', 'ru', 'rw',
+            'sa', 'sc', 'sd', 'se', 'sg', 'si', 'sk', 'sl', 'sm', 'sn', 'so', 'sq', 'sr', 'ss', 'st', 'su', 'sv', 'sw',
+            'ta', 'te', 'tg', 'th', 'ti', 'tk', 'tl', 'tn', 'to', 'tr', 'ts', 'tt', 'tw', 'ty',
+            'ug', 'uk', 'ur', 'uz',
+            've', 'vi', 'vo',
+            'wa', 'wo',
+            'xh',
+            'yi', 'yo',
+            'za', 'zh', 'zu',
         ];
     }
 }
