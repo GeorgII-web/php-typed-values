@@ -117,3 +117,18 @@ it('isUndefined returns false for instances and true for Undefined results', fun
         ->and($u1->isUndefined())->toBeTrue()
         ->and($u2->isUndefined())->toBeTrue();
 });
+
+it('isTypeOf returns true when class matches', function (): void {
+    $v = StringDecimal::fromString('10.5');
+    expect($v->isTypeOf(StringDecimal::class))->toBeTrue();
+});
+
+it('isTypeOf returns false when class does not match', function (): void {
+    $v = StringDecimal::fromString('10.5');
+    expect($v->isTypeOf('NonExistentClass'))->toBeFalse();
+});
+
+it('isTypeOf returns true for multiple classNames when one matches', function (): void {
+    $v = StringDecimal::fromString('10.5');
+    expect($v->isTypeOf('NonExistentClass', StringDecimal::class, 'AnotherClass'))->toBeTrue();
+});

@@ -121,3 +121,18 @@ it('tryFromMixed returns Undefined for non-Stringable objects', function (): voi
     expect($result)->toBeInstanceOf(Undefined::class)
         ->and($result->isUndefined())->toBeTrue();
 });
+
+it('isTypeOf returns true when class matches', function (): void {
+    $vo = DateTimeSql::fromString('2025-01-02 03:04:05');
+    expect($vo->isTypeOf(DateTimeSql::class))->toBeTrue();
+});
+
+it('isTypeOf returns false when class does not match', function (): void {
+    $vo = DateTimeSql::fromString('2025-01-02 03:04:05');
+    expect($vo->isTypeOf('NonExistentClass'))->toBeFalse();
+});
+
+it('isTypeOf returns true for multiple classNames when one matches', function (): void {
+    $vo = DateTimeSql::fromString('2025-01-02 03:04:05');
+    expect($vo->isTypeOf('NonExistentClass', DateTimeSql::class, 'AnotherClass'))->toBeTrue();
+});

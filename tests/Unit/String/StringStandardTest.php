@@ -133,3 +133,18 @@ it('isUndefined is always false for StringStandard', function (): void {
     expect(StringStandard::fromString('x')->isUndefined())->toBeFalse()
         ->and(StringStandard::fromString('')->isUndefined())->toBeFalse();
 });
+
+it('isTypeOf returns true when class matches', function (): void {
+    $v = StringStandard::fromString('test');
+    expect($v->isTypeOf(StringStandard::class))->toBeTrue();
+});
+
+it('isTypeOf returns false when class does not match', function (): void {
+    $v = StringStandard::fromString('test');
+    expect($v->isTypeOf('NonExistentClass'))->toBeFalse();
+});
+
+it('isTypeOf returns true for multiple classNames when one matches', function (): void {
+    $v = StringStandard::fromString('test');
+    expect($v->isTypeOf('NonExistentClass', StringStandard::class, 'AnotherClass'))->toBeTrue();
+});

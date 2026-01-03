@@ -125,3 +125,18 @@ it('isEmpty is always false for TrueStandard', function (): void {
 it('isUndefined is always false for TrueStandard', function (): void {
     expect(TrueStandard::fromString('yes')->isUndefined())->toBeFalse();
 });
+
+it('isTypeOf returns true when class matches', function (): void {
+    $t = new TrueStandard(true);
+    expect($t->isTypeOf(TrueStandard::class))->toBeTrue();
+});
+
+it('isTypeOf returns false when class does not match', function (): void {
+    $t = new TrueStandard(true);
+    expect($t->isTypeOf('NonExistentClass'))->toBeFalse();
+});
+
+it('isTypeOf returns true for multiple classNames when one matches', function (): void {
+    $t = new TrueStandard(true);
+    expect($t->isTypeOf('NonExistentClass', TrueStandard::class, 'AnotherClass'))->toBeTrue();
+});

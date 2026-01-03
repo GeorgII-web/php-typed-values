@@ -95,3 +95,18 @@ it('isUndefined is always false for StringFileName', function (): void {
     $f = new StringFileName('file.txt');
     expect($f->isUndefined())->toBeFalse();
 });
+
+it('isTypeOf returns true when class matches', function (): void {
+    $v = StringFileName::fromString('test.txt');
+    expect($v->isTypeOf(StringFileName::class))->toBeTrue();
+});
+
+it('isTypeOf returns false when class does not match', function (): void {
+    $v = StringFileName::fromString('test.txt');
+    expect($v->isTypeOf('NonExistentClass'))->toBeFalse();
+});
+
+it('isTypeOf returns true for multiple classNames when one matches', function (): void {
+    $v = StringFileName::fromString('test.txt');
+    expect($v->isTypeOf('NonExistentClass', StringFileName::class, 'AnotherClass'))->toBeTrue();
+});

@@ -236,3 +236,18 @@ it('tryFromMixed returns Undefined for non-Stringable objects', function (): voi
     expect($result)->toBeInstanceOf(Undefined::class)
         ->and($result->isUndefined())->toBeTrue();
 });
+
+it('isTypeOf returns true when class matches', function (): void {
+    $vo = DateTimeW3C::fromString('2025-01-02T03:04:05+00:00');
+    expect($vo->isTypeOf(DateTimeW3C::class))->toBeTrue();
+});
+
+it('isTypeOf returns false when class does not match', function (): void {
+    $vo = DateTimeW3C::fromString('2025-01-02T03:04:05+00:00');
+    expect($vo->isTypeOf('NonExistentClass'))->toBeFalse();
+});
+
+it('isTypeOf returns true for multiple classNames when one matches', function (): void {
+    $vo = DateTimeW3C::fromString('2025-01-02T03:04:05+00:00');
+    expect($vo->isTypeOf('NonExistentClass', DateTimeW3C::class, 'AnotherClass'))->toBeTrue();
+});

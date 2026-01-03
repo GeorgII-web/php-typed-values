@@ -229,3 +229,18 @@ it('round-trip: hash input → get string → hash again produces same result', 
     expect($hash1->value())->toBe($hash2->value())
         ->and($hash2->value())->toBe(md5($input));
 });
+
+it('isTypeOf returns true when class matches', function (): void {
+    $v = StringMd5::fromString('5d41402abc4b2a76b9719d911017c592');
+    expect($v->isTypeOf(StringMd5::class))->toBeTrue();
+});
+
+it('isTypeOf returns false when class does not match', function (): void {
+    $v = StringMd5::fromString('5d41402abc4b2a76b9719d911017c592');
+    expect($v->isTypeOf('NonExistentClass'))->toBeFalse();
+});
+
+it('isTypeOf returns true for multiple classNames when one matches', function (): void {
+    $v = StringMd5::fromString('5d41402abc4b2a76b9719d911017c592');
+    expect($v->isTypeOf('NonExistentClass', StringMd5::class, 'AnotherClass'))->toBeTrue();
+});

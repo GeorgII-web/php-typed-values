@@ -315,6 +315,22 @@ describe('ArrayOfObjects specific tests', function () {
 
         expect($array->value())->toBe($original);
     });
+
+    // Test isTypeOf method
+    it('isTypeOf returns true when class matches', function () {
+        $array = new ArrayOfObjects([new stdClass()]);
+        expect($array->isTypeOf(ArrayOfObjects::class))->toBeTrue();
+    });
+
+    it('isTypeOf returns false when class does not match', function () {
+        $array = new ArrayOfObjects([new stdClass()]);
+        expect($array->isTypeOf('NonExistentClass'))->toBeFalse();
+    });
+
+    it('isTypeOf returns true for multiple classNames when one matches', function () {
+        $array = new ArrayOfObjects([new stdClass()]);
+        expect($array->isTypeOf('NonExistentClass', ArrayOfObjects::class, 'AnotherClass'))->toBeTrue();
+    });
 });
 
 // Additional tests for tryFromArray from parent class

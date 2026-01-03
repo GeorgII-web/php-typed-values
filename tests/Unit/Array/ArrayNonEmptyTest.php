@@ -222,3 +222,18 @@ it('isEmpty returns true if empty (unreachable via constructor)', function (): v
 
     expect($vo->isEmpty())->toBeTrue();
 });
+
+it('isTypeOf returns true when class matches', function (): void {
+    $vo = new ArrayNonEmpty([new stdClass()]);
+    expect($vo->isTypeOf(ArrayNonEmpty::class))->toBeTrue();
+});
+
+it('isTypeOf returns false when class does not match', function (): void {
+    $vo = new ArrayNonEmpty([new stdClass()]);
+    expect($vo->isTypeOf('NonExistentClass'))->toBeFalse();
+});
+
+it('isTypeOf returns true for multiple classNames when one matches', function (): void {
+    $vo = new ArrayNonEmpty([new stdClass()]);
+    expect($vo->isTypeOf('NonExistentClass', ArrayNonEmpty::class))->toBeTrue();
+});

@@ -182,6 +182,22 @@ describe('ArrayUndefined specific tests', function () {
             ->and($array->isUndefined())->toBeTrue()
             ->and($array->hasUndefined())->toBeTrue();
     });
+
+    // Test isTypeOf method
+    it('isTypeOf returns true when class matches', function () {
+        $array = new ArrayUndefined();
+        expect($array->isTypeOf(ArrayUndefined::class))->toBeTrue();
+    });
+
+    it('isTypeOf returns false when class does not match', function () {
+        $array = new ArrayUndefined();
+        expect($array->isTypeOf('NonExistentClass'))->toBeFalse();
+    });
+
+    it('isTypeOf returns true for multiple classNames when one matches', function () {
+        $array = new ArrayUndefined();
+        expect($array->isTypeOf('NonExistentClass', ArrayUndefined::class, 'AnotherClass'))->toBeTrue();
+    });
 });
 
 // Test ArrayUndefined in collection context

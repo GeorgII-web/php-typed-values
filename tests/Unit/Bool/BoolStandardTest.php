@@ -203,3 +203,18 @@ it('returns Undefined for invalid mixed inputs', function (mixed $input): void {
     ['input' => fn() => 1.5],                  // Closure
     ['input' => fopen('php://memory', 'r')],   // Resource
 ]);
+
+it('isTypeOf returns true when class matches', function (): void {
+    $f = new BoolStandard(false);
+    expect($f->isTypeOf(BoolStandard::class))->toBeTrue();
+});
+
+it('isTypeOf returns false when class does not match', function (): void {
+    $f = new BoolStandard(false);
+    expect($f->isTypeOf('NonExistentClass'))->toBeFalse();
+});
+
+it('isTypeOf returns true for multiple classNames when one matches', function (): void {
+    $f = new BoolStandard(false);
+    expect($f->isTypeOf('NonExistentClass', BoolStandard::class, 'AnotherClass'))->toBeTrue();
+});

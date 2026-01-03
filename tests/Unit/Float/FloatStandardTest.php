@@ -191,3 +191,18 @@ it('returns Undefined for invalid mixed inputs', function (mixed $input): void {
     ['input' => \NAN],                          // Not a Number
     ['input' => "\0"],                         // Null byte string
 ]);
+
+it('isTypeOf returns true when class matches', function (): void {
+    $v = FloatStandard::fromFloat(1.5);
+    expect($v->isTypeOf(FloatStandard::class))->toBeTrue();
+});
+
+it('isTypeOf returns false when class does not match', function (): void {
+    $v = FloatStandard::fromFloat(1.5);
+    expect($v->isTypeOf('NonExistentClass'))->toBeFalse();
+});
+
+it('isTypeOf returns true for multiple classNames when one matches', function (): void {
+    $v = FloatStandard::fromFloat(1.5);
+    expect($v->isTypeOf('NonExistentClass', FloatStandard::class, 'AnotherClass'))->toBeTrue();
+});

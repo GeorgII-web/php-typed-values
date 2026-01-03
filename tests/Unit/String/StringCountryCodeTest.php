@@ -142,3 +142,18 @@ it('isUndefined returns false for instances and true for Undefined results', fun
         ->and($u2->isUndefined())->toBeTrue()
         ->and($u3->isUndefined())->toBeTrue();
 });
+
+it('isTypeOf returns true when class matches', function (): void {
+    $v = StringCountryCode::fromString('US');
+    expect($v->isTypeOf(StringCountryCode::class))->toBeTrue();
+});
+
+it('isTypeOf returns false when class does not match', function (): void {
+    $v = StringCountryCode::fromString('US');
+    expect($v->isTypeOf('NonExistentClass'))->toBeFalse();
+});
+
+it('isTypeOf returns true for multiple classNames when one matches', function (): void {
+    $v = StringCountryCode::fromString('US');
+    expect($v->isTypeOf('NonExistentClass', StringCountryCode::class, 'AnotherClass'))->toBeTrue();
+});

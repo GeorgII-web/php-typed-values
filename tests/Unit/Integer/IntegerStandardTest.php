@@ -313,3 +313,18 @@ it('round-trip conversion with all formats: string → int → float → int →
 
     expect($result)->toBe($original);
 });
+
+it('isTypeOf returns true when class matches', function (): void {
+    $v = IntegerStandard::fromInt(5);
+    expect($v->isTypeOf(IntegerStandard::class))->toBeTrue();
+});
+
+it('isTypeOf returns false when class does not match', function (): void {
+    $v = IntegerStandard::fromInt(5);
+    expect($v->isTypeOf('NonExistentClass'))->toBeFalse();
+});
+
+it('isTypeOf returns true for multiple classNames when one matches', function (): void {
+    $v = IntegerStandard::fromInt(5);
+    expect($v->isTypeOf('NonExistentClass', IntegerStandard::class, 'AnotherClass'))->toBeTrue();
+});

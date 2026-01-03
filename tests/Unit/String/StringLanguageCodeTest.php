@@ -181,3 +181,18 @@ it('__toString magic method works correctly', function (): void {
     expect((string) $lang)->toBe('ja')
         ->and($lang . ' language')->toBe('ja language');
 });
+
+it('isTypeOf returns true when class matches', function (): void {
+    $v = StringLanguageCode::fromString('en');
+    expect($v->isTypeOf(StringLanguageCode::class))->toBeTrue();
+});
+
+it('isTypeOf returns false when class does not match', function (): void {
+    $v = StringLanguageCode::fromString('en');
+    expect($v->isTypeOf('NonExistentClass'))->toBeFalse();
+});
+
+it('isTypeOf returns true for multiple classNames when one matches', function (): void {
+    $v = StringLanguageCode::fromString('en');
+    expect($v->isTypeOf('NonExistentClass', StringLanguageCode::class, 'AnotherClass'))->toBeTrue();
+});

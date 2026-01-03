@@ -283,3 +283,18 @@ it('tryFromString and tryFromMixed accept custom timezone', function (): void {
         ->and($vo2->toString())->toBe($s)
         ->and($vo2->value()->getOffset())->toBe(0);
 });
+
+it('isTypeOf returns true when class matches', function (): void {
+    $vo = TimestampSeconds::fromString('1735787045');
+    expect($vo->isTypeOf(TimestampSeconds::class))->toBeTrue();
+});
+
+it('isTypeOf returns false when class does not match', function (): void {
+    $vo = TimestampSeconds::fromString('1735787045');
+    expect($vo->isTypeOf('NonExistentClass'))->toBeFalse();
+});
+
+it('isTypeOf returns true for multiple classNames when one matches', function (): void {
+    $vo = TimestampSeconds::fromString('1735787045');
+    expect($vo->isTypeOf('NonExistentClass', TimestampSeconds::class, 'AnotherClass'))->toBeTrue();
+});

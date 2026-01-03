@@ -263,3 +263,18 @@ it('multiple round-trips preserve value integrity for boundary values', function
         expect($result)->toBe($original);
     }
 });
+
+it('isTypeOf returns true when class matches', function (): void {
+    $v = IntegerTiny::fromInt(5);
+    expect($v->isTypeOf(IntegerTiny::class))->toBeTrue();
+});
+
+it('isTypeOf returns false when class does not match', function (): void {
+    $v = IntegerTiny::fromInt(5);
+    expect($v->isTypeOf('NonExistentClass'))->toBeFalse();
+});
+
+it('isTypeOf returns true for multiple classNames when one matches', function (): void {
+    $v = IntegerTiny::fromInt(5);
+    expect($v->isTypeOf('NonExistentClass', IntegerTiny::class, 'AnotherClass'))->toBeTrue();
+});

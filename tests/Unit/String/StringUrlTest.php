@@ -93,3 +93,18 @@ it('isUndefined is always false for StringUrl', function (): void {
     $u = new StringUrl('https://example.com');
     expect($u->isUndefined())->toBeFalse();
 });
+
+it('isTypeOf returns true when class matches', function (): void {
+    $v = StringUrl::fromString('https://example.com');
+    expect($v->isTypeOf(StringUrl::class))->toBeTrue();
+});
+
+it('isTypeOf returns false when class does not match', function (): void {
+    $v = StringUrl::fromString('https://example.com');
+    expect($v->isTypeOf('NonExistentClass'))->toBeFalse();
+});
+
+it('isTypeOf returns true for multiple classNames when one matches', function (): void {
+    $v = StringUrl::fromString('https://example.com');
+    expect($v->isTypeOf('NonExistentClass', StringUrl::class, 'AnotherClass'))->toBeTrue();
+});

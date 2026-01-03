@@ -375,3 +375,18 @@ it('multiple round-trips preserve integrity: label → int → label → int', f
         expect($result)->toBe($original);
     }
 });
+
+it('isTypeOf returns true when class matches', function (): void {
+    $v = IntegerWeekDay::fromInt(5);
+    expect($v->isTypeOf(IntegerWeekDay::class))->toBeTrue();
+});
+
+it('isTypeOf returns false when class does not match', function (): void {
+    $v = IntegerWeekDay::fromInt(5);
+    expect($v->isTypeOf('NonExistentClass'))->toBeFalse();
+});
+
+it('isTypeOf returns true for multiple classNames when one matches', function (): void {
+    $v = IntegerWeekDay::fromInt(5);
+    expect($v->isTypeOf('NonExistentClass', IntegerWeekDay::class, 'AnotherClass'))->toBeTrue();
+});

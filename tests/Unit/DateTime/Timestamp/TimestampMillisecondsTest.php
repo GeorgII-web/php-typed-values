@@ -257,3 +257,18 @@ it('isUndefined is always false for TimestampMilliseconds', function (): void {
     $vo = TimestampMilliseconds::fromString('0');
     expect($vo->isUndefined())->toBeFalse();
 });
+
+it('isTypeOf returns true when class matches', function (): void {
+    $vo = TimestampMilliseconds::fromString('1732445696123');
+    expect($vo->isTypeOf(TimestampMilliseconds::class))->toBeTrue();
+});
+
+it('isTypeOf returns false when class does not match', function (): void {
+    $vo = TimestampMilliseconds::fromString('1732445696123');
+    expect($vo->isTypeOf('NonExistentClass'))->toBeFalse();
+});
+
+it('isTypeOf returns true for multiple classNames when one matches', function (): void {
+    $vo = TimestampMilliseconds::fromString('1732445696123');
+    expect($vo->isTypeOf('NonExistentClass', TimestampMilliseconds::class, 'AnotherClass'))->toBeTrue();
+});

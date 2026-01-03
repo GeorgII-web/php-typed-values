@@ -92,3 +92,18 @@ it('isUndefined returns false', function (): void {
     $c = new StringEmpty('');
     expect($c->isUndefined())->toBeFalse();
 });
+
+it('isTypeOf returns true when class matches', function (): void {
+    $v = StringEmpty::fromString('');
+    expect($v->isTypeOf(StringEmpty::class))->toBeTrue();
+});
+
+it('isTypeOf returns false when class does not match', function (): void {
+    $v = StringEmpty::fromString('');
+    expect($v->isTypeOf('NonExistentClass'))->toBeFalse();
+});
+
+it('isTypeOf returns true for multiple classNames when one matches', function (): void {
+    $v = StringEmpty::fromString('');
+    expect($v->isTypeOf('NonExistentClass', StringEmpty::class, 'AnotherClass'))->toBeTrue();
+});

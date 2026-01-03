@@ -101,3 +101,18 @@ it('isUndefined is always false for StringPath', function (): void {
     $p = new StringPath('/tmp');
     expect($p->isUndefined())->toBeFalse();
 });
+
+it('isTypeOf returns true when class matches', function (): void {
+    $v = StringPath::fromString('/tmp');
+    expect($v->isTypeOf(StringPath::class))->toBeTrue();
+});
+
+it('isTypeOf returns false when class does not match', function (): void {
+    $v = StringPath::fromString('/tmp');
+    expect($v->isTypeOf('NonExistentClass'))->toBeFalse();
+});
+
+it('isTypeOf returns true for multiple classNames when one matches', function (): void {
+    $v = StringPath::fromString('/tmp');
+    expect($v->isTypeOf('NonExistentClass', StringPath::class, 'AnotherClass'))->toBeTrue();
+});

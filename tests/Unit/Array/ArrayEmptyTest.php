@@ -59,3 +59,18 @@ it('getDefinedItems returns empty array', function (): void {
     $c = new ArrayEmpty([]);
     expect($c->getDefinedItems())->toBe([]);
 });
+
+it('isTypeOf returns true when class matches', function (): void {
+    $c = new ArrayEmpty([]);
+    expect($c->isTypeOf(ArrayEmpty::class))->toBeTrue();
+});
+
+it('isTypeOf returns false when class does not match', function (): void {
+    $c = new ArrayEmpty([]);
+    expect($c->isTypeOf('NonExistentClass'))->toBeFalse();
+});
+
+it('isTypeOf returns true for multiple classNames when one matches', function (): void {
+    $c = new ArrayEmpty([]);
+    expect($c->isTypeOf('NonExistentClass', ArrayEmpty::class, 'AnotherClass'))->toBeTrue();
+});

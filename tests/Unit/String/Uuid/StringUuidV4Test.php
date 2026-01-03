@@ -123,3 +123,18 @@ it('isUndefined is always false for StringUuidV4', function (): void {
     $u = new StringUuidV4('550e8400-e29b-41d4-a716-446655440000');
     expect($u->isUndefined())->toBeFalse();
 });
+
+it('isTypeOf returns true when class matches', function (): void {
+    $v = StringUuidV4::fromString('550e8400-e29b-41d4-a716-446655440000');
+    expect($v->isTypeOf(StringUuidV4::class))->toBeTrue();
+});
+
+it('isTypeOf returns false when class does not match', function (): void {
+    $v = StringUuidV4::fromString('550e8400-e29b-41d4-a716-446655440000');
+    expect($v->isTypeOf('NonExistentClass'))->toBeFalse();
+});
+
+it('isTypeOf returns true for multiple classNames when one matches', function (): void {
+    $v = StringUuidV4::fromString('550e8400-e29b-41d4-a716-446655440000');
+    expect($v->isTypeOf('NonExistentClass', StringUuidV4::class, 'AnotherClass'))->toBeTrue();
+});

@@ -195,3 +195,18 @@ it('value and toString return the same string', function (): void {
     expect($json->value())->toBe($json->toString())
         ->and($json->value())->toBe($jsonText);
 });
+
+it('isTypeOf returns true when class matches', function (): void {
+    $v = StringJson::fromString('{"test":true}');
+    expect($v->isTypeOf(StringJson::class))->toBeTrue();
+});
+
+it('isTypeOf returns false when class does not match', function (): void {
+    $v = StringJson::fromString('{"test":true}');
+    expect($v->isTypeOf('NonExistentClass'))->toBeFalse();
+});
+
+it('isTypeOf returns true for multiple classNames when one matches', function (): void {
+    $v = StringJson::fromString('{"test":true}');
+    expect($v->isTypeOf('NonExistentClass', StringJson::class, 'AnotherClass'))->toBeTrue();
+});

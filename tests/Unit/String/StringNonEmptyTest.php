@@ -89,3 +89,18 @@ it('tryFromMixed handles various inputs for StringNonEmpty', function (): void {
         ->and($fromStringable)->toBeInstanceOf(StringNonEmpty::class)
         ->and($fromStringable->value())->toBe('stringable-content');
 });
+
+it('isTypeOf returns true when class matches', function (): void {
+    $v = StringNonEmpty::fromString('test');
+    expect($v->isTypeOf(StringNonEmpty::class))->toBeTrue();
+});
+
+it('isTypeOf returns false when class does not match', function (): void {
+    $v = StringNonEmpty::fromString('test');
+    expect($v->isTypeOf('NonExistentClass'))->toBeFalse();
+});
+
+it('isTypeOf returns true for multiple classNames when one matches', function (): void {
+    $v = StringNonEmpty::fromString('test');
+    expect($v->isTypeOf('NonExistentClass', StringNonEmpty::class, 'AnotherClass'))->toBeTrue();
+});
