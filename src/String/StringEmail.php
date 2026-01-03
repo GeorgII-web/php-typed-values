@@ -25,6 +25,8 @@ use function sprintf;
  * Uses PHP's FILTER_VALIDATE_EMAIL to validate an address string. The value is
  * stored as provided and must be non-empty.
  *
+ * Warning! Email validation is complex, and the only true way to confirm an email is valid and exists is to email the address.
+ *
  * Example
  *  - $e = StringEmail::fromString('user@example.com');
  *    (string) $e; // 'user@example.com'

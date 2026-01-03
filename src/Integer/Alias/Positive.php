@@ -7,7 +7,7 @@ namespace PhpTypedValues\Integer\Alias;
 use PhpTypedValues\Integer\IntegerPositive;
 
 /**
- * Alias for positive integer (> 0).
+ * Positive (Alias for positive integer).
  *
  * Provides the same behavior as IntegerPositive while exposing a concise
  * name suitable for APIs that prefer "Positive".

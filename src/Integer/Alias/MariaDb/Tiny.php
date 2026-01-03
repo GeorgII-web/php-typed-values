@@ -7,7 +7,7 @@ namespace PhpTypedValues\Integer\Alias\MariaDb;
 use PhpTypedValues\Integer\MariaDb\IntegerTiny;
 
 /**
- * Alias for MariaDB tiny integer type (signed TINYINT: -128..127).
+ * Tiny (Alias for MariaDB signed TINYINT).
  *
  * Provides the same behavior as IntegerTiny while exposing a concise name
  * suitable for APIs that prefer "Tiny" in the MariaDB namespace.

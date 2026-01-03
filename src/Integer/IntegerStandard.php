@@ -20,7 +20,7 @@ use function is_string;
 use function sprintf;
 
 /**
- * Generic integer-typed value.
+ * IntegerStandard (Generic integer-typed value).
  *
  * Wraps any PHP integer and provides factories from a strictly validated
  * string or a native int, along with convenient string formatting.

@@ -20,7 +20,7 @@ use function is_string;
 use function sprintf;
 
 /**
- * Positive integer (> 0).
+ * IntegerPositive (Positive integer > 0).
  *
  * Ensures the wrapped value is strictly greater than zero. Provides factories
  * from strictly validated string and native int, plus convenient formatting.

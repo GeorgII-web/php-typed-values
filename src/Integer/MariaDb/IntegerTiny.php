@@ -20,7 +20,7 @@ use function is_string;
 use function sprintf;
 
 /**
- * Database tiny integer (TINYINT signed: -128..127).
+ * IntegerTiny (Database tiny integer TINYINT signed: -128..127).
  *
  * Represents a tinyint value in the signed range -128..127, matching common
  * MariaDB/MySQL semantics. Factories accept strictly validated strings and

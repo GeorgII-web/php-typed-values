@@ -20,7 +20,7 @@ use function is_string;
 use function sprintf;
 
 /**
- * Non‑negative integer (>= 0).
+ * IntegerNonNegative (Non-negative integer >= 0).
  *
  * Guarantees the wrapped integer is zero or positive. Provides factories from
  * strictly validated string and native int, along with standard formatting.

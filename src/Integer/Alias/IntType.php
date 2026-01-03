@@ -7,7 +7,7 @@ namespace PhpTypedValues\Integer\Alias;
 use PhpTypedValues\Integer\IntegerStandard;
 
 /**
- * Alias for the generic integer-typed value.
+ * IntType (Alias for integer).
  *
  * Provides the same behavior as IntegerStandard while offering a more
  * descriptive name for APIs that prefer "IntType".

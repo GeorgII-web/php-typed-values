@@ -7,7 +7,7 @@ namespace PhpTypedValues\Integer\Alias;
 use PhpTypedValues\Integer\IntegerNonNegative;
 
 /**
- * Alias for non‑negative integer (>= 0).
+ * NonNegative (Alias for non-negative integer).
  *
  * Provides the same behavior as IntegerNonNegative while exposing a concise
  * name suitable for APIs that prefer "NonNegative".

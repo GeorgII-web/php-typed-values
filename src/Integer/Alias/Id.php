@@ -7,7 +7,7 @@ namespace PhpTypedValues\Integer\Alias;
 use PhpTypedValues\Integer\IntegerPositive;
 
 /**
- * Alias for positive integer used as identifier.
+ * ID (Alias for positive integer).
  *
  * Provides the same behavior as IntegerPositive but conveys the semantic
  * meaning of an application-level identifier. Useful where IDs are strictly

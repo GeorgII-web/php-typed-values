@@ -20,7 +20,7 @@ use function is_string;
 use function sprintf;
 
 /**
- * Week day number between 1 and 7.
+ * IntegerWeekDay (Week day number between 1 and 7).
  *
  * Represents an integer constrained to the inclusive range 1..7 where
  * 1 = Monday and 7 = Sunday (or any convention your domain applies).
