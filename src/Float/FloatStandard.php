@@ -31,8 +31,11 @@ use function is_string;
  *
  * @psalm-immutable
  */
-readonly class FloatStandard extends FloatType
+class FloatStandard extends FloatType
 {
+    /**
+     * @readonly
+     */
     protected float $value;
 
     /**
@@ -53,8 +56,9 @@ readonly class FloatStandard extends FloatType
 
     /**
      * @throws FloatTypeException
+     * @return static
      */
-    public static function fromFloat(float $value): static
+    public static function fromFloat(float $value)
     {
         return new static($value);
     }
@@ -65,8 +69,9 @@ readonly class FloatStandard extends FloatType
      * for "cleaner" output).
      *
      * @throws FloatTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         parent::assertFloatString($value);
 
@@ -118,12 +123,13 @@ readonly class FloatStandard extends FloatType
      */
     public static function tryFromFloat(
         float $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
+        PrimitiveType $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromFloat($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -135,21 +141,28 @@ readonly class FloatStandard extends FloatType
      * @param T $default
      *
      * @return static|T
+     * @param mixed $value
      */
     public static function tryFromMixed(
-        mixed $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
+        $value,
+        PrimitiveType $default = null
+    ) {
+        $default ??= new Undefined();
         try {
-            /** @var static */
-            return match (true) {
-                is_float($value), is_int($value) => static::fromFloat($value),
-                ($value instanceof self) => static::fromFloat($value->value()),
-                is_bool($value) => static::fromFloat($value ? 1.0 : 0.0),
-                is_string($value) || $value instanceof Stringable => static::fromString((string) $value),
-                default => throw new TypeException('Value cannot be cast to float'),
-            };
-        } catch (Exception) {
+            switch (true) {
+                case is_float($value):
+                case is_int($value):
+                    return static::fromFloat($value);
+                case $value instanceof self:
+                    return static::fromFloat($value->value());
+                case is_bool($value):
+                    return static::fromFloat($value ? 1.0 : 0.0);
+                case is_string($value) || is_object($value) && method_exists($value, '__toString'):
+                    return static::fromString((string) $value);
+                default:
+                    throw new TypeException('Value cannot be cast to float');
+            }
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -164,12 +177,13 @@ readonly class FloatStandard extends FloatType
      */
     public static function tryFromString(
         string $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
+        PrimitiveType $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromString($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }

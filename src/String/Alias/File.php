@@ -20,6 +20,6 @@ use PhpTypedValues\String\StringFileName;
  *
  * @psalm-immutable
  */
-final readonly class File extends StringFileName
+final class File extends StringFileName
 {
 }

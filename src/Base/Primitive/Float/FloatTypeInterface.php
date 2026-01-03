@@ -30,10 +30,14 @@ interface FloatTypeInterface
      * when the provided value is invalid.
      *
      * @throws TypeException
+     * @return static
      */
-    public static function fromString(string $value): static;
+    public static function fromString(string $value);
 
-    public static function fromFloat(float $value): static;
+    /**
+     * @return static
+     */
+    public static function fromFloat(float $value);
 
     public function value(): float;
 
@@ -46,8 +50,8 @@ interface FloatTypeInterface
      */
     public static function tryFromFloat(
         float $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+        PrimitiveType $default = null
+    );
 
     /**
      * @template T of PrimitiveType
@@ -55,11 +59,12 @@ interface FloatTypeInterface
      * @param T $default
      *
      * @return static|T
+     * @param mixed $value
      */
     public static function tryFromMixed(
-        mixed $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+        $value,
+        PrimitiveType $default = null
+    );
 
     /**
      * @template T of PrimitiveType
@@ -70,6 +75,6 @@ interface FloatTypeInterface
      */
     public static function tryFromString(
         string $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+        PrimitiveType $default = null
+    );
 }

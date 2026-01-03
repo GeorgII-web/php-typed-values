@@ -17,6 +17,6 @@ use PhpTypedValues\String\StringPath;
  *
  * @psalm-immutable
  */
-final readonly class Path extends StringPath
+final class Path extends StringPath
 {
 }

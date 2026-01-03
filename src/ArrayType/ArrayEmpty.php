@@ -17,7 +17,7 @@ use function count;
  *
  * @psalm-immutable
  */
-readonly class ArrayEmpty extends ArrayType
+class ArrayEmpty extends ArrayType
 {
     /**
      * @throws ArrayTypeException
@@ -33,8 +33,9 @@ readonly class ArrayEmpty extends ArrayType
      * @param list<mixed> $value
      *
      * @throws ArrayTypeException
+     * @return static
      */
-    public static function fromArray(array $value): static
+    public static function fromArray(array $value)
     {
         /** @var array $value */
         return new static($value);
