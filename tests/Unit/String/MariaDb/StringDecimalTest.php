@@ -21,7 +21,7 @@ it('accepts valid decimal strings and preserves value/toString', function (): vo
 
 it('throws on malformed decimal strings', function (): void {
     expect(fn() => new StringDecimal(''))
-        ->toThrow(DecimalStringTypeException::class, 'Expected decimal string')
+        ->toThrow(DecimalStringTypeException::class, 'Expected non-empty decimal string')
         ->and(fn() => StringDecimal::fromString('abc'))
         ->toThrow(DecimalStringTypeException::class, 'Expected decimal string')
         ->and(fn() => StringDecimal::fromString('.5'))
@@ -100,11 +100,6 @@ it('tryFromMixed handles valid decimal-like values and invalid mixed inputs', fu
         ->and($fromObject)->toBeInstanceOf(Undefined::class);
 });
 
-it('isEmpty is always false for StringDecimal', function (): void {
-    $d = new StringDecimal('0');
-    expect($d->isEmpty())->toBeFalse();
-});
-
 it('isUndefined returns false for instances and true for Undefined results', function (): void {
     // Valid instance should report false
     $ok = StringDecimal::fromString('10.5');
@@ -132,4 +127,10 @@ it('isTypeOf returns false when class does not match', function (): void {
 it('isTypeOf returns true for multiple classNames when one matches', function (): void {
     $v = StringDecimal::fromString('10.5');
     expect($v->isTypeOf('NonExistentClass', StringDecimal::class, 'AnotherClass'))->toBeTrue();
+});
+
+it('isEmpty is always false for StringDecimal', function (): void {
+    $d = new StringDecimal('0');
+    expect($d->isEmpty())->toBeFalse()
+        ->and($d->isEmpty())->not()->toBeTrue();
 });

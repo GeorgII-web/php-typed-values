@@ -47,8 +47,7 @@ readonly class StringDecimal extends StrType
      */
     public function __construct(string $value)
     {
-        self::assertDecimalString($value);
-        $this->value = $value;
+        $this->value = self::getFromDecimalString($value);
     }
 
     /**
@@ -87,13 +86,21 @@ readonly class StringDecimal extends StrType
      * Accepts optional leading minus, digits, and optional fractional part with at least one digit.
      * Disallows leading/trailing spaces, plus sign, and missing integer or fractional digits like ".5" or "1.".
      *
+     * @return non-empty-string
+     *
      * @throws DecimalStringTypeException
      */
-    private static function assertDecimalString(string $value): void
+    private static function getFromDecimalString(string $value): string
     {
         if (preg_match('/^-?\d+(?:\.\d+)?$/', $value) !== 1) {
             throw new DecimalStringTypeException(sprintf('Expected decimal string (e.g., "123", "-1", "3.14"), got "%s"', $value));
         }
+
+        if ($value === '') {
+            throw new DecimalStringTypeException('Expected non-empty decimal string');
+        }
+
+        return $value;
     }
 
     /**
