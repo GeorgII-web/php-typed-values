@@ -6,6 +6,7 @@ require_once 'vendor/autoload.php';
 
 use const PHP_EOL;
 
+use PhpTypedValues\Base\Primitive\Undefined\UndefinedType;
 use PhpTypedValues\Integer\Alias\Id;
 use PhpTypedValues\Integer\Alias\Integer;
 use PhpTypedValues\Integer\Alias\IntType;
@@ -18,6 +19,7 @@ use PhpTypedValues\Integer\IntegerPositive;
 use PhpTypedValues\Integer\IntegerStandard;
 use PhpTypedValues\Integer\IntegerWeekDay;
 use PhpTypedValues\Integer\MariaDb\IntegerTiny;
+use PhpTypedValues\Undefined\Alias\Unknown;
 
 /**
  * Integer.
@@ -29,6 +31,7 @@ testPositiveInt(IntegerPositive::fromInt(10)->value());
 testNonNegativeInt(IntegerNonNegative::fromInt(10)->value());
 testWeekDayInt(IntegerWeekDay::fromInt(7)->value());
 
+echo IntegerStandard::tryFromString('no', Unknown::create())->isTypeOf(WeekDay::class, Tiny::class, UndefinedType::class) ? 'Type correct - "Unknown" is type of "UndefinedType"' . PHP_EOL : 'Invalid type' . PHP_EOL;
 echo WeekDay::fromLabel('Monday')->toLabel() . PHP_EOL;
 echo WeekDay::fromInt(7)->value() . PHP_EOL;
 echo Tiny::tryFromMixed(-5)->toString() . PHP_EOL;

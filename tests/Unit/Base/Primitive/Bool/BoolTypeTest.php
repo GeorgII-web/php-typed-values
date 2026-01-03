@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Base\Primitive\Bool;
+namespace Unit\Base\Primitive\Bool;
 
 use PhpTypedValues\Base\Primitive\Bool\BoolType;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -89,6 +89,11 @@ readonly class BoolTypeTest extends BoolType
     }
 
     public function jsonSerialize(): bool
+    {
+        return true;
+    }
+
+    public function isTypeOf(string ...$classNames): bool
     {
         return true;
     }

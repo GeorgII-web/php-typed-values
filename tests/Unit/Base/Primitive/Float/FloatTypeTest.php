@@ -29,6 +29,11 @@ readonly class FloatTypeTest extends FloatType
         return new static((float) $value);
     }
 
+    public function isTypeOf(string ...$classNames): bool
+    {
+        return true;
+    }
+
     public static function fromFloat(float $value): static
     {
         return new static($value);

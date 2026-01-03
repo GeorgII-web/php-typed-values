@@ -79,6 +79,17 @@ readonly class UndefinedStandard extends UndefinedType
         throw new UndefinedTypeException('UndefinedType cannot be converted to string.');
     }
 
+    public function isTypeOf(string ...$classNames): bool
+    {
+        foreach ($classNames as $className) {
+            if ($this instanceof $className) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * @throws UndefinedTypeException
      */

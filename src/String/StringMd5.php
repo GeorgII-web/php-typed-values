@@ -82,6 +82,17 @@ readonly class StringMd5 extends StrType
         return $this->value();
     }
 
+    public function isTypeOf(string ...$classNames): bool
+    {
+        foreach ($classNames as $className) {
+            if ($this instanceof $className) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * Returns the MD5 hash as a string.
      *

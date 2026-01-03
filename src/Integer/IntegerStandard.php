@@ -132,6 +132,17 @@ readonly class IntegerStandard extends IntType
         }
     }
 
+    public function isTypeOf(string ...$classNames): bool
+    {
+        foreach ($classNames as $className) {
+            if ($this instanceof $className) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function value(): int
     {
         return $this->value;

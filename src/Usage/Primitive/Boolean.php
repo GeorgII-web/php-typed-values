@@ -44,6 +44,8 @@ echo Flag::tryFromMixed('yes')->toString() . PHP_EOL;
 echo Logical::tryFromMixed('yes')->toString() . PHP_EOL;
 echo Toggle::tryFromMixed('yes')->toString() . PHP_EOL;
 
+echo Toggle::fromString('1')->isTypeOf(Toggle::class) ? 'Type correct' . PHP_EOL : 'Invalid type' . PHP_EOL;
+
 // true/false literal usages (and try* to reference both branches for Psalm)
 $t1 = TrueStandard::tryFromString('yes');
 if (!($t1 instanceof Undefined)) {

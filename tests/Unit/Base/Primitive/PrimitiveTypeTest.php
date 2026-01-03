@@ -20,6 +20,11 @@ readonly class PrimitiveTypeTest extends PrimitiveType
     {
     }
 
+    public function isTypeOf(string ...$classNames): bool
+    {
+        return true;
+    }
+
     public function isEmpty(): bool
     {
         return empty($this->value);

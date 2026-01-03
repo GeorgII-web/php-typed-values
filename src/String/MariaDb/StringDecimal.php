@@ -95,6 +95,17 @@ readonly class StringDecimal extends StrType
         return $this->toString();
     }
 
+    public function isTypeOf(string ...$classNames): bool
+    {
+        foreach ($classNames as $className) {
+            if ($this instanceof $className) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function toString(): string
     {
         return $this->value();

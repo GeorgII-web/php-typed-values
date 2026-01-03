@@ -67,6 +67,17 @@ readonly class ArrayOfObjects extends ArrayType
         return new static($items);
     }
 
+    public function isTypeOf(string ...$classNames): bool
+    {
+        foreach ($classNames as $className) {
+            if ($this instanceof $className) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * @return list<TItem>
      */

@@ -19,6 +19,11 @@ readonly class DateTimeTypeTest extends DateTimeType
     {
     }
 
+    public function isTypeOf(string ...$classNames): bool
+    {
+        return true;
+    }
+
     public function value(): DateTimeImmutable
     {
         return $this->dt;

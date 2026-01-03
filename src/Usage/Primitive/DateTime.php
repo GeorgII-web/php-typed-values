@@ -29,6 +29,7 @@ echo TimestampMilliseconds::getFormat() . PHP_EOL;
 echo DateTimeSql::getFormat() . PHP_EOL;
 echo DateTimeAtom::tryFromMixed('2025-01-02T03:04:05+00:00')->toString() . PHP_EOL;
 echo DateTimeSql::tryFromMixed('2025-01-02 03:04:05')->toString() . PHP_EOL;
+echo DateTimeSql::tryFromMixed('2025-01-02 03:04:05')->isTypeOf(DateTimeSql::class) ? 'Type correct' . PHP_EOL : 'Invalid type' . PHP_EOL;
 
 $dt = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00')->value();
 echo DateTimeAtom::fromDateTime($dt)->toString() . PHP_EOL;

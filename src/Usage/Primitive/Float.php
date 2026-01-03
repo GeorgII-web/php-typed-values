@@ -52,6 +52,8 @@ if (!($tn instanceof Undefined)) {
     echo $tn->toString() . PHP_EOL;
 }
 
+echo FloatStandard::fromString('1')->isTypeOf(FloatStandard::class) ? 'Type correct' . PHP_EOL : 'Invalid type' . PHP_EOL;
+
 /**
  * Artificial functions.
  */

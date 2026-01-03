@@ -107,6 +107,17 @@ readonly class TimestampMilliseconds extends DateTimeType
         );
     }
 
+    public function isTypeOf(string ...$classNames): bool
+    {
+        foreach ($classNames as $className) {
+            if ($this instanceof $className) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * Render as milliseconds since epoch, e.g. "1732445696123".
      */

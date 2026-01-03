@@ -72,6 +72,17 @@ readonly class StringCountryCode extends StrType
         return $this->toString();
     }
 
+    public function isTypeOf(string ...$classNames): bool
+    {
+        foreach ($classNames as $className) {
+            if ($this instanceof $className) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * @return non-empty-string
      */

@@ -56,6 +56,17 @@ readonly class ArrayNonEmpty extends ArrayType
         return new static($value);
     }
 
+    public function isTypeOf(string ...$classNames): bool
+    {
+        foreach ($classNames as $className) {
+            if ($this instanceof $className) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * @return list<TItem>
      */

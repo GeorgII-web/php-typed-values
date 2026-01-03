@@ -99,3 +99,5 @@ try {
 } catch (TypeException $e) {
     echo $e->getMessage() . PHP_EOL;
 }
+
+echo Undefined::fromString('no')->isTypeOf(Undefined::class) ? 'Type correct' . PHP_EOL : 'Invalid type' . PHP_EOL;

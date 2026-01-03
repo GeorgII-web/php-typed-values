@@ -25,6 +25,11 @@ readonly class StrTypeTest extends StrType
         return new static($value);
     }
 
+    public function isTypeOf(string ...$classNames): bool
+    {
+        return true;
+    }
+
     public function value(): string
     {
         return $this->val;

@@ -22,6 +22,17 @@ readonly class ArrayUndefined extends ArrayType implements ArrayUndefinedTypeInt
         return new static();
     }
 
+    public function isTypeOf(string ...$classNames): bool
+    {
+        foreach ($classNames as $className) {
+            if ($this instanceof $className) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * @throws ArrayUndefinedTypeException
      */

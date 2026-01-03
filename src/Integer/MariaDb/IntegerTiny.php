@@ -176,6 +176,17 @@ readonly class IntegerTiny extends IntType
         return $this->value();
     }
 
+    public function isTypeOf(string ...$classNames): bool
+    {
+        foreach ($classNames as $className) {
+            if ($this instanceof $className) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * @return non-empty-string
      */
