@@ -114,6 +114,7 @@ it('isUndefined returns false for instances and true for Undefined results', fun
     $u2 = StringDecimal::tryFromMixed(['x']);
 
     expect($ok->isUndefined())->toBeFalse()
+        ->and($ok->isUndefined())->not()->toBeTrue()
         ->and($u1->isUndefined())->toBeTrue()
         ->and($u2->isUndefined())->toBeTrue();
 });

@@ -37,6 +37,9 @@ use function sprintf;
  */
 readonly class StringDecimal extends StrType
 {
+    /**
+     * @var non-empty-string
+     */
     protected string $value;
 
     /**
@@ -56,6 +59,9 @@ readonly class StringDecimal extends StrType
         return new static($value);
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function value(): string
     {
         return $this->value;
@@ -90,6 +96,9 @@ readonly class StringDecimal extends StrType
         }
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function jsonSerialize(): string
     {
         return $this->toString();
@@ -106,14 +115,12 @@ readonly class StringDecimal extends StrType
         return false;
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function toString(): string
     {
         return $this->value();
-    }
-
-    public function __toString(): string
-    {
-        return $this->toString();
     }
 
     public function isEmpty(): bool
