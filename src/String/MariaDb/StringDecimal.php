@@ -92,12 +92,12 @@ readonly class StringDecimal extends StrType
      */
     private static function getFromDecimalString(string $value): string
     {
-        if (preg_match('/^-?\d+(?:\.\d+)?$/', $value) !== 1) {
-            throw new DecimalStringTypeException(sprintf('Expected decimal string (e.g., "123", "-1", "3.14"), got "%s"', $value));
-        }
-
         if ($value === '') {
             throw new DecimalStringTypeException('Expected non-empty decimal string');
+        }
+
+        if (preg_match('/^-?\d+(?:\.\d+)?$/', $value) !== 1) {
+            throw new DecimalStringTypeException(sprintf('Expected decimal string (e.g., "123", "-1", "3.14"), got "%s"', $value));
         }
 
         return $value;
