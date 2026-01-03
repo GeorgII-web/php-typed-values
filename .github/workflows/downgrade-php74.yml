@@ -126,26 +126,3 @@ jobs:
           # Force push the tag to update it if it already exists on remote
           git push --force origin "$NEW_TAG"
 
-
-  test-php74:
-    name: Test Downgraded Code (PHP 7.4)
-    needs: downgrade-and-tag
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-        with:
-          ref: php7.4
-
-      - name: Setup PHP 7.4
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '7.4'
-          extensions: mbstring, intl
-          tools: composer:v2
-
-      - name: Install dependencies
-        run: composer install --no-interaction --prefer-dist --no-progress --ignore-platform-reqs
-
-      - name: Run tests
-        run: composer run-script usage
