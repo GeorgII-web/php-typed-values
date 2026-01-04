@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\String\Specific;
 
+use const FILTER_VALIDATE_EMAIL;
+
 use Exception;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Base\Primitive\String\StringTypeAbstractAbstract;
@@ -11,11 +13,11 @@ use PhpTypedValues\Exception\String\EmailStringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
+
 use function filter_var;
 use function is_scalar;
 use function is_string;
 use function sprintf;
-use const FILTER_VALIDATE_EMAIL;
 
 /**
  * Email address string (RFC 5322 pragmatic validation).
@@ -101,9 +103,9 @@ readonly class StringEmail extends StringTypeAbstractAbstract
     /**
      * @template T of PrimitiveTypeAbstract
      *
-     * @param PrimitiveTypeAbstract $default
+     * @param T $default
      *
-     * @return static|PrimitiveTypeAbstract
+     * @return static|T
      */
     public static function tryFromMixed(
         mixed $value,
@@ -117,7 +119,7 @@ readonly class StringEmail extends StringTypeAbstractAbstract
                 default => throw new TypeException('Value cannot be cast to string'),
             };
         } catch (Exception) {
-            /** @var PrimitiveTypeAbstract */
+            /** @var T */
             return $default;
         }
     }
@@ -125,9 +127,9 @@ readonly class StringEmail extends StringTypeAbstractAbstract
     /**
      * @template T of PrimitiveTypeAbstract
      *
-     * @param PrimitiveTypeAbstract $default
+     * @param T $default
      *
-     * @return static|PrimitiveTypeAbstract
+     * @return static|T
      */
     public static function tryFromString(
         string $value,
@@ -137,7 +139,7 @@ readonly class StringEmail extends StringTypeAbstractAbstract
             /** @var static */
             return static::fromString($value);
         } catch (Exception) {
-            /** @var PrimitiveTypeAbstract */
+            /** @var T */
             return $default;
         }
     }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\String\Specific;
 
+use const JSON_THROW_ON_ERROR;
+
 use Exception;
 use JsonException;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
@@ -12,11 +14,11 @@ use PhpTypedValues\Exception\String\JsonStringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
+
 use function is_scalar;
 use function is_string;
 use function json_decode;
 use function sprintf;
-use const JSON_THROW_ON_ERROR;
 
 /**
  * Valid JSON string.
@@ -141,9 +143,9 @@ readonly class StringJson extends StringTypeAbstractAbstract
     /**
      * @template T of PrimitiveTypeAbstract
      *
-     * @param PrimitiveTypeAbstract $default
+     * @param T $default
      *
-     * @return static|PrimitiveTypeAbstract
+     * @return static|T
      */
     public static function tryFromMixed(
         mixed $value,
@@ -159,7 +161,7 @@ readonly class StringJson extends StringTypeAbstractAbstract
                 default => throw new TypeException('Value cannot be cast to string'),
             };
         } catch (Exception) {
-            /** @var PrimitiveTypeAbstract */
+            /** @var T */
             return $default;
         }
     }
@@ -167,9 +169,9 @@ readonly class StringJson extends StringTypeAbstractAbstract
     /**
      * @template T of PrimitiveTypeAbstract
      *
-     * @param PrimitiveTypeAbstract $default
+     * @param T $default
      *
-     * @return static|PrimitiveTypeAbstract
+     * @return static|T
      */
     public static function tryFromString(
         string $value,
@@ -179,7 +181,7 @@ readonly class StringJson extends StringTypeAbstractAbstract
             /** @var static */
             return static::fromString($value);
         } catch (Exception) {
-            /** @var PrimitiveTypeAbstract */
+            /** @var T */
             return $default;
         }
     }

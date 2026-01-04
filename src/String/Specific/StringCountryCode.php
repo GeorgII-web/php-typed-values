@@ -11,6 +11,7 @@ use PhpTypedValues\Exception\String\CountryCodeStringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
+
 use function in_array;
 use function is_scalar;
 use function is_string;
@@ -103,9 +104,9 @@ readonly class StringCountryCode extends StringTypeAbstractAbstract
     /**
      * @template T of PrimitiveTypeAbstract
      *
-     * @param PrimitiveTypeAbstract $default
+     * @param T $default
      *
-     * @return static|PrimitiveTypeAbstract
+     * @return static|T
      */
     public static function tryFromMixed(
         mixed $value,
@@ -120,7 +121,7 @@ readonly class StringCountryCode extends StringTypeAbstractAbstract
                 default => throw new TypeException('Value cannot be cast to string'),
             };
         } catch (Exception) {
-            /** @var PrimitiveTypeAbstract */
+            /** @var T */
             return $default;
         }
     }
@@ -128,9 +129,9 @@ readonly class StringCountryCode extends StringTypeAbstractAbstract
     /**
      * @template T of PrimitiveTypeAbstract
      *
-     * @param PrimitiveTypeAbstract $default
+     * @param T $default
      *
-     * @return static|PrimitiveTypeAbstract
+     * @return static|T
      */
     public static function tryFromString(
         string $value,
@@ -140,7 +141,7 @@ readonly class StringCountryCode extends StringTypeAbstractAbstract
             /** @var static */
             return static::fromString($value);
         } catch (Exception) {
-            /** @var PrimitiveTypeAbstract */
+            /** @var T */
             return $default;
         }
     }
