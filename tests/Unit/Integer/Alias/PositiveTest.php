@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Exception\IntegerTypeException;
+use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Integer\Alias\Positive;
 
 it('PositiveInt alias factories return PositiveInt instance', function (): void {

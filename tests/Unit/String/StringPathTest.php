@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Exception\PathStringTypeException;
-use PhpTypedValues\String\StringPath;
+use PhpTypedValues\Exception\String\PathStringTypeException;
+use PhpTypedValues\String\Specific\StringPath;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 it('checks valid paths', function (): void {

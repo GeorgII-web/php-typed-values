@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace PhpTypedValues\String;
 
 use Exception;
-use PhpTypedValues\Base\Primitive\PrimitiveType;
-use PhpTypedValues\Base\Primitive\String\StrType;
+use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
+use PhpTypedValues\Base\Primitive\String\StringTypeAbstractAbstract;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
@@ -27,7 +27,7 @@ use function is_string;
  *
  * @psalm-immutable
  */
-readonly class StringStandard extends StrType
+readonly class StringStandard extends StringTypeAbstractAbstract
 {
     protected string $value;
 
@@ -78,7 +78,7 @@ readonly class StringStandard extends StrType
     }
 
     /**
-     * @template T of PrimitiveType
+     * @template T of PrimitiveTypeAbstract
      *
      * @param T $default
      *
@@ -86,8 +86,8 @@ readonly class StringStandard extends StrType
      */
     public static function tryFromMixed(
         mixed $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
             return match (true) {
@@ -104,7 +104,7 @@ readonly class StringStandard extends StrType
     }
 
     /**
-     * @template T of PrimitiveType
+     * @template T of PrimitiveTypeAbstract
      *
      * @param T $default
      *
@@ -112,8 +112,8 @@ readonly class StringStandard extends StrType
      */
     public static function tryFromString(
         string $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
             return static::fromString($value);

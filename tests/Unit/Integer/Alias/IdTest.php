@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Exception\IntegerTypeException;
-use PhpTypedValues\Integer\Alias\Id;
+use PhpTypedValues\Exception\Integer\IntegerTypeException;
+use PhpTypedValues\Integer\Alias\Specific\Id;
 
 it('creates Id', function (): void {
     expect(Id::fromInt(1)->value())->toBe(1);

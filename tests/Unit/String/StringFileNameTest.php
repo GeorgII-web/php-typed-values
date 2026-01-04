@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Exception\FileNameStringTypeException;
-use PhpTypedValues\String\StringFileName;
+use PhpTypedValues\Exception\String\FileNameStringTypeException;
+use PhpTypedValues\String\Specific\StringFileName;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 it('accepts valid filename, preserves value/toString and casts via __toString', function (): void {

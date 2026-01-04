@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Exception\EmailStringTypeException;
-use PhpTypedValues\String\StringEmail;
+use PhpTypedValues\Exception\String\EmailStringTypeException;
+use PhpTypedValues\String\Specific\StringEmail;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 it('accepts valid email, preserves value/toString', function (): void {

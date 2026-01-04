@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace PhpTypedValues\Float;
 
 use Exception;
-use PhpTypedValues\Base\Primitive\Float\FloatType;
-use PhpTypedValues\Base\Primitive\PrimitiveType;
-use PhpTypedValues\Exception\FloatTypeException;
+use PhpTypedValues\Base\Primitive\Float\FloatTypeAbstractAbstract;
+use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
+use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
-
 use function is_float;
 use function is_int;
 use function is_string;
@@ -31,7 +30,7 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class FloatPositive extends FloatType
+readonly class FloatPositive extends FloatTypeAbstractAbstract
 {
     protected float $value;
 
@@ -110,7 +109,7 @@ readonly class FloatPositive extends FloatType
     }
 
     /**
-     * @template T of PrimitiveType
+     * @template T of PrimitiveTypeAbstract
      *
      * @param T $default
      *
@@ -118,8 +117,8 @@ readonly class FloatPositive extends FloatType
      */
     public static function tryFromFloat(
         float $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
             return static::fromFloat($value);
@@ -130,7 +129,7 @@ readonly class FloatPositive extends FloatType
     }
 
     /**
-     * @template T of PrimitiveType
+     * @template T of PrimitiveTypeAbstract
      *
      * @param T $default
      *
@@ -138,8 +137,8 @@ readonly class FloatPositive extends FloatType
      */
     public static function tryFromMixed(
         mixed $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
             return match (true) {
@@ -156,7 +155,7 @@ readonly class FloatPositive extends FloatType
     }
 
     /**
-     * @template T of PrimitiveType
+     * @template T of PrimitiveTypeAbstract
      *
      * @param T $default
      *
@@ -164,8 +163,8 @@ readonly class FloatPositive extends FloatType
      */
     public static function tryFromString(
         string $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
             return static::fromString($value);

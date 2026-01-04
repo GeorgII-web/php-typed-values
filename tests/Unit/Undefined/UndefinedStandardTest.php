@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Exception\UndefinedTypeException;
+use PhpTypedValues\Exception\Undefined\UndefinedTypeException;
 use PhpTypedValues\Undefined\UndefinedStandard;
 
 it('creates UndefinedStandard via factory', function (): void {

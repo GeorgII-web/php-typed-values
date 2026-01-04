@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace PhpTypedValues\Bool;
 
 use Exception;
-use PhpTypedValues\Base\Primitive\Bool\BoolType;
-use PhpTypedValues\Base\Primitive\PrimitiveType;
-use PhpTypedValues\Exception\BoolTypeException;
+use PhpTypedValues\Base\Primitive\Bool\BoolTypeAbstract;
+use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
+use PhpTypedValues\Exception\Bool\BoolTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
-
 use function is_bool;
 use function is_int;
 use function is_string;
@@ -34,7 +33,7 @@ use function trim;
  *
  * @psalm-immutable
  */
-readonly class FalseStandard extends BoolType
+readonly class FalseStandard extends BoolTypeAbstract
 {
     protected false $value;
 
@@ -81,7 +80,7 @@ readonly class FalseStandard extends BoolType
     }
 
     /**
-     * @template T of PrimitiveType
+     * @template T of PrimitiveTypeAbstract
      *
      * @param T $default
      *
@@ -89,8 +88,8 @@ readonly class FalseStandard extends BoolType
      */
     public static function tryFromInt(
         int $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
             return static::fromInt($value);
@@ -101,7 +100,7 @@ readonly class FalseStandard extends BoolType
     }
 
     /**
-     * @template T of PrimitiveType
+     * @template T of PrimitiveTypeAbstract
      *
      * @param T $default
      *
@@ -109,8 +108,8 @@ readonly class FalseStandard extends BoolType
      */
     public static function tryFromMixed(
         mixed $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
             return match (true) {
@@ -128,7 +127,7 @@ readonly class FalseStandard extends BoolType
     }
 
     /**
-     * @template T of PrimitiveType
+     * @template T of PrimitiveTypeAbstract
      *
      * @param T $default
      *
@@ -136,8 +135,8 @@ readonly class FalseStandard extends BoolType
      */
     public static function tryFromString(
         string $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
             return static::fromString($value);

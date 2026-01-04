@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Exception\IntegerTypeException;
-use PhpTypedValues\Integer\IntegerWeekDay;
+use PhpTypedValues\Exception\Integer\IntegerTypeException;
+use PhpTypedValues\Integer\Specific\IntegerWeekDay;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 it('IntegerWeekDay::tryFromString returns value for 1..7', function (): void {

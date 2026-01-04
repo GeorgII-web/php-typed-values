@@ -23,7 +23,7 @@ it('fromString parses valid RFC3339 and preserves timezone offset', function ():
 it('fromString throws on invalid date parts (errors path)', function (): void {
     // invalid month 13 produces errors
     $call = fn() => DateTimeRFC3339::fromString('2025-13-02T03:04:05+00:00');
-    expect($call)->toThrow(PhpTypedValues\Exception\DateTimeTypeException::class);
+    expect($call)->toThrow(\PhpTypedValues\Exception\DateTime\DateTimeTypeException::class);
 });
 
 it('fromString throws on trailing data (warnings path)', function (): void {
@@ -32,7 +32,7 @@ it('fromString throws on trailing data (warnings path)', function (): void {
         DateTimeRFC3339::fromString('2025-01-02T03:04:05+00:00 ');
         expect()->fail('Exception was not thrown');
     } catch (Throwable $e) {
-        expect($e)->toBeInstanceOf(PhpTypedValues\Exception\DateTimeTypeException::class)
+        expect($e)->toBeInstanceOf(\PhpTypedValues\Exception\DateTime\DateTimeTypeException::class)
             ->and($e->getMessage())->toContain('Invalid date time value');
     }
 });
@@ -54,7 +54,7 @@ it('fromString with both parse error and warning includes both details in the ex
         DateTimeRFC3339::fromString($input);
         expect()->fail('Exception was not thrown');
     } catch (Throwable $e) {
-        expect($e)->toBeInstanceOf(PhpTypedValues\Exception\DateTimeTypeException::class)
+        expect($e)->toBeInstanceOf(\PhpTypedValues\Exception\DateTime\DateTimeTypeException::class)
             ->and($e->getMessage())->toContain('Invalid date time value')
             ->and($e->getMessage())->toContain('Error at')
             ->and($e->getMessage())->toContain('Warning at');
@@ -76,7 +76,7 @@ it('fromString aggregates multiple parse warnings with proper concatenation and 
             \DATE_RFC3339
         ) . \PHP_EOL;
 
-        expect($e)->toBeInstanceOf(PhpTypedValues\Exception\DateTimeTypeException::class)
+        expect($e)->toBeInstanceOf(\PhpTypedValues\Exception\DateTime\DateTimeTypeException::class)
             ->and($msg)->toContain($expectedHeader)
             ->and($msg)->toContain('Invalid date time value "2025-13-40T25:61:61+00:00", use format "Y-m-d\TH:i:sP"
 Warning at 25: The parsed date was invalid
@@ -94,7 +94,7 @@ it('errors-only path keeps newline after header and after error line', function 
     } catch (Throwable $e) {
         $msg = $e->getMessage();
         // must contain the header + newline and at least one warning line ending with newline
-        expect($e)->toBeInstanceOf(PhpTypedValues\Exception\DateTimeTypeException::class)
+        expect($e)->toBeInstanceOf(\PhpTypedValues\Exception\DateTime\DateTimeTypeException::class)
             ->and($msg)->toContain('Invalid date time value "2025-01-02T03:04:05+00:00 ", use format "Y-m-d\TH:i:sP"
 Error at 25: Trailing data
 ');
@@ -112,7 +112,7 @@ it('double error message', function (): void {
     } catch (Throwable $e) {
         $msg = $e->getMessage();
         // must contain the header + newline and at least one warning line ending with newline
-        expect($e)->toBeInstanceOf(PhpTypedValues\Exception\DateTimeTypeException::class)
+        expect($e)->toBeInstanceOf(\PhpTypedValues\Exception\DateTime\DateTimeTypeException::class)
             ->and($msg)->toContain('Invalid date time value "2025-12-02T03:04:05+ 00:00", use format "Y-m-d\TH:i:sP"
 Error at 19: The timezone could not be found in the database
 Error at 20: Trailing data

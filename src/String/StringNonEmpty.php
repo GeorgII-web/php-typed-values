@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace PhpTypedValues\String;
 
 use Exception;
-use PhpTypedValues\Base\Primitive\PrimitiveType;
-use PhpTypedValues\Base\Primitive\String\StrType;
-use PhpTypedValues\Exception\StringTypeException;
+use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
+use PhpTypedValues\Base\Primitive\String\StringTypeAbstractAbstract;
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
-
 use function is_scalar;
 use function is_string;
 use function sprintf;
@@ -29,7 +28,7 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class StringNonEmpty extends StrType
+readonly class StringNonEmpty extends StringTypeAbstractAbstract
 {
     /** @var non-empty-string */
     protected string $value;
@@ -95,7 +94,7 @@ readonly class StringNonEmpty extends StrType
     }
 
     /**
-     * @template T of PrimitiveType
+     * @template T of PrimitiveTypeAbstract
      *
      * @param T $default
      *
@@ -103,8 +102,8 @@ readonly class StringNonEmpty extends StrType
      */
     public static function tryFromMixed(
         mixed $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
             return match (true) {
@@ -120,7 +119,7 @@ readonly class StringNonEmpty extends StrType
     }
 
     /**
-     * @template T of PrimitiveType
+     * @template T of PrimitiveTypeAbstract
      *
      * @param T $default
      *
@@ -128,8 +127,8 @@ readonly class StringNonEmpty extends StrType
      */
     public static function tryFromString(
         string $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
             return static::fromString($value);

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Exception\UndefinedTypeException;
+use PhpTypedValues\Exception\Undefined\UndefinedTypeException;
 use PhpTypedValues\Undefined\Alias\NotExist;
 
 it('creates NotExist via factory', function (): void {

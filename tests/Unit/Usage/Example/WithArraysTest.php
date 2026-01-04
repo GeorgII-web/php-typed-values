@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Tests\Unit\Usage\Example\WithArrays;
 
-use PhpTypedValues\ArrayType\ArrayOfObjects;
-use PhpTypedValues\Exception\FloatTypeException;
-use PhpTypedValues\Exception\IntegerTypeException;
-use PhpTypedValues\Exception\UndefinedTypeException;
+use PhpTypedValues\ArrayType\ArrayOfObjectsAbstract;
+use PhpTypedValues\Exception\Float\FloatTypeException;
+use PhpTypedValues\Exception\Integer\IntegerTypeException;
+use PhpTypedValues\Exception\Undefined\UndefinedTypeException;
 use PhpTypedValues\Usage\Example\WithArrays;
 
 it('builds from valid scalars and serializes to expected array', function (): void {
@@ -23,7 +23,7 @@ it('builds from valid scalars and serializes to expected array', function (): vo
         ->and($obj->getHeight()->toString())->toBe('170');
 
     $nick = $obj->getNickNames();
-    expect($nick)->toBeInstanceOf(ArrayOfObjects::class)
+    expect($nick)->toBeInstanceOf(ArrayOfObjectsAbstract::class)
         ->and($nick->toArray())->toBe(['User1', 'Admin5']);
 
     expect($obj->jsonSerialize())->toBe([
@@ -62,7 +62,7 @@ it('transforms nickNames to ArrayOfObjects of non-empty strings', function (): v
     $obj = WithArrays::fromScalars(id: 1, firstName: 'Bob', height: 10, nickNames: ['n1', 'n2']);
     $nn = $obj->getNickNames();
 
-    expect($nn)->toBeInstanceOf(ArrayOfObjects::class)
+    expect($nn)->toBeInstanceOf(ArrayOfObjectsAbstract::class)
         ->and($nn->toArray())->toBe(['n1', 'n2'])
         ->and($nn->isEmpty())->toBeFalse()
         ->and($nn->hasUndefined())->toBeFalse()

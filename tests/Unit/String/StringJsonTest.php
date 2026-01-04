@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Exception\JsonStringTypeException;
-use PhpTypedValues\String\StringJson;
+use PhpTypedValues\Exception\String\JsonStringTypeException;
+use PhpTypedValues\String\Specific\StringJson;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 it('Json::tryFromString returns value for valid JSON string', function (): void {

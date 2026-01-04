@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Exception\IntegerTypeException;
-use PhpTypedValues\Exception\ReasonableRangeIntegerTypeException;
+use PhpTypedValues\Exception\Integer\IntegerTypeException;
+use PhpTypedValues\Exception\Integer\ReasonableRangeIntegerTypeException;
 use PhpTypedValues\Integer\IntegerStandard;
 use PhpTypedValues\Undefined\Alias\Undefined;
 

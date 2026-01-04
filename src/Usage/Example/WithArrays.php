@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace PhpTypedValues\Usage\Example;
 
 use JsonSerializable;
-use PhpTypedValues\ArrayType\ArrayOfObjects;
-use PhpTypedValues\Exception\ArrayTypeException;
-use PhpTypedValues\Exception\FloatTypeException;
-use PhpTypedValues\Exception\IntegerTypeException;
-use PhpTypedValues\Exception\StringTypeException;
-use PhpTypedValues\Exception\UndefinedTypeException;
+use PhpTypedValues\ArrayType\ArrayOfObjectsAbstract;
+use PhpTypedValues\Exception\Array\ArrayTypeException;
+use PhpTypedValues\Exception\Float\FloatTypeException;
+use PhpTypedValues\Exception\Integer\IntegerTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
+use PhpTypedValues\Exception\Undefined\UndefinedTypeException;
 use PhpTypedValues\Float\FloatPositive;
 use PhpTypedValues\Integer\IntegerPositive;
 use PhpTypedValues\String\StringNonEmpty;
@@ -46,7 +46,7 @@ final readonly class WithArrays implements JsonSerializable
         private IntegerPositive $id,
         private StringNonEmpty|Undefined $firstName,
         private FloatPositive|Undefined $height,
-        private ArrayOfObjects $nickNames,
+        private ArrayOfObjectsAbstract $nickNames,
     ) {
     }
 
@@ -81,7 +81,7 @@ final readonly class WithArrays implements JsonSerializable
             $height !== null
                 ? FloatPositive::fromString((string) $height) // Early fail for not NULL
                 : Undefined::create(), // Late fail for NULL
-            ArrayOfObjects::fromItems(...$nickNamesObjects)
+            ArrayOfObjectsAbstract::fromItems(...$nickNamesObjects)
         );
     }
 
@@ -109,7 +109,7 @@ final readonly class WithArrays implements JsonSerializable
         return $this->firstName;
     }
 
-    public function getNickNames(): ArrayOfObjects
+    public function getNickNames(): ArrayOfObjectsAbstract
     {
         return $this->nickNames;
     }

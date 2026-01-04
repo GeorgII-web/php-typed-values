@@ -4,16 +4,15 @@ namespace PhpTypedValues\Usage\Primitive;
 
 require_once 'vendor/autoload.php';
 
-use const PHP_EOL;
-
 use PhpTypedValues\Exception\TypeException;
-use PhpTypedValues\Exception\UndefinedTypeException;
+use PhpTypedValues\Exception\Undefined\UndefinedTypeException;
 use PhpTypedValues\Undefined\Alias\NotExist;
 use PhpTypedValues\Undefined\Alias\NotFound;
 use PhpTypedValues\Undefined\Alias\NotSet;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use PhpTypedValues\Undefined\Alias\Unknown;
 use PhpTypedValues\Undefined\UndefinedStandard;
+use const PHP_EOL;
 
 // Undefined
 echo PHP_EOL . '> UNDEFINED' . PHP_EOL;

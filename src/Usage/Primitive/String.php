@@ -4,41 +4,40 @@ namespace PhpTypedValues\Usage\Primitive;
 
 require_once 'vendor/autoload.php';
 
-use const JSON_THROW_ON_ERROR;
-use const PHP_EOL;
-
 use PhpTypedValues\Exception\TypeException;
-use PhpTypedValues\String\Alias\CountryCode;
-use PhpTypedValues\String\Alias\Email;
-use PhpTypedValues\String\Alias\File;
-use PhpTypedValues\String\Alias\Json;
 use PhpTypedValues\String\Alias\MariaDb\Decimal;
 use PhpTypedValues\String\Alias\MariaDb\Text;
 use PhpTypedValues\String\Alias\MariaDb\VarChar255;
 use PhpTypedValues\String\Alias\NonBlank;
 use PhpTypedValues\String\Alias\NonEmpty;
-use PhpTypedValues\String\Alias\Path;
+use PhpTypedValues\String\Alias\Specific\CountryCode;
+use PhpTypedValues\String\Alias\Specific\Email;
+use PhpTypedValues\String\Alias\Specific\File;
+use PhpTypedValues\String\Alias\Specific\Json;
+use PhpTypedValues\String\Alias\Specific\Path;
+use PhpTypedValues\String\Alias\Specific\Url;
+use PhpTypedValues\String\Alias\Specific\UuidV4;
+use PhpTypedValues\String\Alias\Specific\UuidV7;
 use PhpTypedValues\String\Alias\Str;
 use PhpTypedValues\String\Alias\StringType;
-use PhpTypedValues\String\Alias\Url;
-use PhpTypedValues\String\Alias\Uuid\UuidV4;
-use PhpTypedValues\String\Alias\Uuid\UuidV7;
 use PhpTypedValues\String\MariaDb\StringDecimal;
 use PhpTypedValues\String\MariaDb\StringText;
 use PhpTypedValues\String\MariaDb\StringVarChar255;
-use PhpTypedValues\String\StringCountryCode;
-use PhpTypedValues\String\StringEmail;
+use PhpTypedValues\String\Specific\StringCountryCode;
+use PhpTypedValues\String\Specific\StringEmail;
+use PhpTypedValues\String\Specific\StringFileName;
+use PhpTypedValues\String\Specific\StringMd5;
+use PhpTypedValues\String\Specific\StringPath;
+use PhpTypedValues\String\Specific\StringUrl;
+use PhpTypedValues\String\Specific\StringUuidV4;
+use PhpTypedValues\String\Specific\StringUuidV7;
 use PhpTypedValues\String\StringEmpty;
-use PhpTypedValues\String\StringFileName;
-use PhpTypedValues\String\StringMd5;
 use PhpTypedValues\String\StringNonBlank;
 use PhpTypedValues\String\StringNonEmpty;
-use PhpTypedValues\String\StringPath;
 use PhpTypedValues\String\StringStandard;
-use PhpTypedValues\String\StringUrl;
-use PhpTypedValues\String\Uuid\StringUuidV4;
-use PhpTypedValues\String\Uuid\StringUuidV7;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use const JSON_THROW_ON_ERROR;
+use const PHP_EOL;
 
 /**
  * String.
@@ -127,7 +126,7 @@ if (!($cc instanceof Undefined)) {
     echo $cc->toString() . PHP_EOL;
 }
 
-echo StringStandard::fromString('no')->isTypeOf(\PhpTypedValues\Base\Primitive\String\StrType::class) ? 'Type correct' . PHP_EOL : 'Invalid type' . PHP_EOL;
+echo StringStandard::fromString('no')->isTypeOf(\PhpTypedValues\Base\Primitive\String\StringTypeAbstractAbstract::class) ? 'Type correct' . PHP_EOL : 'Invalid type' . PHP_EOL;
 
 // MariaDb Decimal (usage and try*) and toFloat strictness
 echo Decimal::fromString('3.14')->toString() . PHP_EOL;

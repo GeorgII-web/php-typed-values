@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Exception\FloatTypeException;
-use PhpTypedValues\Exception\IntegerTypeException;
-use PhpTypedValues\Exception\StringTypeException;
+use PhpTypedValues\Exception\Float\FloatTypeException;
+use PhpTypedValues\Exception\Integer\IntegerTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Usage\Example\EarlyFail;
 
 it('constructs EarlyFail from scalars and exposes typed values', function (): void {

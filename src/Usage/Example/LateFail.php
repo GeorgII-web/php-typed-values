@@ -6,7 +6,7 @@ namespace PhpTypedValues\Usage\Example;
 
 require_once 'vendor/autoload.php';
 
-use PhpTypedValues\Exception\IntegerTypeException;
+use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Float\FloatPositive;
 use PhpTypedValues\Integer\IntegerPositive;
 use PhpTypedValues\String\StringNonEmpty;

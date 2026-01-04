@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Base\Primitive\Bool;
 
-use PhpTypedValues\Base\Primitive\PrimitiveType;
-use PhpTypedValues\Exception\BoolTypeException;
+use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
+use PhpTypedValues\Exception\Bool\BoolTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -36,7 +36,7 @@ interface BoolTypeInterface
     public static function fromString(string $value): static;
 
     /**
-     * @template T of PrimitiveType
+     * @template T of PrimitiveTypeAbstract
      *
      * @param T $default
      *
@@ -44,11 +44,11 @@ interface BoolTypeInterface
      */
     public static function tryFromString(
         string $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract;
 
     /**
-     * @template T of PrimitiveType
+     * @template T of PrimitiveTypeAbstract
      *
      * @param T $default
      *
@@ -56,11 +56,11 @@ interface BoolTypeInterface
      */
     public static function tryFromMixed(
         mixed $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract;
 
     /**
-     * @template T of PrimitiveType
+     * @template T of PrimitiveTypeAbstract
      *
      * @param T $default
      *
@@ -68,13 +68,15 @@ interface BoolTypeInterface
      */
     public static function tryFromInt(
         int $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract;
 
     /**
      * @throws BoolTypeException
      */
     public static function fromInt(int $value): static;
+
+    public function isTypeOf(string ...$classNames): bool;
 
     public function value(): bool;
 

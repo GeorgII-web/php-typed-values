@@ -4,19 +4,17 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\DateTime;
 
-use const DATE_RFC3339;
-
 use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
-use PhpTypedValues\Base\Primitive\DateTime\DateTimeType;
-use PhpTypedValues\Base\Primitive\PrimitiveType;
-use PhpTypedValues\Exception\DateTimeTypeException;
+use PhpTypedValues\Base\Primitive\DateTime\DateTimeTypeAbstract;
+use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
+use PhpTypedValues\Exception\DateTime\DateTimeTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
-
 use function is_string;
+use const DATE_RFC3339;
 
 /**
  * Date-time value formatted using PHP's DATE_RFC3339 (RFC 3339 based on ISO 8601).
@@ -33,7 +31,7 @@ use function is_string;
  *
  * @psalm-immutable
  */
-readonly class DateTimeRFC3339 extends DateTimeType
+readonly class DateTimeRFC3339 extends DateTimeTypeAbstract
 {
     protected const FORMAT = DATE_RFC3339;
 
@@ -120,7 +118,7 @@ readonly class DateTimeRFC3339 extends DateTimeType
     }
 
     /**
-     * @template T of PrimitiveType
+     * @template T of PrimitiveTypeAbstract
      *
      * @param T                $default
      * @param non-empty-string $timezone
@@ -130,8 +128,8 @@ readonly class DateTimeRFC3339 extends DateTimeType
     public static function tryFromMixed(
         mixed $value,
         string $timezone = self::DEFAULT_ZONE,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
         try {
             /** @var static $result */
             return match (true) {
@@ -141,13 +139,13 @@ readonly class DateTimeRFC3339 extends DateTimeType
                 default => throw new TypeException('Value cannot be cast to date time'),
             };
         } catch (Exception) {
-            /* @var PrimitiveType */
+            /* @var PrimitiveTypeAbstract */
             return $default;
         }
     }
 
     /**
-     * @template T of PrimitiveType
+     * @template T of PrimitiveTypeAbstract
      *
      * @param T                $default
      * @param non-empty-string $timezone
@@ -157,13 +155,13 @@ readonly class DateTimeRFC3339 extends DateTimeType
     public static function tryFromString(
         string $value,
         string $timezone = self::DEFAULT_ZONE,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
         try {
             /** @var static $result */
             return static::fromString($value, $timezone);
         } catch (Exception) {
-            /* @var PrimitiveType */
+            /* @var PrimitiveTypeAbstract */
             return $default;
         }
     }

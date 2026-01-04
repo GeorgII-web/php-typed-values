@@ -22,7 +22,7 @@ it('fromString parses valid SQL string', function (): void {
 
 it('fromString throws on invalid date parts', function (): void {
     $call = fn() => DateTimeSql::fromString('2025-13-02 03:04:05');
-    expect($call)->toThrow(PhpTypedValues\Exception\DateTimeTypeException::class);
+    expect($call)->toThrow(\PhpTypedValues\Exception\DateTime\DateTimeTypeException::class);
 });
 
 it('getFormat returns SQL format', function (): void {

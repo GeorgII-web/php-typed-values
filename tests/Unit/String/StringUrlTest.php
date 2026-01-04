@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Exception\UrlStringTypeException;
-use PhpTypedValues\String\StringUrl;
+use PhpTypedValues\Exception\String\UrlStringTypeException;
+use PhpTypedValues\String\Specific\StringUrl;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 it('accepts valid URL, preserves value/toString and casts via __toString', function (): void {

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace PhpTypedValues\Usage\Example;
 
 use JsonSerializable;
-use PhpTypedValues\Exception\FloatTypeException;
-use PhpTypedValues\Exception\IntegerTypeException;
-use PhpTypedValues\Exception\UndefinedTypeException;
+use PhpTypedValues\Exception\Float\FloatTypeException;
+use PhpTypedValues\Exception\Integer\IntegerTypeException;
+use PhpTypedValues\Exception\Undefined\UndefinedTypeException;
 use PhpTypedValues\Float\FloatPositive;
 use PhpTypedValues\Integer\IntegerPositive;
 use PhpTypedValues\String\StringNonEmpty;

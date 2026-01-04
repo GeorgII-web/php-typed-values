@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Exception\CountryCodeStringTypeException;
-use PhpTypedValues\String\Alias\CountryCode;
-use PhpTypedValues\String\StringCountryCode;
+use PhpTypedValues\Exception\String\CountryCodeStringTypeException;
+use PhpTypedValues\String\Alias\Specific\CountryCode;
+use PhpTypedValues\String\Specific\StringCountryCode;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 it('accepts valid country code and normalizes to uppercase; preserves toString and __toString', function (): void {

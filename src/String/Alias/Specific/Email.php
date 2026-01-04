@@ -1,0 +1,23 @@
+<?php
+
+declare(strict_types=1);
+
+namespace PhpTypedValues\String\Alias\Specific;
+
+use PhpTypedValues\String\Specific\StringEmail;
+
+/**
+ * Alias for email address string.
+ *
+ * Provides the same behavior as StringEmail while exposing a concise
+ * name suitable for APIs that prefer "Email".
+ *
+ * Example
+ *  - $e = Email::fromString('user@example.com');
+ *    (string) $e; // "user@example.com"
+ *
+ * @psalm-immutable
+ */
+final readonly class Email extends StringEmail
+{
+}

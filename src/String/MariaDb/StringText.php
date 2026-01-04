@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace PhpTypedValues\String\MariaDb;
 
 use Exception;
-use PhpTypedValues\Base\Primitive\PrimitiveType;
-use PhpTypedValues\Base\Primitive\String\StrType;
-use PhpTypedValues\Exception\StringTypeException;
+use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
+use PhpTypedValues\Base\Primitive\String\StringTypeAbstractAbstract;
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
-
 use function is_scalar;
 use function is_string;
 use function mb_strlen;
@@ -29,7 +28,7 @@ use function mb_strlen;
  *
  * @psalm-immutable
  */
-readonly class StringText extends StrType
+readonly class StringText extends StringTypeAbstractAbstract
 {
     protected string $value;
 
@@ -90,7 +89,7 @@ readonly class StringText extends StrType
     }
 
     /**
-     * @template T of PrimitiveType
+     * @template T of PrimitiveTypeAbstract
      *
      * @param T $default
      *
@@ -98,8 +97,8 @@ readonly class StringText extends StrType
      */
     public static function tryFromMixed(
         mixed $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
             return match (true) {
@@ -116,7 +115,7 @@ readonly class StringText extends StrType
     }
 
     /**
-     * @template T of PrimitiveType
+     * @template T of PrimitiveTypeAbstract
      *
      * @param T $default
      *
@@ -124,8 +123,8 @@ readonly class StringText extends StrType
      */
     public static function tryFromString(
         string $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
             return static::fromString($value);

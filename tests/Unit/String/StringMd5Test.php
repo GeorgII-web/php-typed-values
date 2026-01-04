@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Exception\Md5StringTypeException;
-use PhpTypedValues\String\StringMd5;
+use PhpTypedValues\Exception\String\Md5StringTypeException;
+use PhpTypedValues\String\Specific\StringMd5;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 it('accepts valid MD5 hash and preserves case', function (): void {

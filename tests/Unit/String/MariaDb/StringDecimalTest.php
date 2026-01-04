@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Exception\DecimalStringTypeException;
+use PhpTypedValues\Exception\String\DecimalStringTypeException;
 use PhpTypedValues\String\MariaDb\StringDecimal;
 use PhpTypedValues\Undefined\Alias\Undefined;
 

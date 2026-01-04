@@ -7,7 +7,7 @@ require_once 'vendor/autoload.php';
 use const JSON_THROW_ON_ERROR;
 use const PHP_EOL;
 
-use PhpTypedValues\ArrayType\ArrayEmpty;
+use PhpTypedValues\ArrayType\ArrayEmptyAbstract;
 use PhpTypedValues\Usage\Example\EarlyFail;
 use PhpTypedValues\Usage\Example\LateFail;
 use PhpTypedValues\Usage\Example\OptionalFail;
@@ -53,5 +53,5 @@ echo ($nickNames->isUndefined() ? 'true' : 'false')
 echo json_encode($nickNames->toArray(), JSON_THROW_ON_ERROR) . PHP_EOL;
 echo json_encode($testArray, JSON_THROW_ON_ERROR) . PHP_EOL;
 
-$testEmpty = ArrayEmpty::fromArray([]);
+$testEmpty = ArrayEmptyAbstract::fromArray([]);
 echo json_encode($testEmpty->toArray(), JSON_THROW_ON_ERROR) . PHP_EOL;

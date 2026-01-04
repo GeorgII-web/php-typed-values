@@ -4,21 +4,20 @@ namespace PhpTypedValues\Usage\Primitive;
 
 require_once 'vendor/autoload.php';
 
-use const JSON_THROW_ON_ERROR;
-use const PHP_EOL;
-
-use PhpTypedValues\ArrayType\ArrayEmpty;
-use PhpTypedValues\ArrayType\ArrayNonEmpty;
-use PhpTypedValues\ArrayType\ArrayOfObjects;
-use PhpTypedValues\ArrayType\ArrayUndefined;
+use PhpTypedValues\ArrayType\ArrayEmptyAbstract;
+use PhpTypedValues\ArrayType\ArrayNonEmptyAbstract;
+use PhpTypedValues\ArrayType\ArrayOfObjectsAbstract;
+use PhpTypedValues\ArrayType\ArrayUndefinedAbstract;
 use PhpTypedValues\Bool\Alias\BooleanType;
-use PhpTypedValues\Exception\ArrayTypeException;
-use PhpTypedValues\Exception\ArrayUndefinedTypeException;
+use PhpTypedValues\Exception\Array\ArrayTypeException;
+use PhpTypedValues\Exception\Array\ArrayUndefinedTypeException;
 use PhpTypedValues\Integer\IntegerNonNegative;
 use PhpTypedValues\Integer\IntegerStandard;
 use PhpTypedValues\String\Alias\NonEmpty;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use PhpTypedValues\Usage\Example\OptionalFail;
+use const JSON_THROW_ON_ERROR;
+use const PHP_EOL;
 
 /**
  * Array.
@@ -32,7 +31,7 @@ try {
 }
 
 // Defined items
-$collection = ArrayOfObjects::fromArray(
+$collection = ArrayOfObjectsAbstract::fromArray(
     [
         IntegerNonNegative::fromInt(1), // Primitive
         OptionalFail::fromScalars(id: 1, firstName: 'Foobar', height: 170), // value object
@@ -52,35 +51,35 @@ foreach ($collection->value() as $item) {
     }
 }
 
-$collection = ArrayOfObjects::tryFromArray([1, 2, 3]);
+$collection = ArrayOfObjectsAbstract::tryFromArray([1, 2, 3]);
 echo $collection->isUndefined() ? 'Undefined array' . PHP_EOL : 'ERROR' . PHP_EOL;
 
-echo ArrayUndefined::create()->isUndefined() ? 'Undefined array' . PHP_EOL : 'ERROR' . PHP_EOL;
+echo ArrayUndefinedAbstract::create()->isUndefined() ? 'Undefined array' . PHP_EOL : 'ERROR' . PHP_EOL;
 
-echo ArrayEmpty::fromArray([])->isTypeOf(ArrayEmpty::class) ? 'Type correct' . PHP_EOL : 'Invalid type' . PHP_EOL;
-echo ArrayNonEmpty::fromArray([1])->isTypeOf(ArrayNonEmpty::class) ? 'Type correct' . PHP_EOL : 'Invalid type' . PHP_EOL;
-echo ArrayOfObjects::fromArray([IntegerStandard::fromString('1')])->isTypeOf(ArrayOfObjects::class) ? 'Type correct' . PHP_EOL : 'Invalid type' . PHP_EOL;
-echo ArrayUndefined::create()->isTypeOf(ArrayUndefined::class) ? 'Type correct' . PHP_EOL : 'Invalid type' . PHP_EOL;
+echo ArrayEmptyAbstract::fromArray([])->isTypeOf(ArrayEmptyAbstract::class) ? 'Type correct' . PHP_EOL : 'Invalid type' . PHP_EOL;
+echo ArrayNonEmptyAbstract::fromArray([1])->isTypeOf(ArrayNonEmptyAbstract::class) ? 'Type correct' . PHP_EOL : 'Invalid type' . PHP_EOL;
+echo ArrayOfObjectsAbstract::fromArray([IntegerStandard::fromString('1')])->isTypeOf(ArrayOfObjectsAbstract::class) ? 'Type correct' . PHP_EOL : 'Invalid type' . PHP_EOL;
+echo ArrayUndefinedAbstract::create()->isTypeOf(ArrayUndefinedAbstract::class) ? 'Type correct' . PHP_EOL : 'Invalid type' . PHP_EOL;
 
 try {
-    ArrayUndefined::create()->getDefinedItems();
+    ArrayUndefinedAbstract::create()->getDefinedItems();
 } catch (ArrayUndefinedTypeException) {
     // suppress
 }
 
 try {
-    ArrayUndefined::create()->toInt();
+    ArrayUndefinedAbstract::create()->toInt();
 } catch (ArrayUndefinedTypeException) {
     // suppress
 }
 
 try {
-    ArrayUndefined::create()->toFloat();
+    ArrayUndefinedAbstract::create()->toFloat();
 } catch (ArrayUndefinedTypeException) {
     // suppress
 }
 
-echo (ArrayOfObjects::tryFromArray(
+echo (ArrayOfObjectsAbstract::tryFromArray(
     [1, 2],
-    ArrayOfObjects::tryFromArray([NonEmpty::fromString('One typed item in array as fallback')])
+    ArrayOfObjectsAbstract::tryFromArray([NonEmpty::fromString('One typed item in array as fallback')])
 )->isUndefined() ? 'Error' : 'ArrayOfObjects fallback: yes') . PHP_EOL;

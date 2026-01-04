@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Exception\StringTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\String\Alias\MariaDb\Text;
 use PhpTypedValues\String\MariaDb\StringText;
 use PhpTypedValues\Undefined\Alias\Undefined;

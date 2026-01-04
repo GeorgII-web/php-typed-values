@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use PhpTypedValues\Bool\TrueStandard;
-use PhpTypedValues\Exception\BoolTypeException;
+use PhpTypedValues\Exception\Bool\BoolTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 it('constructs only with true and exposes value/toString', function (): void {

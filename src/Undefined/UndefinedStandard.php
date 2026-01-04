@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Undefined;
 
-use PhpTypedValues\Base\Primitive\PrimitiveType;
-use PhpTypedValues\Base\Primitive\Undefined\UndefinedType;
-use PhpTypedValues\Exception\UndefinedTypeException;
+use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
+use PhpTypedValues\Base\Primitive\Undefined\UndefinedTypeAbstractAbstract;
+use PhpTypedValues\Exception\Undefined\UndefinedTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
@@ -21,7 +21,7 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  *
  * @psalm-immutable
  */
-readonly class UndefinedStandard extends UndefinedType
+readonly class UndefinedStandard extends UndefinedTypeAbstractAbstract
 {
     public static function create(): static
     {
@@ -30,42 +30,42 @@ readonly class UndefinedStandard extends UndefinedType
 
     public static function tryFromBool(
         bool $value,
-        PrimitiveType $default = new Undefined(),
+        PrimitiveTypeAbstract $default = new Undefined(),
     ): static {
         return static::fromBool($value);
     }
 
     public static function tryFromFloat(
         float $value,
-        PrimitiveType $default = new Undefined(),
+        PrimitiveTypeAbstract $default = new Undefined(),
     ): static {
         return static::fromFloat($value);
     }
 
     public static function tryFromInt(
         int $value,
-        PrimitiveType $default = new Undefined(),
+        PrimitiveTypeAbstract $default = new Undefined(),
     ): static {
         return static::fromInt($value);
     }
 
     public static function tryFromString(
         string $value,
-        PrimitiveType $default = new Undefined(),
+        PrimitiveTypeAbstract $default = new Undefined(),
     ): static {
         return static::fromString($value);
     }
 
     public static function tryFromArray(
         array $value,
-        PrimitiveType $default = new Undefined(),
+        PrimitiveTypeAbstract $default = new Undefined(),
     ): static {
         return static::fromArray($value);
     }
 
     public static function tryFromMixed(
         mixed $value,
-        PrimitiveType $default = new Undefined(),
+        PrimitiveTypeAbstract $default = new Undefined(),
     ): static {
         return new static();
     }

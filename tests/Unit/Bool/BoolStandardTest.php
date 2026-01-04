@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use PhpTypedValues\Bool\BoolStandard;
-use PhpTypedValues\Exception\BoolTypeException;
+use PhpTypedValues\Exception\Bool\BoolTypeException;
 
 it('constructs with boolean and exposes value and toString', function (): void {
     $t = new BoolStandard(true);

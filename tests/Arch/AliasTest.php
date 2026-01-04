@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Base\Primitive\Bool\BoolType;
+use PhpTypedValues\Base\Primitive\Bool\BoolTypeAbstract;
 use PhpTypedValues\Base\Primitive\Bool\BoolTypeInterface;
 use PhpTypedValues\Base\Primitive\Float\FloatTypeInterface;
-use PhpTypedValues\Base\Primitive\Integer\IntTypeInterface;
+use PhpTypedValues\Base\Primitive\Integer\IntegerTypeInterface;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeInterface;
-use PhpTypedValues\Base\Primitive\String\StrTypeInterface;
+use PhpTypedValues\Base\Primitive\String\StringTypeInterface;
 use PhpTypedValues\Base\Primitive\Undefined\UndefinedTypeInterface;
 
 arch('Alias Boolean')
     ->expect('PhpTypedValues\Bool\Alias')
     ->toBeClasses()
     ->toBeFinal()
-    ->toExtend(BoolType::class)
+    ->toExtend(BoolTypeAbstract::class)
     ->toImplement(PrimitiveTypeInterface::class)
     ->toImplement(BoolTypeInterface::class)
     ->toBeReadonly();
@@ -32,7 +32,7 @@ arch('Alias Integer')
     ->toBeClasses()
     ->toBeFinal()
     ->toImplement(PrimitiveTypeInterface::class)
-    ->toImplement(IntTypeInterface::class)
+    ->toImplement(IntegerTypeInterface::class)
     ->toBeReadonly();
 
 arch('Alias String')
@@ -40,7 +40,7 @@ arch('Alias String')
     ->toBeClasses()
     ->toBeFinal()
     ->toImplement(PrimitiveTypeInterface::class)
-    ->toImplement(StrTypeInterface::class)
+    ->toImplement(StringTypeInterface::class)
     ->toBeReadonly();
 
 arch('Alias Undefined')

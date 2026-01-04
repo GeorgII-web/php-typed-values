@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Exception\IntegerTypeException;
+use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Integer\MariaDb\IntegerTiny;
 use PhpTypedValues\Undefined\Alias\Undefined;
 

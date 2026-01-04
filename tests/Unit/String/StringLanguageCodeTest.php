@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Exception\LanguageCodeStringTypeException;
-use PhpTypedValues\String\StringLanguageCode;
+use PhpTypedValues\Exception\String\LanguageCodeStringTypeException;
+use PhpTypedValues\String\Specific\StringLanguageCode;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 it('accepts valid language code and preserves toString and __toString', function (): void {

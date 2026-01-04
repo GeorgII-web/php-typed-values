@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Base\Primitive\Undefined;
 
-use PhpTypedValues\Base\Primitive\PrimitiveType;
-use PhpTypedValues\Exception\UndefinedTypeException;
+use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
+use PhpTypedValues\Exception\Undefined\UndefinedTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
@@ -27,32 +27,32 @@ interface UndefinedTypeInterface
 
     public static function tryFromBool(
         bool $value,
-        PrimitiveType $default = new Undefined(),
+        PrimitiveTypeAbstract $default = new Undefined(),
     ): static;
 
     public static function tryFromFloat(
         float $value,
-        PrimitiveType $default = new Undefined(),
+        PrimitiveTypeAbstract $default = new Undefined(),
     ): static;
 
     public static function tryFromInt(
         int $value,
-        PrimitiveType $default = new Undefined(),
+        PrimitiveTypeAbstract $default = new Undefined(),
     ): static;
 
     public static function tryFromString(
         string $value,
-        PrimitiveType $default = new Undefined(),
+        PrimitiveTypeAbstract $default = new Undefined(),
     ): static;
 
     public static function tryFromArray(
         array $value,
-        PrimitiveType $default = new Undefined(),
+        PrimitiveTypeAbstract $default = new Undefined(),
     ): static;
 
     public static function tryFromMixed(
         mixed $value,
-        PrimitiveType $default = new Undefined(),
+        PrimitiveTypeAbstract $default = new Undefined(),
     ): static;
 
     public static function fromBool(bool $value): static;
@@ -94,4 +94,6 @@ interface UndefinedTypeInterface
      * @throws UndefinedTypeException
      */
     public function value(): string;
+
+    public function isTypeOf(string ...$classNames): bool;
 }

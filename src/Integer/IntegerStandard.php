@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace PhpTypedValues\Integer;
 
 use Exception;
-use PhpTypedValues\Base\Primitive\Integer\IntType;
-use PhpTypedValues\Base\Primitive\PrimitiveType;
-use PhpTypedValues\Exception\IntegerTypeException;
-use PhpTypedValues\Exception\ReasonableRangeIntegerTypeException;
+use PhpTypedValues\Base\Primitive\Integer\IntegerTypeAbstractAbstract;
+use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
+use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
-
 use function is_bool;
 use function is_float;
 use function is_int;
@@ -33,7 +31,7 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class IntegerStandard extends IntType
+readonly class IntegerStandard extends IntegerTypeAbstractAbstract
 {
     protected int $value;
 
@@ -57,7 +55,6 @@ readonly class IntegerStandard extends IntType
 
     /**
      * @throws IntegerTypeException
-     * @throws ReasonableRangeIntegerTypeException
      */
     public static function fromFloat(float $value): static
     {
@@ -70,24 +67,64 @@ readonly class IntegerStandard extends IntType
     }
 
     /**
-     * @template T of PrimitiveType
+     * @template T of PrimitiveTypeAbstract
      *
      * @param T $default
      *
      * @return static|T
      *
-     * @psalm-return (static&IntType)|T
+     * @psalm-return (static&IntegerTypeAbstractAbstract)|T
      */
     public static function tryFromInt(
         int $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
-        /** @var static&IntType */
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
+        /** @var static&IntegerTypeAbstractAbstract */
         return static::fromInt($value);
     }
 
     /**
-     * @template T of PrimitiveType
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromFloat(
+        float $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
+        try {
+            /** @var static */
+            return static::fromFloat($value);
+        } catch (Exception) {
+            /** @var T */
+            return $default;
+        }
+    }
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromBool(
+        bool $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
+        try {
+            /** @var static */
+            return static::fromBool($value);
+        } catch (Exception) {
+            /** @var T */
+            return $default;
+        }
+    }
+
+    /**
+     * @template T of PrimitiveTypeAbstract
      *
      * @param T $default
      *
@@ -95,8 +132,8 @@ readonly class IntegerStandard extends IntType
      */
     public static function tryFromString(
         string $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
             return static::fromString($value);
@@ -107,7 +144,7 @@ readonly class IntegerStandard extends IntType
     }
 
     /**
-     * @template T of PrimitiveType
+     * @template T of PrimitiveTypeAbstract
      *
      * @param T $default
      *
@@ -115,8 +152,8 @@ readonly class IntegerStandard extends IntType
      */
     public static function tryFromMixed(
         mixed $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType {
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
             return match (true) {
@@ -162,6 +199,8 @@ readonly class IntegerStandard extends IntType
     }
 
     /**
+     * Some big integers converted to a float that can't be converted to the same int back.
+     *
      * @throws IntegerTypeException
      */
     public function toFloat(): float

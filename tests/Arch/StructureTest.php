@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Base\Primitive\Bool\BoolType;
-use PhpTypedValues\Base\Primitive\DateTime\DateTimeType;
-use PhpTypedValues\Base\Primitive\Float\FloatType;
-use PhpTypedValues\Base\Primitive\Integer\IntType;
-use PhpTypedValues\Base\Primitive\String\StrType;
-use PhpTypedValues\Base\Primitive\Undefined\UndefinedType;
+use PhpTypedValues\Base\Primitive\Bool\BoolTypeAbstract;
+use PhpTypedValues\Base\Primitive\DateTime\DateTimeTypeAbstract;
+use PhpTypedValues\Base\Primitive\Float\FloatTypeAbstractAbstract;
+use PhpTypedValues\Base\Primitive\Integer\IntegerTypeAbstractAbstract;
+use PhpTypedValues\Base\Primitive\String\StringTypeAbstractAbstract;
+use PhpTypedValues\Base\Primitive\Undefined\UndefinedTypeAbstractAbstract;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\UndefinedStandard;
 
 arch('Abstract Int classes')
-    ->expect(IntType::class)
+    ->expect(IntegerTypeAbstractAbstract::class)
     ->toBeClasses()
     ->toBeAbstract()
     ->toBeReadonly()
@@ -20,12 +20,12 @@ arch('Abstract Int classes')
 
 arch('Integer classes are final and read-only')
     ->expect('PhpTypedValues\Integer')
-    ->toExtend(IntType::class)
+    ->toExtend(IntegerTypeAbstractAbstract::class)
     ->toBeClasses()
     ->toBeReadonly();
 
 arch('Abstract Float classes')
-    ->expect(FloatType::class)
+    ->expect(FloatTypeAbstractAbstract::class)
     ->toBeClasses()
     ->toBeAbstract()
     ->toBeReadonly()
@@ -33,12 +33,12 @@ arch('Abstract Float classes')
 
 arch('Float classes are final and read-only')
     ->expect('PhpTypedValues\Float')
-    ->toExtend(FloatType::class)
+    ->toExtend(FloatTypeAbstractAbstract::class)
     ->toBeClasses()
     ->toBeReadonly();
 
 arch('Abstract Str classes')
-    ->expect(StrType::class)
+    ->expect(StringTypeAbstractAbstract::class)
     ->toBeClasses()
     ->toBeAbstract()
     ->toBeReadonly()
@@ -46,12 +46,12 @@ arch('Abstract Str classes')
 
 arch('String classes are final and read-only')
     ->expect('PhpTypedValues\String')
-    ->toExtend(StrType::class)
+    ->toExtend(StringTypeAbstractAbstract::class)
     ->toBeClasses()
     ->toBeReadonly();
 
 arch('Abstract Datetime classes')
-    ->expect(DateTimeType::class)
+    ->expect(DateTimeTypeAbstract::class)
     ->toBeClasses()
     ->toBeAbstract()
     ->toBeReadonly()
@@ -59,12 +59,12 @@ arch('Abstract Datetime classes')
 
 arch('Datetime classes are final and read-only')
     ->expect('PhpTypedValues\DateTime')
-    ->toExtend(DateTimeType::class)
+    ->toExtend(DateTimeTypeAbstract::class)
     ->toBeClasses()
     ->toBeReadonly();
 
 arch('Abstract Bool classes')
-    ->expect(BoolType::class)
+    ->expect(BoolTypeAbstract::class)
     ->toBeClasses()
     ->toBeAbstract()
     ->toBeReadonly()
@@ -72,12 +72,12 @@ arch('Abstract Bool classes')
 
 arch('Boolean classes are final and read-only')
     ->expect('PhpTypedValues\Bool')
-    ->toExtend(BoolType::class)
+    ->toExtend(BoolTypeAbstract::class)
     ->toBeClasses()
     ->toBeReadonly();
 
 arch('Abstract Undefined classes')
-    ->expect(UndefinedType::class)
+    ->expect(UndefinedTypeAbstractAbstract::class)
     ->toBeClasses()
     ->toBeAbstract()
     ->toBeReadonly()
@@ -85,7 +85,7 @@ arch('Abstract Undefined classes')
 
 arch('Undefined classes are read-only and extend UndefinedType')
     ->expect('PhpTypedValues\Undefined')
-    ->toExtend(UndefinedType::class)
+    ->toExtend(UndefinedTypeAbstractAbstract::class)
     ->toBeClasses()
     ->toBeReadonly();
 

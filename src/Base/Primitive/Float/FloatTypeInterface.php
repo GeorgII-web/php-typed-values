@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Base\Primitive\Float;
 
-use PhpTypedValues\Base\Primitive\PrimitiveType;
+use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -37,8 +37,10 @@ interface FloatTypeInterface
 
     public function value(): float;
 
+    public function isTypeOf(string ...$classNames): bool;
+
     /**
-     * @template T of PrimitiveType
+     * @template T of PrimitiveTypeAbstract
      *
      * @param T $default
      *
@@ -46,11 +48,11 @@ interface FloatTypeInterface
      */
     public static function tryFromFloat(
         float $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract;
 
     /**
-     * @template T of PrimitiveType
+     * @template T of PrimitiveTypeAbstract
      *
      * @param T $default
      *
@@ -58,11 +60,11 @@ interface FloatTypeInterface
      */
     public static function tryFromMixed(
         mixed $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract;
 
     /**
-     * @template T of PrimitiveType
+     * @template T of PrimitiveTypeAbstract
      *
      * @param T $default
      *
@@ -70,6 +72,6 @@ interface FloatTypeInterface
      */
     public static function tryFromString(
         string $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract;
 }

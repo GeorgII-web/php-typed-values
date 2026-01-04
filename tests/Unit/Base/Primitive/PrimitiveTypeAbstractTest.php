@@ -1,0 +1,139 @@
+<?php
+
+declare(strict_types=1);
+
+use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
+use PhpTypedValues\Undefined\Alias\Undefined;
+
+covers(PrimitiveTypeAbstract::class);
+
+/**
+ * Mock concrete implementation for testing abstract class.
+ *
+ * @internal
+ *
+ * @covers \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract
+ */
+readonly class PrimitiveTypeAbstractTest extends PrimitiveTypeAbstract
+{
+    public function __construct(private mixed $value)
+    {
+    }
+
+    public function isTypeOf(string ...$classNames): bool
+    {
+        return true;
+    }
+
+    public function isEmpty(): bool
+    {
+        return empty($this->value);
+    }
+
+    public function isUndefined(): bool
+    {
+        return $this->value instanceof Undefined;
+    }
+
+    public function toString(): string
+    {
+        return (string) $this->value;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return $this->value;
+    }
+
+    public function value(): mixed
+    {
+        return $this->value;
+    }
+}
+
+it('PrimitiveType is abstract and cannot be instantiated', function () {
+    expect(PrimitiveTypeAbstract::class)
+        ->toBeAbstract()
+        ->and(class_exists(PrimitiveTypeAbstractTest::class))
+        ->toBeTrue();
+});
+
+describe('Concrete PrimitiveType implementation', function () {
+    beforeEach(function () {
+        $this->primitive = new PrimitiveTypeAbstractTest('test value');
+    });
+
+    it('isEmpty method works correctly', function ($value, $expected) {
+        $primitive = new PrimitiveTypeAbstractTest($value);
+
+        expect($primitive->isEmpty())->toBe($expected);
+    })->with([
+        ['value' => '', 'expected' => true],
+        ['value' => 'test', 'expected' => false],
+        ['value' => 0, 'expected' => true],
+        ['value' => 1, 'expected' => false],
+        ['value' => [], 'expected' => true],
+        ['value' => null, 'expected' => true],
+    ]);
+
+    it('isUndefined method identifies Undefined instances', function () {
+        $undefined = new PrimitiveTypeAbstractTest(new Undefined());
+        $defined = new PrimitiveTypeAbstractTest('some value');
+
+        expect($undefined->isUndefined())->toBeTrue()
+            ->and($defined->isUndefined())->toBeFalse();
+    });
+
+    it('toString method returns string representation', function ($value, $expected) {
+        $primitive = new PrimitiveTypeAbstractTest($value);
+
+        expect($primitive->toString())->toBe($expected)
+            ->and((string) $primitive)->toBe($expected);
+    })->with([
+        ['value' => 'test', 'expected' => 'test'],
+        ['value' => 123, 'expected' => '123'],
+        ['value' => 3.14, 'expected' => '3.14'],
+        ['value' => true, 'expected' => '1'],
+        ['value' => false, 'expected' => ''],
+        ['value' => null, 'expected' => ''],
+    ]);
+
+    it('__toString magic method works correctly', function () {
+        $primitive = new PrimitiveTypeAbstractTest('magic string');
+
+        expect((string) $primitive)->toBe('magic string')
+            ->and($primitive->__toString())->toBe('magic string');
+    });
+
+    it('jsonSerialize returns value for JSON encoding', function () {
+        $data = ['key' => 'value'];
+        $primitive = new PrimitiveTypeAbstractTest($data);
+
+        expect($primitive->jsonSerialize())->toBe($data)
+            ->and(json_encode($primitive))->toBe(json_encode($data));
+    });
+
+    it('Undefined type works correctly', function () {
+        $undefined = new Undefined();
+
+        expect($undefined->isEmpty())->toBeTrue()
+            ->and($undefined->isUndefined())->toBeTrue();
+    });
+});
+
+describe('Equality and comparison', function () {
+    it('Different instances with same value should not be equal', function () {
+        $primitive1 = new PrimitiveTypeAbstractTest('test');
+        $primitive2 = new PrimitiveTypeAbstractTest('test');
+
+        expect($primitive1)->not->toBe($primitive2)
+            ->and($primitive1->toString())->toBe($primitive2->toString());
+    });
+
+    it('String casting works in concatenation', function () {
+        $primitive = new PrimitiveTypeAbstractTest('world');
+        $result = 'Hello ' . $primitive;
+
+        expect($result)->toBe('Hello world');
+    });
+});
