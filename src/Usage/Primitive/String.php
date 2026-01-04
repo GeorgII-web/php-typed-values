@@ -4,6 +4,9 @@ namespace PhpTypedValues\Usage\Primitive;
 
 require_once 'vendor/autoload.php';
 
+use const JSON_THROW_ON_ERROR;
+use const PHP_EOL;
+
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Integer\String\Alias\MariaDb\Decimal;
 use PhpTypedValues\Integer\String\Alias\Specific\Json;
@@ -36,8 +39,6 @@ use PhpTypedValues\String\StringNonBlank;
 use PhpTypedValues\String\StringNonEmpty;
 use PhpTypedValues\String\StringStandard;
 use PhpTypedValues\Undefined\Alias\Undefined;
-use const JSON_THROW_ON_ERROR;
-use const PHP_EOL;
 
 /**
  * String.

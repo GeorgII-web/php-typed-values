@@ -101,7 +101,7 @@ readonly class IntegerWeekDay extends IntegerTypeAbstractAbstract
             /** @var static&IntegerTypeAbstractAbstract */
             return static::fromInt($value);
         } catch (TypeException) {
-            /* @var PrimitiveTypeAbstract $default */
+            /* @var T */
             return $default;
         }
     }
@@ -117,7 +117,7 @@ readonly class IntegerWeekDay extends IntegerTypeAbstractAbstract
             /** @var static */
             return static::fromFloat($value);
         } catch (Exception) {
-            /** @var PrimitiveTypeAbstract */
+            /** @var T */
             return $default;
         }
     }
@@ -133,7 +133,7 @@ readonly class IntegerWeekDay extends IntegerTypeAbstractAbstract
             /** @var static */
             return static::fromBool($value);
         } catch (Exception) {
-            /** @var PrimitiveTypeAbstract */
+            /** @var T */
             return $default;
         }
     }
@@ -149,7 +149,7 @@ readonly class IntegerWeekDay extends IntegerTypeAbstractAbstract
             /** @var static */
             return static::fromString($value);
         } catch (Exception) {
-            /** @var PrimitiveTypeAbstract */
+            /** @var T */
             return $default;
         }
     }
@@ -171,7 +171,7 @@ readonly class IntegerWeekDay extends IntegerTypeAbstractAbstract
                 default => throw new TypeException('Value cannot be cast to int'),
             };
         } catch (Exception) {
-            /** @var PrimitiveTypeAbstract */
+            /** @var T */
             return $default;
         }
     }

@@ -122,6 +122,10 @@ readonly class StringFileName extends StringTypeAbstractAbstract
 
     /**
      * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
      */
     public static function tryFromMixed(
         mixed $value,
@@ -136,13 +140,17 @@ readonly class StringFileName extends StringTypeAbstractAbstract
                 default => throw new TypeException('Value cannot be cast to string'),
             };
         } catch (Exception) {
-            /** @var PrimitiveTypeAbstract */
+            /** @var T */
             return $default;
         }
     }
 
     /**
      * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
      */
     public static function tryFromString(
         string $value,
@@ -152,7 +160,7 @@ readonly class StringFileName extends StringTypeAbstractAbstract
             /** @var static */
             return static::fromString($value);
         } catch (Exception) {
-            /** @var PrimitiveTypeAbstract */
+            /** @var T */
             return $default;
         }
     }
