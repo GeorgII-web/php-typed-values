@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Integer\String\Specific\StringMd5;
+use PhpTypedValues\String\Specific\StringMd5;
 
 arch('strict types')
     ->expect('App')

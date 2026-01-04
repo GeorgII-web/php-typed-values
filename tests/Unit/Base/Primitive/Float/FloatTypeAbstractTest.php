@@ -100,6 +100,43 @@ readonly class FloatTypeAbstractTest extends FloatTypeAbstractAbstract
             return $default;
         }
     }
+
+    public static function fromInt(int $value): static
+    {
+        return new static($value);
+    }
+
+    public static function fromBool(bool $value): static
+    {
+        return new static((float) $value);
+    }
+
+    public static function tryFromInt(int $value,
+        PrimitiveTypeAbstract $default = new Undefined(), ): static|PrimitiveTypeAbstract
+    {
+        return new static($value);
+    }
+
+    public static function tryFromBool(bool $value,
+        PrimitiveTypeAbstract $default = new Undefined(), ): static|PrimitiveTypeAbstract
+    {
+        return new static((float) $value);
+    }
+
+    public function toFloat(): float
+    {
+        return $this->value();
+    }
+
+    public function toInt(): int
+    {
+        return (int) $this->value();
+    }
+
+    public function toBool(): bool
+    {
+        return (bool) $this->value();
+    }
 }
 
 it('exercises FloatType through a concrete stub', function (): void {
