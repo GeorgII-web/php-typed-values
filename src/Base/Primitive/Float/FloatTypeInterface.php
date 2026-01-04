@@ -22,22 +22,13 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  */
 interface FloatTypeInterface
 {
-    /**
-     * Create an instance from a validated string representation.
-     *
-     * Implementations should perform strict validation and may throw a
-     * domain-specific subtype of {@see TypeException}
-     * when the provided value is invalid.
-     *
-     * @throws TypeException
-     */
     public static function fromString(string $value): static;
 
     public static function fromFloat(float $value): static;
 
-    public function value(): float;
+    public static function fromInt(int $value): static;
 
-    public function isTypeOf(string ...$classNames): bool;
+    public static function fromBool(bool $value): static;
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -74,4 +65,40 @@ interface FloatTypeInterface
         string $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract;
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromInt(
+        int $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract;
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromBool(
+        bool $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract;
+
+    public function value(): float;
+
+    public function isTypeOf(string ...$classNames): bool;
+
+    public function toString(): string;
+
+    public function toFloat(): float;
+
+    public function toInt(): int;
+
+    public function toBool(): bool;
 }

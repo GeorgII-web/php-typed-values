@@ -40,7 +40,7 @@ readonly class FloatNonNegative extends FloatTypeAbstractAbstract
      */
     public function __construct(float $value)
     {
-        if ($value < 0) {
+        if ($value < 0.0) {
             throw new FloatTypeException(sprintf('Expected non-negative float, got "%s"', $value));
         }
 
@@ -68,9 +68,7 @@ readonly class FloatNonNegative extends FloatTypeAbstractAbstract
      */
     public static function fromString(string $value): static
     {
-        parent::assertFloatString($value);
-
-        return new static((float) $value);
+        return new static(parent::getFloatFromString($value));
     }
 
     public function value(): float

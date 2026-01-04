@@ -28,22 +28,11 @@ use function sprintf;
  */
 abstract readonly class FloatTypeAbstractAbstract extends PrimitiveTypeAbstract implements FloatTypeInterface
 {
-    /**
-     * @throws FloatTypeException
-     */
-    abstract public static function fromString(string $value): static;
 
     /**
      * @throws FloatTypeException
      */
-    abstract public static function fromFloat(float $value): static;
-
-    abstract public function value(): float;
-
-    /**
-     * @throws FloatTypeException
-     */
-    protected static function assertFloatString(string $value): void
+    protected static function getFloatFromString(string $value): float
     {
         if (!is_numeric($value)) {
             throw new FloatTypeException(sprintf('String "%s" has no valid float value', $value));
@@ -69,7 +58,17 @@ abstract readonly class FloatTypeAbstractAbstract extends PrimitiveTypeAbstract 
         ) {
             throw new FloatTypeException(sprintf('String "%s" has invalid formatting (leading zeros or redundant characters)', $value));
         }
+
+        return (float)$value;
     }
+
+    abstract public static function fromString(string $value): static;
+
+    abstract public static function fromFloat(float $value): static;
+
+    abstract public static function fromInt(int $value): static;
+
+    abstract public static function fromBool(bool $value): static;
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -107,8 +106,42 @@ abstract readonly class FloatTypeAbstractAbstract extends PrimitiveTypeAbstract 
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract;
 
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    abstract public static function tryFromInt(
+        int $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract;
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    abstract public static function tryFromBool(
+        bool $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract;
+
+    abstract public function value(): float;
+
     public function __toString(): string
     {
         return $this->toString();
     }
+
+    abstract public function toString(): string;
+
+    abstract public function toFloat(): float;
+
+    abstract public function toInt(): int;
+
+    abstract public function toBool(): bool;
 }
