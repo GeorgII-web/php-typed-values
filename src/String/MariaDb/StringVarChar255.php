@@ -79,11 +79,6 @@ readonly class StringVarChar255 extends StrType
         return $this->value();
     }
 
-    public function __toString(): string
-    {
-        return $this->toString();
-    }
-
     public function isEmpty(): bool
     {
         return $this->value === '';

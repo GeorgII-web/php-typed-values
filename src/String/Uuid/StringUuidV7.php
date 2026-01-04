@@ -89,14 +89,10 @@ readonly class StringUuidV7 extends StrType
         return false;
     }
 
+    /** @return non-empty-string */
     public function toString(): string
     {
         return $this->value();
-    }
-
-    public function __toString(): string
-    {
-        return $this->toString();
     }
 
     public function isEmpty(): bool

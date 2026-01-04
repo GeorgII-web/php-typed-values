@@ -91,11 +91,6 @@ readonly class StringLanguageCode extends StrType
         return $this->value();
     }
 
-    public function __toString(): string
-    {
-        return $this->toString();
-    }
-
     public function isEmpty(): bool
     {
         return false;

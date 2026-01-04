@@ -129,11 +129,6 @@ readonly class StringJson extends StrType
         return $this->value();
     }
 
-    public function __toString(): string
-    {
-        return $this->toString();
-    }
-
     public function isEmpty(): bool
     {
         // JSON values are never empty by construction; constructor rejects empty strings
