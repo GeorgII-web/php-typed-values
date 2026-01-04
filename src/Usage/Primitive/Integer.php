@@ -6,7 +6,7 @@ require_once 'vendor/autoload.php';
 
 use const PHP_EOL;
 
-use PhpTypedValues\Base\Primitive\Undefined\UndefinedTypeAbstractAbstract;
+use PhpTypedValues\Base\Primitive\Undefined\UndefinedTypeAbstract;
 use PhpTypedValues\Integer\Alias\IntegerType;
 use PhpTypedValues\Integer\Alias\MariaDb\Tiny;
 use PhpTypedValues\Integer\Alias\NonNegative;
@@ -32,7 +32,7 @@ testWeekDayInt(IntegerWeekDay::fromInt(7)->value());
 
 echo (string) IntegerStandard::tryFromFloat(1.0)->toFloat() . PHP_EOL;
 echo IntegerStandard::tryFromBool(true)->toBool() ? 'true' . PHP_EOL : 'false' . PHP_EOL;
-echo IntegerStandard::tryFromString('no', Unknown::create())->isTypeOf(WeekDay::class, Tiny::class, UndefinedTypeAbstractAbstract::class) ? 'Type correct - "Unknown" is type of "UndefinedType"' . PHP_EOL : 'Invalid type' . PHP_EOL;
+echo IntegerStandard::tryFromString('no', Unknown::create())->isTypeOf(WeekDay::class, Tiny::class, UndefinedTypeAbstract::class) ? 'Type correct - "Unknown" is type of "UndefinedType"' . PHP_EOL : 'Invalid type' . PHP_EOL;
 echo WeekDay::fromLabel('Monday')->toLabel() . PHP_EOL;
 echo WeekDay::fromInt(7)->value() . PHP_EOL;
 echo Tiny::tryFromMixed(-5)->toString() . PHP_EOL;

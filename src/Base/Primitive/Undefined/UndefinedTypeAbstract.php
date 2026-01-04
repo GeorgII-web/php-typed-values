@@ -25,7 +25,7 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  *
  * @psalm-immutable
  */
-abstract readonly class UndefinedTypeAbstractAbstract extends PrimitiveTypeAbstract implements UndefinedTypeInterface
+abstract readonly class UndefinedTypeAbstract extends PrimitiveTypeAbstract implements UndefinedTypeInterface
 {
     abstract public static function create(): static;
 

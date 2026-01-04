@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace PhpTypedValues\Undefined;
 
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
-use PhpTypedValues\Base\Primitive\Undefined\UndefinedTypeAbstractAbstract;
+use PhpTypedValues\Base\Primitive\Undefined\UndefinedTypeAbstract;
 use PhpTypedValues\Exception\Undefined\UndefinedTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -21,7 +21,7 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  *
  * @psalm-immutable
  */
-readonly class UndefinedStandard extends UndefinedTypeAbstractAbstract
+readonly class UndefinedStandard extends UndefinedTypeAbstract
 {
     public static function create(): static
     {

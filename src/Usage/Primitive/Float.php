@@ -7,6 +7,7 @@ require_once 'vendor/autoload.php';
 use const PHP_EOL;
 
 use PhpTypedValues\Float\Alias\DoubleType;
+use PhpTypedValues\Float\Alias\FloatType;
 use PhpTypedValues\Float\Alias\NonNegative;
 use PhpTypedValues\Float\Alias\Positive;
 use PhpTypedValues\Float\FloatNonNegative;
@@ -29,6 +30,7 @@ echo FloatStandard::tryFromFloat(2.71828)->toString() . PHP_EOL;
 echo FloatNonNegative::tryFromMixed('2.1828')->toString() . PHP_EOL;
 echo FloatNonNegative::tryFromFloat(2.71828)->toString() . PHP_EOL;
 echo NonNegative::fromString('2.7182')->toString() . PHP_EOL;
+echo FloatType::fromString('2.7188')->toString() . PHP_EOL;
 echo DoubleType::fromString('2.7188')->toString() . PHP_EOL;
 echo DoubleType::fromString('2.716828')->toString() . PHP_EOL;
 echo Positive::fromString('2.8')->toString() . PHP_EOL;

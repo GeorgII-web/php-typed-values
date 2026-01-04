@@ -7,7 +7,7 @@ use PhpTypedValues\Base\Primitive\DateTime\DateTimeTypeAbstract;
 use PhpTypedValues\Base\Primitive\Float\FloatTypeAbstractAbstract;
 use PhpTypedValues\Base\Primitive\Integer\IntegerTypeAbstractAbstract;
 use PhpTypedValues\Base\Primitive\String\StringTypeAbstractAbstract;
-use PhpTypedValues\Base\Primitive\Undefined\UndefinedTypeAbstractAbstract;
+use PhpTypedValues\Base\Primitive\Undefined\UndefinedTypeAbstract;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\UndefinedStandard;
 
@@ -77,7 +77,7 @@ arch('Boolean classes are final and read-only')
     ->toBeReadonly();
 
 arch('Abstract Undefined classes')
-    ->expect(UndefinedTypeAbstractAbstract::class)
+    ->expect(UndefinedTypeAbstract::class)
     ->toBeClasses()
     ->toBeAbstract()
     ->toBeReadonly()
@@ -85,7 +85,7 @@ arch('Abstract Undefined classes')
 
 arch('Undefined classes are read-only and extend UndefinedType')
     ->expect('PhpTypedValues\Undefined')
-    ->toExtend(UndefinedTypeAbstractAbstract::class)
+    ->toExtend(UndefinedTypeAbstract::class)
     ->toBeClasses()
     ->toBeReadonly();
 
