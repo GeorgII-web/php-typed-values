@@ -27,17 +27,19 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-abstract readonly class FloatType extends PrimitiveType implements FloatTypeInterface
+abstract class FloatType extends PrimitiveType implements FloatTypeInterface
 {
     /**
      * @throws FloatTypeException
+     * @return static
      */
-    abstract public static function fromString(string $value): static;
+    abstract public static function fromString(string $value);
 
     /**
      * @throws FloatTypeException
+     * @return static
      */
-    abstract public static function fromFloat(float $value): static;
+    abstract public static function fromFloat(float $value);
 
     abstract public function value(): float;
 
@@ -81,8 +83,8 @@ abstract readonly class FloatType extends PrimitiveType implements FloatTypeInte
      */
     abstract public static function tryFromFloat(
         float $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+        PrimitiveType $default = null
+    );
 
     /**
      * @template T of PrimitiveType
@@ -90,11 +92,12 @@ abstract readonly class FloatType extends PrimitiveType implements FloatTypeInte
      * @param T $default
      *
      * @return static|T
+     * @param mixed $value
      */
     abstract public static function tryFromMixed(
-        mixed $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+        $value,
+        PrimitiveType $default = null
+    );
 
     /**
      * @template T of PrimitiveType
@@ -105,8 +108,8 @@ abstract readonly class FloatType extends PrimitiveType implements FloatTypeInte
      */
     abstract public static function tryFromString(
         string $value,
-        PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+        PrimitiveType $default = null
+    );
 
     public function __toString(): string
     {

@@ -25,64 +25,104 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  *
  * @psalm-immutable
  */
-abstract readonly class UndefinedType extends PrimitiveType implements UndefinedTypeInterface
+abstract class UndefinedType extends PrimitiveType implements UndefinedTypeInterface
 {
-    abstract public static function create(): static;
+    /**
+     * @return static
+     */
+    abstract public static function create();
 
+    /**
+     * @return static
+     */
     abstract public static function tryFromBool(
         bool $value,
-        PrimitiveType $default = new Undefined(),
-    ): static;
+        PrimitiveType $default = null
+    );
 
+    /**
+     * @return static
+     */
     abstract public static function tryFromFloat(
         float $value,
-        PrimitiveType $default = new Undefined(),
-    ): static;
+        PrimitiveType $default = null
+    );
 
+    /**
+     * @return static
+     */
     abstract public static function tryFromInt(
         int $value,
-        PrimitiveType $default = new Undefined(),
-    ): static;
+        PrimitiveType $default = null
+    );
 
+    /**
+     * @return static
+     */
     abstract public static function tryFromString(
         string $value,
-        PrimitiveType $default = new Undefined(),
-    ): static;
+        PrimitiveType $default = null
+    );
 
+    /**
+     * @return static
+     */
     abstract public static function tryFromArray(
         array $value,
-        PrimitiveType $default = new Undefined(),
-    ): static;
+        PrimitiveType $default = null
+    );
 
+    /**
+     * @param mixed $value
+     * @return static
+     */
     abstract public static function tryFromMixed(
-        mixed $value,
-        PrimitiveType $default = new Undefined(),
-    ): static;
+        $value,
+        PrimitiveType $default = null
+    );
 
-    abstract public static function fromBool(bool $value): static;
+    /**
+     * @return static
+     */
+    abstract public static function fromBool(bool $value);
 
-    abstract public static function fromFloat(float $value): static;
+    /**
+     * @return static
+     */
+    abstract public static function fromFloat(float $value);
 
-    abstract public static function fromInt(int $value): static;
+    /**
+     * @return static
+     */
+    abstract public static function fromInt(int $value);
 
-    abstract public static function fromString(string $value): static;
+    /**
+     * @return static
+     */
+    abstract public static function fromString(string $value);
 
-    abstract public static function fromArray(array $value): static;
+    /**
+     * @return static
+     */
+    abstract public static function fromArray(array $value);
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    abstract public function toInt(): never;
+    abstract public function toInt();
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    abstract public function toFloat(): never;
+    abstract public function toFloat();
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    abstract public function toBool(): never;
+    abstract public function toBool();
 
     /**
      * @throws UndefinedTypeException
@@ -91,8 +131,9 @@ abstract readonly class UndefinedType extends PrimitiveType implements Undefined
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    abstract public function toArray(): never;
+    abstract public function toArray();
 
     /**
      * @throws UndefinedTypeException

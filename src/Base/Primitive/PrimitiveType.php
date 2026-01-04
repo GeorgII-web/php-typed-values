@@ -25,7 +25,7 @@ namespace PhpTypedValues\Base\Primitive;
  *
  * @psalm-immutable
  */
-abstract readonly class PrimitiveType implements PrimitiveTypeInterface
+abstract class PrimitiveType implements PrimitiveTypeInterface
 {
     /**
      * Checks if the current object (or its parents) is an instance of the provided class names.
@@ -61,6 +61,7 @@ abstract readonly class PrimitiveType implements PrimitiveTypeInterface
      * Marked as mutation-free so Psalm treats calls as pure in immutable contexts.
      *
      * @psalm-mutation-free
+     * @return mixed
      */
-    abstract public function jsonSerialize(): mixed;
+    abstract public function jsonSerialize();
 }

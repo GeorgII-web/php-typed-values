@@ -23,62 +23,102 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  */
 interface UndefinedTypeInterface
 {
-    public static function create(): static;
+    /**
+     * @return static
+     */
+    public static function create();
 
+    /**
+     * @return static
+     */
     public static function tryFromBool(
         bool $value,
-        PrimitiveType $default = new Undefined(),
-    ): static;
+        PrimitiveType $default = null
+    );
 
+    /**
+     * @return static
+     */
     public static function tryFromFloat(
         float $value,
-        PrimitiveType $default = new Undefined(),
-    ): static;
+        PrimitiveType $default = null
+    );
 
+    /**
+     * @return static
+     */
     public static function tryFromInt(
         int $value,
-        PrimitiveType $default = new Undefined(),
-    ): static;
+        PrimitiveType $default = null
+    );
 
+    /**
+     * @return static
+     */
     public static function tryFromString(
         string $value,
-        PrimitiveType $default = new Undefined(),
-    ): static;
+        PrimitiveType $default = null
+    );
 
+    /**
+     * @return static
+     */
     public static function tryFromArray(
         array $value,
-        PrimitiveType $default = new Undefined(),
-    ): static;
+        PrimitiveType $default = null
+    );
 
+    /**
+     * @param mixed $value
+     * @return static
+     */
     public static function tryFromMixed(
-        mixed $value,
-        PrimitiveType $default = new Undefined(),
-    ): static;
+        $value,
+        PrimitiveType $default = null
+    );
 
-    public static function fromBool(bool $value): static;
+    /**
+     * @return static
+     */
+    public static function fromBool(bool $value);
 
-    public static function fromFloat(float $value): static;
+    /**
+     * @return static
+     */
+    public static function fromFloat(float $value);
 
-    public static function fromInt(int $value): static;
+    /**
+     * @return static
+     */
+    public static function fromInt(int $value);
 
-    public static function fromString(string $value): static;
+    /**
+     * @return static
+     */
+    public static function fromString(string $value);
 
-    public static function fromArray(array $value): static;
+    /**
+     * @return static
+     */
+    public static function fromArray(array $value);
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    public function toInt(): never;
+    public function toInt();
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    public function toFloat(): never;
+    public function toFloat();
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    public function toBool(): never;
+    public function toBool();
 
     /**
      * @throws UndefinedTypeException
@@ -87,8 +127,9 @@ interface UndefinedTypeInterface
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    public function toArray(): never;
+    public function toArray();
 
     /**
      * @throws UndefinedTypeException
