@@ -6,7 +6,7 @@ namespace PhpTypedValues\String\Specific;
 
 use Exception;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
-use PhpTypedValues\Base\Primitive\String\StringTypeAbstractAbstract;
+use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\String\UuidStringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -32,7 +32,7 @@ use function strtolower;
  *
  * @psalm-immutable
  */
-readonly class StringUuidV4 extends StringTypeAbstractAbstract
+readonly class StringUuidV4 extends StringTypeAbstract
 {
     /** @var non-empty-string */
     protected string $value;

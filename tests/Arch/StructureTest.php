@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 use PhpTypedValues\Base\Primitive\Bool\BoolTypeAbstract;
 use PhpTypedValues\Base\Primitive\DateTime\DateTimeTypeAbstract;
-use PhpTypedValues\Base\Primitive\Float\FloatTypeAbstractAbstract;
-use PhpTypedValues\Base\Primitive\Integer\IntegerTypeAbstractAbstract;
-use PhpTypedValues\Base\Primitive\String\StringTypeAbstractAbstract;
+use PhpTypedValues\Base\Primitive\Float\FloatTypeAbstract;
+use PhpTypedValues\Base\Primitive\Integer\IntegerTypeAbstract;
+use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Base\Primitive\Undefined\UndefinedTypeAbstract;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\UndefinedStandard;
 
 arch('Abstract Int classes')
-    ->expect(IntegerTypeAbstractAbstract::class)
+    ->expect(IntegerTypeAbstract::class)
     ->toBeClasses()
     ->toBeAbstract()
     ->toBeReadonly()
@@ -20,12 +20,12 @@ arch('Abstract Int classes')
 
 arch('Integer classes are final and read-only')
     ->expect('PhpTypedValues\Integer')
-    ->toExtend(IntegerTypeAbstractAbstract::class)
+    ->toExtend(IntegerTypeAbstract::class)
     ->toBeClasses()
     ->toBeReadonly();
 
 arch('Abstract Float classes')
-    ->expect(FloatTypeAbstractAbstract::class)
+    ->expect(FloatTypeAbstract::class)
     ->toBeClasses()
     ->toBeAbstract()
     ->toBeReadonly()
@@ -33,12 +33,12 @@ arch('Abstract Float classes')
 
 arch('Float classes are final and read-only')
     ->expect('PhpTypedValues\Float')
-    ->toExtend(FloatTypeAbstractAbstract::class)
+    ->toExtend(FloatTypeAbstract::class)
     ->toBeClasses()
     ->toBeReadonly();
 
 arch('Abstract Str classes')
-    ->expect(StringTypeAbstractAbstract::class)
+    ->expect(StringTypeAbstract::class)
     ->toBeClasses()
     ->toBeAbstract()
     ->toBeReadonly()
@@ -46,7 +46,7 @@ arch('Abstract Str classes')
 
 arch('String classes are final and read-only')
     ->expect('PhpTypedValues\String')
-    ->toExtend(StringTypeAbstractAbstract::class)
+    ->toExtend(StringTypeAbstract::class)
     ->toBeClasses()
     ->toBeReadonly();
 

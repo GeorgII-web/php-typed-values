@@ -24,7 +24,7 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  *
  * @psalm-immutable
  */
-abstract readonly class StringTypeAbstractAbstract extends PrimitiveTypeAbstract implements StringTypeInterface
+abstract readonly class StringTypeAbstract extends PrimitiveTypeAbstract implements StringTypeInterface
 {
     abstract public function value(): string;
 

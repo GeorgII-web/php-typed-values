@@ -9,7 +9,7 @@ use const JSON_THROW_ON_ERROR;
 use Exception;
 use JsonException;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
-use PhpTypedValues\Base\Primitive\String\StringTypeAbstractAbstract;
+use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\String\JsonStringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -33,7 +33,7 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class StringJson extends StringTypeAbstractAbstract
+readonly class StringJson extends StringTypeAbstract
 {
     /**
      * @var non-empty-string

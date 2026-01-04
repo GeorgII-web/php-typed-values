@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace PhpTypedValues\Float;
 
 use Exception;
-use PhpTypedValues\Base\Primitive\Float\FloatTypeAbstractAbstract;
+use PhpTypedValues\Base\Primitive\Float\FloatTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\TypeException;
@@ -32,7 +32,7 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class FloatPositive extends FloatTypeAbstractAbstract
+readonly class FloatPositive extends FloatTypeAbstract
 {
     protected float $value;
 

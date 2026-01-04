@@ -6,7 +6,7 @@ namespace PhpTypedValues\String\MariaDb;
 
 use Exception;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
-use PhpTypedValues\Base\Primitive\String\StringTypeAbstractAbstract;
+use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -29,7 +29,7 @@ use function mb_strlen;
  *
  * @psalm-immutable
  */
-readonly class StringText extends StringTypeAbstractAbstract
+readonly class StringText extends StringTypeAbstract
 {
     protected string $value;
 

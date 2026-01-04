@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace PhpTypedValues\Integer;
 
 use Exception;
-use PhpTypedValues\Base\Primitive\Integer\IntegerTypeAbstractAbstract;
+use PhpTypedValues\Base\Primitive\Integer\IntegerTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\Integer\ReasonableRangeIntegerTypeException;
@@ -33,7 +33,7 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class IntegerPositive extends IntegerTypeAbstractAbstract
+readonly class IntegerPositive extends IntegerTypeAbstract
 {
     /** @var positive-int */
     protected int $value;

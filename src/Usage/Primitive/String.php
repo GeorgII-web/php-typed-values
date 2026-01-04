@@ -129,7 +129,7 @@ if (!($cc instanceof Undefined)) {
     echo $cc->toString() . PHP_EOL;
 }
 
-echo StringStandard::fromString('no')->isTypeOf(\PhpTypedValues\Base\Primitive\String\StringTypeAbstractAbstract::class) ? 'Type correct' . PHP_EOL : 'Invalid type' . PHP_EOL;
+echo StringStandard::fromString('no')->isTypeOf(\PhpTypedValues\Base\Primitive\String\StringTypeAbstract::class) ? 'Type correct' . PHP_EOL : 'Invalid type' . PHP_EOL;
 
 // MariaDb Decimal (usage and try*) and toFloat strictness
 echo Decimal::fromString('3.14')->toString() . PHP_EOL;

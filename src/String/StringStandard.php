@@ -6,7 +6,7 @@ namespace PhpTypedValues\String;
 
 use Exception;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
-use PhpTypedValues\Base\Primitive\String\StringTypeAbstractAbstract;
+use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
@@ -27,7 +27,7 @@ use function is_string;
  *
  * @psalm-immutable
  */
-readonly class StringStandard extends StringTypeAbstractAbstract
+readonly class StringStandard extends StringTypeAbstract
 {
     protected string $value;
 

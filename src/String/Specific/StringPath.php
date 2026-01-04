@@ -6,7 +6,7 @@ namespace PhpTypedValues\String\Specific;
 
 use Exception;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
-use PhpTypedValues\Base\Primitive\String\StringTypeAbstractAbstract;
+use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\String\PathStringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -30,7 +30,7 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class StringPath extends StringTypeAbstractAbstract
+readonly class StringPath extends StringTypeAbstract
 {
     /** @var non-empty-string */
     protected string $value;

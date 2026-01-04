@@ -6,7 +6,7 @@ namespace PhpTypedValues\String;
 
 use Exception;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
-use PhpTypedValues\Base\Primitive\String\StringTypeAbstractAbstract;
+use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -30,7 +30,7 @@ use function trim;
  *
  * @psalm-immutable
  */
-readonly class StringNonBlank extends StringTypeAbstractAbstract
+readonly class StringNonBlank extends StringTypeAbstract
 {
     /** @var non-empty-string */
     protected string $value;

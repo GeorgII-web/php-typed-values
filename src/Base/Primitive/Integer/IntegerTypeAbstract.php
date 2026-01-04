@@ -30,7 +30,7 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-abstract readonly class IntegerTypeAbstractAbstract extends PrimitiveTypeAbstract implements IntegerTypeInterface
+abstract readonly class IntegerTypeAbstract extends PrimitiveTypeAbstract implements IntegerTypeInterface
 {
     public function __toString(): string
     {

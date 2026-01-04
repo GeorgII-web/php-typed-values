@@ -8,7 +8,7 @@ use const FILTER_VALIDATE_EMAIL;
 
 use Exception;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
-use PhpTypedValues\Base\Primitive\String\StringTypeAbstractAbstract;
+use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\String\EmailStringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -34,7 +34,7 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class StringEmail extends StringTypeAbstractAbstract
+readonly class StringEmail extends StringTypeAbstract
 {
     /** @var non-empty-string */
     protected string $value;

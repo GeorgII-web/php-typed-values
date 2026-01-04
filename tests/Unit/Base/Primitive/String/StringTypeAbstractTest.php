@@ -3,18 +3,18 @@
 declare(strict_types=1);
 
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
-use PhpTypedValues\Base\Primitive\String\StringTypeAbstractAbstract;
+use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\String\StringStandard;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
-covers(StringTypeAbstractAbstract::class);
+covers(StringTypeAbstract::class);
 
 /**
  * @internal
  *
- * @covers \PhpTypedValues\Base\Primitive\String\StringTypeAbstractAbstract
+ * @covers \PhpTypedValues\Base\Primitive\String\StringTypeAbstract
  */
-readonly class StringTypeAbstractTest extends StringTypeAbstractAbstract
+readonly class StringTypeAbstractTest extends StringTypeAbstract
 {
     public function __construct(private string $val)
     {
@@ -81,7 +81,7 @@ readonly class StringTypeAbstractTest extends StringTypeAbstractAbstract
 it('exercises StrType through a concrete stub', function (): void {
     $strType = new StringTypeAbstractTest('test');
 
-    expect($strType)->toBeInstanceOf(StringTypeAbstractAbstract::class)
+    expect($strType)->toBeInstanceOf(StringTypeAbstract::class)
         ->and($strType->value())->toBe('test')
         ->and($strType->toString())->toBe('test')
         ->and((string) $strType)->toBe('test')

@@ -9,7 +9,7 @@ use const PATHINFO_FILENAME;
 
 use Exception;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
-use PhpTypedValues\Base\Primitive\String\StringTypeAbstractAbstract;
+use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\String\FileNameStringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -34,7 +34,7 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class StringFileName extends StringTypeAbstractAbstract
+readonly class StringFileName extends StringTypeAbstract
 {
     /** @var non-empty-string */
     protected string $value;

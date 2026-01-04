@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Base\Primitive\Float\FloatTypeAbstractAbstract;
+use PhpTypedValues\Base\Primitive\Float\FloatTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Float\FloatStandard;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
-covers(FloatTypeAbstractAbstract::class);
+covers(FloatTypeAbstract::class);
 
 /**
  * @internal
  *
- * @covers \PhpTypedValues\Base\Primitive\Float\FloatTypeAbstractAbstract
+ * @covers \PhpTypedValues\Base\Primitive\Float\FloatTypeAbstract
  */
-readonly class FloatTypeAbstractTest extends FloatTypeAbstractAbstract
+readonly class FloatTypeAbstractTest extends FloatTypeAbstract
 {
     public function __construct(private float $val)
     {
