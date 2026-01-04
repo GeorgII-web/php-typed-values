@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use PhpTypedValues\Exception\String\UuidStringTypeException;
-use PhpTypedValues\String\Specific\StringUuidV4;
+use PhpTypedValues\Integer\String\Specific\StringUuidV4;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 it('accepts a valid lowercase UUID v4 and preserves value', function (): void {

@@ -11,7 +11,6 @@ use PhpTypedValues\Exception\String\UuidStringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
-
 use function is_scalar;
 use function is_string;
 use function preg_match;
@@ -107,6 +106,10 @@ readonly class StringUuidV7 extends StringTypeAbstractAbstract
 
     /**
      * @template T of PrimitiveTypeAbstract
+     *
+     * @param PrimitiveTypeAbstract $default
+     *
+     * @return static|PrimitiveTypeAbstract
      */
     public static function tryFromMixed(
         mixed $value,
@@ -128,6 +131,10 @@ readonly class StringUuidV7 extends StringTypeAbstractAbstract
 
     /**
      * @template T of PrimitiveTypeAbstract
+     *
+     * @param PrimitiveTypeAbstract $default
+     *
+     * @return static|PrimitiveTypeAbstract
      */
     public static function tryFromString(
         string $value,

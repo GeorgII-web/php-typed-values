@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use PhpTypedValues\Exception\String\UrlStringTypeException;
-use PhpTypedValues\String\Specific\StringUrl;
+use PhpTypedValues\Integer\String\Specific\StringUrl;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 it('accepts valid URL, preserves value/toString and casts via __toString', function (): void {

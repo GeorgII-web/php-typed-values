@@ -11,7 +11,6 @@ use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
-
 use function is_scalar;
 use function is_string;
 use function sprintf;
@@ -99,9 +98,9 @@ readonly class StringNonBlank extends StringTypeAbstractAbstract
     /**
      * @template T of PrimitiveTypeAbstract
      *
-     * @param T $default
+     * @param PrimitiveTypeAbstract $default
      *
-     * @return static|T
+     * @return static|PrimitiveTypeAbstract
      */
     public static function tryFromMixed(
         mixed $value,
@@ -116,7 +115,7 @@ readonly class StringNonBlank extends StringTypeAbstractAbstract
                 default => throw new TypeException('Value cannot be cast to string'),
             };
         } catch (Exception) {
-            /** @var T */
+            /** @var PrimitiveTypeAbstract */
             return $default;
         }
     }
@@ -124,9 +123,9 @@ readonly class StringNonBlank extends StringTypeAbstractAbstract
     /**
      * @template T of PrimitiveTypeAbstract
      *
-     * @param T $default
+     * @param PrimitiveTypeAbstract $default
      *
-     * @return static|T
+     * @return static|PrimitiveTypeAbstract
      */
     public static function tryFromString(
         string $value,
@@ -136,7 +135,7 @@ readonly class StringNonBlank extends StringTypeAbstractAbstract
             /** @var static */
             return static::fromString($value);
         } catch (Exception) {
-            /** @var T */
+            /** @var PrimitiveTypeAbstract */
             return $default;
         }
     }

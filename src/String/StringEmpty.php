@@ -87,6 +87,10 @@ readonly class StringEmpty extends StringTypeAbstractAbstract
 
     /**
      * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
      */
     public static function tryFromMixed(
         mixed $value,
@@ -96,19 +100,22 @@ readonly class StringEmpty extends StringTypeAbstractAbstract
             /** @var static */
             return match (true) {
                 is_string($value) => static::fromString($value),
-                //                ($value instanceof self) => static::fromString($value->value()),
                 $value instanceof Stringable, is_scalar($value) => static::fromString((string) $value),
                 null === $value => static::fromString(''),
                 default => throw new TypeException('Value cannot be cast to string'),
             };
         } catch (Exception) {
-            /** @var PrimitiveTypeAbstract */
+            /** @var T */
             return $default;
         }
     }
 
     /**
      * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
      */
     public static function tryFromString(
         string $value,
@@ -118,7 +125,7 @@ readonly class StringEmpty extends StringTypeAbstractAbstract
             /** @var static */
             return static::fromString($value);
         } catch (Exception) {
-            /** @var PrimitiveTypeAbstract */
+            /** @var T */
             return $default;
         }
     }

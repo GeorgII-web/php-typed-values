@@ -4,9 +4,6 @@ namespace PhpTypedValues\Usage\Primitive;
 
 require_once 'vendor/autoload.php';
 
-use const JSON_THROW_ON_ERROR;
-use const PHP_EOL;
-
 use PhpTypedValues\ArrayType\ArrayEmptyAbstract;
 use PhpTypedValues\ArrayType\ArrayNonEmptyAbstract;
 use PhpTypedValues\ArrayType\ArrayOfObjectsAbstract;
@@ -19,6 +16,8 @@ use PhpTypedValues\Integer\IntegerStandard;
 use PhpTypedValues\String\Alias\NonEmpty;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use PhpTypedValues\Usage\Example\OptionalFail;
+use const JSON_THROW_ON_ERROR;
+use const PHP_EOL;
 
 /**
  * Array.

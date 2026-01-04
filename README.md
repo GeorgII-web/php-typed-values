@@ -61,11 +61,8 @@ Id::fromInt(123);
 #### Compose value objects
 
 ```php
-use PhpTypedValues\Base\ValueObjectInterface;
-use PhpTypedValues\Integer\IntegerPositive;
-use PhpTypedValues\String\StringNonEmpty;
-use PhpTypedValues\Float\FloatPositive;
-use PhpTypedValues\Undefined\Alias\Undefined; // represents an intentionally missing value
+use PhpTypedValues\Base\ValueObjectInterface;use PhpTypedValues\Float\FloatPositive;use PhpTypedValues\Integer\IntegerPositive;use PhpTypedValues\String\StringNonEmpty;use PhpTypedValues\Undefined\Alias\Undefined;
+// represents an intentionally missing value
 
 final readonly class Profile implements ValueObjectInterface
 {

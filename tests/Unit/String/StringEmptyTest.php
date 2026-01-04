@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace PhpTypedValues\Tests\Unit\String;
 
 use PhpTypedValues\Exception\String\StringTypeException;
-use PhpTypedValues\String\StringEmpty;
+use PhpTypedValues\Integer\String\StringEmpty;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 use Stringable;

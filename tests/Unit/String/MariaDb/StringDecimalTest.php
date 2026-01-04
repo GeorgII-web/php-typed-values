@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use PhpTypedValues\Exception\String\DecimalStringTypeException;
-use PhpTypedValues\String\MariaDb\StringDecimal;
+use PhpTypedValues\Integer\String\MariaDb\StringDecimal;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 it('accepts valid decimal strings and preserves value/toString', function (): void {

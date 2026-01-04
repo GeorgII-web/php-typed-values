@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use PhpTypedValues\Exception\String\StringTypeException;
+use PhpTypedValues\Integer\String\MariaDb\StringText;
 use PhpTypedValues\String\Alias\MariaDb\Text;
-use PhpTypedValues\String\MariaDb\StringText;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 it('accepts empty string and preserves value/toString', function (): void {
