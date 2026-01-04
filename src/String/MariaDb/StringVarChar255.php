@@ -11,6 +11,7 @@ use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
+
 use function is_scalar;
 use function is_string;
 use function mb_strlen;
@@ -90,10 +91,6 @@ readonly class StringVarChar255 extends StringTypeAbstractAbstract
 
     /**
      * @template T of PrimitiveTypeAbstract
-     *
-     * @param PrimitiveTypeAbstract $default
-     *
-     * @return static|PrimitiveTypeAbstract
      */
     public static function tryFromMixed(
         mixed $value,
@@ -116,10 +113,6 @@ readonly class StringVarChar255 extends StringTypeAbstractAbstract
 
     /**
      * @template T of PrimitiveTypeAbstract
-     *
-     * @param PrimitiveTypeAbstract $default
-     *
-     * @return static|PrimitiveTypeAbstract
      */
     public static function tryFromString(
         string $value,
