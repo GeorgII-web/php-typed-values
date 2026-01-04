@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Float\Alias\FloatType;
+use PhpTypedValues\Float\Alias\DoubleType;
 
 it('FloatType::fromFloat returns FloatType instance', function (): void {
-    $v = FloatType::fromFloat(1.25);
+    $v = DoubleType::fromFloat(1.25);
 
-    expect($v)->toBeInstanceOf(FloatType::class)
-        ->and($v::class)->toBe(FloatType::class)
+    expect($v)->toBeInstanceOf(DoubleType::class)
+        ->and($v::class)->toBe(DoubleType::class)
         ->and($v->value())->toBe(1.25);
 });
 
 it('FloatType::fromString returns FloatType instance', function (): void {
-    $v = FloatType::fromString('2.75');
+    $v = DoubleType::fromString('2.75');
 
-    expect($v)->toBeInstanceOf(FloatType::class)
-        ->and($v::class)->toBe(FloatType::class)
+    expect($v)->toBeInstanceOf(DoubleType::class)
+        ->and($v::class)->toBe(DoubleType::class)
         ->and($v->toString())->toBe('2.75');
 });

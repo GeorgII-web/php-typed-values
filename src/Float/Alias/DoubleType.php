@@ -10,14 +10,14 @@ use PhpTypedValues\Float\FloatStandard;
  * Alias for the generic float-typed value.
  *
  * Provides the same behavior as FloatStandard while offering a more descriptive
- * name for APIs that prefer "FloatType".
+ * name for APIs that prefer "DoubleType".
  *
  * Example
- *  - $v = FloatType::fromString('1.25');
+ *  - $v = DoubleType::fromString('1.25');
  *    $v->toString(); // "1.25"
  *
  * @psalm-immutable
  */
-final readonly class FloatType extends FloatStandard
+final readonly class DoubleType extends FloatStandard
 {
 }

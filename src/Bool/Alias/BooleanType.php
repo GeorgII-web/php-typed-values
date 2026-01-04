@@ -13,11 +13,11 @@ use PhpTypedValues\Bool\BoolStandard;
  * descriptive name for APIs that prefer "Boolean".
  *
  * Example
- *  - $b = Boolean::fromString('true');
+ *  - $b = BooleanType::fromString('true');
  *    $b->toString(); // "true"
  *
  * @psalm-immutable
  */
-final readonly class Boolean extends BoolStandard
+final readonly class BooleanType extends BoolStandard
 {
 }

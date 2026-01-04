@@ -8,7 +8,7 @@ use const PHP_EOL;
 
 use PhpTypedValues\Base\Primitive\Bool\BoolTypeInterface;
 use PhpTypedValues\Bool\Alias\Binary;
-use PhpTypedValues\Bool\Alias\Boolean;
+use PhpTypedValues\Bool\Alias\BooleanType;
 use PhpTypedValues\Bool\Alias\Flag;
 use PhpTypedValues\Bool\Alias\Logical;
 use PhpTypedValues\Bool\Alias\Toggle;
@@ -35,7 +35,7 @@ echo BoolStandard::fromString('true')->toString() . PHP_EOL;
 echo ((string) BoolStandard::fromString('true')->jsonSerialize()) . PHP_EOL;
 echo BoolStandard::fromInt(1)->toString() . PHP_EOL;
 echo BoolStandard::fromBool(true)->toString() . PHP_EOL;
-echo Boolean::fromBool(Boolean::fromBool(true)->value())->toString() . PHP_EOL;
+echo BooleanType::fromBool(BooleanType::fromBool(true)->value())->toString() . PHP_EOL;
 // Ensure interface method usage is visible to Psalm
 echo (testBool(BoolStandard::fromBool(true)) ? 'true' : 'false') . PHP_EOL;
 echo TrueStandard::tryFromMixed('yes')->toString() . PHP_EOL;

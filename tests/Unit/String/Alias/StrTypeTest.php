@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\String\Alias\StrType;
+use PhpTypedValues\String\Alias\StringType;
 
 it('StrType::fromString returns StrType instance (late static binding)', function (): void {
-    $v = StrType::fromString('hello');
+    $v = StringType::fromString('hello');
 
-    expect($v)->toBeInstanceOf(StrType::class)
-        ->and($v::class)->toBe(StrType::class)
+    expect($v)->toBeInstanceOf(StringType::class)
+        ->and($v::class)->toBe(StringType::class)
         ->and($v->value())->toBe('hello');
 });

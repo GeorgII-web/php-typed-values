@@ -7,19 +7,19 @@ namespace PhpTypedValues\Integer\Alias;
 use PhpTypedValues\Integer\IntegerStandard;
 
 /**
- * IntType (Alias for integer).
+ * IntegerType (Alias for integer).
  *
  * Provides the same behavior as IntegerStandard while offering a more
- * descriptive name for APIs that prefer "IntType".
+ * descriptive name for APIs that prefer "IntegerType".
  *
  * Example
- *  - $v = IntType::fromString('7');
+ *  - $v = IntegerType::fromString('7');
  *    $v->toString(); // "7"
- *  - $v = IntType::fromInt(42);
+ *  - $v = IntegerType::fromInt(42);
  *    (string) $v; // "42"
  *
  * @psalm-immutable
  */
-final readonly class IntType extends IntegerStandard
+final readonly class IntegerType extends IntegerStandard
 {
 }

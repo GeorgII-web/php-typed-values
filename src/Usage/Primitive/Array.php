@@ -11,7 +11,7 @@ use PhpTypedValues\ArrayType\ArrayEmpty;
 use PhpTypedValues\ArrayType\ArrayNonEmpty;
 use PhpTypedValues\ArrayType\ArrayOfObjects;
 use PhpTypedValues\ArrayType\ArrayUndefined;
-use PhpTypedValues\Bool\Alias\Boolean;
+use PhpTypedValues\Bool\Alias\BooleanType;
 use PhpTypedValues\Exception\ArrayTypeException;
 use PhpTypedValues\Exception\ArrayUndefinedTypeException;
 use PhpTypedValues\Integer\IntegerNonNegative;
@@ -40,9 +40,9 @@ $collection = ArrayOfObjects::fromArray(
 );
 echo json_encode($collection->toArray(), JSON_THROW_ON_ERROR) . PHP_EOL;
 echo $collection->count() . PHP_EOL;
-echo Boolean::fromBool($collection->hasUndefined())->toString() . PHP_EOL;
-echo Boolean::fromBool($collection->isEmpty())->toString() . PHP_EOL;
-echo Boolean::fromBool($collection->isUndefined())->toString() . PHP_EOL;
+echo BooleanType::fromBool($collection->hasUndefined())->toString() . PHP_EOL;
+echo BooleanType::fromBool($collection->isEmpty())->toString() . PHP_EOL;
+echo BooleanType::fromBool($collection->isUndefined())->toString() . PHP_EOL;
 
 foreach ($collection->value() as $item) {
     if (!$item instanceof Undefined) {
