@@ -59,10 +59,6 @@ readonly class FloatStandard extends FloatTypeAbstractAbstract
     }
 
     /**
-     * String conversion uses a setting called serialize_precision
-     * (usually 14 or 17, but often configured to round the last digit
-     * for "cleaner" output).
-     *
      * @throws FloatTypeException
      */
     public static function fromString(string $value): static
@@ -70,40 +66,20 @@ readonly class FloatStandard extends FloatTypeAbstractAbstract
         return new static(parent::getFloatFromString($value));
     }
 
-    public function value(): float
+    /**
+     * @throws FloatTypeException
+     */
+    public static function fromInt(int $value): static
     {
-        return $this->value;
+        return new static(parent::getFloatFromInt($value));
     }
 
-    public function jsonSerialize(): float
+    /**
+     * @throws FloatTypeException
+     */
+    public static function fromBool(bool $value): static
     {
-        return $this->value;
-    }
-
-    public function isTypeOf(string ...$classNames): bool
-    {
-        foreach ($classNames as $className) {
-            if ($this instanceof $className) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public function toString(): string
-    {
-        return (string) $this->value;
-    }
-
-    public function isEmpty(): bool
-    {
-        return false;
-    }
-
-    public function isUndefined(): bool
-    {
-        return false;
+        return new static(parent::getFloatFromBool($value));
     }
 
     /**
@@ -133,6 +109,46 @@ readonly class FloatStandard extends FloatTypeAbstractAbstract
      *
      * @return static|T
      */
+    public static function tryFromInt(
+        int $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
+        try {
+            /** @var static */
+            return static::fromInt($value);
+        } catch (Exception) {
+            /** @var T */
+            return $default;
+        }
+    }
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromBool(
+        bool $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
+        try {
+            /** @var static */
+            return static::fromBool($value);
+        } catch (Exception) {
+            /** @var T */
+            return $default;
+        }
+    }
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
     public static function tryFromMixed(
         mixed $value,
         PrimitiveTypeAbstract $default = new Undefined(),
@@ -140,9 +156,10 @@ readonly class FloatStandard extends FloatTypeAbstractAbstract
         try {
             /** @var static */
             return match (true) {
-                is_float($value), is_int($value) => static::fromFloat($value),
+                is_float($value) => static::fromFloat($value),
+                is_int($value) => static::fromInt($value),
                 ($value instanceof self) => static::fromFloat($value->value()),
-                is_bool($value) => static::fromFloat($value ? 1.0 : 0.0),
+                is_bool($value) => static::fromBool($value),
                 is_string($value) || $value instanceof Stringable => static::fromString((string) $value),
                 default => throw new TypeException('Value cannot be cast to float'),
             };
@@ -171,4 +188,67 @@ readonly class FloatStandard extends FloatTypeAbstractAbstract
             return $default;
         }
     }
+
+    /**
+     * @return non-empty-string
+     *
+     * @throws FloatTypeException
+     */
+    public function toString(): string
+    {
+        return static::floatToString($this->value);
+    }
+
+    public function toFloat(): float
+    {
+        return $this->value;
+    }
+
+    /**
+     * @throws FloatTypeException
+     */
+    public function toInt(): int
+    {
+        return static::floatToInt($this->value);
+    }
+
+    /**
+     * @throws FloatTypeException
+     */
+    public function toBool(): bool
+    {
+        return static::floatToBool($this->value);
+    }
+
+    public function isEmpty(): bool
+    {
+        return false;
+    }
+
+    public function isUndefined(): bool
+    {
+        return false;
+    }
+
+    public function value(): float
+    {
+        return $this->value;
+    }
+
+    public function jsonSerialize(): float
+    {
+        return $this->value;
+    }
+
+    public function isTypeOf(string ...$classNames): bool
+    {
+        foreach ($classNames as $className) {
+            if ($this instanceof $className) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 }

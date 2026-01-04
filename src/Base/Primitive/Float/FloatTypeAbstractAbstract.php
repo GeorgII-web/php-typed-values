@@ -59,7 +59,74 @@ abstract readonly class FloatTypeAbstractAbstract extends PrimitiveTypeAbstract 
             throw new FloatTypeException(sprintf('String "%s" has invalid formatting (leading zeros or redundant characters)', $value));
         }
 
-        return (float)$value;
+        return (float) $value;
+    }
+
+    /**
+     * @throws FloatTypeException
+     */
+    protected static function getFloatFromInt(int $value): float
+    {
+        // Numerical stability check (catches precision loss)
+        $floatValue = (float) $value;
+        if ($floatValue !== (float) (int) $floatValue) {
+            throw new FloatTypeException(sprintf('Integer "%s" has no valid strict float value', $value));
+        }
+
+        return $floatValue;
+    }
+
+    /**
+     * @return non-empty-string
+     *
+     * @throws FloatTypeException
+     */
+    protected static function floatToString(float $value): string
+    {
+        $strValue = (string) $value;
+        if ($strValue !== (string) (float) $strValue) {
+            throw new FloatTypeException(sprintf('Float "%s" has no valid strict string value', $value));
+        }
+
+        return $strValue;
+    }
+
+    /**
+     * @throws FloatTypeException
+     */
+    protected static function floatToInt(float $value): int
+    {
+        $intValue = (int) $value;
+        if ($intValue !== (int) (float) $intValue) {
+            throw new FloatTypeException(sprintf('Float "%s" has no valid strict int value', $value));
+        }
+
+        return $intValue;
+    }
+
+    /**
+     * @throws FloatTypeException
+     */
+    protected static function floatToBool(float $value): bool
+    {
+        if ($value === 1.0) {
+            return true;
+        }
+
+        if ($value === 0.0) {
+            return false;
+        }
+
+        throw new FloatTypeException(sprintf('Float "%s" has no valid strict bool value', $value));
+    }
+
+    protected static function getFloatFromBool(bool $value): float
+    {
+        if ($value === true) {
+            return 1.0;
+        }
+
+        return 0.0;
     }
 
     abstract public static function fromString(string $value): static;
