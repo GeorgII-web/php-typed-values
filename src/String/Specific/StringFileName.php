@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\String\Specific;
 
-use const PATHINFO_EXTENSION;
-use const PATHINFO_FILENAME;
-
 use Exception;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Base\Primitive\String\StringTypeAbstractAbstract;
@@ -14,12 +11,13 @@ use PhpTypedValues\Exception\String\FileNameStringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
-
 use function is_scalar;
 use function is_string;
 use function pathinfo;
 use function preg_match;
 use function sprintf;
+use const PATHINFO_EXTENSION;
+use const PATHINFO_FILENAME;
 
 /**
  * File name string (no path separators).
@@ -123,9 +121,9 @@ readonly class StringFileName extends StringTypeAbstractAbstract
     /**
      * @template T of PrimitiveTypeAbstract
      *
-     * @param T $default
+     * @param PrimitiveTypeAbstract $default
      *
-     * @return static|T
+     * @return static|PrimitiveTypeAbstract
      */
     public static function tryFromMixed(
         mixed $value,
@@ -140,7 +138,7 @@ readonly class StringFileName extends StringTypeAbstractAbstract
                 default => throw new TypeException('Value cannot be cast to string'),
             };
         } catch (Exception) {
-            /** @var T */
+            /** @var PrimitiveTypeAbstract */
             return $default;
         }
     }
@@ -148,9 +146,9 @@ readonly class StringFileName extends StringTypeAbstractAbstract
     /**
      * @template T of PrimitiveTypeAbstract
      *
-     * @param T $default
+     * @param PrimitiveTypeAbstract $default
      *
-     * @return static|T
+     * @return static|PrimitiveTypeAbstract
      */
     public static function tryFromString(
         string $value,
@@ -160,7 +158,7 @@ readonly class StringFileName extends StringTypeAbstractAbstract
             /** @var static */
             return static::fromString($value);
         } catch (Exception) {
-            /** @var T */
+            /** @var PrimitiveTypeAbstract */
             return $default;
         }
     }

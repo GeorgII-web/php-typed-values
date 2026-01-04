@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\String\Alias;
 
-use PhpTypedValues\Integer\String\StringEmpty;
+use PhpTypedValues\String\StringEmpty;
 
 /**
  * Alias for an empty string typed value.

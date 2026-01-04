@@ -4,20 +4,9 @@ namespace PhpTypedValues\Usage\Primitive;
 
 require_once 'vendor/autoload.php';
 
-use const JSON_THROW_ON_ERROR;
-use const PHP_EOL;
-
 use PhpTypedValues\Exception\TypeException;
-use PhpTypedValues\Integer\String\Alias\MariaDb\Decimal;
-use PhpTypedValues\Integer\String\Alias\Specific\Json;
-use PhpTypedValues\Integer\String\Alias\Specific\UuidV4;
-use PhpTypedValues\Integer\String\MariaDb\StringDecimal;
-use PhpTypedValues\Integer\String\MariaDb\StringText;
-use PhpTypedValues\Integer\String\Specific\StringEmail;
-use PhpTypedValues\Integer\String\Specific\StringMd5;
-use PhpTypedValues\Integer\String\Specific\StringUrl;
-use PhpTypedValues\Integer\String\Specific\StringUuidV4;
-use PhpTypedValues\Integer\String\StringEmpty;
+use PhpTypedValues\String\Alias\EmptyStr;
+use PhpTypedValues\String\Alias\MariaDb\Decimal;
 use PhpTypedValues\String\Alias\MariaDb\Text;
 use PhpTypedValues\String\Alias\MariaDb\VarChar255;
 use PhpTypedValues\String\Alias\NonBlank;
@@ -25,20 +14,31 @@ use PhpTypedValues\String\Alias\NonEmpty;
 use PhpTypedValues\String\Alias\Specific\CountryCode;
 use PhpTypedValues\String\Alias\Specific\Email;
 use PhpTypedValues\String\Alias\Specific\File;
+use PhpTypedValues\String\Alias\Specific\Json;
 use PhpTypedValues\String\Alias\Specific\Path;
 use PhpTypedValues\String\Alias\Specific\Url;
+use PhpTypedValues\String\Alias\Specific\UuidV4;
 use PhpTypedValues\String\Alias\Specific\UuidV7;
 use PhpTypedValues\String\Alias\Str;
 use PhpTypedValues\String\Alias\StringType;
+use PhpTypedValues\String\MariaDb\StringDecimal;
+use PhpTypedValues\String\MariaDb\StringText;
 use PhpTypedValues\String\MariaDb\StringVarChar255;
 use PhpTypedValues\String\Specific\StringCountryCode;
+use PhpTypedValues\String\Specific\StringEmail;
 use PhpTypedValues\String\Specific\StringFileName;
+use PhpTypedValues\String\Specific\StringMd5;
 use PhpTypedValues\String\Specific\StringPath;
+use PhpTypedValues\String\Specific\StringUrl;
+use PhpTypedValues\String\Specific\StringUuidV4;
 use PhpTypedValues\String\Specific\StringUuidV7;
+use PhpTypedValues\String\StringEmpty;
 use PhpTypedValues\String\StringNonBlank;
 use PhpTypedValues\String\StringNonEmpty;
 use PhpTypedValues\String\StringStandard;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use const JSON_THROW_ON_ERROR;
+use const PHP_EOL;
 
 /**
  * String.
@@ -49,6 +49,7 @@ testString(StringStandard::fromString('hi')->value());
 testNonEmptyString(StringNonEmpty::fromString('hi')->value());
 testEmptyString(StringEmpty::fromString('')->value());
 
+echo EmptyStr::fromString('')->toString() . PHP_EOL;
 echo StringMd5::hash('hi')->toString() . PHP_EOL;
 echo StringStandard::fromString('hi')->toString() . PHP_EOL;
 echo NonEmpty::fromString('hi')->toString() . PHP_EOL;

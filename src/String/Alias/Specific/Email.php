@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\String\Alias\Specific;
 
-use PhpTypedValues\Integer\String\Specific\StringEmail;
+use PhpTypedValues\String\Specific\StringEmail;
 
 /**
  * Alias for email address string.

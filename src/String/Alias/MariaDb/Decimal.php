@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\String\Alias\MariaDb;
 
-use PhpTypedValues\Integer\String\MariaDb\StringDecimal;
+use PhpTypedValues\String\MariaDb\StringDecimal;
 
 /**
  * Alias for MariaDB DECIMAL value represented as a string.

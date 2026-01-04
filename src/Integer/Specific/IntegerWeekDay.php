@@ -91,14 +91,16 @@ readonly class IntegerWeekDay extends IntegerTypeAbstractAbstract
     /**
      * @template T of PrimitiveTypeAbstract
      *
-     * @psalm-return (static&IntegerTypeAbstractAbstract)|PrimitiveTypeAbstract
+     * @param T $default
+     *
+     * @return static|T
      */
     public static function tryFromInt(
         int $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract {
         try {
-            /** @var static&IntegerTypeAbstractAbstract */
+            /** @var static */
             return static::fromInt($value);
         } catch (TypeException) {
             /* @var T */
@@ -108,6 +110,10 @@ readonly class IntegerWeekDay extends IntegerTypeAbstractAbstract
 
     /**
      * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
      */
     public static function tryFromFloat(
         float $value,
@@ -124,6 +130,10 @@ readonly class IntegerWeekDay extends IntegerTypeAbstractAbstract
 
     /**
      * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
      */
     public static function tryFromBool(
         bool $value,
@@ -140,6 +150,10 @@ readonly class IntegerWeekDay extends IntegerTypeAbstractAbstract
 
     /**
      * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
      */
     public static function tryFromString(
         string $value,
@@ -156,6 +170,10 @@ readonly class IntegerWeekDay extends IntegerTypeAbstractAbstract
 
     /**
      * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
      */
     public static function tryFromMixed(
         mixed $value,

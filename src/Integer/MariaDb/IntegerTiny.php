@@ -98,15 +98,13 @@ readonly class IntegerTiny extends IntegerTypeAbstractAbstract
      * @param T $default
      *
      * @return static|T
-     *
-     * @psalm-return (static&IntegerTypeAbstractAbstract)|T
      */
     public static function tryFromInt(
         int $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract {
         try {
-            /** @var static&IntegerTypeAbstractAbstract */
+            /** @var static */
             return static::fromInt($value);
         } catch (TypeException) {
             /* @var T $default */

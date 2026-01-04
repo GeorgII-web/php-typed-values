@@ -30,9 +30,8 @@ testPositiveInt(IntegerPositive::fromInt(10)->value());
 testNonNegativeInt(IntegerNonNegative::fromInt(10)->value());
 testWeekDayInt(IntegerWeekDay::fromInt(7)->value());
 
-echo IntegerStandard::tryFromFloat(1.1)->toBool() ? 'true' . PHP_EOL : 'false' . PHP_EOL;
+echo (string) IntegerStandard::tryFromFloat(1.0)->toFloat() . PHP_EOL;
 echo IntegerStandard::tryFromBool(true)->toBool() ? 'true' . PHP_EOL : 'false' . PHP_EOL;
-echo IntegerStandard::tryFromString('no', Unknown::create())->isTypeOf(WeekDay::class, Tiny::class, UndefinedTypeAbstractAbstract::class) ? 'Type correct - "Unknown" is type of "UndefinedType"' . PHP_EOL : 'Invalid type' . PHP_EOL;
 echo IntegerStandard::tryFromString('no', Unknown::create())->isTypeOf(WeekDay::class, Tiny::class, UndefinedTypeAbstractAbstract::class) ? 'Type correct - "Unknown" is type of "UndefinedType"' . PHP_EOL : 'Invalid type' . PHP_EOL;
 echo WeekDay::fromLabel('Monday')->toLabel() . PHP_EOL;
 echo WeekDay::fromInt(7)->value() . PHP_EOL;

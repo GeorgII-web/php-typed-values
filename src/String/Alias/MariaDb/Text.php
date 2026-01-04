@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\String\Alias\MariaDb;
 
-use PhpTypedValues\Integer\String\MariaDb\StringText;
+use PhpTypedValues\String\MariaDb\StringText;
 
 /**
  * Alias for MariaDB TEXT string (up to 65,535 characters).

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\String\Alias\Specific;
 
-use PhpTypedValues\Integer\String\Specific\StringUuidV4;
+use PhpTypedValues\String\Specific\StringUuidV4;
 
 /**
  * Alias for UUID version 4 (random) string.

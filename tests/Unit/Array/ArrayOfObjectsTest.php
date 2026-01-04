@@ -13,7 +13,6 @@ use PhpTypedValues\Integer\IntegerNonNegative;
 use PhpTypedValues\String\StringNonEmpty;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
-
 use function array_map;
 
 it('constructs from a valid list of PrimitiveType objects and preserves order', function (): void {

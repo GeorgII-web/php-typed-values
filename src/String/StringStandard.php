@@ -10,7 +10,6 @@ use PhpTypedValues\Base\Primitive\String\StringTypeAbstractAbstract;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
-
 use function is_scalar;
 use function is_string;
 
@@ -80,9 +79,9 @@ readonly class StringStandard extends StringTypeAbstractAbstract
     /**
      * @template T of PrimitiveTypeAbstract
      *
-     * @param T $default
+     * @param PrimitiveTypeAbstract $default
      *
-     * @return static|T
+     * @return static|PrimitiveTypeAbstract
      */
     public static function tryFromMixed(
         mixed $value,
@@ -92,13 +91,12 @@ readonly class StringStandard extends StringTypeAbstractAbstract
             /** @var static */
             return match (true) {
                 is_string($value) => static::fromString($value),
-                //                ($value instanceof self) => static::fromString($value->value()),
                 $value instanceof Stringable, is_scalar($value) => static::fromString((string) $value),
                 null === $value => static::fromString(''),
                 default => throw new TypeException('Value cannot be cast to string'),
             };
         } catch (Exception) {
-            /** @var T */
+            /** @var PrimitiveTypeAbstract */
             return $default;
         }
     }
@@ -106,9 +104,9 @@ readonly class StringStandard extends StringTypeAbstractAbstract
     /**
      * @template T of PrimitiveTypeAbstract
      *
-     * @param T $default
+     * @param PrimitiveTypeAbstract $default
      *
-     * @return static|T
+     * @return static|PrimitiveTypeAbstract
      */
     public static function tryFromString(
         string $value,
@@ -118,7 +116,7 @@ readonly class StringStandard extends StringTypeAbstractAbstract
             /** @var static */
             return static::fromString($value);
         } catch (Exception) {
-            /** @var T */
+            /** @var PrimitiveTypeAbstract */
             return $default;
         }
     }

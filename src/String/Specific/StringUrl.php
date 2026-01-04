@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\String\Specific;
 
-use const FILTER_VALIDATE_URL;
-
 use Exception;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Base\Primitive\String\StringTypeAbstractAbstract;
@@ -13,11 +11,11 @@ use PhpTypedValues\Exception\String\UrlStringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
-
 use function filter_var;
 use function is_scalar;
 use function is_string;
 use function sprintf;
+use const FILTER_VALIDATE_URL;
 
 /**
  * Absolute URL string.
@@ -101,9 +99,9 @@ readonly class StringUrl extends StringTypeAbstractAbstract
     /**
      * @template T of PrimitiveTypeAbstract
      *
-     * @param T $default
+     * @param PrimitiveTypeAbstract $default
      *
-     * @return static|T
+     * @return static|PrimitiveTypeAbstract
      */
     public static function tryFromMixed(
         mixed $value,
@@ -118,7 +116,7 @@ readonly class StringUrl extends StringTypeAbstractAbstract
                 default => throw new TypeException('Value cannot be cast to string'),
             };
         } catch (Exception) {
-            /** @var T */
+            /** @var PrimitiveTypeAbstract */
             return $default;
         }
     }
@@ -126,9 +124,9 @@ readonly class StringUrl extends StringTypeAbstractAbstract
     /**
      * @template T of PrimitiveTypeAbstract
      *
-     * @param T $default
+     * @param PrimitiveTypeAbstract $default
      *
-     * @return static|T
+     * @return static|PrimitiveTypeAbstract
      */
     public static function tryFromString(
         string $value,
@@ -138,7 +136,7 @@ readonly class StringUrl extends StringTypeAbstractAbstract
             /** @var static */
             return static::fromString($value);
         } catch (Exception) {
-            /** @var T */
+            /** @var PrimitiveTypeAbstract */
             return $default;
         }
     }

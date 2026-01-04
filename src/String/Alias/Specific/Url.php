@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\String\Alias\Specific;
 
-use PhpTypedValues\Integer\String\Specific\StringUrl;
+use PhpTypedValues\String\Specific\StringUrl;
 
 /**
  * Alias for absolute URL string.
