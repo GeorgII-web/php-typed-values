@@ -76,7 +76,18 @@ abstract readonly class FloatTypeAbstractAbstract extends PrimitiveTypeAbstract 
         return $floatValue;
     }
 
+    protected static function getFloatFromBool(bool $value): float
+    {
+        if ($value === true) {
+            return 1.0;
+        }
+
+        return 0.0;
+    }
+
     /**
+     * @psalm-mutation-free
+     *
      * @return non-empty-string
      *
      * @throws FloatTypeException
@@ -92,6 +103,8 @@ abstract readonly class FloatTypeAbstractAbstract extends PrimitiveTypeAbstract 
     }
 
     /**
+     * @psalm-mutation-free
+     *
      * @throws FloatTypeException
      */
     protected static function floatToInt(float $value): int
@@ -105,6 +118,8 @@ abstract readonly class FloatTypeAbstractAbstract extends PrimitiveTypeAbstract 
     }
 
     /**
+     * @psalm-mutation-free
+     *
      * @throws FloatTypeException
      */
     protected static function floatToBool(float $value): bool
@@ -118,15 +133,6 @@ abstract readonly class FloatTypeAbstractAbstract extends PrimitiveTypeAbstract 
         }
 
         throw new FloatTypeException(sprintf('Float "%s" has no valid strict bool value', $value));
-    }
-
-    protected static function getFloatFromBool(bool $value): float
-    {
-        if ($value === true) {
-            return 1.0;
-        }
-
-        return 0.0;
     }
 
     abstract public static function fromString(string $value): static;

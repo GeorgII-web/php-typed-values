@@ -21,13 +21,16 @@ echo PHP_EOL . '> FLOAT' . PHP_EOL;
 
 testFloat(FloatStandard::fromFloat(3.14)->value());
 
-echo FloatStandard::fromString('2.71828')->toString() . PHP_EOL;
+echo (string) FloatStandard::tryFromInt(1)->toFloat() . PHP_EOL;
+echo FloatStandard::tryFromBool(true)->toBool() ? 'true' . PHP_EOL : 'false' . PHP_EOL;
+echo FloatStandard::fromString('2.7128')->toString() . PHP_EOL;
+echo (string) FloatStandard::fromString('2.7127')->toInt() . PHP_EOL;
 echo FloatStandard::tryFromFloat(2.71828)->toString() . PHP_EOL;
-echo FloatNonNegative::tryFromMixed('2.71828')->toString() . PHP_EOL;
+echo FloatNonNegative::tryFromMixed('2.1828')->toString() . PHP_EOL;
 echo FloatNonNegative::tryFromFloat(2.71828)->toString() . PHP_EOL;
-echo NonNegative::fromString('2.71828')->toString() . PHP_EOL;
-echo DoubleType::fromString('2.71828')->toString() . PHP_EOL;
-echo DoubleType::fromString('2.71828')->toString() . PHP_EOL;
+echo NonNegative::fromString('2.7182')->toString() . PHP_EOL;
+echo DoubleType::fromString('2.7188')->toString() . PHP_EOL;
+echo DoubleType::fromString('2.716828')->toString() . PHP_EOL;
 echo Positive::fromString('2.8')->toString() . PHP_EOL;
 echo FloatStandard::tryFromMixed('2.8')->toString() . PHP_EOL;
 
