@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use PhpTypedValues\Exception\UndefinedTypeException;
-use PhpTypedValues\Undefined\Alias\Undefined;
 use PhpTypedValues\Undefined\UndefinedStandard;
 
 it('creates UndefinedStandard via factory', function (): void {
@@ -59,26 +58,46 @@ it('throws on jsonSerialize for UndefinedStandard', function (): void {
         ->toThrow(UndefinedTypeException::class, 'UndefinedType cannot be serialized for Json.');
 });
 
-it('tryFromMixed always returns Undefined', function (): void {
+it('tryFromMixed always returns itself', function (): void {
     $fromString = UndefinedStandard::tryFromMixed('hello');
     $fromInt = UndefinedStandard::tryFromMixed(123);
     $fromArray = UndefinedStandard::tryFromMixed([]);
     $fromNull = UndefinedStandard::tryFromMixed(null);
 
     expect($fromString)
-        ->toBeInstanceOf(Undefined::class)
+        ->toBeInstanceOf(UndefinedStandard::class)
         ->and($fromInt)
-        ->toBeInstanceOf(Undefined::class)
+        ->toBeInstanceOf(UndefinedStandard::class)
         ->and($fromArray)
-        ->toBeInstanceOf(Undefined::class)
+        ->toBeInstanceOf(UndefinedStandard::class)
         ->and($fromNull)
-        ->toBeInstanceOf(Undefined::class);
+        ->toBeInstanceOf(UndefinedStandard::class);
+});
+
+it('cheks tryFrom"Any" methods', function (): void {
+    $fromString = UndefinedStandard::tryFromString('hello');
+    $fromInt = UndefinedStandard::tryFromInt(123);
+    $fromArray = UndefinedStandard::tryFromArray([]);
+    $fromFloat = UndefinedStandard::tryFromFloat(1.1);
+    $fromBool = UndefinedStandard::tryFromBool(true);
+
+    expect($fromString)
+        ->toBeInstanceOf(UndefinedStandard::class)
+        ->and($fromInt)
+        ->toBeInstanceOf(UndefinedStandard::class)
+        ->and($fromArray)
+        ->toBeInstanceOf(UndefinedStandard::class)
+        ->and($fromBool)
+        ->toBeInstanceOf(UndefinedStandard::class)
+        ->and($fromFloat)
+        ->toBeInstanceOf(UndefinedStandard::class)
+        ->and(fn() => $fromBool->toBool())->toThrow(UndefinedTypeException::class);
 });
 
 it('tryFromString always returns Undefined', function (): void {
     $v = UndefinedStandard::tryFromString('anything');
 
-    expect($v)->toBeInstanceOf(Undefined::class);
+    expect($v)->toBeInstanceOf(UndefinedStandard::class);
 });
 
 it('isEmpty returns true for UndefinedStandard', function (): void {

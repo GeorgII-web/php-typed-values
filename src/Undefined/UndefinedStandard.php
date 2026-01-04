@@ -28,21 +28,69 @@ readonly class UndefinedStandard extends UndefinedType
         return new static();
     }
 
+    public static function tryFromBool(
+        bool $value,
+        PrimitiveType $default = new Undefined(),
+    ): static {
+        return static::fromBool($value);
+    }
+
+    public static function tryFromFloat(
+        float $value,
+        PrimitiveType $default = new Undefined(),
+    ): static {
+        return static::fromFloat($value);
+    }
+
+    public static function tryFromInt(
+        int $value,
+        PrimitiveType $default = new Undefined(),
+    ): static {
+        return static::fromInt($value);
+    }
+
     public static function tryFromString(
         string $value,
         PrimitiveType $default = new Undefined(),
-    ): Undefined {
-        return Undefined::create();
+    ): static {
+        return static::fromString($value);
+    }
+
+    public static function tryFromArray(
+        array $value,
+        PrimitiveType $default = new Undefined(),
+    ): static {
+        return static::fromArray($value);
     }
 
     public static function tryFromMixed(
         mixed $value,
         PrimitiveType $default = new Undefined(),
-    ): Undefined {
-        return Undefined::create();
+    ): static {
+        return new static();
+    }
+
+    public static function fromBool(bool $value): static
+    {
+        return new static();
+    }
+
+    public static function fromFloat(float $value): static
+    {
+        return new static();
+    }
+
+    public static function fromInt(int $value): static
+    {
+        return new static();
     }
 
     public static function fromString(string $value): static
+    {
+        return new static();
+    }
+
+    public static function fromArray(array $value): static
     {
         return new static();
     }
@@ -66,9 +114,9 @@ readonly class UndefinedStandard extends UndefinedType
     /**
      * @throws UndefinedTypeException
      */
-    public function toArray(): never
+    public function toBool(): never
     {
-        throw new UndefinedTypeException('UndefinedType cannot be converted to array.');
+        throw new UndefinedTypeException('UndefinedType cannot be converted to boolean.');
     }
 
     /**
@@ -77,6 +125,14 @@ readonly class UndefinedStandard extends UndefinedType
     public function toString(): string
     {
         throw new UndefinedTypeException('UndefinedType cannot be converted to string.');
+    }
+
+    /**
+     * @throws UndefinedTypeException
+     */
+    public function toArray(): never
+    {
+        throw new UndefinedTypeException('UndefinedType cannot be converted to array.');
     }
 
     public function isTypeOf(string ...$classNames): bool

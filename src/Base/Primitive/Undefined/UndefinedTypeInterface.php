@@ -25,29 +25,45 @@ interface UndefinedTypeInterface
 {
     public static function create(): static;
 
-    /**
-     * @template T of PrimitiveType
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
-    public static function tryFromMixed(
-        mixed $value,
+    public static function tryFromBool(
+        bool $value,
         PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+    ): static;
 
-    /**
-     * @template T of PrimitiveType
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
+    public static function tryFromFloat(
+        float $value,
+        PrimitiveType $default = new Undefined(),
+    ): static;
+
+    public static function tryFromInt(
+        int $value,
+        PrimitiveType $default = new Undefined(),
+    ): static;
+
     public static function tryFromString(
         string $value,
         PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+    ): static;
+
+    public static function tryFromArray(
+        array $value,
+        PrimitiveType $default = new Undefined(),
+    ): static;
+
+    public static function tryFromMixed(
+        mixed $value,
+        PrimitiveType $default = new Undefined(),
+    ): static;
+
+    public static function fromBool(bool $value): static;
+
+    public static function fromFloat(float $value): static;
+
+    public static function fromInt(int $value): static;
+
+    public static function fromString(string $value): static;
+
+    public static function fromArray(array $value): static;
 
     /**
      * @throws UndefinedTypeException
@@ -58,6 +74,21 @@ interface UndefinedTypeInterface
      * @throws UndefinedTypeException
      */
     public function toFloat(): never;
+
+    /**
+     * @throws UndefinedTypeException
+     */
+    public function toBool(): never;
+
+    /**
+     * @throws UndefinedTypeException
+     */
+    public function toString(): string;
+
+    /**
+     * @throws UndefinedTypeException
+     */
+    public function toArray(): never;
 
     /**
      * @throws UndefinedTypeException

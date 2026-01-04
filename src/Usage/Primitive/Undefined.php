@@ -63,6 +63,34 @@ try {
     echo $e->getMessage() . PHP_EOL;
 }
 
+$undefined = Unknown::tryFromBool(true);
+try {
+    $undefined->toBool();
+} catch (TypeException $e) {
+    echo $e->getMessage() . PHP_EOL;
+}
+
+$undefined = Unknown::tryFromFloat(1.1);
+try {
+    $undefined->toString();
+} catch (TypeException $e) {
+    echo $e->getMessage() . PHP_EOL;
+}
+
+$undefined = Unknown::tryFromInt(11);
+try {
+    $undefined->toString();
+} catch (TypeException $e) {
+    echo $e->getMessage() . PHP_EOL;
+}
+
+$undefined = Unknown::tryFromArray([]);
+try {
+    $undefined->toString();
+} catch (TypeException $e) {
+    echo $e->getMessage() . PHP_EOL;
+}
+
 $undefined = Undefined::create();
 try {
     $undefined->value();

@@ -28,7 +28,7 @@ namespace PhpTypedValues\Base\Primitive;
 abstract readonly class PrimitiveType implements PrimitiveTypeInterface
 {
     /**
-     * Checks if the current object is an instance of the provided class names.
+     * Checks if the current object (or its parents) is an instance of the provided class names.
      */
     abstract public function isTypeOf(string ...$classNames): bool;
 

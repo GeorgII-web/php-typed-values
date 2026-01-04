@@ -26,7 +26,7 @@ interface PrimitiveTypeInterface extends TypeInterface, JsonSerializable
     public function value(): mixed;
 
     /**
-     * Checks if the current object is an instance of the provided class names.
+     * Checks if the current object (or its parents) is an instance of the provided class names.
      */
     public function isTypeOf(string ...$classNames): bool;
 

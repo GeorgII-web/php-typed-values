@@ -5,17 +5,19 @@ declare(strict_types=1);
 namespace PhpTypedValues\Base\Primitive\Undefined;
 
 use PhpTypedValues\Base\Primitive\PrimitiveType;
+use PhpTypedValues\Exception\UndefinedTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
  * Base implementation for a special "Undefined/Unknown" typed value.
  *
- * Use it in APIs that must return a typed value when no meaningful value is available yet.
- * Prefer this over null to make intent explicit and keep type-safety.
+ * Represents an explicit absence of a meaningful value.
+ * Methods that would normally expose a value or its string representation
+ * intentionally throw to prevent accidental usage.
  *
  * Example
- *  - return Undefined::create();
- *  - $v->toString(); // throws UndefinedTypeException
+ *  - $u = Undefined::create();
+ *  - $u->value(); // throws UndefinedTypeException
  *
  * @internal
  *
@@ -25,31 +27,75 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  */
 abstract readonly class UndefinedType extends PrimitiveType implements UndefinedTypeInterface
 {
-    abstract public function value(): string;
+    abstract public static function create(): static;
 
-    abstract public static function fromString(string $value): static;
-
-    /**
-     * @template T of PrimitiveType
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
-    abstract public static function tryFromMixed(
-        mixed $value,
+    abstract public static function tryFromBool(
+        bool $value,
         PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+    ): static;
 
-    /**
-     * @template T of PrimitiveType
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
+    abstract public static function tryFromFloat(
+        float $value,
+        PrimitiveType $default = new Undefined(),
+    ): static;
+
+    abstract public static function tryFromInt(
+        int $value,
+        PrimitiveType $default = new Undefined(),
+    ): static;
+
     abstract public static function tryFromString(
         string $value,
         PrimitiveType $default = new Undefined(),
-    ): static|PrimitiveType;
+    ): static;
+
+    abstract public static function tryFromArray(
+        array $value,
+        PrimitiveType $default = new Undefined(),
+    ): static;
+
+    abstract public static function tryFromMixed(
+        mixed $value,
+        PrimitiveType $default = new Undefined(),
+    ): static;
+
+    abstract public static function fromBool(bool $value): static;
+
+    abstract public static function fromFloat(float $value): static;
+
+    abstract public static function fromInt(int $value): static;
+
+    abstract public static function fromString(string $value): static;
+
+    abstract public static function fromArray(array $value): static;
+
+    /**
+     * @throws UndefinedTypeException
+     */
+    abstract public function toInt(): never;
+
+    /**
+     * @throws UndefinedTypeException
+     */
+    abstract public function toFloat(): never;
+
+    /**
+     * @throws UndefinedTypeException
+     */
+    abstract public function toBool(): never;
+
+    /**
+     * @throws UndefinedTypeException
+     */
+    abstract public function toString(): string;
+
+    /**
+     * @throws UndefinedTypeException
+     */
+    abstract public function toArray(): never;
+
+    /**
+     * @throws UndefinedTypeException
+     */
+    abstract public function value(): string;
 }
