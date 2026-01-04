@@ -12,6 +12,7 @@ use PhpTypedValues\Exception\Integer\ReasonableRangeIntegerTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
+
 use function is_bool;
 use function is_float;
 use function is_int;

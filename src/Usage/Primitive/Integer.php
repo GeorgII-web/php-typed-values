@@ -4,6 +4,8 @@ namespace PhpTypedValues\Usage\Primitive;
 
 require_once 'vendor/autoload.php';
 
+use const PHP_EOL;
+
 use PhpTypedValues\Base\Primitive\Undefined\UndefinedTypeAbstractAbstract;
 use PhpTypedValues\Integer\Alias\IntegerType;
 use PhpTypedValues\Integer\Alias\MariaDb\Tiny;
@@ -17,7 +19,6 @@ use PhpTypedValues\Integer\IntegerStandard;
 use PhpTypedValues\Integer\MariaDb\IntegerTiny;
 use PhpTypedValues\Integer\Specific\IntegerWeekDay;
 use PhpTypedValues\Undefined\Alias\Unknown;
-use const PHP_EOL;
 
 /**
  * Integer.

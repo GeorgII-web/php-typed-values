@@ -11,6 +11,7 @@ use PhpTypedValues\Exception\String\DecimalStringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
+
 use function is_scalar;
 use function is_string;
 use function preg_match;

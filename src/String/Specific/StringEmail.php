@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\String\Specific;
 
+use const FILTER_VALIDATE_EMAIL;
+
 use Exception;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Base\Primitive\String\StringTypeAbstractAbstract;
@@ -11,11 +13,11 @@ use PhpTypedValues\Exception\String\EmailStringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
+
 use function filter_var;
 use function is_scalar;
 use function is_string;
 use function sprintf;
-use const FILTER_VALIDATE_EMAIL;
 
 /**
  * Email address string (RFC 5322 pragmatic validation).
@@ -100,10 +102,6 @@ readonly class StringEmail extends StringTypeAbstractAbstract
 
     /**
      * @template T of PrimitiveTypeAbstract
-     *
-     * @param PrimitiveTypeAbstract $default
-     *
-     * @return static|PrimitiveTypeAbstract
      */
     public static function tryFromMixed(
         mixed $value,
@@ -125,10 +123,6 @@ readonly class StringEmail extends StringTypeAbstractAbstract
 
     /**
      * @template T of PrimitiveTypeAbstract
-     *
-     * @param PrimitiveTypeAbstract $default
-     *
-     * @return static|PrimitiveTypeAbstract
      */
     public static function tryFromString(
         string $value,

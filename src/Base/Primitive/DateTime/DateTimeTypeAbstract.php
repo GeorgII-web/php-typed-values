@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Base\Primitive\DateTime;
 
+use const PHP_EOL;
+
 use DateTimeImmutable;
 use DateTimeZone;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\DateTime\DateTimeTypeException;
 use PhpTypedValues\Exception\DateTime\ReasonableRangeDateTimeTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
+
 use function count;
 use function sprintf;
-use const PHP_EOL;
 
 /**
  * Base implementation for DateTime typed values.

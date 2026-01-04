@@ -11,6 +11,8 @@ use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
+
+use function is_bool;
 use function is_float;
 use function is_int;
 use function is_string;

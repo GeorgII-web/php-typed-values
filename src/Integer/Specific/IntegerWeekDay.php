@@ -12,6 +12,7 @@ use PhpTypedValues\Exception\Integer\ReasonableRangeIntegerTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
+
 use function is_bool;
 use function is_float;
 use function is_int;
@@ -90,10 +91,6 @@ readonly class IntegerWeekDay extends IntegerTypeAbstractAbstract
     /**
      * @template T of PrimitiveTypeAbstract
      *
-     * @param PrimitiveTypeAbstract $default
-     *
-     * @return static|PrimitiveTypeAbstract
-     *
      * @psalm-return (static&IntegerTypeAbstractAbstract)|PrimitiveTypeAbstract
      */
     public static function tryFromInt(
@@ -111,10 +108,6 @@ readonly class IntegerWeekDay extends IntegerTypeAbstractAbstract
 
     /**
      * @template T of PrimitiveTypeAbstract
-     *
-     * @param PrimitiveTypeAbstract $default
-     *
-     * @return static|PrimitiveTypeAbstract
      */
     public static function tryFromFloat(
         float $value,
@@ -131,10 +124,6 @@ readonly class IntegerWeekDay extends IntegerTypeAbstractAbstract
 
     /**
      * @template T of PrimitiveTypeAbstract
-     *
-     * @param PrimitiveTypeAbstract $default
-     *
-     * @return static|PrimitiveTypeAbstract
      */
     public static function tryFromBool(
         bool $value,
@@ -151,10 +140,6 @@ readonly class IntegerWeekDay extends IntegerTypeAbstractAbstract
 
     /**
      * @template T of PrimitiveTypeAbstract
-     *
-     * @param PrimitiveTypeAbstract $default
-     *
-     * @return static|PrimitiveTypeAbstract
      */
     public static function tryFromString(
         string $value,
@@ -171,10 +156,6 @@ readonly class IntegerWeekDay extends IntegerTypeAbstractAbstract
 
     /**
      * @template T of PrimitiveTypeAbstract
-     *
-     * @param PrimitiveTypeAbstract $default
-     *
-     * @return static|PrimitiveTypeAbstract
      */
     public static function tryFromMixed(
         mixed $value,

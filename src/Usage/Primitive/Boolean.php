@@ -4,6 +4,8 @@ namespace PhpTypedValues\Usage\Primitive;
 
 require_once 'vendor/autoload.php';
 
+use const PHP_EOL;
+
 use PhpTypedValues\Base\Primitive\Bool\BoolTypeInterface;
 use PhpTypedValues\Bool\Alias\Binary;
 use PhpTypedValues\Bool\Alias\BooleanType;
@@ -15,7 +17,6 @@ use PhpTypedValues\Bool\FalseStandard;
 use PhpTypedValues\Bool\TrueStandard;
 use PhpTypedValues\Exception\Undefined\UndefinedTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
-use const PHP_EOL;
 
 /**
  * Boolean.

@@ -7,6 +7,7 @@ namespace PhpTypedValues\Base\Primitive\Float;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
+
 use function sprintf;
 
 /**
@@ -28,7 +29,6 @@ use function sprintf;
  */
 abstract readonly class FloatTypeAbstractAbstract extends PrimitiveTypeAbstract implements FloatTypeInterface
 {
-
     /**
      * @throws FloatTypeException
      */

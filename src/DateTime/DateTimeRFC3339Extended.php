@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\DateTime;
 
+use const DATE_RFC3339_EXTENDED;
+
 use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
@@ -13,8 +15,8 @@ use PhpTypedValues\Exception\DateTime\DateTimeTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
+
 use function is_string;
-use const DATE_RFC3339_EXTENDED;
 
 /**
  * Date-time value formatted using PHP's DATE_RFC3339_EXTENDED (RFC 3339 with microseconds).

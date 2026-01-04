@@ -10,6 +10,7 @@ use PhpTypedValues\Exception\Array\ArrayTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
 use Traversable;
+
 use function count;
 use function is_scalar;
 use function sprintf;

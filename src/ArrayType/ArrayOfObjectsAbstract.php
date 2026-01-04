@@ -9,6 +9,7 @@ use PhpTypedValues\Base\ArrayType\ArrayTypeAbstract;
 use PhpTypedValues\Exception\Array\ArrayTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Traversable;
+
 use function count;
 use function is_object;
 

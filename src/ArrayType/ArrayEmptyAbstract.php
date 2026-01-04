@@ -7,6 +7,7 @@ namespace PhpTypedValues\ArrayType;
 use PhpTypedValues\Base\ArrayType\ArrayTypeAbstract;
 use PhpTypedValues\Exception\Array\ArrayTypeException;
 use Traversable;
+
 use function count;
 
 /**

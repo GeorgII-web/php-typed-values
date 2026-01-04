@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Base\Primitive\Integer;
 
+use const FILTER_VALIDATE_INT;
+
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\Integer\ReasonableRangeIntegerTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
+
 use function sprintf;
-use const FILTER_VALIDATE_INT;
 
 /**
  * Base implementation for integer-typed values.

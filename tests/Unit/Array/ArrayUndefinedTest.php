@@ -6,6 +6,7 @@ namespace PhpTypedValues\Tests\Unit\Array\ArrayOfObjects;
 
 use PhpTypedValues\ArrayType\ArrayUndefinedAbstract;
 use PhpTypedValues\Exception\Array\ArrayUndefinedTypeException;
+
 use function count;
 
 describe('ArrayUndefined specific tests', function () {

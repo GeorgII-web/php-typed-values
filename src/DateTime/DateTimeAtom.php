@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\DateTime;
 
+use const DATE_ATOM;
+
 use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
@@ -14,8 +16,8 @@ use PhpTypedValues\Exception\DateTime\ReasonableRangeDateTimeTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
+
 use function is_string;
-use const DATE_ATOM;
 
 /**
  * Date-time value formatted using PHP's DATE_ATOM (RFC 3339 based on ISO 8601).
