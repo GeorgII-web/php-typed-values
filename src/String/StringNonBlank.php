@@ -111,7 +111,6 @@ readonly class StringNonBlank extends StringTypeAbstract
             /** @var static */
             return match (true) {
                 is_string($value) => static::fromString($value),
-                //                ($value instanceof self) => static::fromString($value->value()),
                 $value instanceof Stringable, is_scalar($value) => static::fromString((string) $value),
                 default => throw new TypeException('Value cannot be cast to string'),
             };

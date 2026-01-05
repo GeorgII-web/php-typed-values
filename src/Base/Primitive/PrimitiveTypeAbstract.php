@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Base\Primitive;
 
+use PhpTypedValues\Exception\Bool\BoolTypeException;
+use PhpTypedValues\Exception\Float\FloatTypeException;
+use PhpTypedValues\Exception\Integer\IntegerTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
+
 /**
  * Base class for immutable typed values.
  *
@@ -28,6 +33,173 @@ namespace PhpTypedValues\Base\Primitive;
 abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
 {
     /**
+     * @psalm-mutation-free
+     *
+     * @return non-empty-string
+     *
+     * @throws FloatTypeException
+     */
+    protected static function floatToString(float $value): string
+    {
+        $strValue = (string)$value;
+        if ($strValue !== (string)(float)$strValue) {
+            throw new FloatTypeException(sprintf('Float "%s" has no valid strict string value', $value));
+        }
+
+        return $strValue;
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @throws FloatTypeException
+     */
+    protected static function floatToInt(float $value): int
+    {
+        $intValue = (int)$value;
+        if ($intValue !== (int)(float)$intValue) {
+            throw new FloatTypeException(sprintf('Float "%s" has no valid strict int value', $value));
+        }
+
+        return $intValue;
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @throws FloatTypeException
+     */
+    protected static function floatToBool(float $value): bool
+    {
+        if ($value === 1.0) {
+            return true;
+        }
+
+        if ($value === 0.0) {
+            return false;
+        }
+
+        throw new FloatTypeException(sprintf('Float "%s" has no valid strict bool value', $value));
+    }
+
+    /**
+     * @throws FloatTypeException
+     */
+    protected static function stringToFloat(string $value): float
+    {
+        if (!is_numeric($value)) {
+            throw new FloatTypeException(sprintf('String "%s" has no valid float value', $value));
+        }
+
+        // Numerical stability check (catches precision loss)
+        $floatValue = (float)$value;
+        if ($floatValue !== (float)(string)$floatValue) {
+            throw new FloatTypeException(sprintf('String "%s" has no valid strict float value', $value));
+        }
+
+        // Formatting check: Ensure no leading zeros (unless it's "0" or "0.something")
+        // and that the string isn't an integer formatted with a trailing .0 that PHP would drop.
+        $normalized = (string)$floatValue;
+
+        // If it's a "clean" float string, PHP's "(string)(float)" cast usually matches
+        // the input, UNLESS the input has trailing .0 (like "5.0").
+        // If we want to be very strict and reject "0005"
+        if (
+            $value !== '0'
+            && $value !== $normalized
+            && $value !== $normalized . '.0'
+        ) {
+            throw new FloatTypeException(sprintf('String "%s" has invalid formatting (leading zeros or redundant characters)', $value));
+        }
+
+        return (float)$value;
+    }
+
+    /**
+     * @throws IntegerTypeException
+     */
+    protected static function stringToInt(string $value): int
+    {
+        if (!is_numeric($value)) {
+            throw new IntegerTypeException(sprintf('String "%s" has no valid int value', $value));
+        }
+
+        $floatValue = (int)$value;
+        if ($floatValue !== (int)(string)$floatValue) {
+            throw new IntegerTypeException(sprintf('String "%s" has no valid strict int value', $value));
+        }
+
+        return $floatValue;
+    }
+
+    /**
+     * @throws BoolTypeException
+     */
+    protected static function stringToBool(string $value): bool
+    {
+        if ($value === 'true') {
+            return true;
+        }
+
+        if ($value === 'false') {
+            return false;
+        }
+
+        throw new BoolTypeException(sprintf('String "%s" has no valid bool value', $value));
+    }
+
+    /**
+     * @throws FloatTypeException
+     */
+    protected static function intToFloat(int $value): float
+    {
+        // Numerical stability check (catches precision loss)
+        $floatValue = (float)$value;
+        if ($floatValue !== (float)(int)$floatValue) {
+            throw new FloatTypeException(sprintf('Integer "%s" has no valid strict float value', $value));
+        }
+
+        return $floatValue;
+    }
+
+    /**
+     * @return non-empty-string
+     *
+     * @throws FloatTypeException
+     */
+    protected static function intToString(int $value): string
+    {
+        // Numerical stability check (catches precision loss)
+        $stringValue = (string)$value;
+        if ($stringValue !== (string)(int)$stringValue) {
+            throw new FloatTypeException(sprintf('Integer "%s" has no valid strict string value', $value));
+        }
+
+        return $stringValue;
+    }
+
+    protected static function boolToFloat(bool $value): float
+    {
+        if ($value === true) {
+            return 1.0;
+        }
+
+        return 0.0;
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    protected static function boolToString(bool $value): string
+    {
+        if ($value === true) {
+            return 'true';
+        }
+
+        return 'false';
+    }
+
+    /**
      * Checks if the current object (or its parents) is an instance of the provided class names.
      */
     abstract public function isTypeOf(string ...$classNames): bool;
@@ -43,17 +215,17 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
     abstract public function isUndefined(): bool;
 
     /**
-     * Returns a normalized string representation of the underlying value.
-     */
-    abstract public function toString(): string;
-
-    /**
      * Alias of {@see toString} for convenient casting.
      */
     public function __toString(): string
     {
         return $this->toString();
     }
+
+    /**
+     * Returns a normalized string representation of the underlying value.
+     */
+    abstract public function toString(): string;
 
     /**
      * JSON representation of the value.

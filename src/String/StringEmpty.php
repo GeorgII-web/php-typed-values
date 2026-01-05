@@ -101,7 +101,6 @@ readonly class StringEmpty extends StringTypeAbstract
             return match (true) {
                 is_string($value) => static::fromString($value),
                 $value instanceof Stringable, is_scalar($value) => static::fromString((string) $value),
-                null === $value => static::fromString(''),
                 default => throw new TypeException('Value cannot be cast to string'),
             };
         } catch (Exception) {

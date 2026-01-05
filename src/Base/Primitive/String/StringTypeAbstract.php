@@ -26,18 +26,63 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  */
 abstract readonly class StringTypeAbstract extends PrimitiveTypeAbstract implements StringTypeInterface
 {
-    abstract public function value(): string;
+    abstract public static function fromString(string $value): static;
 
-    abstract public function toString(): string;
+    abstract public static function fromFloat(float $value): static;
 
-    abstract public function isEmpty(): bool;
+    abstract public static function fromInt(int $value): static;
 
-    abstract public function isUndefined(): bool;
+    abstract public static function fromBool(bool $value): static;
 
-    public function __toString(): string
-    {
-        return $this->toString();
-    }
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    abstract public static function tryFromString(
+        string $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract;
+
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    abstract public static function tryFromFloat(
+        float $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract;
+
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    abstract public static function tryFromInt(
+        int $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract;
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    abstract public static function tryFromBool(
+        bool $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract;
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -51,15 +96,15 @@ abstract readonly class StringTypeAbstract extends PrimitiveTypeAbstract impleme
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract;
 
-    /**
-     * @template T of PrimitiveTypeAbstract
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
-    abstract public static function tryFromString(
-        string $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract;
+    abstract public function toString(): string;
+
+    abstract public function toFloat(): float;
+
+    abstract public function toInt(): int;
+
+    abstract public function toBool(): bool;
+
+    abstract public function value(): string;
+
+    abstract public function isTypeOf(string ...$classNames): bool;
 }

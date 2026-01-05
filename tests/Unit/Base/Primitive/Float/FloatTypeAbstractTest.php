@@ -24,7 +24,7 @@ readonly class FloatTypeAbstractTest extends FloatTypeAbstract
 
     public static function fromString(string $value): static
     {
-        return new static(parent::getFloatFromString($value));
+        return new static(parent::stringToFloat($value));
     }
 
     public function isTypeOf(string ...$classNames): bool

@@ -69,7 +69,7 @@ readonly class FloatPositive extends FloatTypeAbstract
      */
     public static function fromString(string $value): static
     {
-        return new static(parent::getFloatFromString($value));
+        return new static(parent::stringToFloat($value));
     }
 
     /**
@@ -77,7 +77,7 @@ readonly class FloatPositive extends FloatTypeAbstract
      */
     public static function fromInt(int $value): static
     {
-        return new static(parent::getFloatFromInt($value));
+        return new static(parent::intToFloat($value));
     }
 
     /**
@@ -85,7 +85,7 @@ readonly class FloatPositive extends FloatTypeAbstract
      */
     public static function fromBool(bool $value): static
     {
-        return new static(parent::getFloatFromBool($value));
+        return new static(parent::boolToFloat($value));
     }
 
     /**
