@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace PhpTypedValues\Base\Primitive\String;
 
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
-use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
@@ -42,7 +41,6 @@ interface StringTypeInterface
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract;
 
-
     /**
      * @template T of PrimitiveTypeAbstract
      *
@@ -54,7 +52,6 @@ interface StringTypeInterface
         float $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract;
-
 
     /**
      * @template T of PrimitiveTypeAbstract

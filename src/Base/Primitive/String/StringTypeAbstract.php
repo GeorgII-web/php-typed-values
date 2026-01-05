@@ -46,7 +46,6 @@ abstract readonly class StringTypeAbstract extends PrimitiveTypeAbstract impleme
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract;
 
-
     /**
      * @template T of PrimitiveTypeAbstract
      *
@@ -58,7 +57,6 @@ abstract readonly class StringTypeAbstract extends PrimitiveTypeAbstract impleme
         float $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract;
-
 
     /**
      * @template T of PrimitiveTypeAbstract

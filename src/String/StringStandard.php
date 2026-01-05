@@ -14,6 +14,11 @@ use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
 
+use function is_bool;
+use function is_float;
+use function is_int;
+use function is_string;
+
 /**
  * Generic string typed value.
  *
@@ -70,10 +75,9 @@ readonly class StringStandard extends StringTypeAbstract
      * @return static|T
      */
     public static function tryFromMixed(
-        mixed                 $value,
+        mixed $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract
-    {
+    ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
             return match (true) {
@@ -82,7 +86,7 @@ readonly class StringStandard extends StringTypeAbstract
                 is_int($value) => static::fromInt($value),
                 ($value instanceof self) => static::fromString($value->value()),
                 is_bool($value) => static::fromBool($value),
-                $value instanceof Stringable => static::fromString((string)$value),
+                $value instanceof Stringable => static::fromString((string) $value),
                 default => throw new TypeException('Value cannot be cast to string'),
             };
         } catch (Exception) {
@@ -99,10 +103,9 @@ readonly class StringStandard extends StringTypeAbstract
      * @return static|T
      */
     public static function tryFromFloat(
-        float                 $value,
-        PrimitiveTypeAbstract $default = new Undefined()
-    ): static|PrimitiveTypeAbstract
-    {
+        float $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
             return static::fromFloat($value);
@@ -120,10 +123,9 @@ readonly class StringStandard extends StringTypeAbstract
      * @return static|T
      */
     public static function tryFromInt(
-        int                   $value,
-        PrimitiveTypeAbstract $default = new Undefined()
-    ): static|PrimitiveTypeAbstract
-    {
+        int $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
             return static::fromInt($value);
@@ -141,10 +143,9 @@ readonly class StringStandard extends StringTypeAbstract
      * @return static|T
      */
     public static function tryFromBool(
-        bool                  $value,
-        PrimitiveTypeAbstract $default = new Undefined()
-    ): static|PrimitiveTypeAbstract
-    {
+        bool $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
             return static::fromBool($value);
@@ -162,10 +163,9 @@ readonly class StringStandard extends StringTypeAbstract
      * @return static|T
      */
     public static function tryFromString(
-        string                $value,
+        string $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract
-    {
+    ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
             return static::fromString($value);

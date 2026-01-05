@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace PhpTypedValues\Base\Primitive\Float;
 
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
-use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
-
-use function sprintf;
 
 /**
  * Base implementation for float-typed values.
