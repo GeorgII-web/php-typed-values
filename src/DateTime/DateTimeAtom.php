@@ -46,6 +46,11 @@ readonly class DateTimeAtom extends DateTimeTypeAbstract
         $this->value = $value->setTimezone(new DateTimeZone(static::DEFAULT_ZONE));
     }
 
+    public static function fromDateTime(DateTimeImmutable $value): static
+    {
+        return new static($value);
+    }
+
     /**
      * @param non-empty-string $timezone
      *
@@ -62,29 +67,30 @@ readonly class DateTimeAtom extends DateTimeTypeAbstract
         );
     }
 
-    /**
-     * @throws ReasonableRangeDateTimeTypeException
-     * @throws DateTimeTypeException
-     */
-    public function withTimeZone(string $timezone): static
+    public static function getFormat(): string
     {
-        return new static(
-            $this->value()->setTimezone(new DateTimeZone($timezone))
-        );
+        return static::FORMAT;
     }
 
-    /**
-     * @throws ReasonableRangeDateTimeTypeException
-     * @throws DateTimeTypeException
-     */
-    public function toString(): string
+    public function isEmpty(): bool
     {
-        return $this->value()->format(static::FORMAT);
+        return false;
     }
 
-    public static function fromDateTime(DateTimeImmutable $value): static
+    public function isTypeOf(string ...$classNames): bool
     {
-        return new static($value);
+        foreach ($classNames as $className) {
+            if ($this instanceof $className) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function isUndefined(): bool
+    {
+        return false;
     }
 
     /**
@@ -100,40 +106,9 @@ readonly class DateTimeAtom extends DateTimeTypeAbstract
      * @throws ReasonableRangeDateTimeTypeException
      * @throws DateTimeTypeException
      */
-    public function __toString(): string
+    public function toString(): string
     {
-        return $this->toString();
-    }
-
-    public function isTypeOf(string ...$classNames): bool
-    {
-        foreach ($classNames as $className) {
-            if ($this instanceof $className) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public function value(): DateTimeImmutable
-    {
-        return $this->value;
-    }
-
-    public static function getFormat(): string
-    {
-        return static::FORMAT;
-    }
-
-    public function isEmpty(): bool
-    {
-        return false;
-    }
-
-    public function isUndefined(): bool
-    {
-        return false;
+        return $this->value()->format(static::FORMAT);
     }
 
     /**
@@ -183,5 +158,30 @@ readonly class DateTimeAtom extends DateTimeTypeAbstract
             /* @var PrimitiveTypeAbstract */
             return $default;
         }
+    }
+
+    public function value(): DateTimeImmutable
+    {
+        return $this->value;
+    }
+
+    /**
+     * @throws ReasonableRangeDateTimeTypeException
+     * @throws DateTimeTypeException
+     */
+    public function withTimeZone(string $timezone): static
+    {
+        return new static(
+            $this->value()->setTimezone(new DateTimeZone($timezone))
+        );
+    }
+
+    /**
+     * @throws ReasonableRangeDateTimeTypeException
+     * @throws DateTimeTypeException
+     */
+    public function __toString(): string
+    {
+        return $this->toString();
     }
 }

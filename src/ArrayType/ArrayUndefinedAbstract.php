@@ -17,9 +17,47 @@ use PhpTypedValues\Exception\Array\ArrayUndefinedTypeException;
  */
 readonly class ArrayUndefinedAbstract extends ArrayTypeAbstract implements ArrayUndefinedTypeInterface
 {
+    /**
+     * @throws ArrayUndefinedTypeException
+     */
+    public function count(): never
+    {
+        throw new ArrayUndefinedTypeException('Undefined array has no items to count');
+    }
+
+    public static function create(): static
+    {
+        return new static();
+    }
+
     public static function fromArray(array $value): static
     {
         return new static();
+    }
+
+    /**
+     * @psalm-suppress PossiblyUnusedReturnValue
+     *
+     * @throws ArrayUndefinedTypeException
+     */
+    public function getDefinedItems(): array
+    {
+        throw new ArrayUndefinedTypeException('Undefined array has no defined items');
+    }
+
+    public function getIterator(): never
+    {
+        throw new ArrayUndefinedTypeException('Undefined array has no items for iterator');
+    }
+
+    public function hasUndefined(): bool
+    {
+        return true;
+    }
+
+    public function isEmpty(): bool
+    {
+        return true;
     }
 
     public function isTypeOf(string ...$classNames): bool
@@ -33,25 +71,17 @@ readonly class ArrayUndefinedAbstract extends ArrayTypeAbstract implements Array
         return false;
     }
 
-    /**
-     * @throws ArrayUndefinedTypeException
-     */
-    public function value(): array
+    public function isUndefined(): bool
     {
-        throw new ArrayUndefinedTypeException('Undefined array has no value');
-    }
-
-    public function getIterator(): never
-    {
-        throw new ArrayUndefinedTypeException('Undefined array has no items for iterator');
+        return true;
     }
 
     /**
      * @throws ArrayUndefinedTypeException
      */
-    public function count(): never
+    public function jsonSerialize(): never
     {
-        throw new ArrayUndefinedTypeException('Undefined array has no items to count');
+        throw new ArrayUndefinedTypeException('Undefined array cannot be converted to Json');
     }
 
     /**
@@ -65,39 +95,9 @@ readonly class ArrayUndefinedAbstract extends ArrayTypeAbstract implements Array
     /**
      * @throws ArrayUndefinedTypeException
      */
-    public function jsonSerialize(): never
+    public function toFloat(): never
     {
-        throw new ArrayUndefinedTypeException('Undefined array cannot be converted to Json');
-    }
-
-    public function isEmpty(): bool
-    {
-        return true;
-    }
-
-    public function isUndefined(): bool
-    {
-        return true;
-    }
-
-    public function hasUndefined(): bool
-    {
-        return true;
-    }
-
-    /**
-     * @psalm-suppress PossiblyUnusedReturnValue
-     *
-     * @throws ArrayUndefinedTypeException
-     */
-    public function getDefinedItems(): array
-    {
-        throw new ArrayUndefinedTypeException('Undefined array has no defined items');
-    }
-
-    public static function create(): static
-    {
-        return new static();
+        throw new ArrayUndefinedTypeException('Undefined array cannot be converted to float');
     }
 
     /**
@@ -111,8 +111,8 @@ readonly class ArrayUndefinedAbstract extends ArrayTypeAbstract implements Array
     /**
      * @throws ArrayUndefinedTypeException
      */
-    public function toFloat(): never
+    public function value(): array
     {
-        throw new ArrayUndefinedTypeException('Undefined array cannot be converted to float');
+        throw new ArrayUndefinedTypeException('Undefined array has no value');
     }
 }

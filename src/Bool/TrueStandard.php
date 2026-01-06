@@ -56,14 +56,9 @@ readonly class TrueStandard extends BoolTypeAbstract
     /**
      * @throws BoolTypeException
      */
-    public static function fromString(string $value): static
+    public static function fromBool(bool $value): static
     {
-        $v = strtolower(trim($value));
-        if ($v === 'true' || $v === '1' || $v === 'yes' || $v === 'on' || $v === 'y') {
-            return new static(true);
-        }
-
-        throw new BoolTypeException(sprintf('Expected string representing true, got "%s"', $value));
+        return new static($value);
     }
 
     /**
@@ -78,9 +73,48 @@ readonly class TrueStandard extends BoolTypeAbstract
         throw new BoolTypeException(sprintf('Expected int "1" for true, got "%s"', $value));
     }
 
-    public function value(): true
+    /**
+     * @throws BoolTypeException
+     */
+    public static function fromString(string $value): static
     {
-        return $this->value;
+        $v = strtolower(trim($value));
+        if ($v === 'true' || $v === '1' || $v === 'yes' || $v === 'on' || $v === 'y') {
+            return new static(true);
+        }
+
+        throw new BoolTypeException(sprintf('Expected string representing true, got "%s"', $value));
+    }
+
+    public function isEmpty(): bool
+    {
+        return false;
+    }
+
+    public function isTypeOf(string ...$classNames): bool
+    {
+        foreach ($classNames as $className) {
+            if ($this instanceof $className) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function isUndefined(): bool
+    {
+        return false;
+    }
+
+    public function jsonSerialize(): true
+    {
+        return $this->value();
+    }
+
+    public function toString(): string
+    {
+        return 'true';
     }
 
     /**
@@ -150,47 +184,13 @@ readonly class TrueStandard extends BoolTypeAbstract
         }
     }
 
-    public function isTypeOf(string ...$classNames): bool
+    public function value(): true
     {
-        foreach ($classNames as $className) {
-            if ($this instanceof $className) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public function toString(): string
-    {
-        return 'true';
+        return $this->value;
     }
 
     public function __toString(): string
     {
         return $this->toString();
-    }
-
-    public function isEmpty(): bool
-    {
-        return false;
-    }
-
-    public function isUndefined(): bool
-    {
-        return false;
-    }
-
-    public function jsonSerialize(): true
-    {
-        return $this->value();
-    }
-
-    /**
-     * @throws BoolTypeException
-     */
-    public static function fromBool(bool $value): static
-    {
-        return new static($value);
     }
 }

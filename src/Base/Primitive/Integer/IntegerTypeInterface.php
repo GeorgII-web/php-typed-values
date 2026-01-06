@@ -21,25 +21,23 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  */
 interface IntegerTypeInterface
 {
-    public static function fromString(string $value): static;
-
-    public static function fromInt(int $value): static;
+    public static function fromBool(bool $value): static;
 
     public static function fromFloat(float $value): static;
 
-    public static function fromBool(bool $value): static;
+    public static function fromInt(int $value): static;
 
-    /**
-     * @template T of PrimitiveTypeAbstract
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
-    public static function tryFromFloat(
-        float $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract;
+    public static function fromString(string $value): static;
+
+    public function isTypeOf(string ...$classNames): bool;
+
+    public function toBool(): bool;
+
+    public function toFloat(): float;
+
+    public function toInt(): int;
+
+    public function toString(): string;
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -50,6 +48,18 @@ interface IntegerTypeInterface
      */
     public static function tryFromBool(
         bool $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract;
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromFloat(
+        float $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract;
 
@@ -90,14 +100,4 @@ interface IntegerTypeInterface
     ): static|PrimitiveTypeAbstract;
 
     public function value(): int;
-
-    public function isTypeOf(string ...$classNames): bool;
-
-    public function toInt(): int;
-
-    public function toFloat(): float;
-
-    public function toBool(): bool;
-
-    public function toString(): string;
 }

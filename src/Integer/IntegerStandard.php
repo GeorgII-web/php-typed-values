@@ -41,6 +41,19 @@ readonly class IntegerStandard extends IntegerTypeAbstract
         $this->value = $value;
     }
 
+    public static function fromBool(bool $value): static
+    {
+        return new static((int) $value);
+    }
+
+    /**
+     * @throws IntegerTypeException
+     */
+    public static function fromFloat(float $value): static
+    {
+        return new static(parent::getIntegerFromFloat($value));
+    }
+
     public static function fromInt(int $value): static
     {
         return new static($value);
@@ -54,52 +67,64 @@ readonly class IntegerStandard extends IntegerTypeAbstract
         return new static(parent::getIntegerFromString($value));
     }
 
+    public function isEmpty(): false
+    {
+        return false;
+    }
+
+    public function isTypeOf(string ...$classNames): bool
+    {
+        foreach ($classNames as $className) {
+            if ($this instanceof $className) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function isUndefined(): false
+    {
+        return false;
+    }
+
+    public function jsonSerialize(): int
+    {
+        return $this->value();
+    }
+
+    public function toBool(): bool
+    {
+        return (bool) $this->value();
+    }
+
     /**
+     * Some big integers converted to a float that can't be converted to the same int back.
+     *
      * @throws IntegerTypeException
      */
-    public static function fromFloat(float $value): static
+    public function toFloat(): float
     {
-        return new static(parent::getIntegerFromFloat($value));
-    }
+        $toFloatValue = (float) $this->value;
 
-    public static function fromBool(bool $value): static
-    {
-        return new static((int) $value);
-    }
-
-    /**
-     * @template T of PrimitiveTypeAbstract
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
-    public static function tryFromInt(
-        int $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
-        /** @var static */
-        return static::fromInt($value);
-    }
-
-    /**
-     * @template T of PrimitiveTypeAbstract
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
-    public static function tryFromFloat(
-        float $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
-        try {
-            /** @var static */
-            return static::fromFloat($value);
-        } catch (Exception) {
-            /** @var T */
-            return $default;
+        if ($this->value !== (int) $toFloatValue) {
+            throw new IntegerTypeException(sprintf('Integer %s cannot be converted to float without losing precision', $this->value));
         }
+
+        return $toFloatValue;
+    }
+
+    public function toInt(): int
+    {
+        return $this->value;
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    public function toString(): string
+    {
+        return (string) $this->value();
     }
 
     /**
@@ -129,17 +154,32 @@ readonly class IntegerStandard extends IntegerTypeAbstract
      *
      * @return static|T
      */
-    public static function tryFromString(
-        string $value,
+    public static function tryFromFloat(
+        float $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
-            return static::fromString($value);
+            return static::fromFloat($value);
         } catch (Exception) {
             /** @var T */
             return $default;
         }
+    }
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromInt(
+        int $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
+        /** @var static */
+        return static::fromInt($value);
     }
 
     /**
@@ -168,68 +208,28 @@ readonly class IntegerStandard extends IntegerTypeAbstract
         }
     }
 
-    public function isTypeOf(string ...$classNames): bool
-    {
-        foreach ($classNames as $className) {
-            if ($this instanceof $className) {
-                return true;
-            }
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromString(
+        string $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
+        try {
+            /** @var static */
+            return static::fromString($value);
+        } catch (Exception) {
+            /** @var T */
+            return $default;
         }
-
-        return false;
     }
 
     public function value(): int
     {
         return $this->value;
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    public function toString(): string
-    {
-        return (string) $this->value();
-    }
-
-    public function toInt(): int
-    {
-        return $this->value;
-    }
-
-    /**
-     * Some big integers converted to a float that can't be converted to the same int back.
-     *
-     * @throws IntegerTypeException
-     */
-    public function toFloat(): float
-    {
-        $toFloatValue = (float) $this->value;
-
-        if ($this->value !== (int) $toFloatValue) {
-            throw new IntegerTypeException(sprintf('Integer %s cannot be converted to float without losing precision', $this->value));
-        }
-
-        return $toFloatValue;
-    }
-
-    public function toBool(): bool
-    {
-        return (bool) $this->value();
-    }
-
-    public function jsonSerialize(): int
-    {
-        return $this->value();
-    }
-
-    public function isEmpty(): false
-    {
-        return false;
-    }
-
-    public function isUndefined(): false
-    {
-        return false;
     }
 }

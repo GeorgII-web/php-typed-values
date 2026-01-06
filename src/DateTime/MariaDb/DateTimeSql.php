@@ -43,6 +43,11 @@ readonly class DateTimeSql extends DateTimeTypeAbstract
         $this->value = $value->setTimezone(new DateTimeZone(static::DEFAULT_ZONE));
     }
 
+    public static function fromDateTime(DateTimeImmutable $value): static
+    {
+        return new static($value);
+    }
+
     /**
      * @param non-empty-string $timezone
      *
@@ -59,11 +64,14 @@ readonly class DateTimeSql extends DateTimeTypeAbstract
         );
     }
 
-    public function withTimeZone(string $timezone): static
+    public static function getFormat(): string
     {
-        return new static(
-            $this->value()->setTimezone(new DateTimeZone($timezone))
-        );
+        return static::FORMAT;
+    }
+
+    public function isEmpty(): bool
+    {
+        return false;
     }
 
     public function isTypeOf(string ...$classNames): bool
@@ -77,14 +85,9 @@ readonly class DateTimeSql extends DateTimeTypeAbstract
         return false;
     }
 
-    public function toString(): string
+    public function isUndefined(): bool
     {
-        return $this->value()->format(static::FORMAT);
-    }
-
-    public static function fromDateTime(DateTimeImmutable $value): static
-    {
-        return new static($value);
+        return false;
     }
 
     public function jsonSerialize(): string
@@ -92,29 +95,9 @@ readonly class DateTimeSql extends DateTimeTypeAbstract
         return $this->toString();
     }
 
-    public function __toString(): string
+    public function toString(): string
     {
-        return $this->toString();
-    }
-
-    public function value(): DateTimeImmutable
-    {
-        return $this->value;
-    }
-
-    public static function getFormat(): string
-    {
-        return static::FORMAT;
-    }
-
-    public function isEmpty(): bool
-    {
-        return false;
-    }
-
-    public function isUndefined(): bool
-    {
-        return false;
+        return $this->value()->format(static::FORMAT);
     }
 
     /**
@@ -164,5 +147,22 @@ readonly class DateTimeSql extends DateTimeTypeAbstract
             /* @var PrimitiveTypeAbstract */
             return $default;
         }
+    }
+
+    public function value(): DateTimeImmutable
+    {
+        return $this->value;
+    }
+
+    public function withTimeZone(string $timezone): static
+    {
+        return new static(
+            $this->value()->setTimezone(new DateTimeZone($timezone))
+        );
+    }
+
+    public function __toString(): string
+    {
+        return $this->toString();
     }
 }

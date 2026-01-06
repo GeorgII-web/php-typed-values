@@ -34,20 +34,71 @@ use function sprintf;
 abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
 {
     /**
-     * @psalm-mutation-free
+     * Returns true if the Object value is empty.
+     */
+    abstract public function isEmpty(): bool;
+
+    /**
+     * Checks if the current object (or its parents) is an instance of the provided class names.
+     */
+    abstract public function isTypeOf(string ...$classNames): bool;
+
+    /**
+     * Returns if the Object value is an Undefined type class.
+     */
+    abstract public function isUndefined(): bool;
+
+    /**
+     * JSON representation of the value.
      *
+     * Marked as mutation-free so Psalm treats calls as pure in immutable contexts.
+     *
+     * @psalm-mutation-free
+     */
+    abstract public function jsonSerialize(): mixed;
+
+    /**
+     * Returns a normalized string representation of the underlying value.
+     */
+    abstract public function toString(): string;
+
+    protected static function boolToFloat(bool $value): float
+    {
+        if ($value === true) {
+            return 1.0;
+        }
+
+        return 0.0;
+    }
+
+    /**
      * @return non-empty-string
+     */
+    protected static function boolToString(bool $value): string
+    {
+        if ($value === true) {
+            return 'true';
+        }
+
+        return 'false';
+    }
+
+    /**
+     * @psalm-mutation-free
      *
      * @throws FloatTypeException
      */
-    protected static function floatToString(float $value): string
+    protected static function floatToBool(float $value): bool
     {
-        $strValue = (string) $value;
-        if ($strValue !== (string) (float) $strValue) {
-            throw new FloatTypeException(sprintf('Float "%s" has no valid strict string value', $value));
+        if ($value === 1.0) {
+            return true;
         }
 
-        return $strValue;
+        if ($value === 0.0) {
+            return false;
+        }
+
+        throw new FloatTypeException(sprintf('Float "%s" has no valid strict bool value', $value));
     }
 
     /**
@@ -68,19 +119,64 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
     /**
      * @psalm-mutation-free
      *
+     * @return non-empty-string
+     *
      * @throws FloatTypeException
      */
-    protected static function floatToBool(float $value): bool
+    protected static function floatToString(float $value): string
     {
-        if ($value === 1.0) {
+        $strValue = (string) $value;
+        if ($strValue !== (string) (float) $strValue) {
+            throw new FloatTypeException(sprintf('Float "%s" has no valid strict string value', $value));
+        }
+
+        return $strValue;
+    }
+
+    /**
+     * @throws FloatTypeException
+     */
+    protected static function intToFloat(int $value): float
+    {
+        // Numerical stability check (catches precision loss)
+        $floatValue = (float) $value;
+        if ($floatValue !== (float) (int) $floatValue) {
+            throw new FloatTypeException(sprintf('Integer "%s" has no valid strict float value', $value));
+        }
+
+        return $floatValue;
+    }
+
+    /**
+     * @return non-empty-string
+     *
+     * @throws FloatTypeException
+     */
+    protected static function intToString(int $value): string
+    {
+        // Numerical stability check (catches precision loss)
+        $stringValue = (string) $value;
+        if ($stringValue !== (string) (int) $stringValue) {
+            throw new FloatTypeException(sprintf('Integer "%s" has no valid strict string value', $value));
+        }
+
+        return $stringValue;
+    }
+
+    /**
+     * @throws BoolTypeException
+     */
+    protected static function stringToBool(string $value): bool
+    {
+        if ($value === 'true') {
             return true;
         }
 
-        if ($value === 0.0) {
+        if ($value === 'false') {
             return false;
         }
 
-        throw new FloatTypeException(sprintf('Float "%s" has no valid strict bool value', $value));
+        throw new BoolTypeException(sprintf('String "%s" has no valid bool value', $value));
     }
 
     /**
@@ -134,106 +230,10 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
     }
 
     /**
-     * @throws BoolTypeException
-     */
-    protected static function stringToBool(string $value): bool
-    {
-        if ($value === 'true') {
-            return true;
-        }
-
-        if ($value === 'false') {
-            return false;
-        }
-
-        throw new BoolTypeException(sprintf('String "%s" has no valid bool value', $value));
-    }
-
-    /**
-     * @throws FloatTypeException
-     */
-    protected static function intToFloat(int $value): float
-    {
-        // Numerical stability check (catches precision loss)
-        $floatValue = (float) $value;
-        if ($floatValue !== (float) (int) $floatValue) {
-            throw new FloatTypeException(sprintf('Integer "%s" has no valid strict float value', $value));
-        }
-
-        return $floatValue;
-    }
-
-    /**
-     * @return non-empty-string
-     *
-     * @throws FloatTypeException
-     */
-    protected static function intToString(int $value): string
-    {
-        // Numerical stability check (catches precision loss)
-        $stringValue = (string) $value;
-        if ($stringValue !== (string) (int) $stringValue) {
-            throw new FloatTypeException(sprintf('Integer "%s" has no valid strict string value', $value));
-        }
-
-        return $stringValue;
-    }
-
-    protected static function boolToFloat(bool $value): float
-    {
-        if ($value === true) {
-            return 1.0;
-        }
-
-        return 0.0;
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    protected static function boolToString(bool $value): string
-    {
-        if ($value === true) {
-            return 'true';
-        }
-
-        return 'false';
-    }
-
-    /**
-     * Checks if the current object (or its parents) is an instance of the provided class names.
-     */
-    abstract public function isTypeOf(string ...$classNames): bool;
-
-    /**
-     * Returns true if the Object value is empty.
-     */
-    abstract public function isEmpty(): bool;
-
-    /**
-     * Returns if the Object value is an Undefined type class.
-     */
-    abstract public function isUndefined(): bool;
-
-    /**
      * Alias of {@see toString} for convenient casting.
      */
     public function __toString(): string
     {
         return $this->toString();
     }
-
-    /**
-     * Returns a normalized string representation of the underlying value.
-     */
-    abstract public function toString(): string;
-
-    /**
-     * JSON representation of the value.
-     *
-     * Marked as mutation-free so Psalm treats calls as pure in immutable contexts.
-     *
-     * @psalm-mutation-free
-     */
-    abstract public function jsonSerialize(): mixed;
 }

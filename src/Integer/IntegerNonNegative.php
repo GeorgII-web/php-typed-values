@@ -53,9 +53,9 @@ readonly class IntegerNonNegative extends IntegerTypeAbstract
     /**
      * @throws IntegerTypeException
      */
-    public static function fromInt(int $value): static
+    public static function fromBool(bool $value): static
     {
-        return new static($value);
+        return new static((int) $value);
     }
 
     /**
@@ -70,9 +70,9 @@ readonly class IntegerNonNegative extends IntegerTypeAbstract
     /**
      * @throws IntegerTypeException
      */
-    public static function fromBool(bool $value): static
+    public static function fromInt(int $value): static
     {
-        return new static((int) $value);
+        return new static($value);
     }
 
     /**
@@ -83,12 +83,68 @@ readonly class IntegerNonNegative extends IntegerTypeAbstract
         return new static(parent::getIntegerFromString($value));
     }
 
+    public function isEmpty(): false
+    {
+        return false;
+    }
+
+    public function isTypeOf(string ...$classNames): bool
+    {
+        foreach ($classNames as $className) {
+            if ($this instanceof $className) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function isUndefined(): false
+    {
+        return false;
+    }
+
     /**
      * @return non-negative-int
      */
-    public function value(): int
+    public function jsonSerialize(): int
+    {
+        return $this->value();
+    }
+
+    public function toBool(): bool
+    {
+        return (bool) $this->value();
+    }
+
+    /**
+     * @throws IntegerTypeException
+     */
+    public function toFloat(): float
+    {
+        $toFloatValue = (float) $this->value;
+
+        if ($this->value !== (int) $toFloatValue) {
+            throw new IntegerTypeException(sprintf('Integer %s cannot be converted to float without losing precision', $this->value));
+        }
+
+        return $toFloatValue;
+    }
+
+    /**
+     * @return non-negative-int
+     */
+    public function toInt(): int
     {
         return $this->value;
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    public function toString(): string
+    {
+        return (string) $this->value();
     }
 
     /**
@@ -98,15 +154,15 @@ readonly class IntegerNonNegative extends IntegerTypeAbstract
      *
      * @return static|T
      */
-    public static function tryFromInt(
-        int $value,
+    public static function tryFromBool(
+        bool $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
-            return static::fromInt($value);
-        } catch (TypeException) {
-            /* @var T */
+            return static::fromBool($value);
+        } catch (Exception) {
+            /** @var T */
             return $default;
         }
     }
@@ -138,35 +194,15 @@ readonly class IntegerNonNegative extends IntegerTypeAbstract
      *
      * @return static|T
      */
-    public static function tryFromBool(
-        bool $value,
+    public static function tryFromInt(
+        int $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
-            return static::fromBool($value);
-        } catch (Exception) {
-            /** @var T */
-            return $default;
-        }
-    }
-
-    /**
-     * @template T of PrimitiveTypeAbstract
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
-    public static function tryFromString(
-        string $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
-        try {
-            /** @var static */
-            return static::fromString($value);
-        } catch (Exception) {
-            /** @var T */
+            return static::fromInt($value);
+        } catch (TypeException) {
+            /* @var T */
             return $default;
         }
     }
@@ -198,66 +234,30 @@ readonly class IntegerNonNegative extends IntegerTypeAbstract
     }
 
     /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromString(
+        string $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
+        try {
+            /** @var static */
+            return static::fromString($value);
+        } catch (Exception) {
+            /** @var T */
+            return $default;
+        }
+    }
+
+    /**
      * @return non-negative-int
      */
-    public function toInt(): int
+    public function value(): int
     {
         return $this->value;
-    }
-
-    public function isTypeOf(string ...$classNames): bool
-    {
-        foreach ($classNames as $className) {
-            if ($this instanceof $className) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @return non-negative-int
-     */
-    public function jsonSerialize(): int
-    {
-        return $this->value();
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    public function toString(): string
-    {
-        return (string) $this->value();
-    }
-
-    /**
-     * @throws IntegerTypeException
-     */
-    public function toFloat(): float
-    {
-        $toFloatValue = (float) $this->value;
-
-        if ($this->value !== (int) $toFloatValue) {
-            throw new IntegerTypeException(sprintf('Integer %s cannot be converted to float without losing precision', $this->value));
-        }
-
-        return $toFloatValue;
-    }
-
-    public function toBool(): bool
-    {
-        return (bool) $this->value();
-    }
-
-    public function isEmpty(): false
-    {
-        return false;
-    }
-
-    public function isUndefined(): false
-    {
-        return false;
     }
 }

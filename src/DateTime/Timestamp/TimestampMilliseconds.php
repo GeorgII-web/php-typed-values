@@ -52,6 +52,11 @@ readonly class TimestampMilliseconds extends DateTimeTypeAbstract
         $this->value = $value->setTimezone(new DateTimeZone(static::DEFAULT_ZONE));
     }
 
+    public static function fromDateTime(DateTimeImmutable $value): static
+    {
+        return new static($value);
+    }
+
     /**
      * @param non-empty-string $timezone
      *
@@ -95,16 +100,14 @@ readonly class TimestampMilliseconds extends DateTimeTypeAbstract
         );
     }
 
-    public static function fromDateTime(DateTimeImmutable $value): static
+    public static function getFormat(): string
     {
-        return new static($value);
+        return static::FORMAT;
     }
 
-    public function withTimeZone(string $timezone): static
+    public function isEmpty(): bool
     {
-        return new static(
-            $this->value()->setTimezone(new DateTimeZone($timezone))
-        );
+        return false;
     }
 
     public function isTypeOf(string ...$classNames): bool
@@ -116,6 +119,21 @@ readonly class TimestampMilliseconds extends DateTimeTypeAbstract
         }
 
         return false;
+    }
+
+    public function isUndefined(): bool
+    {
+        return false;
+    }
+
+    public function jsonSerialize(): int
+    {
+        return (int) $this->toString();
+    }
+
+    public function toInt(): int
+    {
+        return (int) $this->toString();
     }
 
     /**
@@ -132,41 +150,6 @@ readonly class TimestampMilliseconds extends DateTimeTypeAbstract
         $milliseconds = (intdiv($seconds, 1) * 1000) + intdiv($micros, 1000);
 
         return (string) $milliseconds;
-    }
-
-    public function toInt(): int
-    {
-        return (int) $this->toString();
-    }
-
-    public function jsonSerialize(): int
-    {
-        return (int) $this->toString();
-    }
-
-    public function __toString(): string
-    {
-        return $this->toString();
-    }
-
-    public function value(): DateTimeImmutable
-    {
-        return $this->value;
-    }
-
-    public static function getFormat(): string
-    {
-        return static::FORMAT;
-    }
-
-    public function isEmpty(): bool
-    {
-        return false;
-    }
-
-    public function isUndefined(): bool
-    {
-        return false;
     }
 
     /**
@@ -217,5 +200,22 @@ readonly class TimestampMilliseconds extends DateTimeTypeAbstract
             /* @var PrimitiveTypeAbstract */
             return $default;
         }
+    }
+
+    public function value(): DateTimeImmutable
+    {
+        return $this->value;
+    }
+
+    public function withTimeZone(string $timezone): static
+    {
+        return new static(
+            $this->value()->setTimezone(new DateTimeZone($timezone))
+        );
+    }
+
+    public function __toString(): string
+    {
+        return $this->toString();
     }
 }

@@ -42,6 +42,15 @@ final readonly class EarlyFail implements ValueObjectInterface
     ) {
     }
 
+    public static function fromArray(array $value): static
+    {
+        return new self(
+            IntegerPositive::fromInt($value['id'] ?? 0),
+            StringNonEmpty::fromString($value['firstName'] ?? ''),
+            FloatPositive::fromFloat($value['height'] ?? 0.0),
+        );
+    }
+
     /**
      * Factory that validates all inputs and fails immediately on invalid data.
      *
@@ -66,6 +75,14 @@ final readonly class EarlyFail implements ValueObjectInterface
     }
 
     /**
+     * Returns validated first name.
+     */
+    public function getFirstName(): StringNonEmpty
+    {
+        return $this->firstName;
+    }
+
+    /**
      * Returns validated height value.
      */
     public function getHeight(): FloatPositive
@@ -81,14 +98,6 @@ final readonly class EarlyFail implements ValueObjectInterface
         return $this->id;
     }
 
-    /**
-     * Returns validated first name.
-     */
-    public function getFirstName(): StringNonEmpty
-    {
-        return $this->firstName;
-    }
-
     public function isEmpty(): bool
     {
         return false;
@@ -99,6 +108,11 @@ final readonly class EarlyFail implements ValueObjectInterface
         return false;
     }
 
+    public function jsonSerialize(): array
+    {
+        return $this->toArray();
+    }
+
     public function toArray(): array
     {
         return [
@@ -106,19 +120,5 @@ final readonly class EarlyFail implements ValueObjectInterface
             'firstName' => $this->firstName->value(),
             'height' => $this->height->value(),
         ];
-    }
-
-    public static function fromArray(array $value): static
-    {
-        return new self(
-            IntegerPositive::fromInt($value['id'] ?? 0),
-            StringNonEmpty::fromString($value['firstName'] ?? ''),
-            FloatPositive::fromFloat($value['height'] ?? 0.0),
-        );
-    }
-
-    public function jsonSerialize(): array
-    {
-        return $this->toArray();
     }
 }

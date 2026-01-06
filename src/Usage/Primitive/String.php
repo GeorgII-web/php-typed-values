@@ -30,7 +30,6 @@ use PhpTypedValues\String\MariaDb\StringVarChar255;
 use PhpTypedValues\String\Specific\StringCountryCode;
 use PhpTypedValues\String\Specific\StringEmail;
 use PhpTypedValues\String\Specific\StringFileName;
-use PhpTypedValues\String\Specific\StringMd5;
 use PhpTypedValues\String\Specific\StringPath;
 use PhpTypedValues\String\Specific\StringUrl;
 use PhpTypedValues\String\Specific\StringUuidV4;

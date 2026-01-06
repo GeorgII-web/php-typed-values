@@ -59,17 +59,17 @@ readonly class FloatPositive extends FloatTypeAbstract
     /**
      * @throws FloatTypeException
      */
-    public static function fromFloat(float $value): static
+    public static function fromBool(bool $value): static
     {
-        return new static($value);
+        return new static(parent::boolToFloat($value));
     }
 
     /**
      * @throws FloatTypeException
      */
-    public static function fromString(string $value): static
+    public static function fromFloat(float $value): static
     {
-        return new static(parent::stringToFloat($value));
+        return new static($value);
     }
 
     /**
@@ -83,9 +83,86 @@ readonly class FloatPositive extends FloatTypeAbstract
     /**
      * @throws FloatTypeException
      */
-    public static function fromBool(bool $value): static
+    public static function fromString(string $value): static
     {
-        return new static(parent::boolToFloat($value));
+        return new static(parent::stringToFloat($value));
+    }
+
+    public function isEmpty(): bool
+    {
+        return false;
+    }
+
+    public function isTypeOf(string ...$classNames): bool
+    {
+        foreach ($classNames as $className) {
+            if ($this instanceof $className) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function isUndefined(): bool
+    {
+        return false;
+    }
+
+    public function jsonSerialize(): float
+    {
+        return $this->value;
+    }
+
+    /**
+     * @throws FloatTypeException
+     */
+    public function toBool(): bool
+    {
+        return static::floatToBool($this->value);
+    }
+
+    public function toFloat(): float
+    {
+        return $this->value;
+    }
+
+    /**
+     * @throws FloatTypeException
+     */
+    public function toInt(): int
+    {
+        return static::floatToInt($this->value);
+    }
+
+    /**
+     * @return non-empty-string
+     *
+     * @throws FloatTypeException
+     */
+    public function toString(): string
+    {
+        return static::floatToString($this->value);
+    }
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromBool(
+        bool $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
+        try {
+            /** @var static */
+            return static::fromBool($value);
+        } catch (Exception) {
+            /** @var T */
+            return $default;
+        }
     }
 
     /**
@@ -122,26 +199,6 @@ readonly class FloatPositive extends FloatTypeAbstract
         try {
             /** @var static */
             return static::fromInt($value);
-        } catch (Exception) {
-            /** @var T */
-            return $default;
-        }
-    }
-
-    /**
-     * @template T of PrimitiveTypeAbstract
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
-    public static function tryFromBool(
-        bool $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
-        try {
-            /** @var static */
-            return static::fromBool($value);
         } catch (Exception) {
             /** @var T */
             return $default;
@@ -195,65 +252,8 @@ readonly class FloatPositive extends FloatTypeAbstract
         }
     }
 
-    /**
-     * @return non-empty-string
-     *
-     * @throws FloatTypeException
-     */
-    public function toString(): string
-    {
-        return static::floatToString($this->value);
-    }
-
-    public function toFloat(): float
-    {
-        return $this->value;
-    }
-
-    /**
-     * @throws FloatTypeException
-     */
-    public function toInt(): int
-    {
-        return static::floatToInt($this->value);
-    }
-
-    /**
-     * @throws FloatTypeException
-     */
-    public function toBool(): bool
-    {
-        return static::floatToBool($this->value);
-    }
-
     public function value(): float
     {
         return $this->value;
-    }
-
-    public function jsonSerialize(): float
-    {
-        return $this->value;
-    }
-
-    public function isTypeOf(string ...$classNames): bool
-    {
-        foreach ($classNames as $className) {
-            if ($this instanceof $className) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public function isEmpty(): bool
-    {
-        return false;
-    }
-
-    public function isUndefined(): bool
-    {
-        return false;
     }
 }

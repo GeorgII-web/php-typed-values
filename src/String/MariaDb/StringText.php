@@ -53,14 +53,9 @@ readonly class StringText extends StringTypeAbstract
         return new static($value);
     }
 
-    public function value(): string
+    public function isEmpty(): bool
     {
-        return $this->value;
-    }
-
-    public function jsonSerialize(): string
-    {
-        return $this->toString();
+        return $this->value === '';
     }
 
     public function isTypeOf(string ...$classNames): bool
@@ -74,19 +69,19 @@ readonly class StringText extends StringTypeAbstract
         return false;
     }
 
-    public function toString(): string
-    {
-        return $this->value();
-    }
-
-    public function isEmpty(): bool
-    {
-        return $this->value === '';
-    }
-
     public function isUndefined(): bool
     {
         return false;
+    }
+
+    public function jsonSerialize(): string
+    {
+        return $this->toString();
+    }
+
+    public function toString(): string
+    {
+        return $this->value();
     }
 
     /**
@@ -133,5 +128,10 @@ readonly class StringText extends StringTypeAbstract
             /** @var T */
             return $default;
         }
+    }
+
+    public function value(): string
+    {
+        return $this->value;
     }
 }

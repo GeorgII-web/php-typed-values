@@ -26,13 +26,23 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  */
 abstract readonly class StringTypeAbstract extends PrimitiveTypeAbstract implements StringTypeInterface
 {
-    abstract public static function fromString(string $value): static;
+    abstract public static function fromBool(bool $value): static;
 
     abstract public static function fromFloat(float $value): static;
 
     abstract public static function fromInt(int $value): static;
 
-    abstract public static function fromBool(bool $value): static;
+    abstract public static function fromString(string $value): static;
+
+    abstract public function isTypeOf(string ...$classNames): bool;
+
+    abstract public function toBool(): bool;
+
+    abstract public function toFloat(): float;
+
+    abstract public function toInt(): int;
+
+    abstract public function toString(): string;
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -41,8 +51,8 @@ abstract readonly class StringTypeAbstract extends PrimitiveTypeAbstract impleme
      *
      * @return static|T
      */
-    abstract public static function tryFromString(
-        string $value,
+    abstract public static function tryFromBool(
+        bool $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract;
 
@@ -77,8 +87,8 @@ abstract readonly class StringTypeAbstract extends PrimitiveTypeAbstract impleme
      *
      * @return static|T
      */
-    abstract public static function tryFromBool(
-        bool $value,
+    abstract public static function tryFromMixed(
+        mixed $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract;
 
@@ -89,20 +99,10 @@ abstract readonly class StringTypeAbstract extends PrimitiveTypeAbstract impleme
      *
      * @return static|T
      */
-    abstract public static function tryFromMixed(
-        mixed $value,
+    abstract public static function tryFromString(
+        string $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract;
 
-    abstract public function toString(): string;
-
-    abstract public function toFloat(): float;
-
-    abstract public function toInt(): int;
-
-    abstract public function toBool(): bool;
-
     abstract public function value(): string;
-
-    abstract public function isTypeOf(string ...$classNames): bool;
 }

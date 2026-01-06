@@ -21,13 +21,35 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  */
 interface FloatTypeInterface
 {
-    public static function fromString(string $value): static;
+    public static function fromBool(bool $value): static;
 
     public static function fromFloat(float $value): static;
 
     public static function fromInt(int $value): static;
 
-    public static function fromBool(bool $value): static;
+    public static function fromString(string $value): static;
+
+    public function isTypeOf(string ...$classNames): bool;
+
+    public function toBool(): bool;
+
+    public function toFloat(): float;
+
+    public function toInt(): int;
+
+    public function toString(): string;
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromBool(
+        bool $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract;
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -38,6 +60,18 @@ interface FloatTypeInterface
      */
     public static function tryFromFloat(
         float $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract;
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromInt(
+        int $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract;
 
@@ -65,39 +99,5 @@ interface FloatTypeInterface
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract;
 
-    /**
-     * @template T of PrimitiveTypeAbstract
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
-    public static function tryFromInt(
-        int $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract;
-
-    /**
-     * @template T of PrimitiveTypeAbstract
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
-    public static function tryFromBool(
-        bool $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract;
-
     public function value(): float;
-
-    public function isTypeOf(string ...$classNames): bool;
-
-    public function toString(): string;
-
-    public function toFloat(): float;
-
-    public function toInt(): int;
-
-    public function toBool(): bool;
 }

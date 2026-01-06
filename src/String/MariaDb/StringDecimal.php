@@ -58,12 +58,34 @@ readonly class StringDecimal extends StringTypeAbstract
         return new static($value);
     }
 
+    public function isEmpty(): bool
+    {
+        // Decimal values are never empty by construction; constructor rejects empty strings
+        return false;
+    }
+
+    public function isTypeOf(string ...$classNames): bool
+    {
+        foreach ($classNames as $className) {
+            if ($this instanceof $className) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function isUndefined(): bool
+    {
+        return false;
+    }
+
     /**
      * @return non-empty-string
      */
-    public function value(): string
+    public function jsonSerialize(): string
     {
-        return $this->value;
+        return $this->toString();
     }
 
     /**
@@ -83,62 +105,11 @@ readonly class StringDecimal extends StringTypeAbstract
     }
 
     /**
-     * Accepts optional leading minus, digits, and optional fractional part with at least one digit.
-     * Disallows leading/trailing spaces, plus sign, and missing integer or fractional digits like ".5" or "1.".
-     *
-     * @return non-empty-string
-     *
-     * @throws DecimalStringTypeException
-     */
-    private static function getFromDecimalString(string $value): string
-    {
-        if ($value === '') {
-            throw new DecimalStringTypeException('Expected non-empty decimal string');
-        }
-
-        if (preg_match('/^-?\d+(?:\.\d+)?$/', $value) !== 1) {
-            throw new DecimalStringTypeException(sprintf('Expected decimal string (e.g., "123", "-1", "3.14"), got "%s"', $value));
-        }
-
-        return $value;
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    public function jsonSerialize(): string
-    {
-        return $this->toString();
-    }
-
-    public function isTypeOf(string ...$classNames): bool
-    {
-        foreach ($classNames as $className) {
-            if ($this instanceof $className) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * @return non-empty-string
      */
     public function toString(): string
     {
         return $this->value();
-    }
-
-    public function isEmpty(): bool
-    {
-        // Decimal values are never empty by construction; constructor rejects empty strings
-        return false;
-    }
-
-    public function isUndefined(): bool
-    {
-        return false;
     }
 
     /**
@@ -184,5 +155,34 @@ readonly class StringDecimal extends StringTypeAbstract
             /** @var T */
             return $default;
         }
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    public function value(): string
+    {
+        return $this->value;
+    }
+
+    /**
+     * Accepts optional leading minus, digits, and optional fractional part with at least one digit.
+     * Disallows leading/trailing spaces, plus sign, and missing integer or fractional digits like ".5" or "1.".
+     *
+     * @return non-empty-string
+     *
+     * @throws DecimalStringTypeException
+     */
+    private static function getFromDecimalString(string $value): string
+    {
+        if ($value === '') {
+            throw new DecimalStringTypeException('Expected non-empty decimal string');
+        }
+
+        if (preg_match('/^-?\d+(?:\.\d+)?$/', $value) !== 1) {
+            throw new DecimalStringTypeException(sprintf('Expected decimal string (e.g., "123", "-1", "3.14"), got "%s"', $value));
+        }
+
+        return $value;
     }
 }

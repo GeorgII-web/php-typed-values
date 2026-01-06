@@ -25,19 +25,19 @@ readonly class StringTypeAbstractTest extends StringTypeAbstract
         return new static($value);
     }
 
+    public function isEmpty(): bool
+    {
+        return $this->val === '';
+    }
+
     public function isTypeOf(string ...$classNames): bool
     {
         return true;
     }
 
-    public function value(): string
+    public function isUndefined(): bool
     {
-        return $this->val;
-    }
-
-    public function toString(): string
-    {
-        return $this->val;
+        return false;
     }
 
     public function jsonSerialize(): string
@@ -45,14 +45,9 @@ readonly class StringTypeAbstractTest extends StringTypeAbstract
         return $this->val;
     }
 
-    public function isEmpty(): bool
+    public function toString(): string
     {
-        return $this->val === '';
-    }
-
-    public function isUndefined(): bool
-    {
-        return false;
+        return $this->val;
     }
 
     public static function tryFromMixed(
@@ -75,6 +70,11 @@ readonly class StringTypeAbstractTest extends StringTypeAbstract
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract {
         return new static($value);
+    }
+
+    public function value(): string
+    {
+        return $this->val;
     }
 }
 

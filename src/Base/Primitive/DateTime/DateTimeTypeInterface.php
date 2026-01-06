@@ -26,11 +26,20 @@ interface DateTimeTypeInterface
 {
     public const DEFAULT_ZONE = 'UTC';
 
-    public function value(): DateTimeImmutable;
+    public static function fromDateTime(DateTimeImmutable $value): static;
+
+    /**
+     * @param non-empty-string $timezone
+     *
+     * @throws DateTimeTypeException
+     */
+    public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE): static;
+
+    public static function getFormat(): string;
 
     public function isTypeOf(string ...$classNames): bool;
 
-    public static function fromDateTime(DateTimeImmutable $value): static;
+    public function toString(): string;
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -60,19 +69,10 @@ interface DateTimeTypeInterface
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract;
 
-    /**
-     * @param non-empty-string $timezone
-     *
-     * @throws DateTimeTypeException
-     */
-    public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE): static;
+    public function value(): DateTimeImmutable;
 
     /**
      * @param non-empty-string $timezone
      */
     public function withTimeZone(string $timezone): static;
-
-    public static function getFormat(): string;
-
-    public function toString(): string;
 }

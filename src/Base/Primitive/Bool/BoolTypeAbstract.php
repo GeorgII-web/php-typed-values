@@ -26,10 +26,11 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  */
 abstract readonly class BoolTypeAbstract extends PrimitiveTypeAbstract implements BoolTypeInterface
 {
-    /**
-     * DO NOT IMPLEMENT ANY PUBLIC METHODS IN INTERNAL CLASS!
-     */
-    abstract public function value(): bool;
+    abstract public function isEmpty(): bool;
+
+    abstract public function isUndefined(): bool;
+
+    abstract public function toString(): string;
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -67,14 +68,13 @@ abstract readonly class BoolTypeAbstract extends PrimitiveTypeAbstract implement
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract;
 
-    abstract public function toString(): string;
+    /**
+     * DO NOT IMPLEMENT ANY PUBLIC METHODS IN INTERNAL CLASS!
+     */
+    abstract public function value(): bool;
 
     public function __toString(): string
     {
         return $this->toString();
     }
-
-    abstract public function isEmpty(): bool;
-
-    abstract public function isUndefined(): bool;
 }

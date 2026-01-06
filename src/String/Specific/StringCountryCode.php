@@ -17,6 +17,9 @@ use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
 
 use function in_array;
+use function is_bool;
+use function is_float;
+use function is_int;
 use function is_scalar;
 use function is_string;
 use function preg_match;
@@ -57,13 +60,13 @@ readonly class StringCountryCode extends StringTypeAbstract
         $this->value = $value;
     }
 
-
     /**
+     * @throws StringTypeException
      * @throws CountryCodeStringTypeException
      */
-    public static function fromString(string $value): static
+    public static function fromBool(bool $value): static
     {
-        return new static($value);
+        return new static(static::boolToString($value));
     }
 
     /**
@@ -85,23 +88,16 @@ readonly class StringCountryCode extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
      * @throws CountryCodeStringTypeException
      */
-    public static function fromBool(bool $value): static
+    public static function fromString(string $value): static
     {
-        return new static(static::boolToString($value));
+        return new static($value);
     }
 
-    /** @return non-empty-string */
-    public function value(): string
+    public function isEmpty(): bool
     {
-        return $this->value;
-    }
-
-    public function jsonSerialize(): string
-    {
-        return $this->toString();
+        return false;
     }
 
     public function isTypeOf(string ...$classNames): bool
@@ -115,12 +111,22 @@ readonly class StringCountryCode extends StringTypeAbstract
         return false;
     }
 
-    /**
-     * @return non-empty-string
-     */
-    public function toString(): string
+    public function isUndefined(): bool
     {
-        return $this->value();
+        return false;
+    }
+
+    public function jsonSerialize(): string
+    {
+        return $this->toString();
+    }
+
+    /**
+     * @throws BoolTypeException
+     */
+    public function toBool(): bool
+    {
+        return static::stringToBool($this->value());
     }
 
     /**
@@ -140,21 +146,11 @@ readonly class StringCountryCode extends StringTypeAbstract
     }
 
     /**
-     * @throws BoolTypeException
+     * @return non-empty-string
      */
-    public function toBool(): bool
+    public function toString(): string
     {
-        return static::stringToBool($this->value());
-    }
-
-    public function isEmpty(): bool
-    {
-        return false;
-    }
-
-    public function isUndefined(): bool
-    {
-        return false;
+        return $this->value();
     }
 
     /**
@@ -164,41 +160,13 @@ readonly class StringCountryCode extends StringTypeAbstract
      *
      * @return static|T
      */
-    public static function tryFromMixed(
-        mixed $value,
+    public static function tryFromBool(
+        bool $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
-            return match (true) {
-                is_string($value) => static::fromString($value),
-                ($value instanceof self) => static::fromString($value->value()),
-                is_float($value) => static::fromFloat($value),
-                is_int($value) => static::fromInt($value),
-                is_bool($value) => static::fromBool($value),
-                $value instanceof Stringable, is_scalar($value) => static::fromString((string) $value),
-                default => throw new TypeException('Value cannot be cast to string'),
-            };
-        } catch (Exception) {
-            /** @var T */
-            return $default;
-        }
-    }
-
-    /**
-     * @template T of PrimitiveTypeAbstract
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
-    public static function tryFromString(
-        string $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
-        try {
-            /** @var static */
-            return static::fromString($value);
+            return static::fromBool($value);
         } catch (Exception) {
             /** @var T */
             return $default;
@@ -252,17 +220,51 @@ readonly class StringCountryCode extends StringTypeAbstract
      *
      * @return static|T
      */
-    public static function tryFromBool(
-        bool $value,
+    public static function tryFromMixed(
+        mixed $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
-            return static::fromBool($value);
+            return match (true) {
+                is_string($value) => static::fromString($value),
+                ($value instanceof self) => static::fromString($value->value()),
+                is_float($value) => static::fromFloat($value),
+                is_int($value) => static::fromInt($value),
+                is_bool($value) => static::fromBool($value),
+                $value instanceof Stringable, is_scalar($value) => static::fromString((string) $value),
+                default => throw new TypeException('Value cannot be cast to string'),
+            };
         } catch (Exception) {
             /** @var T */
             return $default;
         }
+    }
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromString(
+        string $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
+        try {
+            /** @var static */
+            return static::fromString($value);
+        } catch (Exception) {
+            /** @var T */
+            return $default;
+        }
+    }
+
+    /** @return non-empty-string */
+    public function value(): string
+    {
+        return $this->value;
     }
 
     /**

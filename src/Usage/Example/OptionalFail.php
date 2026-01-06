@@ -69,6 +69,14 @@ final readonly class OptionalFail implements JsonSerializable
     }
 
     /**
+     * Returns first name or `Undefined` when the input was empty/invalid.
+     */
+    public function getFirstName(): StringNonEmpty|Undefined
+    {
+        return $this->firstName;
+    }
+
+    /**
      * Returns height, which may be `Undefined` when it was omitted.
      */
     public function getHeight(): FloatPositive|Undefined
@@ -82,14 +90,6 @@ final readonly class OptionalFail implements JsonSerializable
     public function getId(): IntegerPositive
     {
         return $this->id;
-    }
-
-    /**
-     * Returns first name or `Undefined` when the input was empty/invalid.
-     */
-    public function getFirstName(): StringNonEmpty|Undefined
-    {
-        return $this->firstName;
     }
 
     /**

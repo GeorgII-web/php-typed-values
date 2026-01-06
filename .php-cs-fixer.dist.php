@@ -67,5 +67,25 @@ return $config->setUsingCache(true)
                 'function',
             ],
         ],
+        'ordered_class_elements' => [
+            'order' => [
+                'use_trait',
+                'constant_public',
+                'constant_protected',
+                'constant_private',
+                'property_public',
+                'property_protected',
+                'property_private',
+                'construct',
+                'destruct',
+                'method_public',
+                'method_protected',
+                'method_private',
+                'magic',
+                'phpunit',
+            ],
+            'sort_algorithm' => 'alpha', // or 'none' for just grouping
+            'case_sensitive' => false,
+        ],
     ])
     ->setFinder($finder);

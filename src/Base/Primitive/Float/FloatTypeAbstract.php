@@ -26,13 +26,33 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  */
 abstract readonly class FloatTypeAbstract extends PrimitiveTypeAbstract implements FloatTypeInterface
 {
-    abstract public static function fromString(string $value): static;
+    abstract public static function fromBool(bool $value): static;
 
     abstract public static function fromFloat(float $value): static;
 
     abstract public static function fromInt(int $value): static;
 
-    abstract public static function fromBool(bool $value): static;
+    abstract public static function fromString(string $value): static;
+
+    abstract public function toBool(): bool;
+
+    abstract public function toFloat(): float;
+
+    abstract public function toInt(): int;
+
+    abstract public function toString(): string;
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    abstract public static function tryFromBool(
+        bool $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract;
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -43,6 +63,18 @@ abstract readonly class FloatTypeAbstract extends PrimitiveTypeAbstract implemen
      */
     abstract public static function tryFromFloat(
         float $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract;
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    abstract public static function tryFromInt(
+        int $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract;
 
@@ -70,42 +102,10 @@ abstract readonly class FloatTypeAbstract extends PrimitiveTypeAbstract implemen
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract;
 
-    /**
-     * @template T of PrimitiveTypeAbstract
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
-    abstract public static function tryFromInt(
-        int $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract;
-
-    /**
-     * @template T of PrimitiveTypeAbstract
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
-    abstract public static function tryFromBool(
-        bool $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract;
-
     abstract public function value(): float;
 
     public function __toString(): string
     {
         return $this->toString();
     }
-
-    abstract public function toString(): string;
-
-    abstract public function toFloat(): float;
-
-    abstract public function toInt(): int;
-
-    abstract public function toBool(): bool;
 }

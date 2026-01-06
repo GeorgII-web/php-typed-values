@@ -20,14 +20,14 @@ readonly class PrimitiveTypeAbstractTest extends PrimitiveTypeAbstract
     {
     }
 
-    public function isTypeOf(string ...$classNames): bool
-    {
-        return true;
-    }
-
     public function isEmpty(): bool
     {
         return empty($this->value);
+    }
+
+    public function isTypeOf(string ...$classNames): bool
+    {
+        return true;
     }
 
     public function isUndefined(): bool
@@ -35,14 +35,14 @@ readonly class PrimitiveTypeAbstractTest extends PrimitiveTypeAbstract
         return $this->value instanceof Undefined;
     }
 
-    public function toString(): string
-    {
-        return (string) $this->value;
-    }
-
     public function jsonSerialize(): mixed
     {
         return $this->value;
+    }
+
+    public function toString(): string
+    {
+        return (string) $this->value;
     }
 
     public function value(): mixed

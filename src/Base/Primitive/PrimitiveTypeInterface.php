@@ -23,7 +23,10 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  */
 interface PrimitiveTypeInterface extends TypeInterface, JsonSerializable
 {
-    public function value(): mixed;
+    /**
+     * Returns true if the Object value is empty.
+     */
+    public function isEmpty(): bool;
 
     /**
      * Checks if the current object (or its parents) is an instance of the provided class names.
@@ -31,24 +34,9 @@ interface PrimitiveTypeInterface extends TypeInterface, JsonSerializable
     public function isTypeOf(string ...$classNames): bool;
 
     /**
-     * Returns true if the Object value is empty.
-     */
-    public function isEmpty(): bool;
-
-    /**
      * Returns if the Object value is an Undefined type class.
      */
     public function isUndefined(): bool;
-
-    /**
-     * Returns a normalized string representation of the underlying value.
-     */
-    public function toString(): string;
-
-    /**
-     * Alias of {@see toString} for convenient casting.
-     */
-    public function __toString(): string;
 
     /**
      * JSON representation of the value.
@@ -58,4 +46,16 @@ interface PrimitiveTypeInterface extends TypeInterface, JsonSerializable
      * @psalm-mutation-free
      */
     public function jsonSerialize(): mixed;
+
+    /**
+     * Returns a normalized string representation of the underlying value.
+     */
+    public function toString(): string;
+
+    public function value(): mixed;
+
+    /**
+     * Alias of {@see toString} for convenient casting.
+     */
+    public function __toString(): string;
 }

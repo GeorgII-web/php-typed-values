@@ -24,6 +24,13 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  */
 interface BoolTypeInterface
 {
+    public static function fromBool(bool $value): static;
+
+    /**
+     * @throws BoolTypeException
+     */
+    public static function fromInt(int $value): static;
+
     /**
      * Create an instance from a validated string representation.
      *
@@ -35,6 +42,8 @@ interface BoolTypeInterface
      */
     public static function fromString(string $value): static;
 
+    public function isTypeOf(string ...$classNames): bool;
+
     /**
      * @template T of PrimitiveTypeAbstract
      *
@@ -42,8 +51,8 @@ interface BoolTypeInterface
      *
      * @return static|T
      */
-    public static function tryFromString(
-        string $value,
+    public static function tryFromInt(
+        int $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract;
 
@@ -66,19 +75,10 @@ interface BoolTypeInterface
      *
      * @return static|T
      */
-    public static function tryFromInt(
-        int $value,
+    public static function tryFromString(
+        string $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract;
 
-    /**
-     * @throws BoolTypeException
-     */
-    public static function fromInt(int $value): static;
-
-    public function isTypeOf(string ...$classNames): bool;
-
     public function value(): bool;
-
-    public static function fromBool(bool $value): static;
 }

@@ -58,9 +58,9 @@ readonly class IntegerWeekDay extends IntegerTypeAbstract
     /**
      * @throws IntegerTypeException
      */
-    public static function fromInt(int $value): static
+    public static function fromBool(bool $value): static
     {
-        return new static($value);
+        return new static((int) $value);
     }
 
     /**
@@ -75,9 +75,28 @@ readonly class IntegerWeekDay extends IntegerTypeAbstract
     /**
      * @throws IntegerTypeException
      */
-    public static function fromBool(bool $value): static
+    public static function fromInt(int $value): static
     {
-        return new static((int) $value);
+        return new static($value);
+    }
+
+    /**
+     * @throws IntegerTypeException
+     */
+    public static function fromLabel(string $label): static
+    {
+        $value = match ($label) {
+            'Monday' => 1,
+            'Tuesday' => 2,
+            'Wednesday' => 3,
+            'Thursday' => 4,
+            'Friday' => 5,
+            'Saturday' => 6,
+            'Sunday' => 7,
+            default => throw new IntegerTypeException(sprintf('Invalid weekday label "%s"', $label)),
+        };
+
+        return new static($value);
     }
 
     /**
@@ -88,6 +107,77 @@ readonly class IntegerWeekDay extends IntegerTypeAbstract
         return new static(parent::getIntegerFromString($value));
     }
 
+    public function isEmpty(): false
+    {
+        return false;
+    }
+
+    public function isTypeOf(string ...$classNames): bool
+    {
+        foreach ($classNames as $className) {
+            if ($this instanceof $className) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function isUndefined(): false
+    {
+        return false;
+    }
+
+    /**
+     * @return int<1, 7>
+     */
+    public function jsonSerialize(): int
+    {
+        return $this->value();
+    }
+
+    public function toBool(): bool
+    {
+        return (bool) $this->value();
+    }
+
+    public function toFloat(): float
+    {
+        return $this->value();
+    }
+
+    /**
+     * @return int<1, 7>
+     */
+    public function toInt(): int
+    {
+        return $this->value;
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    public function toLabel(): string
+    {
+        return match ($this->value) {
+            1 => 'Monday',
+            2 => 'Tuesday',
+            3 => 'Wednesday',
+            4 => 'Thursday',
+            5 => 'Friday',
+            6 => 'Saturday',
+            7 => 'Sunday',
+        };
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    public function toString(): string
+    {
+        return (string) $this->value();
+    }
+
     /**
      * @template T of PrimitiveTypeAbstract
      *
@@ -95,15 +185,15 @@ readonly class IntegerWeekDay extends IntegerTypeAbstract
      *
      * @return static|T
      */
-    public static function tryFromInt(
-        int $value,
+    public static function tryFromBool(
+        bool $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
-            return static::fromInt($value);
-        } catch (TypeException) {
-            /* @var T */
+            return static::fromBool($value);
+        } catch (Exception) {
+            /** @var T */
             return $default;
         }
     }
@@ -135,35 +225,15 @@ readonly class IntegerWeekDay extends IntegerTypeAbstract
      *
      * @return static|T
      */
-    public static function tryFromBool(
-        bool $value,
+    public static function tryFromInt(
+        int $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
-            return static::fromBool($value);
-        } catch (Exception) {
-            /** @var T */
-            return $default;
-        }
-    }
-
-    /**
-     * @template T of PrimitiveTypeAbstract
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
-    public static function tryFromString(
-        string $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
-        try {
-            /** @var static */
-            return static::fromString($value);
-        } catch (Exception) {
-            /** @var T */
+            return static::fromInt($value);
+        } catch (TypeException) {
+            /* @var T */
             return $default;
         }
     }
@@ -194,15 +264,24 @@ readonly class IntegerWeekDay extends IntegerTypeAbstract
         }
     }
 
-    public function isTypeOf(string ...$classNames): bool
-    {
-        foreach ($classNames as $className) {
-            if ($this instanceof $className) {
-                return true;
-            }
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromString(
+        string $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
+        try {
+            /** @var static */
+            return static::fromString($value);
+        } catch (Exception) {
+            /** @var T */
+            return $default;
         }
-
-        return false;
     }
 
     /**
@@ -211,84 +290,5 @@ readonly class IntegerWeekDay extends IntegerTypeAbstract
     public function value(): int
     {
         return $this->value;
-    }
-
-    /**
-     * @return int<1, 7>
-     */
-    public function toInt(): int
-    {
-        return $this->value;
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    public function toString(): string
-    {
-        return (string) $this->value();
-    }
-
-    public function toFloat(): float
-    {
-        return $this->value();
-    }
-
-    public function toBool(): bool
-    {
-        return (bool) $this->value();
-    }
-
-    /**
-     * @return int<1, 7>
-     */
-    public function jsonSerialize(): int
-    {
-        return $this->value();
-    }
-
-    public function isEmpty(): false
-    {
-        return false;
-    }
-
-    public function isUndefined(): false
-    {
-        return false;
-    }
-
-    /**
-     * @throws IntegerTypeException
-     */
-    public static function fromLabel(string $label): static
-    {
-        $value = match ($label) {
-            'Monday' => 1,
-            'Tuesday' => 2,
-            'Wednesday' => 3,
-            'Thursday' => 4,
-            'Friday' => 5,
-            'Saturday' => 6,
-            'Sunday' => 7,
-            default => throw new IntegerTypeException(sprintf('Invalid weekday label "%s"', $label)),
-        };
-
-        return new static($value);
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    public function toLabel(): string
-    {
-        return match ($this->value) {
-            1 => 'Monday',
-            2 => 'Tuesday',
-            3 => 'Wednesday',
-            4 => 'Thursday',
-            5 => 'Friday',
-            6 => 'Saturday',
-            7 => 'Sunday',
-        };
     }
 }

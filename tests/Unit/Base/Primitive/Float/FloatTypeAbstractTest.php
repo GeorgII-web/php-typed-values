@@ -22,14 +22,9 @@ readonly class FloatTypeAbstractTest extends FloatTypeAbstract
     {
     }
 
-    public static function fromString(string $value): static
+    public static function fromBool(bool $value): static
     {
-        return new static(parent::stringToFloat($value));
-    }
-
-    public function isTypeOf(string ...$classNames): bool
-    {
-        return true;
+        return new static((float) $value);
     }
 
     public static function fromFloat(float $value): static
@@ -37,19 +32,14 @@ readonly class FloatTypeAbstractTest extends FloatTypeAbstract
         return new static($value);
     }
 
-    public function value(): float
+    public static function fromInt(int $value): static
     {
-        return $this->val;
+        return new static($value);
     }
 
-    public function toString(): string
+    public static function fromString(string $value): static
     {
-        return (string) $this->val;
-    }
-
-    public function jsonSerialize(): float
-    {
-        return $this->val;
+        return new static(parent::stringToFloat($value));
     }
 
     public function isEmpty(): bool
@@ -57,9 +47,45 @@ readonly class FloatTypeAbstractTest extends FloatTypeAbstract
         return false;
     }
 
+    public function isTypeOf(string ...$classNames): bool
+    {
+        return true;
+    }
+
     public function isUndefined(): bool
     {
         return false;
+    }
+
+    public function jsonSerialize(): float
+    {
+        return $this->val;
+    }
+
+    public function toBool(): bool
+    {
+        return (bool) $this->value();
+    }
+
+    public function toFloat(): float
+    {
+        return $this->value();
+    }
+
+    public function toInt(): int
+    {
+        return (int) $this->value();
+    }
+
+    public function toString(): string
+    {
+        return (string) $this->val;
+    }
+
+    public static function tryFromBool(bool $value,
+        PrimitiveTypeAbstract $default = new Undefined(), ): static|PrimitiveTypeAbstract
+    {
+        return new static((float) $value);
     }
 
     public static function tryFromFloat(
@@ -71,6 +97,12 @@ readonly class FloatTypeAbstractTest extends FloatTypeAbstract
         } catch (Exception) {
             return $default;
         }
+    }
+
+    public static function tryFromInt(int $value,
+        PrimitiveTypeAbstract $default = new Undefined(), ): static|PrimitiveTypeAbstract
+    {
+        return new static($value);
     }
 
     public static function tryFromMixed(
@@ -101,41 +133,9 @@ readonly class FloatTypeAbstractTest extends FloatTypeAbstract
         }
     }
 
-    public static function fromInt(int $value): static
+    public function value(): float
     {
-        return new static($value);
-    }
-
-    public static function fromBool(bool $value): static
-    {
-        return new static((float) $value);
-    }
-
-    public static function tryFromInt(int $value,
-        PrimitiveTypeAbstract $default = new Undefined(), ): static|PrimitiveTypeAbstract
-    {
-        return new static($value);
-    }
-
-    public static function tryFromBool(bool $value,
-        PrimitiveTypeAbstract $default = new Undefined(), ): static|PrimitiveTypeAbstract
-    {
-        return new static((float) $value);
-    }
-
-    public function toFloat(): float
-    {
-        return $this->value();
-    }
-
-    public function toInt(): int
-    {
-        return (int) $this->value();
-    }
-
-    public function toBool(): bool
-    {
-        return (bool) $this->value();
+        return $this->val;
     }
 }
 

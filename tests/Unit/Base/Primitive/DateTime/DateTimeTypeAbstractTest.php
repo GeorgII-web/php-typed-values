@@ -19,34 +19,9 @@ readonly class DateTimeTypeAbstractTest extends DateTimeTypeAbstract
     {
     }
 
-    public function isTypeOf(string ...$classNames): bool
+    public static function fromDateTime(DateTimeImmutable $value): static
     {
-        return true;
-    }
-
-    public function value(): DateTimeImmutable
-    {
-        return $this->dt;
-    }
-
-    public function toString(): string
-    {
-        return $this->dt->format('Y-m-d');
-    }
-
-    public function jsonSerialize(): string
-    {
-        return $this->toString();
-    }
-
-    public function isEmpty(): bool
-    {
-        return false;
-    }
-
-    public function isUndefined(): bool
-    {
-        return false;
+        return new self($value);
     }
 
     public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE): static
@@ -54,19 +29,34 @@ readonly class DateTimeTypeAbstractTest extends DateTimeTypeAbstract
         return new self(new DateTimeImmutable($value, new DateTimeZone($timezone)));
     }
 
-    public static function fromDateTime(DateTimeImmutable $value): static
-    {
-        return new self($value);
-    }
-
-    public function withTimeZone(string $timezone): static
-    {
-        return new self(new DateTimeImmutable());
-    }
-
     public static function getFormat(): string
     {
         return '';
+    }
+
+    public function isEmpty(): bool
+    {
+        return false;
+    }
+
+    public function isTypeOf(string ...$classNames): bool
+    {
+        return true;
+    }
+
+    public function isUndefined(): bool
+    {
+        return false;
+    }
+
+    public function jsonSerialize(): string
+    {
+        return $this->toString();
+    }
+
+    public function toString(): string
+    {
+        return $this->dt->format('Y-m-d');
     }
 
     public static function tryFromMixed(mixed $value, string $timezone = self::DEFAULT_ZONE,
@@ -79,6 +69,16 @@ readonly class DateTimeTypeAbstractTest extends DateTimeTypeAbstract
         PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract $default = new Undefined(), ): static|PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract
     {
         return static::fromDateTime(new DateTimeImmutable());
+    }
+
+    public function value(): DateTimeImmutable
+    {
+        return $this->dt;
+    }
+
+    public function withTimeZone(string $timezone): static
+    {
+        return new self(new DateTimeImmutable());
     }
 }
 

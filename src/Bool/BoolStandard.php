@@ -42,22 +42,9 @@ readonly class BoolStandard extends BoolTypeAbstract
         $this->value = $value;
     }
 
-    /**
-     * @throws BoolTypeException
-     */
-    public static function fromString(string $value): static
+    public static function fromBool(bool $value): static
     {
-        $lowerCaseValue = strtolower(trim($value));
-
-        if ($lowerCaseValue === 'true' || $lowerCaseValue === '1' || $lowerCaseValue === 'yes' || $lowerCaseValue === 'on' || $lowerCaseValue === 'y') {
-            $boolValue = true;
-        } elseif ($lowerCaseValue === 'false' || $lowerCaseValue === '0' || $lowerCaseValue === 'no' || $lowerCaseValue === 'off' || $lowerCaseValue === 'n') {
-            $boolValue = false;
-        } else {
-            throw new BoolTypeException(sprintf('Expected string "true" or "false", got "%s"', $value));
-        }
-
-        return new static($boolValue);
+        return new static($value);
     }
 
     /**
@@ -76,9 +63,53 @@ readonly class BoolStandard extends BoolTypeAbstract
         return new static($boolValue);
     }
 
-    public function value(): bool
+    /**
+     * @throws BoolTypeException
+     */
+    public static function fromString(string $value): static
     {
-        return $this->value;
+        $lowerCaseValue = strtolower(trim($value));
+
+        if ($lowerCaseValue === 'true' || $lowerCaseValue === '1' || $lowerCaseValue === 'yes' || $lowerCaseValue === 'on' || $lowerCaseValue === 'y') {
+            $boolValue = true;
+        } elseif ($lowerCaseValue === 'false' || $lowerCaseValue === '0' || $lowerCaseValue === 'no' || $lowerCaseValue === 'off' || $lowerCaseValue === 'n') {
+            $boolValue = false;
+        } else {
+            throw new BoolTypeException(sprintf('Expected string "true" or "false", got "%s"', $value));
+        }
+
+        return new static($boolValue);
+    }
+
+    public function isEmpty(): bool
+    {
+        return false;
+    }
+
+    public function isTypeOf(string ...$classNames): bool
+    {
+        foreach ($classNames as $className) {
+            if ($this instanceof $className) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function isUndefined(): bool
+    {
+        return false;
+    }
+
+    public function jsonSerialize(): bool
+    {
+        return $this->value();
+    }
+
+    public function toString(): string
+    {
+        return $this->value() ? 'true' : 'false';
     }
 
     /**
@@ -148,44 +179,13 @@ readonly class BoolStandard extends BoolTypeAbstract
         }
     }
 
-    public function isTypeOf(string ...$classNames): bool
+    public function value(): bool
     {
-        foreach ($classNames as $className) {
-            if ($this instanceof $className) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public function toString(): string
-    {
-        return $this->value() ? 'true' : 'false';
+        return $this->value;
     }
 
     public function __toString(): string
     {
         return $this->toString();
-    }
-
-    public function isEmpty(): bool
-    {
-        return false;
-    }
-
-    public function isUndefined(): bool
-    {
-        return false;
-    }
-
-    public function jsonSerialize(): bool
-    {
-        return $this->value();
-    }
-
-    public static function fromBool(bool $value): static
-    {
-        return new static($value);
     }
 }

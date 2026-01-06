@@ -54,17 +54,9 @@ readonly class IntegerTiny extends IntegerTypeAbstract
     /**
      * @throws IntegerTypeException
      */
-    public static function fromInt(int $value): static
+    public static function fromBool(bool $value): static
     {
-        return new static($value);
-    }
-
-    /**
-     * @throws IntegerTypeException
-     */
-    public static function fromString(string $value): static
-    {
-        return new static(parent::getIntegerFromString($value));
+        return new static((int) $value);
     }
 
     /**
@@ -79,17 +71,72 @@ readonly class IntegerTiny extends IntegerTypeAbstract
     /**
      * @throws IntegerTypeException
      */
-    public static function fromBool(bool $value): static
+    public static function fromInt(int $value): static
     {
-        return new static((int) $value);
+        return new static($value);
+    }
+
+    /**
+     * @throws IntegerTypeException
+     */
+    public static function fromString(string $value): static
+    {
+        return new static(parent::getIntegerFromString($value));
+    }
+
+    public function isEmpty(): false
+    {
+        return false;
+    }
+
+    public function isTypeOf(string ...$classNames): bool
+    {
+        foreach ($classNames as $className) {
+            if ($this instanceof $className) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function isUndefined(): false
+    {
+        return false;
     }
 
     /**
      * @return int<-128, 127>
      */
-    public function value(): int
+    public function jsonSerialize(): int
+    {
+        return $this->value();
+    }
+
+    public function toBool(): bool
+    {
+        return (bool) $this->value();
+    }
+
+    public function toFloat(): float
+    {
+        return $this->value();
+    }
+
+    /**
+     * @return int<-128, 127>
+     */
+    public function toInt(): int
     {
         return $this->value;
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    public function toString(): string
+    {
+        return (string) $this->value();
     }
 
     /**
@@ -99,15 +146,15 @@ readonly class IntegerTiny extends IntegerTypeAbstract
      *
      * @return static|T
      */
-    public static function tryFromInt(
-        int $value,
+    public static function tryFromBool(
+        bool $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
-            return static::fromInt($value);
-        } catch (TypeException) {
-            /* @var T $default */
+            return static::fromBool($value);
+        } catch (Exception) {
+            /** @var T */
             return $default;
         }
     }
@@ -139,35 +186,15 @@ readonly class IntegerTiny extends IntegerTypeAbstract
      *
      * @return static|T
      */
-    public static function tryFromBool(
-        bool $value,
+    public static function tryFromInt(
+        int $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
-            return static::fromBool($value);
-        } catch (Exception) {
-            /** @var T */
-            return $default;
-        }
-    }
-
-    /**
-     * @template T of PrimitiveTypeAbstract
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
-    public static function tryFromString(
-        string $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
-        try {
-            /** @var static */
-            return static::fromString($value);
-        } catch (Exception) {
-            /** @var T */
+            return static::fromInt($value);
+        } catch (TypeException) {
+            /* @var T $default */
             return $default;
         }
     }
@@ -199,57 +226,30 @@ readonly class IntegerTiny extends IntegerTypeAbstract
     }
 
     /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromString(
+        string $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
+        try {
+            /** @var static */
+            return static::fromString($value);
+        } catch (Exception) {
+            /** @var T */
+            return $default;
+        }
+    }
+
+    /**
      * @return int<-128, 127>
      */
-    public function toInt(): int
+    public function value(): int
     {
         return $this->value;
-    }
-
-    /**
-     * @return int<-128, 127>
-     */
-    public function jsonSerialize(): int
-    {
-        return $this->value();
-    }
-
-    public function isTypeOf(string ...$classNames): bool
-    {
-        foreach ($classNames as $className) {
-            if ($this instanceof $className) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    public function toString(): string
-    {
-        return (string) $this->value();
-    }
-
-    public function toFloat(): float
-    {
-        return $this->value();
-    }
-
-    public function toBool(): bool
-    {
-        return (bool) $this->value();
-    }
-
-    public function isEmpty(): false
-    {
-        return false;
-    }
-
-    public function isUndefined(): false
-    {
-        return false;
     }
 }

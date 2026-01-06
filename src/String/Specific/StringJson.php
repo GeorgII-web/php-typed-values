@@ -56,58 +56,10 @@ readonly class StringJson extends StringTypeAbstract
         return new static($value);
     }
 
-    /**
-     * @return non-empty-string
-     */
-    public function value(): string
+    public function isEmpty(): bool
     {
-        return $this->value;
-    }
-
-    /**
-     * @throws JsonException
-     */
-    public function toObject(): mixed
-    {
-        return json_decode(json: $this->value, associative: false, flags: JSON_THROW_ON_ERROR);
-    }
-
-    /**
-     * @throws JsonException
-     */
-    public function toArray(): array
-    {
-        return json_decode(json: $this->value, associative: true, flags: JSON_THROW_ON_ERROR);
-    }
-
-    /**
-     * @return non-empty-string
-     *
-     * @throws JsonStringTypeException
-     */
-    protected static function getJsonStringFromString(string $value): string
-    {
-        try {
-            if ($value === '') {
-                throw new JsonStringTypeException('Empty string cannot be a valid JSON');
-            }
-
-            /**
-             * Only validate; ignore the decoded result. Exceptions signal invalid JSON.
-             *
-             * @psalm-suppress UnusedFunctionCall
-             */
-            json_decode(json: $value, flags: JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
-            throw new JsonStringTypeException(sprintf('String "%s" has no valid JSON value', $value), 0, $e);
-        }
-
-        return $value;
-    }
-
-    public function jsonSerialize(): string
-    {
-        return $this->toString();
+        // JSON values are never empty by construction; constructor rejects empty strings
+        return false;
     }
 
     public function isTypeOf(string ...$classNames): bool
@@ -121,23 +73,38 @@ readonly class StringJson extends StringTypeAbstract
         return false;
     }
 
+    public function isUndefined(): bool
+    {
+        return false;
+    }
+
+    public function jsonSerialize(): string
+    {
+        return $this->toString();
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function toArray(): array
+    {
+        return json_decode(json: $this->value, associative: true, flags: JSON_THROW_ON_ERROR);
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function toObject(): mixed
+    {
+        return json_decode(json: $this->value, associative: false, flags: JSON_THROW_ON_ERROR);
+    }
+
     /**
      * @return non-empty-string
      */
     public function toString(): string
     {
         return $this->value();
-    }
-
-    public function isEmpty(): bool
-    {
-        // JSON values are never empty by construction; constructor rejects empty strings
-        return false;
-    }
-
-    public function isUndefined(): bool
-    {
-        return false;
     }
 
     /**
@@ -184,5 +151,38 @@ readonly class StringJson extends StringTypeAbstract
             /** @var T */
             return $default;
         }
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    public function value(): string
+    {
+        return $this->value;
+    }
+
+    /**
+     * @return non-empty-string
+     *
+     * @throws JsonStringTypeException
+     */
+    protected static function getJsonStringFromString(string $value): string
+    {
+        try {
+            if ($value === '') {
+                throw new JsonStringTypeException('Empty string cannot be a valid JSON');
+            }
+
+            /**
+             * Only validate; ignore the decoded result. Exceptions signal invalid JSON.
+             *
+             * @psalm-suppress UnusedFunctionCall
+             */
+            json_decode(json: $value, flags: JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
+            throw new JsonStringTypeException(sprintf('String "%s" has no valid JSON value', $value), 0, $e);
+        }
+
+        return $value;
     }
 }

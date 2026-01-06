@@ -30,6 +30,14 @@ readonly class ArrayEmptyAbstract extends ArrayTypeAbstract
     }
 
     /**
+     * @return non-negative-int
+     */
+    public function count(): int
+    {
+        return 0;
+    }
+
+    /**
      * @param list<mixed> $value
      *
      * @throws ArrayTypeException
@@ -38,6 +46,29 @@ readonly class ArrayEmptyAbstract extends ArrayTypeAbstract
     {
         /** @var array $value */
         return new static($value);
+    }
+
+    /**
+     * @return list<never>
+     */
+    public function getDefinedItems(): array
+    {
+        return [];
+    }
+
+    public function getIterator(): Traversable
+    {
+        yield from [];
+    }
+
+    public function hasUndefined(): bool
+    {
+        return false;
+    }
+
+    public function isEmpty(): bool
+    {
+        return true;
     }
 
     public function isTypeOf(string ...$classNames): bool
@@ -51,38 +82,9 @@ readonly class ArrayEmptyAbstract extends ArrayTypeAbstract
         return false;
     }
 
-    /**
-     * @return list<never>
-     */
-    public function value(): array
+    public function isUndefined(): bool
     {
-        return [];
-    }
-
-    public function getIterator(): Traversable
-    {
-        yield from [];
-    }
-
-    /**
-     * @return non-negative-int
-     */
-    public function count(): int
-    {
-        return 0;
-    }
-
-    public function isEmpty(): bool
-    {
-        return true;
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    public function toArray(): array
-    {
-        return [];
+        return false;
     }
 
     /**
@@ -95,20 +97,18 @@ readonly class ArrayEmptyAbstract extends ArrayTypeAbstract
         return [];
     }
 
-    public function isUndefined(): bool
+    /**
+     * @psalm-mutation-free
+     */
+    public function toArray(): array
     {
-        return false;
-    }
-
-    public function hasUndefined(): bool
-    {
-        return false;
+        return [];
     }
 
     /**
      * @return list<never>
      */
-    public function getDefinedItems(): array
+    public function value(): array
     {
         return [];
     }

@@ -69,11 +69,12 @@ readonly class StringLocaleCode extends StringTypeAbstract
     }
 
     /**
+     * @throws StringTypeException
      * @throws LocaleStringTypeException
      */
-    public static function fromString(string $value): static
+    public static function fromBool(bool $value): static
     {
-        return new static($value);
+        return new static(static::boolToString($value));
     }
 
     /**
@@ -95,23 +96,36 @@ readonly class StringLocaleCode extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
      * @throws LocaleStringTypeException
      */
-    public static function fromBool(bool $value): static
+    public static function fromString(string $value): static
     {
-        return new static(static::boolToString($value));
+        return new static($value);
     }
 
-    /** @return non-empty-string */
-    public function value(): string
+    /**
+     * Get the country/region part of the locale.
+     *
+     * @return non-empty-string ISO 3166-1 country code
+     */
+    public function getCountryCode(): string
     {
-        return $this->value;
+        return explode('_', $this->value, 2)[1];
     }
 
-    public function jsonSerialize(): string
+    /**
+     * Get the language part of the locale.
+     *
+     * @return non-empty-string ISO 639-1 language code
+     */
+    public function getLanguageCode(): string
     {
-        return $this->toString();
+        return explode('_', $this->value, 2)[0];
+    }
+
+    public function isEmpty(): bool
+    {
+        return false;
     }
 
     public function isTypeOf(string ...$classNames): bool
@@ -125,32 +139,22 @@ readonly class StringLocaleCode extends StringTypeAbstract
         return false;
     }
 
-    /**
-     * @return non-empty-string
-     */
-    public function toString(): string
+    public function isUndefined(): bool
     {
-        return $this->value();
+        return false;
+    }
+
+    public function jsonSerialize(): string
+    {
+        return $this->toString();
     }
 
     /**
-     * Get the language part of the locale.
-     *
-     * @return non-empty-string ISO 639-1 language code
+     * @throws BoolTypeException
      */
-    public function getLanguageCode(): string
+    public function toBool(): bool
     {
-        return explode('_', $this->value, 2)[0];
-    }
-
-    /**
-     * Get the country/region part of the locale.
-     *
-     * @return non-empty-string ISO 3166-1 country code
-     */
-    public function getCountryCode(): string
-    {
-        return explode('_', $this->value, 2)[1];
+        return static::stringToBool($this->value());
     }
 
     /**
@@ -170,21 +174,11 @@ readonly class StringLocaleCode extends StringTypeAbstract
     }
 
     /**
-     * @throws BoolTypeException
+     * @return non-empty-string
      */
-    public function toBool(): bool
+    public function toString(): string
     {
-        return static::stringToBool($this->value());
-    }
-
-    public function isEmpty(): bool
-    {
-        return false;
-    }
-
-    public function isUndefined(): bool
-    {
-        return false;
+        return $this->value();
     }
 
     /**
@@ -194,43 +188,13 @@ readonly class StringLocaleCode extends StringTypeAbstract
      *
      * @return static|T
      */
-    public static function tryFromMixed(
-        mixed                 $value,
+    public static function tryFromBool(
+        bool $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract
-    {
+    ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
-            return match (true) {
-                is_string($value) => static::fromString($value),
-                ($value instanceof self) => static::fromString($value->value()),
-                is_float($value) => static::fromFloat($value),
-                is_int($value) => static::fromInt($value),
-                is_bool($value) => static::fromBool($value),
-                $value instanceof Stringable, is_scalar($value) => static::fromString((string)$value),
-                default => throw new TypeException('Value cannot be cast to string'),
-            };
-        } catch (Exception) {
-            /** @var T */
-            return $default;
-        }
-    }
-
-    /**
-     * @template T of PrimitiveTypeAbstract
-     *
-     * @param T $default
-     *
-     * @return static|T
-     */
-    public static function tryFromString(
-        string                $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract
-    {
-        try {
-            /** @var static */
-            return static::fromString($value);
+            return static::fromBool($value);
         } catch (Exception) {
             /** @var T */
             return $default;
@@ -245,10 +209,9 @@ readonly class StringLocaleCode extends StringTypeAbstract
      * @return static|T
      */
     public static function tryFromFloat(
-        float                 $value,
+        float $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract
-    {
+    ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
             return static::fromFloat($value);
@@ -266,10 +229,9 @@ readonly class StringLocaleCode extends StringTypeAbstract
      * @return static|T
      */
     public static function tryFromInt(
-        int                   $value,
+        int $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract
-    {
+    ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
             return static::fromInt($value);
@@ -286,18 +248,89 @@ readonly class StringLocaleCode extends StringTypeAbstract
      *
      * @return static|T
      */
-    public static function tryFromBool(
-        bool                  $value,
+    public static function tryFromMixed(
+        mixed $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract
-    {
+    ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
-            return static::fromBool($value);
+            return match (true) {
+                is_string($value) => static::fromString($value),
+                ($value instanceof self) => static::fromString($value->value()),
+                is_float($value) => static::fromFloat($value),
+                is_int($value) => static::fromInt($value),
+                is_bool($value) => static::fromBool($value),
+                $value instanceof Stringable, is_scalar($value) => static::fromString((string) $value),
+                default => throw new TypeException('Value cannot be cast to string'),
+            };
         } catch (Exception) {
             /** @var T */
             return $default;
         }
+    }
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromString(
+        string $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
+        try {
+            /** @var static */
+            return static::fromString($value);
+        } catch (Exception) {
+            /** @var T */
+            return $default;
+        }
+    }
+
+    /** @return non-empty-string */
+    public function value(): string
+    {
+        return $this->value;
+    }
+
+    /**
+     * ISO 3166-1 alpha-2 country codes used for validation.
+     *
+     * @pest-mutate-ignore
+     *
+     * @return list<non-empty-string>
+     */
+    private static function listAllowedCountries(): array
+    {
+        return [
+            'AD', 'AE', 'AF', 'AG', 'AI', 'AL', 'AM', 'AO', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AW', 'AX', 'AZ',
+            'BA', 'BB', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ', 'BL', 'BM', 'BN', 'BO', 'BQ', 'BR', 'BS', 'BT', 'BV', 'BW', 'BY', 'BZ',
+            'CA', 'CC', 'CD', 'CF', 'CG', 'CH', 'CI', 'CK', 'CL', 'CM', 'CN', 'CO', 'CR', 'CU', 'CV', 'CW', 'CX', 'CY', 'CZ',
+            'DE', 'DJ', 'DK', 'DM', 'DO', 'DZ',
+            'EC', 'EE', 'EG', 'EH', 'ER', 'ES', 'ET',
+            'FI', 'FJ', 'FK', 'FM', 'FO', 'FR',
+            'GA', 'GB', 'GD', 'GE', 'GF', 'GG', 'GH', 'GI', 'GL', 'GM', 'GN', 'GP', 'GQ', 'GR', 'GS', 'GT', 'GU', 'GW', 'GY',
+            'HK', 'HM', 'HN', 'HR', 'HT', 'HU',
+            'ID', 'IE', 'IL', 'IM', 'IN', 'IO', 'IQ', 'IR', 'IS', 'IT',
+            'JE', 'JM', 'JO', 'JP',
+            'KE', 'KG', 'KH', 'KI', 'KM', 'KN', 'KP', 'KR', 'KW', 'KY', 'KZ',
+            'LA', 'LB', 'LC', 'LI', 'LK', 'LR', 'LS', 'LT', 'LU', 'LV', 'LY',
+            'MA', 'MC', 'MD', 'ME', 'MF', 'MG', 'MH', 'MK', 'ML', 'MM', 'MN', 'MO', 'MP', 'MQ', 'MR', 'MS', 'MT', 'MU', 'MV', 'MW', 'MX', 'MY', 'MZ',
+            'NA', 'NC', 'NE', 'NF', 'NG', 'NI', 'NL', 'NO', 'NP', 'NR', 'NU', 'NZ',
+            'OM',
+            'PA', 'PE', 'PF', 'PG', 'PH', 'PK', 'PL', 'PM', 'PN', 'PR', 'PS', 'PT', 'PW', 'PY',
+            'QA',
+            'RE', 'RO', 'RS', 'RU', 'RW',
+            'SA', 'SB', 'SC', 'SD', 'SE', 'SG', 'SH', 'SI', 'SJ', 'SK', 'SL', 'SM', 'SN', 'SO', 'SR', 'SS', 'ST', 'SV', 'SX', 'SY', 'SZ',
+            'TC', 'TD', 'TF', 'TG', 'TH', 'TJ', 'TK', 'TL', 'TM', 'TN', 'TO', 'TR', 'TT', 'TV', 'TW', 'TZ',
+            'UA', 'UG', 'UM', 'US', 'UY', 'UZ',
+            'VA', 'VC', 'VE', 'VG', 'VI', 'VN', 'VU',
+            'WF', 'WS',
+            'YE', 'YT',
+            'ZA', 'ZM', 'ZW',
+        ];
     }
 
     /**
@@ -336,44 +369,6 @@ readonly class StringLocaleCode extends StringTypeAbstract
             'xh',
             'yi', 'yo',
             'za', 'zh', 'zu',
-        ];
-    }
-
-    /**
-     * ISO 3166-1 alpha-2 country codes used for validation.
-     *
-     * @pest-mutate-ignore
-     *
-     * @return list<non-empty-string>
-     */
-    private static function listAllowedCountries(): array
-    {
-        return [
-            'AD', 'AE', 'AF', 'AG', 'AI', 'AL', 'AM', 'AO', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AW', 'AX', 'AZ',
-            'BA', 'BB', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ', 'BL', 'BM', 'BN', 'BO', 'BQ', 'BR', 'BS', 'BT', 'BV', 'BW', 'BY', 'BZ',
-            'CA', 'CC', 'CD', 'CF', 'CG', 'CH', 'CI', 'CK', 'CL', 'CM', 'CN', 'CO', 'CR', 'CU', 'CV', 'CW', 'CX', 'CY', 'CZ',
-            'DE', 'DJ', 'DK', 'DM', 'DO', 'DZ',
-            'EC', 'EE', 'EG', 'EH', 'ER', 'ES', 'ET',
-            'FI', 'FJ', 'FK', 'FM', 'FO', 'FR',
-            'GA', 'GB', 'GD', 'GE', 'GF', 'GG', 'GH', 'GI', 'GL', 'GM', 'GN', 'GP', 'GQ', 'GR', 'GS', 'GT', 'GU', 'GW', 'GY',
-            'HK', 'HM', 'HN', 'HR', 'HT', 'HU',
-            'ID', 'IE', 'IL', 'IM', 'IN', 'IO', 'IQ', 'IR', 'IS', 'IT',
-            'JE', 'JM', 'JO', 'JP',
-            'KE', 'KG', 'KH', 'KI', 'KM', 'KN', 'KP', 'KR', 'KW', 'KY', 'KZ',
-            'LA', 'LB', 'LC', 'LI', 'LK', 'LR', 'LS', 'LT', 'LU', 'LV', 'LY',
-            'MA', 'MC', 'MD', 'ME', 'MF', 'MG', 'MH', 'MK', 'ML', 'MM', 'MN', 'MO', 'MP', 'MQ', 'MR', 'MS', 'MT', 'MU', 'MV', 'MW', 'MX', 'MY', 'MZ',
-            'NA', 'NC', 'NE', 'NF', 'NG', 'NI', 'NL', 'NO', 'NP', 'NR', 'NU', 'NZ',
-            'OM',
-            'PA', 'PE', 'PF', 'PG', 'PH', 'PK', 'PL', 'PM', 'PN', 'PR', 'PS', 'PT', 'PW', 'PY',
-            'QA',
-            'RE', 'RO', 'RS', 'RU', 'RW',
-            'SA', 'SB', 'SC', 'SD', 'SE', 'SG', 'SH', 'SI', 'SJ', 'SK', 'SL', 'SM', 'SN', 'SO', 'SR', 'SS', 'ST', 'SV', 'SX', 'SY', 'SZ',
-            'TC', 'TD', 'TF', 'TG', 'TH', 'TJ', 'TK', 'TL', 'TM', 'TN', 'TO', 'TR', 'TT', 'TV', 'TW', 'TZ',
-            'UA', 'UG', 'UM', 'US', 'UY', 'UZ',
-            'VA', 'VC', 'VE', 'VG', 'VI', 'VN', 'VU',
-            'WF', 'WS',
-            'YE', 'YT',
-            'ZA', 'ZM', 'ZW',
         ];
     }
 }

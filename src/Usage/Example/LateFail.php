@@ -65,6 +65,14 @@ final readonly class LateFail
     }
 
     /**
+     * Returns first name or `Undefined`.
+     */
+    public function getFirstName(): StringNonEmpty|Undefined
+    {
+        return $this->firstName;
+    }
+
+    /**
      * Returns height, which may be `Undefined`.
      */
     public function getHeight(): FloatPositive|Undefined
@@ -78,13 +86,5 @@ final readonly class LateFail
     public function getId(): IntegerPositive
     {
         return $this->id;
-    }
-
-    /**
-     * Returns first name or `Undefined`.
-     */
-    public function getFirstName(): StringNonEmpty|Undefined
-    {
-        return $this->firstName;
     }
 }

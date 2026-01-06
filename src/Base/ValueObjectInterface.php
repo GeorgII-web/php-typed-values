@@ -16,7 +16,7 @@ use PhpTypedValues\Base\Shared\IsUndefinedInterface;
  */
 interface ValueObjectInterface extends JsonSerializable, IsUndefinedInterface, IsEmptyInterface
 {
-    public function toArray(): array;
-
     public static function fromArray(array $value): static;
+
+    public function toArray(): array;
 }

@@ -20,9 +20,9 @@ readonly class BoolTypeAbstractTest extends BoolTypeAbstract
     {
     }
 
-    public static function fromString(string $value): static
+    public static function fromBool(bool $value): static
     {
-        return new self($value);
+        return new self();
     }
 
     public static function fromInt(int $value): static
@@ -30,14 +30,34 @@ readonly class BoolTypeAbstractTest extends BoolTypeAbstract
         return new self();
     }
 
-    public static function fromBool(bool $value): static
+    public static function fromString(string $value): static
     {
-        return new self();
+        return new self($value);
     }
 
-    public function value(): bool
+    public function isEmpty(): bool
+    {
+        return false;
+    }
+
+    public function isTypeOf(string ...$classNames): bool
     {
         return true;
+    }
+
+    public function isUndefined(): bool
+    {
+        return false;
+    }
+
+    public function jsonSerialize(): bool
+    {
+        return true;
+    }
+
+    public function toString(): string
+    {
+        return 'true';
     }
 
     public static function tryFromInt(
@@ -73,27 +93,7 @@ readonly class BoolTypeAbstractTest extends BoolTypeAbstract
         return new self($value);
     }
 
-    public function toString(): string
-    {
-        return 'true';
-    }
-
-    public function isEmpty(): bool
-    {
-        return false;
-    }
-
-    public function isUndefined(): bool
-    {
-        return false;
-    }
-
-    public function jsonSerialize(): bool
-    {
-        return true;
-    }
-
-    public function isTypeOf(string ...$classNames): bool
+    public function value(): bool
     {
         return true;
     }

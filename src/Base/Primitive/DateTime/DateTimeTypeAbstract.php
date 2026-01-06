@@ -36,13 +36,36 @@ use function sprintf;
 abstract readonly class DateTimeTypeAbstract extends PrimitiveTypeAbstract implements DateTimeTypeInterface
 {
     protected const FORMAT = '';
-    protected const MIN_TIMESTAMP_SECONDS = -62135596800; // 0001-01-01
     protected const MAX_TIMESTAMP_SECONDS = 253402300799; // 9999-12-31 23:59:59
+    protected const MIN_TIMESTAMP_SECONDS = -62135596800; // 0001-01-01
 
-    public function __toString(): string
-    {
-        return $this->toString();
-    }
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T                $default
+     * @param non-empty-string $timezone
+     *
+     * @return static|T
+     */
+    abstract public static function tryFromMixed(
+        mixed $value,
+        string $timezone = self::DEFAULT_ZONE,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract;
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T                $default
+     * @param non-empty-string $timezone
+     *
+     * @return static|T
+     */
+    abstract public static function tryFromString(
+        string $value,
+        string $timezone = self::DEFAULT_ZONE,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract;
 
     /**
      * @throws DateTimeTypeException
@@ -122,31 +145,8 @@ abstract readonly class DateTimeTypeAbstract extends PrimitiveTypeAbstract imple
         return $dt->setTimezone(new DateTimeZone(self::DEFAULT_ZONE));
     }
 
-    /**
-     * @template T of PrimitiveTypeAbstract
-     *
-     * @param T                $default
-     * @param non-empty-string $timezone
-     *
-     * @return static|T
-     */
-    abstract public static function tryFromMixed(
-        mixed $value,
-        string $timezone = self::DEFAULT_ZONE,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract;
-
-    /**
-     * @template T of PrimitiveTypeAbstract
-     *
-     * @param T                $default
-     * @param non-empty-string $timezone
-     *
-     * @return static|T
-     */
-    abstract public static function tryFromString(
-        string $value,
-        string $timezone = self::DEFAULT_ZONE,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract;
+    public function __toString(): string
+    {
+        return $this->toString();
+    }
 }

@@ -46,6 +46,14 @@ readonly class ArrayNonEmptyAbstract extends ArrayTypeAbstract
     }
 
     /**
+     * @return non-negative-int
+     */
+    public function count(): int
+    {
+        return count($this->value);
+    }
+
+    /**
      * @param list<mixed> $value
      *
      * @throws ArrayTypeException
@@ -54,6 +62,47 @@ readonly class ArrayNonEmptyAbstract extends ArrayTypeAbstract
     {
         /** @var list<TItem> $value */
         return new static($value);
+    }
+
+    /**
+     * @psalm-return list<TItem>
+     */
+    public function getDefinedItems(): array
+    {
+        $result = [];
+
+        foreach ($this->value as $item) {
+            if (!$item instanceof Undefined) {
+                $result[] = $item;
+            }
+        }
+
+        /** @var list<TItem> $result */
+        return $result;
+    }
+
+    /**
+     * @return Traversable<int, TItem>
+     */
+    public function getIterator(): Traversable
+    {
+        yield from $this->value;
+    }
+
+    public function hasUndefined(): bool
+    {
+        foreach ($this->value as $item) {
+            if ($item instanceof Undefined) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function isEmpty(): bool
+    {
+        return $this->count() === 0;
     }
 
     public function isTypeOf(string ...$classNames): bool
@@ -67,33 +116,33 @@ readonly class ArrayNonEmptyAbstract extends ArrayTypeAbstract
         return false;
     }
 
-    /**
-     * @return list<TItem>
-     */
-    public function value(): array
+    public function isUndefined(): bool
     {
-        return $this->value;
+        $items = $this->value;
+
+        if ($items === []) {
+            return false;
+        }
+
+        foreach ($items as $item) {
+            if (!$item instanceof Undefined) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
-     * @return Traversable<int, TItem>
+     * JSON serialization helper.
+     *
+     * @throws ArrayTypeException
+     *
+     * @psalm-mutation-free
      */
-    public function getIterator(): Traversable
+    public function jsonSerialize(): array
     {
-        yield from $this->value;
-    }
-
-    /**
-     * @return non-negative-int
-     */
-    public function count(): int
-    {
-        return count($this->value);
-    }
-
-    public function isEmpty(): bool
-    {
-        return $this->count() === 0;
+        return $this->toArray();
     }
 
     /**
@@ -131,59 +180,10 @@ readonly class ArrayNonEmptyAbstract extends ArrayTypeAbstract
     }
 
     /**
-     * JSON serialization helper.
-     *
-     * @throws ArrayTypeException
-     *
-     * @psalm-mutation-free
+     * @return list<TItem>
      */
-    public function jsonSerialize(): array
+    public function value(): array
     {
-        return $this->toArray();
-    }
-
-    public function isUndefined(): bool
-    {
-        $items = $this->value;
-
-        if ($items === []) {
-            return false;
-        }
-
-        foreach ($items as $item) {
-            if (!$item instanceof Undefined) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    public function hasUndefined(): bool
-    {
-        foreach ($this->value as $item) {
-            if ($item instanceof Undefined) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @psalm-return list<TItem>
-     */
-    public function getDefinedItems(): array
-    {
-        $result = [];
-
-        foreach ($this->value as $item) {
-            if (!$item instanceof Undefined) {
-                $result[] = $item;
-            }
-        }
-
-        /** @var list<TItem> $result */
-        return $result;
+        return $this->value;
     }
 }

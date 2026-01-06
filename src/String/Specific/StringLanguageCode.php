@@ -61,15 +61,9 @@ readonly class StringLanguageCode extends StringTypeAbstract
         return new static($value);
     }
 
-    /** @return non-empty-string */
-    public function value(): string
+    public function isEmpty(): bool
     {
-        return $this->value;
-    }
-
-    public function jsonSerialize(): string
-    {
-        return $this->toString();
+        return false;
     }
 
     public function isTypeOf(string ...$classNames): bool
@@ -83,22 +77,22 @@ readonly class StringLanguageCode extends StringTypeAbstract
         return false;
     }
 
+    public function isUndefined(): bool
+    {
+        return false;
+    }
+
+    public function jsonSerialize(): string
+    {
+        return $this->toString();
+    }
+
     /**
      * @return non-empty-string
      */
     public function toString(): string
     {
         return $this->value();
-    }
-
-    public function isEmpty(): bool
-    {
-        return false;
-    }
-
-    public function isUndefined(): bool
-    {
-        return false;
     }
 
     /**
@@ -143,6 +137,12 @@ readonly class StringLanguageCode extends StringTypeAbstract
             /** @var T */
             return $default;
         }
+    }
+
+    /** @return non-empty-string */
+    public function value(): string
+    {
+        return $this->value;
     }
 
     /**

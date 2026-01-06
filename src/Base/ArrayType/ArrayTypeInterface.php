@@ -33,13 +33,6 @@ use PhpTypedValues\Exception\Array\ArrayTypeException;
 interface ArrayTypeInterface extends TypeInterface, JsonSerializable, IteratorAggregate, Countable, IsEmptyInterface, IsUndefinedInterface
 {
     /**
-     * Returns the underlying Objects array.
-     *
-     * @psalm-return list<TItem>
-     */
-    public function value(): array;
-
-    /**
      * Creates a new collection from a list of Objects.
      * Implementations MUST fail early on invalid input.
      *
@@ -48,6 +41,34 @@ interface ArrayTypeInterface extends TypeInterface, JsonSerializable, IteratorAg
      * @throws ArrayTypeException
      */
     public static function fromArray(array $value): static;
+
+    /**
+     * @template TSelf of ArrayTypeInterface
+     *
+     * Returns items excluding Undefined entries.
+     *
+     * @phpstan-return list<TItem>
+     *
+     * @psalm-return (TSelf is ArrayUndefinedAbstract ? never : list<TItem>)
+     *
+     * @psalm-suppress PossiblyUnusedReturnValue
+     */
+    public function getDefinedItems(): array;
+
+    /**
+     * Returns true if at least one item in the collection is Undefined.
+     */
+    public function hasUndefined(): bool;
+
+    /**
+     * Convert to an array of scalars from an array of Objects.
+     * Each Item should implement JsonSerializable interface.
+     *
+     * @throws ArrayTypeException
+     *
+     * @psalm-mutation-free
+     */
+    public function toArray(): array;
 
     /**
      * Creates a new collection from a list of Objects or scalars (which
@@ -69,30 +90,9 @@ interface ArrayTypeInterface extends TypeInterface, JsonSerializable, IteratorAg
     ): static|self;
 
     /**
-     * Convert to an array of scalars from an array of Objects.
-     * Each Item should implement JsonSerializable interface.
+     * Returns the underlying Objects array.
      *
-     * @throws ArrayTypeException
-     *
-     * @psalm-mutation-free
+     * @psalm-return list<TItem>
      */
-    public function toArray(): array;
-
-    /**
-     * Returns true if at least one item in the collection is Undefined.
-     */
-    public function hasUndefined(): bool;
-
-    /**
-     * @template TSelf of ArrayTypeInterface
-     *
-     * Returns items excluding Undefined entries.
-     *
-     * @phpstan-return list<TItem>
-     *
-     * @psalm-return (TSelf is ArrayUndefinedAbstract ? never : list<TItem>)
-     *
-     * @psalm-suppress PossiblyUnusedReturnValue
-     */
-    public function getDefinedItems(): array;
+    public function value(): array;
 }
