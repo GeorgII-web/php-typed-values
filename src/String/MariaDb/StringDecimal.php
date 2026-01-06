@@ -7,11 +7,17 @@ namespace PhpTypedValues\String\MariaDb;
 use Exception;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
+use PhpTypedValues\Exception\Bool\BoolTypeException;
+use PhpTypedValues\Exception\Float\FloatTypeException;
+use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\DecimalStringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
 
+use function is_bool;
+use function is_float;
+use function is_int;
 use function is_scalar;
 use function is_string;
 use function preg_match;
@@ -53,6 +59,32 @@ readonly class StringDecimal extends StringTypeAbstract
     /**
      * @throws DecimalStringTypeException
      */
+    public static function fromBool(bool $value): static
+    {
+        return new static(static::boolToString($value));
+    }
+
+    /**
+     * @throws FloatTypeException
+     * @throws DecimalStringTypeException
+     */
+    public static function fromFloat(float $value): static
+    {
+        return new static(static::floatToString($value));
+    }
+
+    /**
+     * @throws FloatTypeException
+     * @throws DecimalStringTypeException
+     */
+    public static function fromInt(int $value): static
+    {
+        return new static(static::intToString($value));
+    }
+
+    /**
+     * @throws DecimalStringTypeException
+     */
     public static function fromString(string $value): static
     {
         return new static($value);
@@ -60,7 +92,6 @@ readonly class StringDecimal extends StringTypeAbstract
 
     public function isEmpty(): bool
     {
-        // Decimal values are never empty by construction; constructor rejects empty strings
         return false;
     }
 
@@ -89,8 +120,14 @@ readonly class StringDecimal extends StringTypeAbstract
     }
 
     /**
-     * Convert to float only if the string representation exactly matches string-casted float.
-     *
+     * @throws BoolTypeException
+     */
+    public function toBool(): bool
+    {
+        return static::stringToBool($this->value());
+    }
+
+    /**
      * @throws DecimalStringTypeException
      */
     public function toFloat(): float
@@ -102,6 +139,14 @@ readonly class StringDecimal extends StringTypeAbstract
         }
 
         return (float) $src;
+    }
+
+    /**
+     * @throws IntegerTypeException
+     */
+    public function toInt(): int
+    {
+        return static::stringToInt($this->value());
     }
 
     /**
@@ -119,6 +164,66 @@ readonly class StringDecimal extends StringTypeAbstract
      *
      * @return static|T
      */
+    public static function tryFromBool(
+        bool $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
+        try {
+            /** @var static */
+            return static::fromBool($value);
+        } catch (Exception) {
+            /** @var T */
+            return $default;
+        }
+    }
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromFloat(
+        float $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
+        try {
+            /** @var static */
+            return static::fromFloat($value);
+        } catch (Exception) {
+            /** @var T */
+            return $default;
+        }
+    }
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromInt(
+        int $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
+        try {
+            /** @var static */
+            return static::fromInt($value);
+        } catch (Exception) {
+            /** @var T */
+            return $default;
+        }
+    }
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
     public static function tryFromMixed(
         mixed $value,
         PrimitiveTypeAbstract $default = new Undefined(),
@@ -127,7 +232,10 @@ readonly class StringDecimal extends StringTypeAbstract
             /** @var static */
             return match (true) {
                 is_string($value) => static::fromString($value),
-                //                ($value instanceof self) => static::fromString($value->value()),
+                is_float($value) => static::fromFloat($value),
+                is_int($value) => static::fromInt($value),
+                ($value instanceof self) => static::fromString($value->value()),
+                is_bool($value) => static::fromBool($value),
                 $value instanceof Stringable, is_scalar($value) => static::fromString((string) $value),
                 default => throw new TypeException('Value cannot be cast to string'),
             };
