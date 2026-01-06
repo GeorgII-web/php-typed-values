@@ -131,13 +131,8 @@ readonly class BoolStandard extends BoolTypeAbstract
         bool $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract {
-        try {
-            /** @var static */
-            return static::fromBool($value);
-        } catch (Exception) {
-            /** @var T */
-            return $default;
-        }
+        /** @var static */
+        return static::fromBool($value);
     }
 
     /**

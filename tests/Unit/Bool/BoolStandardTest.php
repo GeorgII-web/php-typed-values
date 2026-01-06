@@ -4,217 +4,375 @@ declare(strict_types=1);
 
 use PhpTypedValues\Bool\BoolStandard;
 use PhpTypedValues\Exception\Bool\BoolTypeException;
+use PhpTypedValues\Exception\Float\FloatTypeException;
+use PhpTypedValues\Exception\Integer\IntegerTypeException;
+use PhpTypedValues\Undefined\Alias\Undefined;
+use Stringable;
 
-it('constructs with boolean and exposes value and toString', function (): void {
-    $t = new BoolStandard(true);
-    $f = new BoolStandard(false);
+describe('BoolStandard - Instantiation and Core Methods', function (): void {
+    it('constructs with boolean values', function (bool $value): void {
+        $bool = new BoolStandard($value);
+        expect($bool->value())->toBe($value);
+    })->with([true, false]);
 
-    expect($t->value())->toBeTrue()
-        ->and($t->toString())->toBe('true')
-        ->and($f->value())->toBeFalse()
-        ->and($f->toString())->toBe('false');
+    it('provides correct string representation', function (bool $value, string $expectedString): void {
+        $bool = new BoolStandard($value);
+        expect($bool->toString())->toBe($expectedString)
+            ->and((string) $bool)->toBe($expectedString)
+            ->and($bool->__toString())->toBe($expectedString);
+    })->with([
+        [true, 'true'],
+        [false, 'false'],
+    ]);
+
+    it('jsonSerialize returns native boolean', function (bool $value): void {
+        $bool = new BoolStandard($value);
+        expect($bool->jsonSerialize())->toBe($value);
+    })->with([true, false]);
+
+    it('isEmpty always returns false', function (bool $value): void {
+        $bool = new BoolStandard($value);
+        expect($bool->isEmpty())->toBeFalse();
+    })->with([true, false]);
+
+    it('isUndefined always returns false', function (bool $value): void {
+        $bool = new BoolStandard($value);
+        expect($bool->isUndefined())->toBeFalse();
+    })->with([true, false]);
+
+    it('isTypeOf returns true when class matches', function (bool $value): void {
+        $bool = new BoolStandard($value);
+        expect($bool->isTypeOf(BoolStandard::class))->toBeTrue();
+    })->with([true, false]);
+
+    it('isTypeOf returns false when class does not match', function (bool $value): void {
+        $bool = new BoolStandard($value);
+        expect($bool->isTypeOf('NonExistentClass'))->toBeFalse();
+    })->with([true, false]);
+
+    it('isTypeOf returns true for multiple classNames when one matches', function (bool $value): void {
+        $bool = new BoolStandard($value);
+        expect($bool->isTypeOf('NonExistentClass', BoolStandard::class, 'AnotherClass'))->toBeTrue();
+    })->with([true, false]);
+
+    it('toBool returns boolean value', function (bool $value): void {
+        $bool = new BoolStandard($value);
+        expect($bool->toBool())->toBe($value);
+    })->with([true, false]);
+
+    it('toInt returns integer representation', function (bool $value, int $expectedInt): void {
+        $bool = new BoolStandard($value);
+        expect($bool->toInt())->toBe($expectedInt);
+    })->with([
+        [true, 1],
+        [false, 0],
+    ]);
+
+    it('toFloat returns float representation', function (bool $value, float $expectedFloat): void {
+        $bool = new BoolStandard($value);
+        expect($bool->toFloat())->toBe($expectedFloat);
+    })->with([
+        [true, 1.0],
+        [false, 0.0],
+    ]);
 });
 
-it('jsonSerialize returns native boolean for true/false', function (): void {
-    $t = new BoolStandard(true);
-    $f = new BoolStandard(false);
+describe('BoolStandard - from* Factory Methods', function (): void {
+    it('fromBool creates instance from boolean', function (bool $value): void {
+        $bool = BoolStandard::fromBool($value);
+        expect($bool->value())->toBe($value);
+    })->with([true, false]);
 
-    expect($t->jsonSerialize())->toBeTrue()
-        ->and($f->jsonSerialize())->toBeFalse();
-});
+    it('fromInt creates instance from valid integers', function (int $input, bool $expected): void {
+        $bool = BoolStandard::fromInt($input);
+        expect($bool->value())->toBe($expected);
+    })->with([
+        [1, true],
+        [0, false],
+    ]);
 
-it('creates fromBool correctly', function (): void {
-    expect(BoolStandard::fromBool(true)->value())->toBeTrue()
-        ->and(BoolStandard::fromBool(false)->toString())->toBe('false');
-});
+    it('fromInt throws IntegerTypeException for invalid integers', function (int $invalidValue): void {
+        expect(fn() => BoolStandard::fromInt($invalidValue))
+            ->toThrow(IntegerTypeException::class);
+    })->with([-1, 2, 10, -10]);
 
-it('parses valid string values case-insensitively', function (): void {
-    expect(BoolStandard::fromString('true')->value())->toBeTrue()
-        ->and(BoolStandard::fromString('FALSE')->value())->toBeFalse()
-        ->and(BoolStandard::fromString('TrUe')->toString())->toBe('true');
-});
+    it('fromFloat creates instance from valid floats', function (float $input, bool $expected): void {
+        $bool = BoolStandard::fromFloat($input);
+        expect($bool->value())->toBe($expected);
+    })->with([
+        [1.0, true],
+        [0.0, false],
+    ]);
 
-it('parses extended true/false string aliases', function (): void {
-    // true-like
-    expect(BoolStandard::fromString('1')->value())->toBeTrue()
-        ->and(BoolStandard::fromString('yes')->value())->toBeTrue()
-        ->and(BoolStandard::fromString('on')->value())->toBeTrue()
-        ->and(BoolStandard::fromString('Y')->value())->toBeTrue()
-        // false-like
-        ->and(BoolStandard::fromString('0')->value())->toBeFalse()
-        ->and(BoolStandard::fromString('no')->value())->toBeFalse()
-        ->and(BoolStandard::fromString('off')->value())->toBeFalse()
-        ->and(BoolStandard::fromString('N')->value())->toBeFalse();
-});
+    it('fromFloat throws FloatTypeException for invalid floats', function (float $invalidValue): void {
+        expect(fn() => BoolStandard::fromFloat($invalidValue))
+            ->toThrow(FloatTypeException::class);
+    })->with([-1.0, 2.0, 0.5, -0.5, 1.1]);
 
-it('throws on invalid string values', function (): void {
-    expect(fn() => BoolStandard::fromString('yes1'))
-        ->toThrow(BoolTypeException::class, 'Expected string "true" or "false", got "yes1"');
-});
+    it('fromString creates instance from valid strings', function (string $input, bool $expected): void {
+        $bool = BoolStandard::fromString($input);
+        expect($bool->value())->toBe($expected);
+    })->with([
+        // Case-sensitive lowercase only
+        ['true', true],
+        ['false', false],
+    ]);
 
-it('parses valid integer values 1/0', function (): void {
-    expect(BoolStandard::fromInt(1)->value())->toBeTrue()
-        ->and(BoolStandard::fromInt(0)->toString())->toBe('false');
-});
+    it('fromString throws BoolTypeException for invalid strings', function (string $invalidValue, ?string $expectedExceptionMessage = null): void {
+        $test = fn() => BoolStandard::fromString($invalidValue);
 
-it('throws on invalid integer values', function (): void {
-    expect(fn() => BoolStandard::fromInt(2))
-        ->toThrow(BoolTypeException::class, 'Expected int "1" or "0", got "2"');
-    expect(fn() => BoolStandard::fromInt(-1))
-        ->toThrow(BoolTypeException::class, 'Expected int "1" or "0", got "-1"');
-});
-
-it('tryFromString returns Undefined on invalid input and BoolStandard on valid', function (): void {
-    $ok = BoolStandard::tryFromString('true');
-    $fail = BoolStandard::tryFromString('maybe');
-
-    expect($ok)->toBeInstanceOf(BoolStandard::class)
-        ->and($ok->value())->toBeTrue();
-
-    // Undefined type instance indicates failure without throwing
-    expect($fail::class)->toBe(PhpTypedValues\Undefined\Alias\Undefined::class);
-});
-
-it('tryFromInt returns Undefined on invalid input and BoolStandard on valid', function (): void {
-    $one = BoolStandard::tryFromInt(1);
-    $zero = BoolStandard::tryFromInt(0);
-    $bad = BoolStandard::tryFromInt(3);
-
-    expect($one)->toBeInstanceOf(BoolStandard::class)
-        ->and($one->value())->toBeTrue()
-        ->and($zero)->toBeInstanceOf(BoolStandard::class)
-        ->and($zero->value())->toBeFalse()
-        ->and($bad::class)->toBe(PhpTypedValues\Undefined\Alias\Undefined::class);
-});
-
-it('parses string values with surrounding whitespace', function (): void {
-    expect(BoolStandard::fromString('  true  ')->value())->toBeTrue()
-        ->and(BoolStandard::fromString("\tFALSE \n")->value())->toBeFalse()
-        ->and(BoolStandard::fromString('  on ')->value())->toBeTrue()
-        ->and(BoolStandard::fromString(' off  ')->value())->toBeFalse();
-});
-
-it('casts to string via __toString magic method', function (): void {
-    $t = new BoolStandard(true);
-    $f = BoolStandard::fromBool(false);
-
-    expect((string) $t)->toBe('true')
-        ->and((string) $f)->toBe('false');
-});
-
-it('jsonSerialize returns bool', function (): void {
-    expect(BoolStandard::tryFromString('1')->jsonSerialize())->toBeBool();
-});
-
-it('tryFromMixed handles various inputs returning BoolStandard or Undefined', function (): void {
-    // valid inputs
-    $fromString = BoolStandard::tryFromMixed('true');
-    $fromInt = BoolStandard::tryFromMixed(0);
-    $fromBool = BoolStandard::tryFromMixed(true);
-
-    // invalid inputs
-    $fromArray = BoolStandard::tryFromMixed(['x']);
-    $fromNull = BoolStandard::tryFromMixed(null);
-    $fromObject = BoolStandard::tryFromMixed(new stdClass());
-
-    // stringable object
-    $stringable = new class {
-        public function __toString(): string
-        {
-            return 'yes';
+        if ($expectedExceptionMessage) {
+            expect($test)->toThrow(BoolTypeException::class, $expectedExceptionMessage);
+        } else {
+            expect($test)->toThrow(BoolTypeException::class);
         }
-    };
-    $fromStringable = BoolStandard::tryFromMixed($stringable);
+    })->with([
+        // Uppercase variations
+        ['TRUE', 'String "TRUE" has no valid bool value'],
+        ['True', 'String "True" has no valid bool value'],
+        ['FALSE', 'String "FALSE" has no valid bool value'],
+        ['False', 'String "False" has no valid bool value'],
 
-    expect($fromString)->toBeInstanceOf(BoolStandard::class)
-        ->and($fromString->value())->toBeTrue()
-        ->and($fromInt)->toBeInstanceOf(BoolStandard::class)
-        ->and($fromInt->value())->toBeFalse()
-        ->and($fromBool)->toBeInstanceOf(BoolStandard::class)
-        ->and($fromBool->value())->toBeTrue()
-        ->and($fromStringable)->toBeInstanceOf(BoolStandard::class)
-        ->and($fromStringable->value())->toBeTrue()
-        ->and($fromArray)->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class)
-        ->and($fromNull)->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class)
-        ->and($fromObject)->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class);
+        // Other invalid values
+        ['yes', 'String "yes" has no valid bool value'],
+        ['no', 'String "no" has no valid bool value'],
+        ['on', 'String "on" has no valid bool value'],
+        ['off', 'String "off" has no valid bool value'],
+        ['1', 'String "1" has no valid bool value'],
+        ['0', 'String "0" has no valid bool value'],
+        ['', 'String "" has no valid bool value'],
+        [' ', 'String " " has no valid bool value'],
+        ['invalid', 'String "invalid" has no valid bool value'],
+        ['true ', 'String "true " has no valid bool value'],
+        [' true', 'String " true" has no valid bool value'],
+    ]);
 });
 
-it('isEmpty is always false for BoolStandard', function (): void {
-    expect(BoolStandard::fromBool(true)->isEmpty())->toBeFalse()
-        ->and(BoolStandard::fromBool(false)->isEmpty())->toBeFalse();
+describe('BoolStandard - tryFrom* Methods', function (): void {
+    it('tryFromBool returns BoolStandard for boolean values', function (bool $value): void {
+        $result = BoolStandard::tryFromBool($value);
+        expect($result)->toBeInstanceOf(BoolStandard::class)
+            ->and($result->value())->toBe($value);
+    })->with([true, false]);
+
+    it('tryFromInt returns appropriate result', function (int $input, string|bool $expectedResult): void {
+        $result = BoolStandard::tryFromInt($input);
+
+        if ($expectedResult === true) {
+            expect($result)->toBeInstanceOf(BoolStandard::class)
+                ->and($result->value())->toBeTrue();
+        } elseif ($expectedResult === false) {
+            expect($result)->toBeInstanceOf(BoolStandard::class)
+                ->and($result->value())->toBeFalse();
+        } else {
+            expect($result)->toBeInstanceOf($expectedResult);
+        }
+    })->with([
+        [1, true],
+        [0, false],
+        [-1, Undefined::class],
+        [2, Undefined::class],
+        [10, Undefined::class],
+    ]);
+
+    it('tryFromFloat returns appropriate result', function (float $input, string|bool $expectedResult): void {
+        $result = BoolStandard::tryFromFloat($input);
+
+        if ($expectedResult === true) {
+            expect($result)->toBeInstanceOf(BoolStandard::class)
+                ->and($result->value())->toBeTrue();
+        } elseif ($expectedResult === false) {
+            expect($result)->toBeInstanceOf(BoolStandard::class)
+                ->and($result->value())->toBeFalse();
+        } else {
+            expect($result)->toBeInstanceOf($expectedResult);
+        }
+    })->with([
+        [1.0, true],
+        [0.0, false],
+        [-1.0, Undefined::class],
+        [2.0, Undefined::class],
+        [0.5, Undefined::class],
+        [1.1, Undefined::class],
+    ]);
+
+    it('tryFromString returns appropriate result', function (string $input, string|bool $expectedResult): void {
+        $result = BoolStandard::tryFromString($input);
+
+        if ($expectedResult === true) {
+            expect($result)->toBeInstanceOf(BoolStandard::class)
+                ->and($result->value())->toBeTrue();
+        } elseif ($expectedResult === false) {
+            expect($result)->toBeInstanceOf(BoolStandard::class)
+                ->and($result->value())->toBeFalse();
+        } else {
+            expect($result)->toBeInstanceOf($expectedResult);
+        }
+    })->with([
+        // Valid lowercase strings
+        ['true', true],
+        ['false', false],
+
+        // Invalid strings (case-sensitive)
+        ['TRUE', Undefined::class],
+        ['True', Undefined::class],
+        ['FALSE', Undefined::class],
+        ['False', Undefined::class],
+        ['yes', Undefined::class],
+        ['no', Undefined::class],
+        ['on', Undefined::class],
+        ['off', Undefined::class],
+        ['1', Undefined::class],
+        ['0', Undefined::class],
+        ['', Undefined::class],
+        [' ', Undefined::class],
+        ['invalid', Undefined::class],
+        ['true ', Undefined::class],
+        [' true', Undefined::class],
+    ]);
 });
 
-it('isUndefined is always false for BoolStandard', function (): void {
-    expect(BoolStandard::fromBool(true)->isUndefined())->toBeFalse()
-        ->and(BoolStandard::fromBool(false)->isUndefined())->toBeFalse();
-});
+describe('BoolStandard - tryFromMixed Method', function (): void {
+    it('handles boolean inputs', function (bool $value): void {
+        $result = BoolStandard::tryFromMixed($value);
+        expect($result)->toBeInstanceOf(BoolStandard::class)
+            ->and($result->value())->toBe($value);
+    })->with([true, false]);
 
-it('converts mixed values to correct boolean state', function (mixed $input, bool $expected): void {
-    $result = BoolStandard::tryFromMixed($input);
+    it('handles integer inputs', function (int $value, string|bool $expectedResult): void {
+        $result = BoolStandard::tryFromMixed($value);
 
-    expect($result)->toBeInstanceOf(BoolStandard::class)
-        ->and($result->value())->toBe($expected);
-})->with([
-    // Booleans
-    ['input' => true, 'expected' => true],
-    ['input' => false, 'expected' => false],
-    // Integers
-    ['input' => 1, 'expected' => true],
-    ['input' => 0, 'expected' => false],
-    // Floats (Strict)
-    ['input' => 1.0, 'expected' => true],
-    ['input' => 0.0, 'expected' => false],
-    // Strings (True-like)
-    ['input' => 'true', 'expected' => true],
-    ['input' => '1', 'expected' => true],
-    ['input' => 'yes', 'expected' => true],
-    ['input' => 'on', 'expected' => true],
-    ['input' => 'y', 'expected' => true],
-    // Strings (False-like)
-    ['input' => 'false', 'expected' => false],
-    ['input' => '0', 'expected' => false],
-    ['input' => 'no', 'expected' => false],
-    ['input' => 'off', 'expected' => false],
-    ['input' => 'n', 'expected' => false],
-    // Value Objects
-    ['input' => BoolStandard::fromBool(true), 'expected' => true],
-    ['input' => BoolStandard::fromBool(false), 'expected' => false],
-]);
+        if ($expectedResult === true) {
+            expect($result)->toBeInstanceOf(BoolStandard::class)
+                ->and($result->value())->toBeTrue();
+        } elseif ($expectedResult === false) {
+            expect($result)->toBeInstanceOf(BoolStandard::class)
+                ->and($result->value())->toBeFalse();
+        } else {
+            expect($result)->toBeInstanceOf($expectedResult);
+        }
+    })->with([
+        [1, true],
+        [0, false],
+        [-1, Undefined::class],
+        [2, Undefined::class],
+        [10, Undefined::class],
+    ]);
 
-it('returns Undefined for invalid mixed inputs', function (mixed $input): void {
-    $result = BoolStandard::tryFromMixed($input);
+    it('handles float inputs', function (float $value, string|bool $expectedResult): void {
+        $result = BoolStandard::tryFromMixed($value);
 
-    expect($result)->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class)
-        ->and($result->isUndefined())->toBeTrue();
-})->with([
-    ['input' => null],
-    ['input' => []],
-    ['input' => [1, 2, 3]],
-    ['input' => new stdClass()],
-    ['input' => 0.5],             // Float that isn't 1.0 or 0.0
-    ['input' => 1.1],             // Float that isn't 1.0 or 0.0
-    ['input' => 2],               // Integer that isn't 1 or 0
-    ['input' => -1],              // Integer that isn't 1 or 0
-    ['input' => 'maybe'],         // String that isn't true-like or false-like
-    ['input' => ''],              // Empty string
-    ['input' => ' '],             // Blank string
-    ['input' => \INF],                          // Infinite value
-    ['input' => \NAN],                          // Not a Number
-    ['input' => fn() => 1.5],                  // Closure
-    ['input' => fopen('php://memory', 'r')],   // Resource
-]);
+        if ($expectedResult === true) {
+            expect($result)->toBeInstanceOf(BoolStandard::class)
+                ->and($result->value())->toBeTrue();
+        } elseif ($expectedResult === false) {
+            expect($result)->toBeInstanceOf(BoolStandard::class)
+                ->and($result->value())->toBeFalse();
+        } else {
+            expect($result)->toBeInstanceOf($expectedResult);
+        }
+    })->with([
+        [1.0, true],
+        [0.0, false],
+        [-1.0, Undefined::class],
+        [2.0, Undefined::class],
+        [0.5, Undefined::class],
+        [1.1, Undefined::class],
+    ]);
 
-it('isTypeOf returns true when class matches', function (): void {
-    $f = new BoolStandard(false);
-    expect($f->isTypeOf(BoolStandard::class))->toBeTrue();
-});
+    it('handles string inputs', function (string $value, string|bool $expectedResult): void {
+        $result = BoolStandard::tryFromMixed($value);
 
-it('isTypeOf returns false when class does not match', function (): void {
-    $f = new BoolStandard(false);
-    expect($f->isTypeOf('NonExistentClass'))->toBeFalse();
-});
+        if ($expectedResult === true) {
+            expect($result)->toBeInstanceOf(BoolStandard::class)
+                ->and($result->value())->toBeTrue();
+        } elseif ($expectedResult === false) {
+            expect($result)->toBeInstanceOf(BoolStandard::class)
+                ->and($result->value())->toBeFalse();
+        } else {
+            expect($result)->toBeInstanceOf($expectedResult);
+        }
+    })->with([
+        ['true', true],
+        ['false', false],
+        ['TRUE', Undefined::class],
+        ['FALSE', Undefined::class],
+        ['yes', Undefined::class],
+        ['no', Undefined::class],
+        ['on', Undefined::class],
+        ['off', Undefined::class],
+        ['', Undefined::class],
+        [' ', Undefined::class],
+    ]);
 
-it('isTypeOf returns true for multiple classNames when one matches', function (): void {
-    $f = new BoolStandard(false);
-    expect($f->isTypeOf('NonExistentClass', BoolStandard::class, 'AnotherClass'))->toBeTrue();
+    it('handles Stringable objects', function (): void {
+        $stringableTrue = new class implements Stringable {
+            public function __toString(): string
+            {
+                return 'true';
+            }
+        };
+
+        $stringableFalse = new class implements Stringable {
+            public function __toString(): string
+            {
+                return 'false';
+            }
+        };
+
+        $stringableInvalid = new class implements Stringable {
+            public function __toString(): string
+            {
+                return 'invalid';
+            }
+        };
+
+        $stringableUppercase = new class implements Stringable {
+            public function __toString(): string
+            {
+                return 'TRUE';
+            }
+        };
+
+        expect(BoolStandard::tryFromMixed($stringableTrue))
+            ->toBeInstanceOf(BoolStandard::class)
+            ->and(BoolStandard::tryFromMixed($stringableTrue)->value())->toBeTrue()
+            ->and(BoolStandard::tryFromMixed($stringableFalse))
+            ->toBeInstanceOf(BoolStandard::class)
+            ->and(BoolStandard::tryFromMixed($stringableFalse)->value())->toBeFalse()
+            ->and(BoolStandard::tryFromMixed($stringableInvalid))
+            ->toBeInstanceOf(Undefined::class)
+            ->and(BoolStandard::tryFromMixed($stringableUppercase))
+            ->toBeInstanceOf(Undefined::class);
+    });
+
+    it('handles existing BoolStandard instances', function (bool $value): void {
+        $bool = new BoolStandard($value);
+        $result = BoolStandard::tryFromMixed($bool);
+
+        expect($result)->toBeInstanceOf(BoolStandard::class)
+            ->and($result->value())->toBe($value);
+    })->with([true, false]);
+
+    it('returns Undefined for unsupported types', function (mixed $invalidValue): void {
+        $result = BoolStandard::tryFromMixed($invalidValue);
+        expect($result)->toBeInstanceOf(Undefined::class);
+    })->with([
+        [null],
+        [[]],
+        [['x']],
+        [new stdClass()],
+        [fn() => null], // callable
+        [new class {}], // anonymous object without Stringable
+    ]);
+
+    it('handles TypeException in default match case', function (): void {
+        // This tests the default case in the match statement
+        // We need to pass something that doesn't match any condition
+        $resource = fopen('php://memory', 'r');
+        fclose($resource);
+
+        $result = BoolStandard::tryFromMixed($resource);
+        expect($result)->toBeInstanceOf(Undefined::class);
+    });
 });

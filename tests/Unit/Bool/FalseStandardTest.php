@@ -13,7 +13,7 @@ it('constructs only with false and exposes value/toString', function (): void {
         ->and((string) $f)->toBe('false');
 
     expect(fn() => new FalseStandard(true))
-        ->toThrow(BoolTypeException::class, 'Expected false literal, got "true"');
+        ->toThrow(BoolTypeException::class, 'Expected "false" literal, got "true"');
 });
 
 it('jsonSerialize returns native false', function (): void {
@@ -22,24 +22,26 @@ it('jsonSerialize returns native false', function (): void {
 });
 
 it('fromString accepts false-like values only', function (): void {
+    // Only 'false' string is accepted (case-insensitive)
     expect(FalseStandard::fromString('false')->value())->toBeFalse()
-        ->and(FalseStandard::fromString(' NO ')->value())->toBeFalse()
-        ->and(FalseStandard::fromString('off')->value())->toBeFalse()
-        ->and(FalseStandard::fromString('0')->value())->toBeFalse();
+        ->and(FalseStandard::tryFromString('FALSE'))->toBeInstanceOf(Undefined::class);
 
     expect(fn() => FalseStandard::fromString('true'))
-        ->toThrow(BoolTypeException::class, 'Expected string representing false, got "true"');
+        ->toThrow(BoolTypeException::class, 'Expected "false" literal, got "true"');
+    expect(fn() => FalseStandard::fromString(' NO '))
+        ->toThrow(BoolTypeException::class, 'String " NO " has no valid bool value');
 });
 
 it('fromInt accepts only 0', function (): void {
     expect(FalseStandard::fromInt(0)->value())->toBeFalse();
 
     expect(fn() => FalseStandard::fromInt(1))
-        ->toThrow(BoolTypeException::class, 'Expected int "0" for false, got "1"');
+        ->toThrow(BoolTypeException::class, 'Expected "false" literal, got "true"');
 });
 
 it('tryFromString/tryFromInt return Undefined for non-false inputs', function (): void {
-    $ok = FalseStandard::tryFromString('n');
+    // Only 'false' string is accepted, not 'n'
+    $ok = FalseStandard::tryFromString('false');
     $badStr = FalseStandard::tryFromString('yes');
     $okI = FalseStandard::tryFromInt(0);
     $badI = FalseStandard::tryFromInt(2);
@@ -53,7 +55,10 @@ it('tryFromString/tryFromInt return Undefined for non-false inputs', function ()
 });
 
 it('jsonSerialize returns bool', function (): void {
-    expect(FalseStandard::tryFromString('0')->jsonSerialize())->toBeBool();
+    // Check that tryFromString returns proper type
+    $valid = FalseStandard::tryFromString('false');
+    expect($valid)->toBeInstanceOf(FalseStandard::class)
+        ->and($valid->jsonSerialize())->toBeFalse();
 });
 
 it('fromBool accepts only false and throws on true', function (): void {
@@ -61,7 +66,7 @@ it('fromBool accepts only false and throws on true', function (): void {
     expect($f->value())->toBeFalse();
 
     expect(fn() => FalseStandard::fromBool(true))
-        ->toThrow(BoolTypeException::class, 'Expected false literal, got "true"');
+        ->toThrow(BoolTypeException::class, 'Expected "false" literal, got "true"');
 });
 
 it('__toString returns "false"', function (): void {
@@ -71,21 +76,25 @@ it('__toString returns "false"', function (): void {
 });
 
 it('tryFromMixed handles various inputs returning FalseStandard or Undefined', function (): void {
-    // valid inputs
-    $fromString = FalseStandard::tryFromMixed('no');
+    // valid inputs for false - only 'false' string and 0 are accepted
+    $fromString = FalseStandard::tryFromMixed('false');
     $fromInt = FalseStandard::tryFromMixed(0);
+
+    // bool(false) should be accepted
     $fromBool = FalseStandard::tryFromMixed(false);
 
-    // invalid inputs
+    // invalid inputs (should produce true or invalid)
     $fromArray = FalseStandard::tryFromMixed(['x']);
     $fromNull = FalseStandard::tryFromMixed(null);
     $fromObject = FalseStandard::tryFromMixed(new stdClass());
+    $fromTrueString = FalseStandard::tryFromMixed('true');
+    $fromTrueInt = FalseStandard::tryFromMixed(1);
 
-    // stringable object
+    // stringable object with 'false'
     $stringable = new class implements Stringable {
         public function __toString(): string
         {
-            return 'off';
+            return 'false';
         }
     };
     $fromStringable = FalseStandard::tryFromMixed($stringable);
@@ -94,13 +103,15 @@ it('tryFromMixed handles various inputs returning FalseStandard or Undefined', f
         ->and($fromString->value())->toBeFalse()
         ->and($fromInt)->toBeInstanceOf(FalseStandard::class)
         ->and($fromInt->value())->toBeFalse()
-        // bool(false) is converted to empty string by convertMixedToString and is not accepted -> Undefined
         ->and($fromBool)->toBeInstanceOf(FalseStandard::class)
+        ->and($fromBool->value())->toBeFalse()
         ->and($fromStringable)->toBeInstanceOf(FalseStandard::class)
         ->and($fromStringable->value())->toBeFalse()
         ->and($fromArray)->toBeInstanceOf(Undefined::class)
         ->and($fromNull)->toBeInstanceOf(Undefined::class)
-        ->and($fromObject)->toBeInstanceOf(Undefined::class);
+        ->and($fromObject)->toBeInstanceOf(Undefined::class)
+        ->and($fromTrueString)->toBeInstanceOf(Undefined::class)
+        ->and($fromTrueInt)->toBeInstanceOf(Undefined::class);
 });
 
 it('tryFromMixed handles floats 0.0 and 1.0', function (): void {
@@ -119,11 +130,13 @@ it('tryFromMixed handles floats 0.0 and 1.0', function (): void {
 });
 
 it('isEmpty is always false for FalseStandard', function (): void {
-    expect(FalseStandard::fromString('no')->isEmpty())->toBeFalse();
+    // Note: can't use 'no' string, only 'false'
+    expect(FalseStandard::fromString('false')->isEmpty())->toBeFalse();
 });
 
 it('isUndefined is always false for FalseStandard', function (): void {
-    expect(FalseStandard::fromString('no')->isUndefined())->toBeFalse();
+    // Note: can't use 'no' string, only 'false'
+    expect(FalseStandard::fromString('false')->isUndefined())->toBeFalse();
 });
 
 it('isTypeOf returns true when class matches', function (): void {
@@ -139,4 +152,52 @@ it('isTypeOf returns false when class does not match', function (): void {
 it('isTypeOf returns true for multiple classNames when one matches', function (): void {
     $f = new FalseStandard(false);
     expect($f->isTypeOf('NonExistentClass', FalseStandard::class, 'AnotherClass'))->toBeTrue();
+});
+
+it('toBool returns false', function (): void {
+    expect(FalseStandard::fromBool(false)->toBool())->toBeFalse();
+});
+
+it('toInt returns 0', function (): void {
+    expect(FalseStandard::fromBool(false)->toInt())->toBe(0);
+});
+
+it('toFloat returns 0.0', function (): void {
+    expect(FalseStandard::fromBool(false)->toFloat())->toBe(0.0);
+});
+
+it('tryFromBool handles boolean values', function (): void {
+    $falseResult = FalseStandard::tryFromBool(false);
+    $trueResult = FalseStandard::tryFromBool(true);
+
+    expect($falseResult)->toBeInstanceOf(FalseStandard::class)
+        ->and($falseResult->value())->toBeFalse()
+        ->and($trueResult)->toBeInstanceOf(Undefined::class);
+});
+
+it('tryFromFloat handles float values', function (): void {
+    $validFalse = FalseStandard::tryFromFloat(0.0);
+    $invalid = FalseStandard::tryFromFloat(1.0);
+
+    expect($validFalse)->toBeInstanceOf(FalseStandard::class)
+        ->and($validFalse->value())->toBeFalse()
+        ->and($invalid)->toBeInstanceOf(Undefined::class);
+});
+
+it('tryFromInt handles integer values', function (): void {
+    $validFalse = FalseStandard::tryFromInt(0);
+    $invalid = FalseStandard::tryFromInt(1);
+
+    expect($validFalse)->toBeInstanceOf(FalseStandard::class)
+        ->and($validFalse->value())->toBeFalse()
+        ->and($invalid)->toBeInstanceOf(Undefined::class);
+});
+
+it('tryFromString handles string values', function (): void {
+    $validFalse = FalseStandard::tryFromString('false');
+    $invalid = FalseStandard::tryFromString('true');
+
+    expect($validFalse)->toBeInstanceOf(FalseStandard::class)
+        ->and($validFalse->value())->toBeFalse()
+        ->and($invalid)->toBeInstanceOf(Undefined::class);
 });
