@@ -4,9 +4,17 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Base\Primitive\DateTime;
 
+use const PHP_EOL;
+
 use DateTimeImmutable;
+use DateTimeZone;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
+use PhpTypedValues\Exception\DateTime\DateTimeTypeException;
+use PhpTypedValues\Exception\DateTime\ReasonableRangeDateTimeTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
+
+use function count;
+use function sprintf;
 
 /**
  * Base implementation for DateTime typed values.
@@ -78,6 +86,78 @@ abstract readonly class DateTimeTypeAbstract extends PrimitiveTypeAbstract imple
      * @param non-empty-string $timezone
      */
     abstract public function withTimeZone(string $timezone): static;
+
+    /**
+     * @throws ReasonableRangeDateTimeTypeException
+     * @throws DateTimeTypeException
+     */
+    protected static function stringToDateTime(
+        string $value,
+        string $format,
+        ?DateTimeZone $timezone = null,
+    ): DateTimeImmutable {
+        if (str_contains($value, "\0")) {
+            throw new DateTimeTypeException('Date time string must not contain null bytes');
+        }
+
+        if (trim($value) === '') {
+            throw new DateTimeTypeException('Date time string must not be blank');
+        }
+
+        /**
+         * Collect errors and throw exception with all of them.
+         */
+        $dt = DateTimeImmutable::createFromFormat($format, $value, $timezone);
+        /**
+         * Normalize getLastErrors result to an array with counters.
+         * Some PHP versions return an array with zero counts instead of false.
+         */
+        $errors = DateTimeImmutable::getLastErrors() ?: [
+            'errors' => [],
+            'warnings' => [],
+        ];
+
+        if (count($errors['errors']) > 0 || count($errors['warnings']) > 0) {
+            $errorMessages = '';
+
+            foreach ($errors['errors'] as $pos => $message) {
+                $errorMessages .= sprintf('Error at %d: %s' . PHP_EOL, $pos, $message);
+            }
+
+            foreach ($errors['warnings'] as $pos => $message) {
+                $errorMessages .= sprintf('Warning at %d: %s' . PHP_EOL, $pos, $message);
+            }
+
+            throw new DateTimeTypeException(sprintf('Invalid date time value "%s", use format "%s"', $value, static::FORMAT) . PHP_EOL . $errorMessages);
+        }
+
+        /**
+         * Strict “round-trip” check.
+         *
+         * @psalm-suppress PossiblyFalseReference
+         */
+        if ($value !== $dt->format(static::FORMAT)) {
+            throw new DateTimeTypeException(sprintf('Unexpected conversion, source string "%s" is not equal to formatted one "%s"', $value, $dt->format(static::FORMAT)));
+        }
+
+        /**
+         * Assert that timestamp in a reasonable range.
+         *
+         * @psalm-suppress PossiblyFalseReference
+         */
+        $ts = $dt->format('U');
+        if ($ts < static::MIN_TIMESTAMP_SECONDS || $ts > static::MAX_TIMESTAMP_SECONDS) {
+            throw new ReasonableRangeDateTimeTypeException(sprintf('Timestamp "%s" out of supported range "%d"-"%d".', $ts, static::MIN_TIMESTAMP_SECONDS, static::MAX_TIMESTAMP_SECONDS));
+        }
+
+        /**
+         * $dt is not FALSE here, it will fail before on error checking.
+         * Reset to a default time zone.
+         *
+         * @psalm-suppress FalsableReturnStatement
+         */
+        return $dt->setTimezone(static::stringToDateTimeZone(DateTimeTypeInterface::DEFAULT_ZONE));
+    }
 
     public function __toString(): string
     {
