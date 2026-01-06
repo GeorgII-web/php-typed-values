@@ -51,7 +51,6 @@ testNonEmptyString(StringNonEmpty::fromString('hi')->value());
 testEmptyString(StringEmpty::fromString('')->value());
 
 echo EmptyStr::fromString('')->toString() . PHP_EOL;
-echo StringMd5::hash('hi')->toString() . PHP_EOL;
 echo StringStandard::fromString('hi')->toString() . PHP_EOL;
 echo NonEmpty::fromString('hi')->toString() . PHP_EOL;
 echo StringType::fromString('hi')->toString() . PHP_EOL;
