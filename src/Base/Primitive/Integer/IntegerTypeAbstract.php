@@ -113,6 +113,8 @@ abstract readonly class IntegerTypeAbstract extends PrimitiveTypeAbstract implem
     abstract public function value(): int;
 
     /**
+     * todo del.
+     *
      * @throws IntegerTypeException
      */
     protected static function getIntegerFromFloat(float $value): int
@@ -128,6 +130,8 @@ abstract readonly class IntegerTypeAbstract extends PrimitiveTypeAbstract implem
     }
 
     /**
+     * todo del.
+     *
      * @throws IntegerTypeException
      * @throws ReasonableRangeIntegerTypeException
      */

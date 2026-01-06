@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Unit\Base\Primitive\Bool;
 
 use PhpTypedValues\Base\Primitive\Bool\BoolTypeAbstract;
+use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 use Stringable;
@@ -21,6 +22,11 @@ readonly class BoolTypeAbstractTest extends BoolTypeAbstract
     }
 
     public static function fromBool(bool $value): static
+    {
+        return new self();
+    }
+
+    public static function fromFloat(float $value): static
     {
         return new self();
     }
@@ -55,22 +61,47 @@ readonly class BoolTypeAbstractTest extends BoolTypeAbstract
         return true;
     }
 
+    public function toBool(): bool
+    {
+        return true;
+    }
+
+    public function toFloat(): float
+    {
+        return 1.0;
+    }
+
+    public function toInt(): int
+    {
+        return 1;
+    }
+
     public function toString(): string
     {
         return 'true';
     }
 
+    public static function tryFromBool(bool $value, PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
+        return new self();
+    }
+
+    public static function tryFromFloat(float $value, PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
+        return new self();
+    }
+
     public static function tryFromInt(
         int $value,
-        \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|\PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract {
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
         return new self();
     }
 
     public static function tryFromMixed(
         mixed $value,
-        \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|\PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract {
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
         if ($value === null) {
             return $default;
         }
@@ -88,8 +119,8 @@ readonly class BoolTypeAbstractTest extends BoolTypeAbstract
 
     public static function tryFromString(
         string $value,
-        \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|\PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract {
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
         return new self($value);
     }
 

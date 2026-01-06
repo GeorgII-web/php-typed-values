@@ -8,26 +8,27 @@ use Exception;
 use PhpTypedValues\Base\Primitive\Bool\BoolTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\Bool\BoolTypeException;
+use PhpTypedValues\Exception\Float\FloatTypeException;
+use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
 
 use function is_bool;
+use function is_float;
 use function is_int;
 use function is_string;
-use function sprintf;
-use function strtolower;
-use function trim;
 
 /**
  * Literal boolean false typed value.
  *
  * Accepts common false-like representations in factories:
- *  - Strings: "false", "0", "no", "off", "n" (case-insensitive)
- *  - Ints: 0
+ *  - String: "false" (case-insensitive)
+ *  - Int: 0
+ *  - Float: 0.0
  *
  * Example
- *  - $f = FalseStandard::fromString('Off');
+ *  - $f = FalseStandard::fromString('false');
  *    $f->value(); // false
  *  - $f = FalseStandard::fromInt(0);
  *    $f->toString(); // "false"
@@ -44,7 +45,7 @@ readonly class FalseStandard extends BoolTypeAbstract
     public function __construct(bool $value)
     {
         if ($value !== false) {
-            throw new BoolTypeException('Expected false literal, got "true"');
+            throw new BoolTypeException('Expected "false" literal, got "true"');
         }
 
         $this->value = false;
@@ -59,15 +60,21 @@ readonly class FalseStandard extends BoolTypeAbstract
     }
 
     /**
+     * @throws FloatTypeException
+     * @throws BoolTypeException
+     */
+    public static function fromFloat(float $value): static
+    {
+        return new static(static::floatToBool($value));
+    }
+
+    /**
+     * @throws IntegerTypeException
      * @throws BoolTypeException
      */
     public static function fromInt(int $value): static
     {
-        if ($value === 0) {
-            return new static(false);
-        }
-
-        throw new BoolTypeException(sprintf('Expected int "0" for false, got "%s"', $value));
+        return new static(static::intToBool($value));
     }
 
     /**
@@ -75,12 +82,7 @@ readonly class FalseStandard extends BoolTypeAbstract
      */
     public static function fromString(string $value): static
     {
-        $v = strtolower(trim($value));
-        if ($v === 'false' || $v === '0' || $v === 'no' || $v === 'off' || $v === 'n') {
-            return new static(false);
-        }
-
-        throw new BoolTypeException(sprintf('Expected string representing false, got "%s"', $value));
+        return new static(static::stringToBool($value));
     }
 
     public function isEmpty(): bool
@@ -109,9 +111,67 @@ readonly class FalseStandard extends BoolTypeAbstract
         return $this->value();
     }
 
+    public function toBool(): bool
+    {
+        return $this->value();
+    }
+
+    public function toFloat(): float
+    {
+        return static::boolToFloat($this->value());
+    }
+
+    public function toInt(): int
+    {
+        return static::boolToInt($this->value());
+    }
+
+    /**
+     * @return non-empty-string
+     */
     public function toString(): string
     {
-        return 'false';
+        return static::boolToString($this->value());
+    }
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromBool(
+        bool $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
+        try {
+            /** @var static */
+            return static::fromBool($value);
+        } catch (Exception) {
+            /** @var T */
+            return $default;
+        }
+    }
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromFloat(
+        float $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
+        try {
+            /** @var static */
+            return static::fromFloat($value);
+        } catch (Exception) {
+            /** @var T */
+            return $default;
+        }
     }
 
     /**
@@ -148,11 +208,11 @@ readonly class FalseStandard extends BoolTypeAbstract
         try {
             /** @var static */
             return match (true) {
-                is_bool($value) => static::fromBool($value), // Boolean true\false
-                is_int($value) => static::fromInt($value), // Integer 1\0
-                $value === 0.0 => static::fromInt((int) $value), // Floats 0.0
-                //                ($value instanceof self) => static::fromBool($value->value()), // BoolType Class - toString() will care about this case
-                is_string($value) || $value instanceof Stringable => static::fromString((string) $value), // String "true","1","yes", etc.
+                is_bool($value) => static::fromBool($value),
+                is_int($value) => static::fromInt($value),
+                is_float($value) => static::fromFloat($value),
+                ($value instanceof self) => static::fromBool($value->value()),
+                is_string($value) || $value instanceof Stringable => static::fromString((string) $value),
                 default => throw new TypeException('Value cannot be cast to boolean'),
             };
         } catch (Exception) {
@@ -184,10 +244,5 @@ readonly class FalseStandard extends BoolTypeAbstract
     public function value(): false
     {
         return $this->value;
-    }
-
-    public function __toString(): string
-    {
-        return $this->toString();
     }
 }

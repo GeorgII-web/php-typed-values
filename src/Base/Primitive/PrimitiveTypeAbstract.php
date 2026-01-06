@@ -53,7 +53,7 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
      *
      * Marked as mutation-free so Psalm treats calls as pure in immutable contexts.
      *
-     * @psalm-mutation-free
+     * @psalm-pure
      */
     abstract public function jsonSerialize(): mixed;
 
@@ -62,6 +62,9 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
      */
     abstract public function toString(): string;
 
+    /**
+     * @psalm-pure
+     */
     protected static function boolToFloat(bool $value): float
     {
         if ($value === true) {
@@ -72,6 +75,22 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
     }
 
     /**
+     * @psalm-pure
+     *
+     * @return non-negative-int 1|0
+     */
+    protected static function boolToInt(bool $value): int
+    {
+        if ($value === true) {
+            return 1;
+        }
+
+        return 0;
+    }
+
+    /**
+     * @psalm-pure
+     *
      * @return non-empty-string
      */
     protected static function boolToString(bool $value): string
@@ -84,7 +103,7 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
     }
 
     /**
-     * @psalm-mutation-free
+     * @psalm-pure
      *
      * @throws FloatTypeException
      */
@@ -102,7 +121,7 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
     }
 
     /**
-     * @psalm-mutation-free
+     * @psalm-pure
      *
      * @throws FloatTypeException
      */
@@ -117,7 +136,7 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
     }
 
     /**
-     * @psalm-mutation-free
+     * @psalm-pure
      *
      * @return non-empty-string
      *
@@ -134,6 +153,26 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
     }
 
     /**
+     * @psalm-pure
+     *
+     * @throws IntegerTypeException
+     */
+    protected static function intToBool(int $value): bool
+    {
+        if ($value === 1) {
+            return true;
+        }
+
+        if ($value === 0) {
+            return false;
+        }
+
+        throw new IntegerTypeException(sprintf('Integer "%s" has no valid strict bool value', $value));
+    }
+
+    /**
+     * @psalm-pure
+     *
      * @throws FloatTypeException
      */
     protected static function intToFloat(int $value): float
@@ -148,6 +187,8 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
     }
 
     /**
+     * @psalm-pure
+     *
      * @return non-empty-string
      *
      * @throws FloatTypeException

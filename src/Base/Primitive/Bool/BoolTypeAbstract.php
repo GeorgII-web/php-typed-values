@@ -26,11 +26,47 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  */
 abstract readonly class BoolTypeAbstract extends PrimitiveTypeAbstract implements BoolTypeInterface
 {
-    abstract public function isEmpty(): bool;
+    abstract public static function fromBool(bool $value): static;
 
-    abstract public function isUndefined(): bool;
+    abstract public static function fromFloat(float $value): static;
+
+    abstract public static function fromInt(int $value): static;
+
+    abstract public static function fromString(string $value): static;
+
+    abstract public function isTypeOf(string ...$classNames): bool;
+
+    abstract public function toBool(): bool;
+
+    abstract public function toFloat(): float;
+
+    abstract public function toInt(): int;
 
     abstract public function toString(): string;
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    abstract public static function tryFromBool(
+        bool $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract;
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    abstract public static function tryFromFloat(
+        float $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract;
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -68,9 +104,6 @@ abstract readonly class BoolTypeAbstract extends PrimitiveTypeAbstract implement
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract;
 
-    /**
-     * DO NOT IMPLEMENT ANY PUBLIC METHODS IN INTERNAL CLASS!
-     */
     abstract public function value(): bool;
 
     public function __toString(): string
