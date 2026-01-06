@@ -4,14 +4,8 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Base\Primitive\Integer;
 
-use const FILTER_VALIDATE_INT;
-
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
-use PhpTypedValues\Exception\Integer\IntegerTypeException;
-use PhpTypedValues\Exception\Integer\ReasonableRangeIntegerTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
-
-use function sprintf;
 
 /**
  * Base implementation for integer-typed values.
@@ -111,52 +105,6 @@ abstract readonly class IntegerTypeAbstract extends PrimitiveTypeAbstract implem
     ): static|PrimitiveTypeAbstract;
 
     abstract public function value(): int;
-
-    /**
-     * todo del.
-     *
-     * @throws IntegerTypeException
-     */
-    protected static function getIntegerFromFloat(float $value): int
-    {
-        $intValue = (int) $value;
-
-        // Check if the float had a fractional part by comparing back
-        if ((float) $intValue !== $value) {
-            throw new IntegerTypeException(sprintf('Float %s cannot be converted to integer without losing precision', $value));
-        }
-
-        return $intValue;
-    }
-
-    /**
-     * todo del.
-     *
-     * @throws IntegerTypeException
-     * @throws ReasonableRangeIntegerTypeException
-     */
-    protected static function getIntegerFromString(string $value): int
-    {
-        // First, check if filter_var even considers it an integer in range
-        $filtered = filter_var($value, FILTER_VALIDATE_INT);
-        if ($filtered === false) {
-            // If it looks like a canonical decimal integer but filter_var failed, it's an overflow.
-            // Regex matches: 0, -0 (canonical 0), or non-zero numbers without leading zeros.
-            if (preg_match('/^-?(?:0|[1-9]\d*)$/', $value)) {
-                throw new ReasonableRangeIntegerTypeException(sprintf('String "%s" has no reasonable range integer value', $value));
-            }
-
-            throw new IntegerTypeException(sprintf('String "%s" has no valid strict integer value', $value));
-        }
-
-        // Strict check, avoid unexpected string conversion
-        $convertedValue = (string) $filtered;
-        if ($value !== $convertedValue) {
-            throw new IntegerTypeException(sprintf('String "%s" is not in canonical form ("%s")', $value, $filtered));
-        }
-
-        return $filtered;
-    }
 
     public function __toString(): string
     {

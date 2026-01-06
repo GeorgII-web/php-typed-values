@@ -7,7 +7,6 @@ namespace PhpTypedValues\DateTime;
 use const DATE_RFC3339;
 
 use DateTimeImmutable;
-use DateTimeZone;
 use Exception;
 use PhpTypedValues\Base\Primitive\DateTime\DateTimeTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
@@ -42,7 +41,7 @@ readonly class DateTimeRFC3339 extends DateTimeTypeAbstract
     public function __construct(DateTimeImmutable $value)
     {
         // normalized time zone
-        $this->value = $value->setTimezone(new DateTimeZone(static::DEFAULT_ZONE));
+        $this->value = $value->setTimezone(static::stringToDateTimeZone(static::DEFAULT_ZONE));
     }
 
     public static function fromDateTime(DateTimeImmutable $value): static
@@ -58,10 +57,10 @@ readonly class DateTimeRFC3339 extends DateTimeTypeAbstract
     public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE): static
     {
         return new static(
-            static::getDateTimeFromFormatedString(
+            static::stringToDateTime(
                 $value,
                 static::FORMAT,
-                new DateTimeZone($timezone)
+                static::stringToDateTimeZone($timezone)
             )
         );
     }
@@ -159,7 +158,7 @@ readonly class DateTimeRFC3339 extends DateTimeTypeAbstract
     public function withTimeZone(string $timezone): static
     {
         return new static(
-            $this->value()->setTimezone(new DateTimeZone($timezone))
+            $this->value()->setTimezone(static::stringToDateTimeZone($timezone))
         );
     }
 

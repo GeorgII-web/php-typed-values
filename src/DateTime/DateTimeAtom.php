@@ -7,12 +7,11 @@ namespace PhpTypedValues\DateTime;
 use const DATE_ATOM;
 
 use DateTimeImmutable;
-use DateTimeZone;
 use Exception;
 use PhpTypedValues\Base\Primitive\DateTime\DateTimeTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\DateTime\DateTimeTypeException;
-use PhpTypedValues\Exception\DateTime\ReasonableRangeDateTimeTypeException;
+use PhpTypedValues\Exception\DateTime\ZoneDateTimeTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
@@ -43,7 +42,7 @@ readonly class DateTimeAtom extends DateTimeTypeAbstract
     public function __construct(DateTimeImmutable $value)
     {
         // normalized time zone
-        $this->value = $value->setTimezone(new DateTimeZone(static::DEFAULT_ZONE));
+        $this->value = $value->setTimezone(static::stringToDateTimeZone(static::DEFAULT_ZONE));
     }
 
     public static function fromDateTime(DateTimeImmutable $value): static
@@ -59,10 +58,10 @@ readonly class DateTimeAtom extends DateTimeTypeAbstract
     public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE): static
     {
         return new static(
-            static::getDateTimeFromFormatedString(
+            static::stringToDateTime(
                 $value,
                 static::FORMAT,
-                new DateTimeZone($timezone)
+                static::stringToDateTimeZone($timezone)
             )
         );
     }
@@ -93,19 +92,11 @@ readonly class DateTimeAtom extends DateTimeTypeAbstract
         return false;
     }
 
-    /**
-     * @throws ReasonableRangeDateTimeTypeException
-     * @throws DateTimeTypeException
-     */
     public function jsonSerialize(): string
     {
         return $this->toString();
     }
 
-    /**
-     * @throws ReasonableRangeDateTimeTypeException
-     * @throws DateTimeTypeException
-     */
     public function toString(): string
     {
         return $this->value()->format(static::FORMAT);
@@ -166,20 +157,15 @@ readonly class DateTimeAtom extends DateTimeTypeAbstract
     }
 
     /**
-     * @throws ReasonableRangeDateTimeTypeException
-     * @throws DateTimeTypeException
+     * @throws ZoneDateTimeTypeException
      */
     public function withTimeZone(string $timezone): static
     {
         return new static(
-            $this->value()->setTimezone(new DateTimeZone($timezone))
+            $this->value()->setTimezone(static::stringToDateTimeZone($timezone))
         );
     }
 
-    /**
-     * @throws ReasonableRangeDateTimeTypeException
-     * @throws DateTimeTypeException
-     */
     public function __toString(): string
     {
         return $this->toString();

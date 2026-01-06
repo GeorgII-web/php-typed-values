@@ -6,7 +6,6 @@ namespace PhpTypedValues\Base\Primitive\DateTime;
 
 use DateTimeImmutable;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
-use PhpTypedValues\Exception\DateTime\DateTimeTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
@@ -30,8 +29,6 @@ interface DateTimeTypeInterface
 
     /**
      * @param non-empty-string $timezone
-     *
-     * @throws DateTimeTypeException
      */
     public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE): static;
 

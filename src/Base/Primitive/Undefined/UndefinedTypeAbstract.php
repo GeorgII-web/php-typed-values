@@ -98,4 +98,9 @@ abstract readonly class UndefinedTypeAbstract extends PrimitiveTypeAbstract impl
      * @throws UndefinedTypeException
      */
     abstract public function value(): string;
+
+    public function __toString(): string
+    {
+        return $this->toString();
+    }
 }

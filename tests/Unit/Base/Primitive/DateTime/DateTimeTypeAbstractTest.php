@@ -26,7 +26,7 @@ readonly class DateTimeTypeAbstractTest extends DateTimeTypeAbstract
 
     public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE): static
     {
-        return new self(new DateTimeImmutable($value, new DateTimeZone($timezone)));
+        return new self(new DateTimeImmutable($value, static::stringToDateTimeZone($timezone)));
     }
 
     public static function getFormat(): string

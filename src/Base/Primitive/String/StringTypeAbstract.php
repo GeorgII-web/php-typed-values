@@ -105,4 +105,9 @@ abstract readonly class StringTypeAbstract extends PrimitiveTypeAbstract impleme
     ): static|PrimitiveTypeAbstract;
 
     abstract public function value(): string;
+
+    public function __toString(): string
+    {
+        return $this->toString();
+    }
 }

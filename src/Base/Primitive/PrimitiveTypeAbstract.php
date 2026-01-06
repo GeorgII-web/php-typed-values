@@ -4,10 +4,21 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Base\Primitive;
 
-use PhpTypedValues\Exception\Bool\BoolTypeException;
+use const PHP_EOL;
+
+use DateTimeImmutable;
+use DateTimeZone;
+use Exception;
+use PhpTypedValues\Base\Primitive\DateTime\DateTimeTypeAbstract;
+use PhpTypedValues\Base\Primitive\DateTime\DateTimeTypeInterface;
+use PhpTypedValues\Exception\DateTime\DateTimeTypeException;
+use PhpTypedValues\Exception\DateTime\ReasonableRangeDateTimeTypeException;
+use PhpTypedValues\Exception\DateTime\ZoneDateTimeTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
 
+use function count;
 use function sprintf;
 
 /**
@@ -56,6 +67,22 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
      * @psalm-pure
      */
     abstract public function jsonSerialize(): mixed;
+
+    /**
+     * @psalm-pure
+     *
+     * @param non-empty-string $timezone
+     *
+     * @throws ZoneDateTimeTypeException
+     */
+    public static function stringToDateTimeZone(string $timezone = DateTimeTypeInterface::DEFAULT_ZONE): DateTimeZone
+    {
+        try {
+            return new DateTimeZone($timezone);
+        } catch (Exception $e) {
+            throw new ZoneDateTimeTypeException(sprintf('Invalid timezone "%s": %s', $timezone, $e->getMessage()), (int) $e->getCode(), $e);
+        }
+    }
 
     /**
      * Returns a normalized string representation of the underlying value.
@@ -173,14 +200,14 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
     /**
      * @psalm-pure
      *
-     * @throws FloatTypeException
+     * @throws IntegerTypeException
      */
     protected static function intToFloat(int $value): float
     {
         // Numerical stability check (catches precision loss)
         $floatValue = (float) $value;
         if ($floatValue !== (float) (int) $floatValue) {
-            throw new FloatTypeException(sprintf('Integer "%s" has no valid strict float value', $value));
+            throw new IntegerTypeException(sprintf('Integer "%s" has no valid strict float value', $value));
         }
 
         return $floatValue;
@@ -191,14 +218,14 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
      *
      * @return non-empty-string
      *
-     * @throws FloatTypeException
+     * @throws IntegerTypeException
      */
     protected static function intToString(int $value): string
     {
         // Numerical stability check (catches precision loss)
         $stringValue = (string) $value;
         if ($stringValue !== (string) (int) $stringValue) {
-            throw new FloatTypeException(sprintf('Integer "%s" has no valid strict string value', $value));
+            throw new IntegerTypeException(sprintf('Integer "%s" has no valid strict string value', $value));
         }
 
         return $stringValue;
@@ -207,7 +234,7 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
     /**
      * @psalm-pure
      *
-     * @throws BoolTypeException
+     * @throws IntegerTypeException
      */
     protected static function stringToBool(string $value): bool
     {
@@ -219,24 +246,96 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
             return false;
         }
 
-        throw new BoolTypeException(sprintf('String "%s" has no valid bool value', $value));
+        throw new IntegerTypeException(sprintf('Integer "%s" has no valid bool value', $value));
+    }
+
+    /**
+     * @throws ReasonableRangeDateTimeTypeException
+     * @throws DateTimeTypeException
+     */
+    protected static function stringToDateTime(
+        string $value,
+        string $format,
+        ?DateTimeZone $timezone = null,
+    ): DateTimeImmutable {
+        if (str_contains($value, "\0")) {
+            throw new DateTimeTypeException('Date time string must not contain null bytes');
+        }
+
+        if (trim($value) === '') {
+            throw new DateTimeTypeException('Date time string must not be blank');
+        }
+
+        /**
+         * Collect errors and throw exception with all of them.
+         */
+        $dt = DateTimeImmutable::createFromFormat($format, $value, $timezone);
+        /**
+         * Normalize getLastErrors result to an array with counters.
+         * Some PHP versions return an array with zero counts instead of false.
+         */
+        $errors = DateTimeImmutable::getLastErrors() ?: [
+            'errors' => [],
+            'warnings' => [],
+        ];
+
+        if (count($errors['errors']) > 0 || count($errors['warnings']) > 0) {
+            $errorMessages = '';
+
+            foreach ($errors['errors'] as $pos => $message) {
+                $errorMessages .= sprintf('Error at %d: %s' . PHP_EOL, $pos, $message);
+            }
+
+            foreach ($errors['warnings'] as $pos => $message) {
+                $errorMessages .= sprintf('Warning at %d: %s' . PHP_EOL, $pos, $message);
+            }
+
+            throw new DateTimeTypeException(sprintf('Invalid date time value "%s", use format "%s"', $value, DateTimeTypeAbstract::FORMAT) . PHP_EOL . $errorMessages);
+        }
+
+        /**
+         * Strict “round-trip” check.
+         *
+         * @psalm-suppress PossiblyFalseReference
+         */
+        if ($value !== $dt->format(DateTimeTypeAbstract::FORMAT)) {
+            throw new DateTimeTypeException(sprintf('Unexpected conversion, source string %s is not equal to formatted one %s', $value, $dt->format(DateTimeTypeAbstract::FORMAT)));
+        }
+
+        /**
+         * Assert that timestamp in a reasonable range.
+         *
+         * @psalm-suppress PossiblyFalseReference
+         */
+        $ts = $dt->format('U');
+        if ($ts < DateTimeTypeAbstract::MIN_TIMESTAMP_SECONDS || $ts > DateTimeTypeAbstract::MAX_TIMESTAMP_SECONDS) {
+            throw new ReasonableRangeDateTimeTypeException(sprintf('Timestamp "%s" out of supported range "%d"-"%d".', $ts, DateTimeTypeAbstract::MIN_TIMESTAMP_SECONDS, DateTimeTypeAbstract::MAX_TIMESTAMP_SECONDS));
+        }
+
+        /**
+         * $dt is not FALSE here, it will fail before on error checking.
+         * Reset to a default time zone.
+         *
+         * @psalm-suppress FalsableReturnStatement
+         */
+        return $dt->setTimezone(static::stringToDateTimeZone(DateTimeTypeInterface::DEFAULT_ZONE));
     }
 
     /**
      * @psalm-pure
      *
-     * @throws FloatTypeException
+     * @throws StringTypeException
      */
     protected static function stringToFloat(string $value): float
     {
         if (!is_numeric($value)) {
-            throw new FloatTypeException(sprintf('String "%s" has no valid float value', $value));
+            throw new StringTypeException(sprintf('String "%s" has no valid float value', $value));
         }
 
         // Numerical stability check (catches precision loss)
         $floatValue = (float) $value;
         if ($floatValue !== (float) (string) $floatValue) {
-            throw new FloatTypeException(sprintf('String "%s" has no valid strict float value', $value));
+            throw new StringTypeException(sprintf('String "%s" has no valid strict float value', $value));
         }
 
         // Formatting check: Ensure no leading zeros (unless it's "0" or "0.something")
@@ -251,7 +350,7 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
             && $value !== $normalized
             && $value !== $normalized . '.0'
         ) {
-            throw new FloatTypeException(sprintf('String "%s" has invalid formatting (leading zeros or redundant characters)', $value));
+            throw new StringTypeException(sprintf('String "%s" has invalid float formatting (leading zeros or redundant characters)', $value));
         }
 
         return (float) $value;
@@ -260,17 +359,17 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
     /**
      * @psalm-pure
      *
-     * @throws IntegerTypeException
+     * @throws StringTypeException
      */
     protected static function stringToInt(string $value): int
     {
         if (!is_numeric($value)) {
-            throw new IntegerTypeException(sprintf('String "%s" has no valid int value', $value));
+            throw new StringTypeException(sprintf('String "%s" has no valid integer value', $value));
         }
 
         $floatValue = (int) $value;
         if ($floatValue !== (int) (string) $floatValue) {
-            throw new IntegerTypeException(sprintf('String "%s" has no valid strict int value', $value));
+            throw new StringTypeException(sprintf('String "%s" has no valid strict integer value', $value));
         }
 
         return $floatValue;

@@ -7,8 +7,9 @@ namespace PhpTypedValues\Integer;
 use Exception;
 use PhpTypedValues\Base\Primitive\Integer\IntegerTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
+use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
-use PhpTypedValues\Exception\Integer\ReasonableRangeIntegerTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
@@ -55,16 +56,16 @@ readonly class IntegerNonNegative extends IntegerTypeAbstract
      */
     public static function fromBool(bool $value): static
     {
-        return new static((int) $value);
+        return new static(static::boolToInt($value));
     }
 
     /**
+     * @throws FloatTypeException
      * @throws IntegerTypeException
-     * @throws ReasonableRangeIntegerTypeException
      */
     public static function fromFloat(float $value): static
     {
-        return new static(parent::getIntegerFromFloat($value));
+        return new static(static::floatToInt($value));
     }
 
     /**
@@ -76,11 +77,12 @@ readonly class IntegerNonNegative extends IntegerTypeAbstract
     }
 
     /**
+     * @throws StringTypeException
      * @throws IntegerTypeException
      */
     public static function fromString(string $value): static
     {
-        return new static(parent::getIntegerFromString($value));
+        return new static(static::stringToInt($value));
     }
 
     public function isEmpty(): false
