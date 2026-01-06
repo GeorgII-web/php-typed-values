@@ -30,6 +30,9 @@ use PhpTypedValues\String\MariaDb\StringVarChar255;
 use PhpTypedValues\String\Specific\StringCountryCode;
 use PhpTypedValues\String\Specific\StringEmail;
 use PhpTypedValues\String\Specific\StringFileName;
+use PhpTypedValues\String\Specific\StringLanguageCode;
+use PhpTypedValues\String\Specific\StringLocaleCode;
+use PhpTypedValues\String\Specific\StringMd5;
 use PhpTypedValues\String\Specific\StringPath;
 use PhpTypedValues\String\Specific\StringUrl;
 use PhpTypedValues\String\Specific\StringUuidV4;
@@ -125,6 +128,57 @@ try {
 $cc = StringCountryCode::tryFromString('ZZ');
 if (!($cc instanceof Undefined)) {
     echo $cc->toString() . PHP_EOL;
+}
+
+// LanguageCode (usage and try* for Psalm visibility)
+echo StringLanguageCode::fromString('en')->toString() . PHP_EOL;
+$lang = StringLanguageCode::tryFromString('xx');
+if (!($lang instanceof Undefined)) {
+    echo $lang->toString() . PHP_EOL;
+}
+
+// LocaleCode (usage and try* for Psalm visibility)
+echo StringLocaleCode::fromString('en_US')->toString() . PHP_EOL;
+$locale = StringLocaleCode::fromString('de_DE');
+echo $locale->getLanguageCode() . ' ' . $locale->getCountryCode() . PHP_EOL;
+$locale2 = StringLocaleCode::tryFromString('xx_XX');
+if (!($locale2 instanceof Undefined)) {
+    echo $locale2->toString() . PHP_EOL;
+}
+
+try {
+    $md5 = StringMd5::tryFromString('invalid');
+    if (!($md5 instanceof Undefined)) {
+        echo $md5->toString() . PHP_EOL;
+    }
+} catch (TypeException $e) {
+    echo 'Caught exception: ' . $e->getMessage() . PHP_EOL;
+}
+
+// Conversion methods usage
+echo 'Bool conversion: ' . (StringStandard::fromString('1')->toBool() ? 'true' : 'false') . PHP_EOL;
+echo 'Int conversion: ' . StringStandard::fromString('123')->toInt() . PHP_EOL;
+echo 'Float conversion: ' . ((string) StringStandard::fromString('3.14')->toFloat()) . PHP_EOL;
+
+// Factory methods usage
+echo 'From bool: ' . StringStandard::fromBool(true)->toString() . PHP_EOL;
+echo 'From int: ' . StringStandard::fromInt(42)->toString() . PHP_EOL;
+echo 'From float: ' . StringStandard::fromFloat(3.14)->toString() . PHP_EOL;
+
+// tryFrom methods usage
+$fromBool = StringStandard::tryFromBool(true);
+if (!($fromBool instanceof Undefined)) {
+    echo 'tryFromBool: ' . $fromBool->toString() . PHP_EOL;
+}
+
+$fromInt = StringStandard::tryFromInt(99);
+if (!($fromInt instanceof Undefined)) {
+    echo 'tryFromInt: ' . $fromInt->toString() . PHP_EOL;
+}
+
+$fromFloat = StringStandard::tryFromFloat(2.71);
+if (!($fromFloat instanceof Undefined)) {
+    echo 'tryFromFloat: ' . $fromFloat->toString() . PHP_EOL;
 }
 
 echo StringStandard::fromString('no')->isTypeOf(\PhpTypedValues\Base\Primitive\String\StringTypeAbstract::class) ? 'Type correct' . PHP_EOL : 'Invalid type' . PHP_EOL;

@@ -49,6 +49,9 @@ readonly class StringNonBlank extends StringTypeAbstract
             throw new StringTypeException(sprintf('Expected non-blank string, got "%s"', $value));
         }
 
+        /**
+         * @var non-empty-string $value
+         */
         $this->value = $value;
     }
 

@@ -196,7 +196,7 @@ readonly class StringJson extends StringTypeAbstract
      * @return static|T
      */
     public static function tryFromBool(
-        bool                  $value,
+        bool $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract {
         try {
@@ -216,7 +216,7 @@ readonly class StringJson extends StringTypeAbstract
      * @return static|T
      */
     public static function tryFromFloat(
-        float                 $value,
+        float $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract {
         try {
@@ -236,7 +236,7 @@ readonly class StringJson extends StringTypeAbstract
      * @return static|T
      */
     public static function tryFromInt(
-        int                   $value,
+        int $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract {
         try {
@@ -256,7 +256,7 @@ readonly class StringJson extends StringTypeAbstract
      * @return static|T
      */
     public static function tryFromMixed(
-        mixed                 $value,
+        mixed $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract {
         try {
@@ -285,7 +285,7 @@ readonly class StringJson extends StringTypeAbstract
      * @return static|T
      */
     public static function tryFromString(
-        string                $value,
+        string $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract {
         try {

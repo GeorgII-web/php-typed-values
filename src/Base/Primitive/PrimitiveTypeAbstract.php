@@ -164,6 +164,8 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
     }
 
     /**
+     * @psalm-pure
+     *
      * @throws BoolTypeException
      */
     protected static function stringToBool(string $value): bool
@@ -180,6 +182,8 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
     }
 
     /**
+     * @psalm-pure
+     *
      * @throws FloatTypeException
      */
     protected static function stringToFloat(string $value): float
@@ -213,6 +217,8 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
     }
 
     /**
+     * @psalm-pure
+     *
      * @throws IntegerTypeException
      */
     protected static function stringToInt(string $value): int

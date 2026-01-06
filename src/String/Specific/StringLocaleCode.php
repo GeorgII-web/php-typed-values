@@ -44,18 +44,23 @@ readonly class StringLocaleCode extends StringTypeAbstract
     /** @var non-empty-string */
     protected string $value;
 
+    /** @var non-empty-string */
+    private string $country;
+
+    /** @var non-empty-string */
+    private string $language;
+
     /**
      * @throws LocaleStringTypeException
      */
     public function __construct(string $value)
     {
-        if (preg_match('/^[a-z]{2}_[A-Z]{2}$/', $value) !== 1) {
+        if (preg_match('/^([a-z]{2})_([A-Z]{2})$/', $value, $matches) !== 1) {
             throw new LocaleStringTypeException(sprintf('Expected locale code (ll_RR), got "%s"', $value));
         }
 
-        $parts = explode('_', $value, 2);
-        $language = $parts[0];
-        $country = $parts[1];
+        $language = $matches[1];
+        $country = $matches[2];
 
         if (!in_array($language, self::listAllowedLanguages(), true)) {
             throw new LocaleStringTypeException(sprintf('Unknown ISO 639-1 language code "%s"', $language));
@@ -65,7 +70,11 @@ readonly class StringLocaleCode extends StringTypeAbstract
             throw new LocaleStringTypeException(sprintf('Unknown ISO 3166-1 country code "%s"', $country));
         }
 
+        /** @var non-empty-string $value */
         $this->value = $value;
+
+        $this->language = $language;
+        $this->country = $country;
     }
 
     /**
@@ -110,7 +119,7 @@ readonly class StringLocaleCode extends StringTypeAbstract
      */
     public function getCountryCode(): string
     {
-        return explode('_', $this->value, 2)[1];
+        return $this->country;
     }
 
     /**
@@ -120,7 +129,7 @@ readonly class StringLocaleCode extends StringTypeAbstract
      */
     public function getLanguageCode(): string
     {
-        return explode('_', $this->value, 2)[0];
+        return $this->language;
     }
 
     public function isEmpty(): bool
