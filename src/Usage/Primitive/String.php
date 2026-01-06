@@ -156,7 +156,7 @@ try {
 }
 
 // Conversion methods usage
-echo 'Bool conversion: ' . (StringStandard::fromString('1')->toBool() ? 'true' : 'false') . PHP_EOL;
+echo 'Bool conversion: ' . (StringStandard::fromString('true')->toBool() ? 'true' : 'false') . PHP_EOL;
 echo 'Int conversion: ' . StringStandard::fromString('123')->toInt() . PHP_EOL;
 echo 'Float conversion: ' . ((string) StringStandard::fromString('3.14')->toFloat()) . PHP_EOL;
 
