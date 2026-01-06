@@ -198,8 +198,7 @@ readonly class StringJson extends StringTypeAbstract
     public static function tryFromBool(
         bool                  $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract
-    {
+    ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
             return static::fromBool($value);
@@ -219,8 +218,7 @@ readonly class StringJson extends StringTypeAbstract
     public static function tryFromFloat(
         float                 $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract
-    {
+    ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
             return static::fromFloat($value);
@@ -240,8 +238,7 @@ readonly class StringJson extends StringTypeAbstract
     public static function tryFromInt(
         int                   $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract
-    {
+    ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
             return static::fromInt($value);
@@ -261,8 +258,7 @@ readonly class StringJson extends StringTypeAbstract
     public static function tryFromMixed(
         mixed                 $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract
-    {
+    ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
             return match (true) {
@@ -271,7 +267,7 @@ readonly class StringJson extends StringTypeAbstract
                 is_int($value) => static::fromInt($value),
                 ($value instanceof self) => static::fromString($value->value()),
                 is_bool($value) => static::fromBool($value),
-                $value instanceof Stringable, is_scalar($value) => static::fromString((string)$value),
+                $value instanceof Stringable, is_scalar($value) => static::fromString((string) $value),
                 null === $value => static::fromString('null'),
                 default => throw new TypeException('Value cannot be cast to string'),
             };
@@ -291,8 +287,7 @@ readonly class StringJson extends StringTypeAbstract
     public static function tryFromString(
         string                $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract
-    {
+    ): static|PrimitiveTypeAbstract {
         try {
             /** @var static */
             return static::fromString($value);
