@@ -75,8 +75,7 @@ it('tryFromMixed handles various inputs for StringEmpty', function (): void {
         }
     });
 
-    expect($fromNull)->toBeInstanceOf(StringEmpty::class)
-        ->and($fromNull->value())->toBe('')
+    expect($fromNull)->toBeInstanceOf(Undefined::class)
         ->and($fromInt)->toBeInstanceOf(Undefined::class)
         ->and($fromEmptyStringable)->toBeInstanceOf(StringEmpty::class)
         ->and($fromEmptyStringable->value())->toBe('')

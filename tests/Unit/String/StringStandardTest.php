@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use PhpTypedValues\String\StringStandard;
+use PhpTypedValues\Undefined\Alias\Undefined;
 
 it('StringStandard::tryFromString returns instance for any string', function (): void {
     $v = StringStandard::tryFromString('hello');
@@ -46,9 +47,7 @@ it('tryFromMixed returns instance for valid string-convertible values', function
         ->and($fromFloat->value())
         ->toBe('45.67')
         ->and($fromNull)
-        ->toBeInstanceOf(StringStandard::class)
-        ->and($fromNull->value())
-        ->toBe('')
+        ->toBeInstanceOf(Undefined::class)
         ->and($fromStringable)
         ->toBeInstanceOf(StringStandard::class)
         ->and($fromStringable->value())
@@ -68,18 +67,18 @@ it('tryFromMixed returns Undefined for non-convertible values', function (): voi
     $fromError = StringStandard::tryFromMixed($stringableWithError);
 
     expect($fromArray)
-        ->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class)
+        ->toBeInstanceOf(Undefined::class)
         ->and($fromObject)
-        ->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class)
+        ->toBeInstanceOf(Undefined::class)
         ->and($fromError)
-        ->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class);
+        ->toBeInstanceOf(Undefined::class);
 });
 
 it('tryFromMixed handles non-stringable objects and non-scalar types explicitly', function (): void {
     // stdClass is not Stringable and not scalar
-    expect(StringStandard::tryFromMixed(new stdClass()))->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class)
-        ->and(StringStandard::tryFromMixed([]))->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class)
-        ->and(StringStandard::tryFromMixed(\STDOUT))->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class);
+    expect(StringStandard::tryFromMixed(new stdClass()))->toBeInstanceOf(Undefined::class)
+        ->and(StringStandard::tryFromMixed([]))->toBeInstanceOf(Undefined::class)
+        ->and(StringStandard::tryFromMixed(\STDOUT))->toBeInstanceOf(Undefined::class);
 });
 
 /**
@@ -100,7 +99,7 @@ readonly class StringStandardTest extends StringStandard
 
 it('StringStandard::tryFromString returns Undefined when fromString throws', function (): void {
     $result = StringStandardTest::tryFromString('fail');
-    expect($result)->toBeInstanceOf(PhpTypedValues\Undefined\Alias\Undefined::class);
+    expect($result)->toBeInstanceOf(Undefined::class);
 });
 
 it('fromString creates instance with correct value', function (): void {
