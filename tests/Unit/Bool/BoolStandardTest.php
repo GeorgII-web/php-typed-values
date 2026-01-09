@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use PhpTypedValues\Bool\BoolStandard;
-use PhpTypedValues\Exception\Bool\BoolTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -118,33 +117,33 @@ describe('BoolStandard - from* Factory Methods', function (): void {
         ['false', false],
     ]);
 
-    it('fromString throws BoolTypeException for invalid strings', function (string $invalidValue, ?string $expectedExceptionMessage = null): void {
+    it('fromString throws IntegerTypeException for invalid strings', function (string $invalidValue, ?string $expectedExceptionMessage = null): void {
         $test = fn() => BoolStandard::fromString($invalidValue);
 
         if ($expectedExceptionMessage) {
-            expect($test)->toThrow(BoolTypeException::class, $expectedExceptionMessage);
+            expect($test)->toThrow(IntegerTypeException::class, $expectedExceptionMessage);
         } else {
-            expect($test)->toThrow(BoolTypeException::class);
+            expect($test)->toThrow(IntegerTypeException::class);
         }
     })->with([
         // Uppercase variations
-        ['TRUE', 'String "TRUE" has no valid bool value'],
-        ['True', 'String "True" has no valid bool value'],
-        ['FALSE', 'String "FALSE" has no valid bool value'],
-        ['False', 'String "False" has no valid bool value'],
+        ['TRUE', 'Integer "TRUE" has no valid strict bool value'],
+        ['True', 'Integer "True" has no valid strict bool value'],
+        ['FALSE', 'Integer "FALSE" has no valid strict bool value'],
+        ['False', 'Integer "False" has no valid strict bool value'],
 
         // Other invalid values
-        ['yes', 'String "yes" has no valid bool value'],
-        ['no', 'String "no" has no valid bool value'],
-        ['on', 'String "on" has no valid bool value'],
-        ['off', 'String "off" has no valid bool value'],
-        ['1', 'String "1" has no valid bool value'],
-        ['0', 'String "0" has no valid bool value'],
-        ['', 'String "" has no valid bool value'],
-        [' ', 'String " " has no valid bool value'],
-        ['invalid', 'String "invalid" has no valid bool value'],
-        ['true ', 'String "true " has no valid bool value'],
-        [' true', 'String " true" has no valid bool value'],
+        ['yes', 'Integer "yes" has no valid strict bool value'],
+        ['no', 'Integer "no" has no valid strict bool value'],
+        ['on', 'Integer "on" has no valid strict bool value'],
+        ['off', 'Integer "off" has no valid strict bool value'],
+        ['1', 'Integer "1" has no valid strict bool value'],
+        ['0', 'Integer "0" has no valid strict bool value'],
+        ['', 'Integer "" has no valid strict bool value'],
+        [' ', 'Integer " " has no valid strict bool value'],
+        ['invalid', 'Integer "invalid" has no valid strict bool value'],
+        ['true ', 'Integer "true " has no valid strict bool value'],
+        [' true', 'Integer " true" has no valid strict bool value'],
     ]);
 });
 

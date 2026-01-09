@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Integer\Alias\NonNegative;
 
 it('NonNegativeInt alias factories return NonNegativeInt instance', function (): void {
@@ -29,7 +30,7 @@ it('creates NonNegativeInt from string 0', function (): void {
 });
 
 it('fails NonNegativeInt from integerish string', function (): void {
-    expect(fn() => NonNegative::fromString('5.0'))->toThrow(IntegerTypeException::class);
+    expect(fn() => NonNegative::fromString('5.0'))->toThrow(StringTypeException::class);
 });
 
 it('fails creating NonNegativeInt from negative string', function (): void {
@@ -41,5 +42,5 @@ it('toString returns scalar string for NonNegativeInt', function (): void {
 });
 
 it('fails creating NonNegativeInt from float string', function (): void {
-    expect(fn() => NonNegative::fromString('5.5'))->toThrow(IntegerTypeException::class);
+    expect(fn() => NonNegative::fromString('5.5'))->toThrow(StringTypeException::class);
 });

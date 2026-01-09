@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Integer\IntegerPositive;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -46,7 +47,7 @@ it('IntegerPositive throws on non-positive values in ctor and fromInt', function
 it('IntegerPositive::fromString enforces strict integer and positivity', function (): void {
     // Strict integer check
     expect(fn() => IntegerPositive::fromString('5.0'))
-        ->toThrow(IntegerTypeException::class, 'String "5.0" has no valid strict integer value');
+        ->toThrow(StringTypeException::class, 'String "5.0" has no valid strict integer value');
 
     // Positivity check after casting
     expect(fn() => IntegerPositive::fromString('0'))
@@ -74,7 +75,7 @@ it('creates IntegerPositive from string', function (): void {
 });
 
 it('fails IntegerPositive from integerish string', function (): void {
-    expect(fn() => IntegerPositive::fromString('5.0'))->toThrow(IntegerTypeException::class);
+    expect(fn() => IntegerPositive::fromString('5.0'))->toThrow(StringTypeException::class);
 });
 
 it('fails creating IntegerPositive from string 0', function (): void {
@@ -90,7 +91,7 @@ it('toString returns scalar string for IntegerPositive', function (): void {
 });
 
 it('fails creating IntegerPositive from float string', function (): void {
-    expect(fn() => IntegerPositive::fromString('5.5'))->toThrow(IntegerTypeException::class);
+    expect(fn() => IntegerPositive::fromString('5.5'))->toThrow(StringTypeException::class);
 });
 
 it('jsonSerialize returns integer', function (): void {
@@ -132,7 +133,7 @@ it('fromString respects strict integer parsing rules', function (): void {
     // leading zeros, plus sign, decimals, or spaces are rejected by IntType::assertIntegerString
     foreach (['01', '+1', '1.0', ' 1', '1 ', 'a'] as $bad) {
         expect(fn() => IntegerPositive::fromString($bad))
-            ->toThrow(IntegerTypeException::class);
+            ->toThrow(StringTypeException::class);
     }
 });
 

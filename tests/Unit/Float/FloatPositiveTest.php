@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use PhpTypedValues\Exception\Float\FloatTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Float\FloatPositive;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -52,7 +53,7 @@ it('throws on negative via fromString', function (): void {
 
 it('throws on string not float', function (): void {
     expect(fn() => FloatPositive::fromString('unknown'))
-        ->toThrow(FloatTypeException::class, 'String "unknown" has no valid float value');
+        ->toThrow(StringTypeException::class, 'String "unknown" has no valid float value');
 });
 
 it('FloatPositive::tryFromString returns value for > 0.0 and Undefined otherwise', function (): void {
@@ -92,7 +93,7 @@ it('FloatPositive throws on non-positive values in ctor and fromFloat', function
 it('FloatPositive::fromString enforces numeric and positivity', function (): void {
     // Non-numeric
     expect(fn() => FloatPositive::fromString('abc'))
-        ->toThrow(FloatTypeException::class, 'String "abc" has no valid float value');
+        ->toThrow(StringTypeException::class, 'String "abc" has no valid float value');
 
     // Positivity
     expect(fn() => FloatPositive::fromString('0'))

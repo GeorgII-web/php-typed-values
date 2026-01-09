@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Integer\Alias\Positive;
 
 it('creates PositiveInt', function (): void {
@@ -22,7 +23,7 @@ it('creates PositiveInt from string', function (): void {
 });
 
 it('fails PositiveInt from integerish string', function (): void {
-    expect(fn() => Positive::fromString('5.0'))->toThrow(IntegerTypeException::class);
+    expect(fn() => Positive::fromString('5.0'))->toThrow(StringTypeException::class);
 });
 
 it('fails creating PositiveInt from string 0', function (): void {
@@ -38,5 +39,5 @@ it('toString returns scalar string for PositiveInt', function (): void {
 });
 
 it('fails creating PositiveInt from float string', function (): void {
-    expect(fn() => Positive::fromString('5.5'))->toThrow(IntegerTypeException::class);
+    expect(fn() => Positive::fromString('5.5'))->toThrow(StringTypeException::class);
 });

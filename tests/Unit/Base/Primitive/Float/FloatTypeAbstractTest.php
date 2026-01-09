@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use PhpTypedValues\Base\Primitive\Float\FloatTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
-use PhpTypedValues\Exception\Float\FloatTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Float\FloatStandard;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -186,20 +186,20 @@ it('fromString parses valid float strings including negatives, decimals, and sci
 });
 
 it('fromString rejects non-numeric strings and magic conversions', function (): void {
-    expect(fn() => FloatStandard::fromString('5a'))->toThrow(FloatTypeException::class)
-        ->and(fn() => FloatStandard::fromString('a5'))->toThrow(FloatTypeException::class)
-        ->and(fn() => FloatStandard::fromString(''))->toThrow(FloatTypeException::class)
-        ->and(fn() => FloatStandard::fromString('abc'))->toThrow(FloatTypeException::class)
-        ->and(fn() => FloatStandard::fromString('--5'))->toThrow(FloatTypeException::class)
-        ->and(fn() => FloatStandard::fromString('5,5'))->toThrow(FloatTypeException::class)
-        ->and(fn() => FloatStandard::fromString('5 5'))->toThrow(FloatTypeException::class)
-        ->and(fn() => FloatStandard::fromString('1.23456789012345678'))->toThrow(FloatTypeException::class)
-        ->and(fn() => FloatStandard::fromString('0.666666666666666629'))->toThrow(FloatTypeException::class)
-        ->and(fn() => FloatStandard::fromString('0005'))->toThrow(FloatTypeException::class)
-        ->and(fn() => FloatStandard::fromString('5.00000'))->toThrow(FloatTypeException::class)
-        ->and(fn() => FloatStandard::fromString('0005.0'))->toThrow(FloatTypeException::class)
-        ->and(fn() => FloatStandard::fromString('0005.000'))->toThrow(FloatTypeException::class)
-        ->and(fn() => FloatStandard::fromString('1e3'))->toThrow(FloatTypeException::class);
+    expect(fn() => FloatStandard::fromString('5a'))->toThrow(StringTypeException::class)
+        ->and(fn() => FloatStandard::fromString('a5'))->toThrow(StringTypeException::class)
+        ->and(fn() => FloatStandard::fromString(''))->toThrow(StringTypeException::class)
+        ->and(fn() => FloatStandard::fromString('abc'))->toThrow(StringTypeException::class)
+        ->and(fn() => FloatStandard::fromString('--5'))->toThrow(StringTypeException::class)
+        ->and(fn() => FloatStandard::fromString('5,5'))->toThrow(StringTypeException::class)
+        ->and(fn() => FloatStandard::fromString('5 5'))->toThrow(StringTypeException::class)
+        ->and(fn() => FloatStandard::fromString('1.23456789012345678'))->toThrow(StringTypeException::class)
+        ->and(fn() => FloatStandard::fromString('0.666666666666666629'))->toThrow(StringTypeException::class)
+        ->and(fn() => FloatStandard::fromString('0005'))->toThrow(StringTypeException::class)
+        ->and(fn() => FloatStandard::fromString('5.00000'))->toThrow(StringTypeException::class)
+        ->and(fn() => FloatStandard::fromString('0005.0'))->toThrow(StringTypeException::class)
+        ->and(fn() => FloatStandard::fromString('0005.000'))->toThrow(StringTypeException::class)
+        ->and(fn() => FloatStandard::fromString('1e3'))->toThrow(StringTypeException::class);
 });
 
 it('fromString precious for string and float difference', function (): void {

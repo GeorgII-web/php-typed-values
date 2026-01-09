@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use PhpTypedValues\Bool\FalseStandard;
 use PhpTypedValues\Exception\Bool\BoolTypeException;
+use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 it('constructs only with false and exposes value/toString', function (): void {
@@ -29,7 +30,7 @@ it('fromString accepts false-like values only', function (): void {
     expect(fn() => FalseStandard::fromString('true'))
         ->toThrow(BoolTypeException::class, 'Expected "false" literal, got "true"');
     expect(fn() => FalseStandard::fromString(' NO '))
-        ->toThrow(BoolTypeException::class, 'String " NO " has no valid bool value');
+        ->toThrow(IntegerTypeException::class, 'Integer " NO " has no valid strict bool value');
 });
 
 it('fromInt accepts only 0', function (): void {

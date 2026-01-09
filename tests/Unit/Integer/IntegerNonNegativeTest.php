@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Integer\IntegerNonNegative;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -49,7 +50,7 @@ it('IntegerNonNegative throws on negative values in ctor and fromInt', function 
 it('IntegerNonNegative::fromString enforces strict integer and non-negativity', function (): void {
     // Strict integer check
     expect(fn() => IntegerNonNegative::fromString('5.0'))
-        ->toThrow(IntegerTypeException::class, 'String "5.0" has no valid strict integer value');
+        ->toThrow(StringTypeException::class, 'String "5.0" has no valid strict integer value');
 
     // Non-negativity check after casting
     expect(fn() => IntegerNonNegative::fromString('-1'))
@@ -73,7 +74,7 @@ it('creates NonNegativeInt from string 0', function (): void {
 });
 
 it('fails NonNegativeInt from integerish string', function (): void {
-    expect(fn() => IntegerNonNegative::fromString('5.0'))->toThrow(IntegerTypeException::class);
+    expect(fn() => IntegerNonNegative::fromString('5.0'))->toThrow(StringTypeException::class);
 });
 
 it('fails creating NonNegativeInt from negative string', function (): void {
@@ -85,7 +86,7 @@ it('toString returns scalar string for NonNegativeInt', function (): void {
 });
 
 it('fails creating NonNegativeInt from float string', function (): void {
-    expect(fn() => IntegerNonNegative::fromString('5.5'))->toThrow(IntegerTypeException::class);
+    expect(fn() => IntegerNonNegative::fromString('5.5'))->toThrow(StringTypeException::class);
 });
 
 it('jsonSerialize returns integer', function (): void {
@@ -117,7 +118,7 @@ it('fromString uses strict integer parsing and accepts only canonical numbers', 
 
     foreach (['01', '+1', '1.0', ' 1', '1 ', 'a'] as $bad) {
         expect(fn() => IntegerNonNegative::fromString($bad))
-            ->toThrow(IntegerTypeException::class);
+            ->toThrow(StringTypeException::class);
     }
 });
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\Exception\Float\FloatTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Float\FloatStandard;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -45,12 +45,12 @@ it('FloatStandard::tryFromFloat returns Undefined for invalid values', function 
 
 it('FloatStandard::fromString throws on non-numeric strings', function (): void {
     expect(fn() => FloatStandard::fromString('NaN'))
-        ->toThrow(FloatTypeException::class, 'String "NaN" has no valid float value');
+        ->toThrow(StringTypeException::class, 'String "NaN" has no valid float value');
 });
 
 it('FloatStandard::fromString throws exception for a long tail', function (): void {
     expect(fn() => FloatStandard::fromString('12.444144424443444044454446444744484449444'))
-        ->toThrow(FloatTypeException::class, 'String "12.444144424443444044454446444744484449444" has no valid strict float value');
+        ->toThrow(StringTypeException::class, 'String "12.444144424443444044454446444744484449444" has no valid strict float value');
 });
 
 it('jsonSerialize returns float', function (): void {

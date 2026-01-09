@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use PhpTypedValues\Exception\Float\FloatTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Float\FloatNonNegative;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -34,7 +35,7 @@ it('rejects non-numeric or negative strings', function (): void {
     // Non-numeric
     foreach (['', 'abc', '5,5'] as $str) {
         expect(fn() => FloatNonNegative::fromString($str))
-            ->toThrow(FloatTypeException::class);
+            ->toThrow(StringTypeException::class);
     }
 
     // Numeric but negative
@@ -83,7 +84,7 @@ it('FloatNonNegative throws on negative values in ctor and fromFloat', function 
 it('FloatNonNegative::fromString enforces numeric and non-negativity', function (): void {
     // Non-numeric
     expect(fn() => FloatNonNegative::fromString('abc'))
-        ->toThrow(FloatTypeException::class, 'String "abc" has no valid float value');
+        ->toThrow(StringTypeException::class, 'String "abc" has no valid float value');
 
     // Non-negativity
     expect(fn() => FloatNonNegative::fromString('-0.5'))

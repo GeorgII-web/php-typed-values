@@ -45,12 +45,6 @@ describe('fromString factory', function (): void {
         ['0', 0],
         ['127', 127],
         ['-5', -5],
-        ['3.0', 3],     // Float-looking strings that represent integers are accepted
-        ['5.0', 5],
-        ['01', 1],      // Leading zeros are accepted
-        ['+1', 1],      // Plus sign is accepted
-        [' 1', 1],      // Leading space is accepted
-        ['1 ', 1],      // Trailing space is accepted
     ]);
 
     it('throws IntegerTypeException for values outside -128..127', function (string $invalidValue): void {
@@ -66,6 +60,12 @@ describe('fromString factory', function (): void {
         ['5.5', StringTypeException::class],   // Non-integer float - throws StringTypeException
         ['a', StringTypeException::class],     // Non-numeric - throws StringTypeException
         ['', StringTypeException::class],      // Empty string - throws StringTypeException
+        ['3.0', StringTypeException::class],   // Float-looking strings that represent integers are now rejected
+        ['5.0', StringTypeException::class],
+        ['01', StringTypeException::class],    // Leading zeros are now rejected
+        ['+1', StringTypeException::class],    // Plus sign is now rejected
+        [' 1', StringTypeException::class],    // Leading space is now rejected
+        ['1 ', StringTypeException::class],    // Trailing space is now rejected
     ]);
 });
 
@@ -129,12 +129,6 @@ describe('tryFromString method', function (): void {
         ['-128', -128],
         ['0', 0],
         ['127', 127],
-        ['3.0', 3],     // Float-looking strings that represent integers are accepted
-        ['5.0', 5],
-        ['01', 1],      // Leading zeros are accepted
-        ['+1', 1],      // Plus sign is accepted
-        [' 1', 1],      // Leading space is accepted
-        ['1 ', 1],      // Trailing space is accepted
     ]);
 
     it('returns Undefined for values outside -128..127', function (string $invalidValue): void {
@@ -150,6 +144,12 @@ describe('tryFromString method', function (): void {
         '5.5',       // Non-integer float
         'a',         // Non-numeric
         '',          // Empty string
+        '3.0',       // Float-looking string
+        '5.0',       // Float-looking string
+        '01',        // Leading zero
+        '+1',        // Plus sign
+        ' 1',        // Leading space
+        '1 ',        // Trailing space
     ]);
 });
 
@@ -196,11 +196,6 @@ describe('tryFromMixed method', function (): void {
         [127, 127],
         ['-5', -5],
         ['0', 0],
-        ['7.0', 7],     // Float-looking string
-        ['01', 1],      // Leading zero
-        ['+1', 1],      // Plus sign
-        [' 1', 1],      // Leading space
-        ['1 ', 1],      // Trailing space
         [true, 1],      // Boolean true
         [false, 0],     // Boolean false
         [5.0, 5],       // Float
@@ -219,6 +214,11 @@ describe('tryFromMixed method', function (): void {
         ['5.5'],           // Non-integer string
         ['a'],             // Non-numeric string
         [''],              // Empty string
+        ['7.0'],           // Float-looking string
+        ['01'],            // Leading zero
+        ['+1'],            // Plus sign
+        [' 1'],            // Leading space
+        ['1 '],            // Trailing space
         [[]],              // Array
         [null],            // Null
         [new stdClass()],  // Object

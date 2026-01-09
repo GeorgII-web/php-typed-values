@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Integer\Alias\Specific\Id;
 
 it('creates Id', function (): void {
@@ -22,7 +23,7 @@ it('creates Id from string', function (): void {
 });
 
 it('fails Id from integerish string', function (): void {
-    expect(fn() => Id::fromString('5.0'))->toThrow(IntegerTypeException::class);
+    expect(fn() => Id::fromString('5.0'))->toThrow(StringTypeException::class);
 });
 
 it('fails creating Id from string 0', function (): void {
@@ -38,5 +39,5 @@ it('toString returns scalar string for Id', function (): void {
 });
 
 it('fails creating Id from float string', function (): void {
-    expect(fn() => Id::fromString('5.5'))->toThrow(IntegerTypeException::class);
+    expect(fn() => Id::fromString('5.5'))->toThrow(StringTypeException::class);
 });
