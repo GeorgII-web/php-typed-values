@@ -148,7 +148,7 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
     protected static function floatToInt(float $value): int
     {
         $intValue = (int) $value;
-        if ($intValue !== (int) (float) $intValue) {
+        if ($value !== (float) $intValue) {
             throw new FloatTypeException(sprintf('Float "%s" has no valid strict int value', $value));
         }
 
@@ -165,7 +165,7 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
     protected static function floatToString(float $value): string
     {
         $strValue = (string) $value;
-        if ($strValue !== (string) (float) $strValue) {
+        if ($value !== (float) $strValue) {
             throw new FloatTypeException(sprintf('Float "%s" has no valid strict string value', $value));
         }
 
@@ -197,9 +197,8 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
      */
     protected static function intToFloat(int $value): float
     {
-        // Numerical stability check (catches precision loss)
         $floatValue = (float) $value;
-        if ($floatValue !== (float) (int) $floatValue) {
+        if ($value !== (int) $floatValue) {
             throw new IntegerTypeException(sprintf('Integer "%s" has no valid strict float value', $value));
         }
 
@@ -215,9 +214,8 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
      */
     protected static function intToString(int $value): string
     {
-        // Numerical stability check (catches precision loss)
         $stringValue = (string) $value;
-        if ($stringValue !== (string) (int) $stringValue) {
+        if ($value !== (int) $stringValue) {
             throw new IntegerTypeException(sprintf('Integer "%s" has no valid strict string value', $value));
         }
 
@@ -249,6 +247,30 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
      */
     protected static function stringToFloat(string $value): float
     {
+        //        if (!preg_match('/^-?\d+\.\d+$/', $value)) {
+        //            throw new StringTypeException(sprintf('String "%s" has no valid float value', $value));
+        //        }
+        //
+        //        $floatValue = (float) $value;
+        //        $stringValue = (string) $floatValue;
+        //
+        //        // Special handling for .0 cases
+        //        if (preg_match('/^-?\d+\.0+$/', $value)) {
+        //            // Remove trailing zeros and dot for comparison
+        //            $normalizedInput = rtrim(rtrim($value, '0'), '.');
+        //            if ($stringValue !== $normalizedInput) {
+        //                throw new StringTypeException(sprintf('String "%s" has no valid strict float value', $value));
+        //            }
+        //            return $floatValue;
+        //        }
+        //
+        //        // For other cases, ensure exact match
+        //        if ($value !== $stringValue) {
+        //            throw new StringTypeException(sprintf('String "%s" has no valid strict float value', $value));
+        //        }
+        //
+        //        return $floatValue;
+
         if (!is_numeric($value)) {
             throw new StringTypeException(sprintf('String "%s" has no valid float value', $value));
         }
@@ -274,7 +296,7 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
             throw new StringTypeException(sprintf('String "%s" has no valid strict float formatting (leading zeros or redundant characters)', $value));
         }
 
-        return (float) $value;
+        return $floatValue;
     }
 
     /**
@@ -284,16 +306,12 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
      */
     protected static function stringToInt(string $value): int
     {
-        if (!is_numeric($value)) {
-            throw new StringTypeException(sprintf('String "%s" has no valid integer value', $value));
-        }
-
-        $floatValue = (int) $value;
-        if ($floatValue !== (int) (string) $floatValue) {
+        $intValue = (int) $value;
+        if ($value !== (string) $intValue) {
             throw new StringTypeException(sprintf('String "%s" has no valid strict integer value', $value));
         }
 
-        return $floatValue;
+        return $intValue;
     }
 
     /**

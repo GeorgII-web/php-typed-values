@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\Undefined\UndefinedTypeException;
 use PhpTypedValues\Float\FloatPositive;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -63,7 +64,7 @@ it('invalid id throws IntegerTypeException with exact message', function (): voi
 
 it('non-numeric height string throws FloatTypeException from assertFloatString', function (): void {
     expect(fn() => OptionalFail::fromScalars(id: 1, firstName: 'Name', height: 'abc'))
-        ->toThrow(FloatTypeException::class, 'String "abc" has no valid float value');
+        ->toThrow(StringTypeException::class, 'String "abc" has no valid float value');
 });
 
 it('jsonSerialize returns associative array of strings when all values are present', function (): void {

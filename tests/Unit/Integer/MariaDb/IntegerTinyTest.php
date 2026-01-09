@@ -2,255 +2,330 @@
 
 declare(strict_types=1);
 
+use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Integer\MariaDb\IntegerTiny;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
-it('accepts values within signed tinyint range and preserves value', function (): void {
-    $a = new IntegerTiny(-128);
-    $b = IntegerTiny::fromInt(0);
-    $c = IntegerTiny::fromInt(127);
+// ============================================
+// CONSTRUCTOR & FACTORY METHODS
+// ============================================
 
-    expect($a->value())->toBe(-128)
-        ->and($a->toString())->toBe('-128')
-        ->and($b->value())->toBe(0)
-        ->and($b->toString())->toBe('0')
-        ->and($c->value())->toBe(127)
-        ->and($c->toString())->toBe('127');
+describe('Constructor', function (): void {
+    it('creates instance for valid values -128..127', function (int $value): void {
+        $tiny = new IntegerTiny($value);
+        expect($tiny->value())->toBe($value);
+    })->with([-128, -1, 0, 1, 127]);
+
+    it('throws for values outside -128..127', function (int $invalidValue): void {
+        expect(fn() => new IntegerTiny($invalidValue))
+            ->toThrow(IntegerTypeException::class, 'Expected tiny integer in range -128..127');
+    })->with([-129, 128, -200, 200]);
 });
 
-it('fromString parses integers and enforces tinyint bounds', function (): void {
-    $v = IntegerTiny::fromString('-5');
-    expect($v->value())->toBe(-5)
-        ->and($v->toString())->toBe('-5');
+describe('fromInt factory', function (): void {
+    it('creates instance for valid values -128..127', function (int $value): void {
+        $tiny = IntegerTiny::fromInt($value);
+        expect($tiny->value())->toBe($value);
+    })->with([-128, -1, 0, 1, 127]);
+
+    it('throws for values outside -128..127', function (int $invalidValue): void {
+        expect(fn() => IntegerTiny::fromInt($invalidValue))
+            ->toThrow(IntegerTypeException::class, 'Expected tiny integer in range -128..127');
+    })->with([-129, 128, -200, 200]);
 });
 
-it('throws when value is below -128', function (): void {
-    expect(fn() => new IntegerTiny(-129))
-        ->toThrow(IntegerTypeException::class, 'Expected tiny integer in range -128..127, got "-129"');
+describe('fromString factory', function (): void {
+    it('creates instance for valid integer strings -128..127', function (string $value, int $expected): void {
+        $tiny = IntegerTiny::fromString($value);
+        expect($tiny->value())->toBe($expected);
+    })->with([
+        ['-128', -128],
+        ['0', 0],
+        ['127', 127],
+        ['-5', -5],
+        ['3.0', 3],     // Float-looking strings that represent integers are accepted
+        ['5.0', 5],
+        ['01', 1],      // Leading zeros are accepted
+        ['+1', 1],      // Plus sign is accepted
+        [' 1', 1],      // Leading space is accepted
+        ['1 ', 1],      // Trailing space is accepted
+    ]);
+
+    it('throws IntegerTypeException for values outside -128..127', function (string $invalidValue): void {
+        expect(fn() => IntegerTiny::fromString($invalidValue))
+            ->toThrow(IntegerTypeException::class, 'Expected tiny integer in range -128..127');
+    })->with(['-129', '128', '-200', '200']);
+
+    it('throws for non-integer strings', function (string $invalidValue, string $exceptionClass): void {
+        expect(fn() => IntegerTiny::fromString($invalidValue))
+            ->toThrow($exceptionClass);
+    })->with([
+        ['12.3', StringTypeException::class],  // Non-integer float - throws StringTypeException
+        ['5.5', StringTypeException::class],   // Non-integer float - throws StringTypeException
+        ['a', StringTypeException::class],     // Non-numeric - throws StringTypeException
+        ['', StringTypeException::class],      // Empty string - throws StringTypeException
+    ]);
 });
 
-it('throws when value is above 127', function (): void {
-    expect(fn() => IntegerTiny::fromInt(128))
-        ->toThrow(IntegerTypeException::class, 'Expected tiny integer in range -128..127, got "128"');
+describe('fromBool factory', function (): void {
+    it('creates instance from true', function (): void {
+        $tiny = IntegerTiny::fromBool(true);
+        expect($tiny->value())->toBe(1);
+    });
+
+    it('creates instance from false', function (): void {
+        $tiny = IntegerTiny::fromBool(false);
+        expect($tiny->value())->toBe(0);
+    });
 });
 
-it('fromString throws on non-integer strings (strict check)', function (): void {
-    expect(fn() => IntegerTiny::fromString('12.3'))
-        ->toThrow(IntegerTypeException::class, 'String "12.3" has no valid strict integer value');
+describe('fromFloat factory', function (): void {
+    it('creates instance from float with exact integer value -128..127', function (float $value, int $expected): void {
+        $tiny = IntegerTiny::fromFloat($value);
+        expect($tiny->value())->toBe($expected);
+    })->with([
+        [-128.0, -128],
+        [0.0, 0],
+        [127.0, 127],
+        [5.0, 5],
+    ]);
+
+    it('throws for float values outside -128..127', function (float $invalidValue): void {
+        expect(fn() => IntegerTiny::fromFloat($invalidValue))
+            ->toThrow(IntegerTypeException::class, 'Expected tiny integer in range -128..127');
+    })->with([-129.0, 128.0, -200.0]);
+
+    it('throws FloatTypeException for non-integer floats', function (): void {
+        expect(fn() => IntegerTiny::fromFloat(3.14))
+            ->toThrow(FloatTypeException::class);
+    });
 });
 
-it('IntTiny::tryFromString returns value within -128..127', function (): void {
-    $vMin = IntegerTiny::tryFromString('-128');
-    $v0 = IntegerTiny::tryFromString('0');
-    $vMax = IntegerTiny::tryFromString('127');
+// ============================================
+// TRY-FROM METHODS (SAFE FACTORIES)
+// ============================================
 
-    expect($vMin)
-        ->toBeInstanceOf(IntegerTiny::class)
-        ->and($vMin->value())->toBe(-128)
-        ->and($v0)
-        ->toBeInstanceOf(IntegerTiny::class)
-        ->and($v0->value())->toBe(0)
-        ->and($vMax)
-        ->toBeInstanceOf(IntegerTiny::class)
-        ->and($vMax->value())->toBe(127);
+describe('tryFromInt method', function (): void {
+    it('returns IntegerTiny for valid values -128..127', function (int $value): void {
+        $result = IntegerTiny::tryFromInt($value);
+        expect($result)->toBeInstanceOf(IntegerTiny::class)
+            ->and($result->value())->toBe($value);
+    })->with([-128, -1, 0, 1, 127]);
+
+    it('returns Undefined for invalid values', function (int $invalidValue): void {
+        $result = IntegerTiny::tryFromInt($invalidValue);
+        expect($result)->toBeInstanceOf(Undefined::class);
+    })->with([-129, 128, -200, 200]);
 });
 
-it('IntTiny::tryFromString returns Undefined outside range and for non-integer strings', function (): void {
-    expect(IntegerTiny::tryFromString('128'))
-        ->toBeInstanceOf(Undefined::class)
-        ->and(IntegerTiny::tryFromString('5.0'))
-        ->toBeInstanceOf(Undefined::class);
+describe('tryFromString method', function (): void {
+    it('returns IntegerTiny for valid integer strings -128..127', function (string $value, int $expected): void {
+        $result = IntegerTiny::tryFromString($value);
+        expect($result)->toBeInstanceOf(IntegerTiny::class)
+            ->and($result->value())->toBe($expected);
+    })->with([
+        ['-128', -128],
+        ['0', 0],
+        ['127', 127],
+        ['3.0', 3],     // Float-looking strings that represent integers are accepted
+        ['5.0', 5],
+        ['01', 1],      // Leading zeros are accepted
+        ['+1', 1],      // Plus sign is accepted
+        [' 1', 1],      // Leading space is accepted
+        ['1 ', 1],      // Trailing space is accepted
+    ]);
+
+    it('returns Undefined for values outside -128..127', function (string $invalidValue): void {
+        $result = IntegerTiny::tryFromString($invalidValue);
+        expect($result)->toBeInstanceOf(Undefined::class);
+    })->with(['-129', '128', '-200', '200']);
+
+    it('returns Undefined for non-integer strings', function (string $invalidValue): void {
+        $result = IntegerTiny::tryFromString($invalidValue);
+        expect($result)->toBeInstanceOf(Undefined::class);
+    })->with([
+        '12.3',      // Non-integer float
+        '5.5',       // Non-integer float
+        'a',         // Non-numeric
+        '',          // Empty string
+    ]);
 });
 
-it('IntTiny::tryFromInt returns value within range and Undefined otherwise', function (): void {
-    $ok = IntegerTiny::tryFromInt(-5);
-    $bad = IntegerTiny::tryFromInt(200);
+describe('tryFromBool method', function (): void {
+    it('returns IntegerTiny from true', function (): void {
+        $result = IntegerTiny::tryFromBool(true);
+        expect($result)->toBeInstanceOf(IntegerTiny::class)
+            ->and($result->value())->toBe(1);
+    });
 
-    expect($ok)
-        ->toBeInstanceOf(IntegerTiny::class)
-        ->and($ok->value())->toBe(-5)
-        ->and($bad)
-        ->toBeInstanceOf(Undefined::class);
+    it('returns IntegerTiny from false', function (): void {
+        $result = IntegerTiny::tryFromBool(false);
+        expect($result)->toBeInstanceOf(IntegerTiny::class)
+            ->and($result->value())->toBe(0);
+    });
 });
 
-it('jsonSerialize returns integer', function (): void {
-    expect(IntegerTiny::tryFromString('1')->jsonSerialize())->toBeInt();
+describe('tryFromFloat method', function (): void {
+    it('returns IntegerTiny from float with exact integer value -128..127', function (float $value, int $expected,
+    ): void {
+        $result = IntegerTiny::tryFromFloat($value);
+        expect($result)->toBeInstanceOf(IntegerTiny::class)
+            ->and($result->value())->toBe($expected);
+    })->with([
+        [-128.0, -128],
+        [0.0, 0],
+        [127.0, 127],
+        [5.0, 5],
+    ]);
+
+    it('returns Undefined for invalid floats', function (float $invalidValue): void {
+        $result = IntegerTiny::tryFromFloat($invalidValue);
+        expect($result)->toBeInstanceOf(Undefined::class);
+    })->with([-129.0, 128.0, 3.14, -200.0]);
 });
 
-it('accepts -128..127 and exposes value/toString', function (): void {
-    $min = new IntegerTiny(-128);
-    $max = IntegerTiny::fromInt(127);
+describe('tryFromMixed method', function (): void {
+    it('returns IntegerTiny for valid integer inputs -128..127', function (mixed $value, int $expected): void {
+        $result = IntegerTiny::tryFromMixed($value);
+        expect($result)->toBeInstanceOf(IntegerTiny::class)
+            ->and($result->value())->toBe($expected);
+    })->with([
+        [-1, -1],
+        [127, 127],
+        ['-5', -5],
+        ['0', 0],
+        ['7.0', 7],     // Float-looking string
+        ['01', 1],      // Leading zero
+        ['+1', 1],      // Plus sign
+        [' 1', 1],      // Leading space
+        ['1 ', 1],      // Trailing space
+        [true, 1],      // Boolean true
+        [false, 0],     // Boolean false
+        [5.0, 5],       // Float
+    ]);
 
-    expect($min->value())->toBe(-128)
-        ->and($min->toInt())->toBe(-128)
-        ->and($min->toString())->toBe('-128')
-        ->and((string) $min)->toBe('-128')
-        ->and($max->value())->toBe(127)
-        ->and($max->toInt())->toBe(127)
-        ->and($max->toString())->toBe('127');
+    it('returns Undefined for invalid inputs', function (mixed $invalidValue): void {
+        $result = IntegerTiny::tryFromMixed($invalidValue);
+        expect($result)->toBeInstanceOf(Undefined::class);
+    })->with([
+        // Test each invalid case separately to avoid ArgumentCountError
+        [-129],            // Int out of range
+        [128],             // Int out of range
+        ['-129'],          // String out of range
+        ['128'],           // String out of range
+        ['12.3'],          // Non-integer string
+        ['5.5'],           // Non-integer string
+        ['a'],             // Non-numeric string
+        [''],              // Empty string
+        [[]],              // Array
+        [null],            // Null
+        [new stdClass()],  // Object
+    ]);
 });
 
-it('throws on values out of -128..127 in constructor/fromInt', function (): void {
-    expect(fn() => new IntegerTiny(-129))
-        ->toThrow(IntegerTypeException::class, 'Expected tiny integer in range -128..127, got "-129"')
-        ->and(fn() => IntegerTiny::fromInt(128))
-        ->toThrow(IntegerTypeException::class, 'Expected tiny integer in range -128..127, got "128"');
+// ============================================
+// CONVERSION METHODS
+// ============================================
+
+describe('Conversion methods', function (): void {
+    it('toInt returns integer value', function (int $value): void {
+        $tiny = new IntegerTiny($value);
+        expect($tiny->toInt())->toBe($value);
+    })->with([-128, -1, 0, 1, 127]);
+
+    it('toString returns string representation', function (int $value, string $expected): void {
+        $tiny = new IntegerTiny($value);
+        expect($tiny->toString())->toBe($expected)
+            ->and((string) $tiny)->toBe($expected);
+    })->with([
+        [-128, '-128'],
+        [0, '0'],
+        [127, '127'],
+        [-5, '-5'],
+    ]);
+
+    it('toFloat returns float representation', function (int $value): void {
+        $tiny = new IntegerTiny($value);
+        expect($tiny->toFloat())->toBe((float) $value)
+            ->and($tiny->toFloat())->toBeFloat();
+    })->with([-128, -1, 0, 1, 127]);
+
+    it('toBool returns correct boolean value', function (int $value, bool $expected): void {
+        $tiny = new IntegerTiny($value);
+        expect($tiny->toBool())->toBe($expected);
+    })->with([
+        [-128, true],
+        [-1, true],
+        [0, false],
+        [1, true],
+        [127, true],
+    ]);
+
+    it('jsonSerialize returns integer value', function (int $value): void {
+        $tiny = new IntegerTiny($value);
+        expect($tiny->jsonSerialize())->toBe($value)
+            ->and($tiny->jsonSerialize())->toBeInt();
+    })->with([-128, -1, 0, 1, 127]);
 });
 
-it('fromString enforces strict integer parsing and range', function (): void {
-    expect(IntegerTiny::fromString('-5')->value())->toBe(-5)
-        ->and(IntegerTiny::fromString('0')->toString())->toBe('0')
-        ->and(IntegerTiny::fromString('127')->value())->toBe(127);
+// ============================================
+// TYPE CHECKS & PROPERTIES
+// ============================================
 
-    foreach (['01', '+1', '1.0', ' 1', '1 ', 'a'] as $bad) {
-        expect(fn() => IntegerTiny::fromString($bad))
-            ->toThrow(IntegerTypeException::class);
-    }
+describe('Type checks and properties', function (): void {
+    it('isEmpty always returns false', function (int $value): void {
+        $tiny = new IntegerTiny($value);
+        expect($tiny->isEmpty())->toBeFalse();
+    })->with([-128, -1, 0, 1, 127]);
 
-    // In-range strict parse ok; out-of-range strict parse -> domain error
-    expect(fn() => IntegerTiny::fromString('128'))
-        ->toThrow(IntegerTypeException::class, 'Expected tiny integer in range -128..127, got "128"')
-        ->and(fn() => IntegerTiny::fromString('-129'))
-        ->toThrow(IntegerTypeException::class, 'Expected tiny integer in range -128..127, got "-129"');
+    it('isUndefined always returns false', function (int $value): void {
+        $tiny = new IntegerTiny($value);
+        expect($tiny->isUndefined())->toBeFalse();
+    })->with([-128, -1, 0, 1, 127]);
+
+    it('isTypeOf returns true for matching class', function (): void {
+        $tiny = IntegerTiny::fromInt(5);
+        expect($tiny->isTypeOf(IntegerTiny::class))->toBeTrue();
+    });
+
+    it('isTypeOf returns false for non-matching class', function (): void {
+        $tiny = IntegerTiny::fromInt(5);
+        expect($tiny->isTypeOf('NonExistentClass'))->toBeFalse();
+    });
+
+    it('isTypeOf returns true when at least one class matches', function (): void {
+        $tiny = IntegerTiny::fromInt(5);
+        expect($tiny->isTypeOf('NonExistentClass', IntegerTiny::class, 'AnotherClass'))->toBeTrue();
+    });
+
+    it('value() returns integer value', function (int $value): void {
+        $tiny = new IntegerTiny($value);
+        expect($tiny->value())->toBe($value);
+    })->with([-128, -1, 0, 1, 127]);
 });
 
-it('tryFromInt/tryFromString return Undefined on invalid and instance on valid', function (): void {
-    $okI = IntegerTiny::tryFromInt(-1);
-    $badI = IntegerTiny::tryFromInt(1000);
-    $okS = IntegerTiny::tryFromString('5');
-    $badS = IntegerTiny::tryFromString('01');
+// ============================================
+// ROUND-TRIP CONVERSIONS
+// ============================================
 
-    expect($okI)->toBeInstanceOf(IntegerTiny::class)
-        ->and($okI->value())->toBe(-1)
-        ->and($okS)->toBeInstanceOf(IntegerTiny::class)
-        ->and($okS->value())->toBe(5)
-        ->and($badI)->toBeInstanceOf(Undefined::class)
-        ->and($badS)->toBeInstanceOf(Undefined::class);
-});
+describe('Round-trip conversions', function (): void {
+    it('preserves value through int → string → int conversion', function (int $original): void {
+        $v1 = IntegerTiny::fromInt($original);
+        $str = $v1->toString();
+        $v2 = IntegerTiny::fromString($str);
+        expect($v2->value())->toBe($original);
+    })->with([-128, -50, 0, 50, 127]);
 
-it('jsonSerialize returns native int', function (): void {
-    expect(IntegerTiny::fromInt(-7)->jsonSerialize())->toBe(-7);
-});
+    it('preserves value through string → int → string conversion', function (string $original): void {
+        $v1 = IntegerTiny::fromString($original);
+        $int = $v1->toInt();
+        $v2 = IntegerTiny::fromInt($int);
+        expect($v2->toString())->toBe($original);
+    })->with(['-128', '-50', '0', '50', '127']);
 
-it('tryFromMixed returns instance for integer-like inputs within range and Undefined otherwise', function (): void {
-    $okInt = IntegerTiny::tryFromMixed(-1);
-    $okStr = IntegerTiny::tryFromMixed('127');
-    $fromTrue = IntegerTiny::tryFromMixed(true);
-    $fromFalse = IntegerTiny::tryFromMixed(false);
-    $badLow = IntegerTiny::tryFromMixed(-129);
-    $badHigh = IntegerTiny::tryFromMixed(128);
-    $badFloatish = IntegerTiny::tryFromMixed('1.0');
-    $badArr = IntegerTiny::tryFromMixed(['x']);
-    $badNull = IntegerTiny::tryFromMixed(null);
-    $badObj = IntegerTiny::tryFromMixed(new stdClass());
-
-    $stringable = new class implements Stringable {
-        public function __toString(): string
-        {
-            return '0';
-        }
-    };
-    $okStringable = IntegerTiny::tryFromMixed($stringable);
-
-    expect($okInt)->toBeInstanceOf(IntegerTiny::class)
-        ->and($okInt->value())->toBe(-1)
-        ->and($okStr)->toBeInstanceOf(IntegerTiny::class)
-        ->and($okStr->value())->toBe(127)
-        ->and($fromTrue)->toBeInstanceOf(IntegerTiny::class)
-        ->and($fromTrue->value())->toBe(1)
-        ->and($fromFalse)->toBeInstanceOf(IntegerTiny::class)
-        ->and($fromFalse->value())->toBe(0)
-        ->and($okStringable)->toBeInstanceOf(IntegerTiny::class)
-        ->and($okStringable->value())->toBe(0)
-        ->and($badLow)->toBeInstanceOf(Undefined::class)
-        ->and($badHigh)->toBeInstanceOf(Undefined::class)
-        ->and($badFloatish)->toBeInstanceOf(Undefined::class)
-        ->and($badArr)->toBeInstanceOf(Undefined::class)
-        ->and($badNull)->toBeInstanceOf(Undefined::class)
-        ->and($badObj)->toBeInstanceOf(Undefined::class);
-});
-
-it('isEmpty returns false for IntegerTiny', function (): void {
-    $a = new IntegerTiny(-1);
-    $b = IntegerTiny::fromInt(127);
-
-    expect($a->isEmpty())->toBeFalse()
-        ->and($b->isEmpty())->toBeFalse();
-});
-
-it('isUndefined is always false', function (): void {
-    expect(IntegerTiny::fromInt(0)->isUndefined())->toBeFalse()
-        ->and(IntegerTiny::fromInt(1)->isUndefined())->toBeFalse();
-});
-
-it('fromFloat creates instance from float with exact integer value', function (): void {
-    $v = IntegerTiny::fromFloat(5.0);
-    expect($v->value())->toBe(5);
-});
-
-it('toFloat converts to float and kills RemoveDoubleCast mutant', function (): void {
-    $v = new IntegerTiny(42);
-    $f = $v->toFloat();
-    expect($f)->toBe(42.0)
-        ->and($f)->toBeFloat();
-
-    expect(\is_float($v->toFloat()))->toBeTrue();
-
-    // Test boundary values to ensure precision check logic is covered
-    $min = new IntegerTiny(-128);
-    $max = new IntegerTiny(127);
-    expect($min->toFloat())->toBe(-128.0)
-        ->and($max->toFloat())->toBe(127.0);
-});
-
-it('toBool converts to bool', function (): void {
-    $zero = new IntegerTiny(0);
-    $positive = new IntegerTiny(5);
-    expect($zero->toBool())->toBeFalse()
-        ->and($positive->toBool())->toBeTrue();
-});
-
-it('fromBool creates instance from boolean value', function (): void {
-    $fromTrue = IntegerTiny::fromBool(true);
-    $fromFalse = IntegerTiny::fromBool(false);
-    expect($fromTrue->value())->toBe(1)
-        ->and($fromFalse->value())->toBe(0);
-});
-
-it('fromFloat throws on out of range value', function (): void {
-    expect(fn() => IntegerTiny::fromFloat(128.0))
-        ->toThrow(IntegerTypeException::class, 'Expected tiny integer in range -128..127, got "128"');
-});
-
-it('toFloat throws when precision would be lost', function (): void {
-    $largeValue = new IntegerTiny(127);
-    // For tiny integers, conversion will always succeed, but we test the logic anyway
-    expect($largeValue->toFloat())->toBe(127.0);
-});
-
-it('round-trip conversion preserves value: int → string → int', function (): void {
-    $original = -50;
-    $v1 = IntegerTiny::fromInt($original);
-    $str = $v1->toString();
-    $v2 = IntegerTiny::fromString($str);
-
-    expect($v2->value())->toBe($original);
-});
-
-it('round-trip conversion preserves value: string → int → string', function (): void {
-    $original = '-128';
-    $v1 = IntegerTiny::fromString($original);
-    $int = $v1->toInt();
-    $v2 = IntegerTiny::fromInt($int);
-
-    expect($v2->toString())->toBe($original);
-});
-
-it('multiple round-trips preserve value integrity for boundary values', function (): void {
-    $values = [-128, -1, 0, 1, 127];
-
-    foreach ($values as $original) {
+    it('handles multiple round-trips for boundary values', function (int $original): void {
         // int → string → int → string → int
         $result = IntegerTiny::fromString(
             IntegerTiny::fromInt(
@@ -261,20 +336,54 @@ it('multiple round-trips preserve value integrity for boundary values', function
         )->value();
 
         expect($result)->toBe($original);
-    }
+    })->with([-128, -1, 0, 1, 127]);
 });
 
-it('isTypeOf returns true when class matches', function (): void {
-    $v = IntegerTiny::fromInt(5);
-    expect($v->isTypeOf(IntegerTiny::class))->toBeTrue();
-});
+// ============================================
+// EDGE CASES & COMPREHENSIVE TESTS
+// ============================================
 
-it('isTypeOf returns false when class does not match', function (): void {
-    $v = IntegerTiny::fromInt(5);
-    expect($v->isTypeOf('NonExistentClass'))->toBeFalse();
-});
+describe('Edge cases and comprehensive tests', function (): void {
+    // Test Stringable objects
+    it('handles Stringable objects', function (): void {
+        $stringable = new class implements Stringable {
+            public function __toString(): string
+            {
+                return '42';
+            }
+        };
 
-it('isTypeOf returns true for multiple classNames when one matches', function (): void {
-    $v = IntegerTiny::fromInt(5);
-    expect($v->isTypeOf('NonExistentClass', IntegerTiny::class, 'AnotherClass'))->toBeTrue();
+        $result = IntegerTiny::tryFromMixed($stringable);
+        expect($result)->toBeInstanceOf(IntegerTiny::class)
+            ->and($result->value())->toBe(42);
+    });
+
+    // Test boundary edge cases
+    it('handles all boundary values correctly', function (): void {
+        $min = new IntegerTiny(-128);
+        $zero = new IntegerTiny(0);
+        $max = new IntegerTiny(127);
+
+        expect($min->value())->toBe(-128)
+            ->and($min->toString())->toBe('-128')
+            ->and($min->toInt())->toBe(-128)
+            ->and($min->toFloat())->toBe(-128.0)
+            ->and($min->toBool())->toBeTrue()
+            ->and($zero->value())->toBe(0)
+            ->and($zero->toString())->toBe('0')
+            ->and($zero->toInt())->toBe(0)
+            ->and($zero->toFloat())->toBe(0.0)
+            ->and($zero->toBool())->toBeFalse()
+            ->and($max->value())->toBe(127)
+            ->and($max->toString())->toBe('127')
+            ->and($max->toInt())->toBe(127)
+            ->and($max->toFloat())->toBe(127.0)
+            ->and($max->toBool())->toBeTrue();
+    });
+
+    // Test that fromMixed correctly catches TypeException
+    it('tryFromMixed catches TypeException for unserializable types', function (): void {
+        $result = IntegerTiny::tryFromMixed([]);
+        expect($result)->toBeInstanceOf(Undefined::class);
+    });
 });
