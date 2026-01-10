@@ -20,7 +20,7 @@ it('builds from valid scalars and serializes to expected array', function (): vo
 
     expect($obj->getId()->toString())->toBe('1')
         ->and($obj->getFirstName()->toString())->toBe('Alice')
-        ->and($obj->getHeight()->toString())->toBe('170');
+        ->and($obj->getHeight()->toString())->toBe('170.0');
 
     $nick = $obj->getNickNames();
     expect($nick)->toBeInstanceOf(ArrayOfObjectsAbstract::class)
@@ -29,7 +29,7 @@ it('builds from valid scalars and serializes to expected array', function (): vo
     expect($obj->jsonSerialize())->toBe([
         'id' => '1',
         'firstName' => 'Alice',
-        'height' => '170',
+        'height' => '170.0',
         'nickNames' => ['User1', 'Admin5'],
     ]);
 });

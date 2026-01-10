@@ -61,9 +61,9 @@ it('__toString mirrors toString and value', function (): void {
     $v = FloatStandard::fromFloat(3.14);
 
     expect((string) $v)
-        ->toBe('3.14')
+        ->toBe('3.14000000000000012')
         ->and($v->toString())
-        ->toBe('3.14')
+        ->toBe('3.14000000000000012')
         ->and($v->value())
         ->toBe(3.14);
 });

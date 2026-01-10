@@ -179,10 +179,10 @@ it('fromString parses valid float strings including negatives, decimals, and sci
         ->and(FloatStandard::fromString('0')->value())->toBe(0.0)
         ->and(FloatStandard::fromString('-0')->value())->toBe(0.0)
         ->and(FloatStandard::fromString('-0.0')->value())->toBe(0.0)
-        ->and(FloatStandard::fromString('-0.0')->toString())->toBe('-0')
-        ->and(FloatStandard::fromString('1.2345678912345')->toString())->toBe('1.2345678912345')
+        ->and(FloatStandard::fromString('-0.0')->toString())->toBe('0.0')
+        ->and(FloatStandard::fromString('1.2345678912345')->toString())->toBe('1.23456789123449995')
         ->and(FloatStandard::fromString('42')->value())->toBe(42.0)
-        ->and(FloatStandard::fromString('42')->toString())->toBe('42');
+        ->and(FloatStandard::fromString('42')->toString())->toBe('42.0');
 });
 
 it('fromString rejects non-numeric strings and magic conversions', function (): void {
@@ -223,5 +223,5 @@ it('fromFloat returns exact value and toString matches', function (): void {
 
     $f2 = FloatStandard::fromFloat(0.0);
     expect($f2->value())->toBe(0.0)
-        ->and($f2->toString())->toBe('0');
+        ->and($f2->toString())->toBe('0.0');
 });

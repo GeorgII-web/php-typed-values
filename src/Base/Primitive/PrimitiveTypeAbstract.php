@@ -164,11 +164,30 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
      */
     protected static function floatToString(float $value): string
     {
-        $strValue = (string) $value;
+        // Convert to string without scientific notation
+        $strValue = sprintf('%.17f', $value);
+
+        // Trim trailing zeros but keep at least one decimal
+        $strValue = rtrim($strValue, '0');
+        if (str_ends_with($strValue, '.')) {
+            $strValue .= '0';
+        }
+
+        // Ensure leading zero
+        if ($strValue[0] === '.') {
+            $strValue = '0' . $strValue;
+        }
+        if ($strValue[0] === '-' && $strValue[1] === '.') {
+            $strValue = '-0' . substr($strValue, 1);
+        }
+
         if ($value !== (float) $strValue) {
             throw new FloatTypeException(sprintf('Float "%s" has no valid strict string value', $value));
         }
 
+        /**
+         * @var non-empty-string
+         */
         return $strValue;
     }
 
@@ -247,30 +266,6 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
      */
     protected static function stringToFloat(string $value): float
     {
-        //        if (!preg_match('/^-?\d+\.\d+$/', $value)) {
-        //            throw new StringTypeException(sprintf('String "%s" has no valid float value', $value));
-        //        }
-        //
-        //        $floatValue = (float) $value;
-        //        $stringValue = (string) $floatValue;
-        //
-        //        // Special handling for .0 cases
-        //        if (preg_match('/^-?\d+\.0+$/', $value)) {
-        //            // Remove trailing zeros and dot for comparison
-        //            $normalizedInput = rtrim(rtrim($value, '0'), '.');
-        //            if ($stringValue !== $normalizedInput) {
-        //                throw new StringTypeException(sprintf('String "%s" has no valid strict float value', $value));
-        //            }
-        //            return $floatValue;
-        //        }
-        //
-        //        // For other cases, ensure exact match
-        //        if ($value !== $stringValue) {
-        //            throw new StringTypeException(sprintf('String "%s" has no valid strict float value', $value));
-        //        }
-        //
-        //        return $floatValue;
-
         if (!is_numeric($value)) {
             throw new StringTypeException(sprintf('String "%s" has no valid float value', $value));
         }

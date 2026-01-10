@@ -11,7 +11,7 @@ it('constructs LateFail from scalars/mixed and exposes typed values', function (
 
     expect($vo->getId()->toString())->toBe('1');
     expect($vo->getFirstName()->toString())->toBe('Foobar');
-    expect($vo->getHeight()->toString())->toBe('170');
+    expect($vo->getHeight()->toString())->toBe('170.0');
 });
 
 it('coerces mixed valid values via tryFromMixed', function (): void {
@@ -27,7 +27,7 @@ it('keeps Undefined for invalid optional firstName (late fail)', function (): vo
 
     expect($vo->getFirstName())->toBeInstanceOf(Undefined::class);
     // height remains valid
-    expect($vo->getHeight()->toString())->toBe('10');
+    expect($vo->getHeight()->toString())->toBe('10.0');
 });
 
 it('keeps Undefined for invalid optional height values (late fail)', function (): void {

@@ -10,7 +10,7 @@ use PhpTypedValues\Undefined\Alias\Undefined;
 it('accepts non-negative floats via fromFloat and toString matches', function (): void {
     $f0 = FloatNonNegative::fromFloat(0.0);
     expect($f0->value())->toBe(0.0)
-        ->and($f0->toString())->toBe('0');
+        ->and($f0->toString())->toBe('0.0');
 
     $f1 = FloatNonNegative::fromFloat(1.5);
     expect($f1->value())->toBe(1.5)
@@ -21,7 +21,7 @@ it('parses non-negative numeric strings via fromString', function (): void {
     expect(FloatNonNegative::fromString('0')->value())->toBe(0.0)
         ->and(FloatNonNegative::fromString('0.0')->value())->toBe(0.0)
         ->and(FloatNonNegative::fromString('3.14')->value())->toBe(3.14)
-        ->and(FloatNonNegative::fromString('42')->toString())->toBe('42');
+        ->and(FloatNonNegative::fromString('42')->toString())->toBe('42.0');
 });
 
 it('rejects negative values', function (): void {
@@ -115,7 +115,7 @@ it('accepts negative zero and normalizes to "-0" in toString', function (): void
     expect($v->value())
         ->toBe(0.0)
         ->and($v->toString())
-        ->toBe('-0');
+        ->toBe('0.0');
 });
 
 it('converts mixed values to correct float state', function (mixed $input, float $expected): void {

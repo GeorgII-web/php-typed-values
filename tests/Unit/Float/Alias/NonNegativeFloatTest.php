@@ -17,5 +17,5 @@ it('NonNegativeFloat::fromString returns NonNegativeFloat instance', function ()
 
     expect($v)->toBeInstanceOf(NonNegative::class)
         ->and($v::class)->toBe(NonNegative::class)
-        ->and($v->toString())->toBe('2');
+        ->and($v->toString())->toBe('2.0');
 });

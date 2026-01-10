@@ -45,7 +45,7 @@ it('tryFromMixed returns instance for valid string-convertible values', function
         ->and($fromFloat)
         ->toBeInstanceOf(StringStandard::class)
         ->and($fromFloat->value())
-        ->toBe('45.67')
+        ->toBe('45.67000000000000171')
         ->and($fromNull)
         ->toBeInstanceOf(Undefined::class)
         ->and($fromStringable)

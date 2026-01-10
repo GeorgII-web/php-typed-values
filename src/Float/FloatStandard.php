@@ -8,6 +8,8 @@ use Exception;
 use PhpTypedValues\Base\Primitive\Float\FloatTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\Float\FloatTypeException;
+use PhpTypedValues\Exception\Integer\IntegerTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
@@ -41,11 +43,11 @@ readonly class FloatStandard extends FloatTypeAbstract
     public function __construct(float $value)
     {
         if (is_infinite($value)) {
-            throw new FloatTypeException('Infinite float value');
+            throw new FloatTypeException('Infinite "INF" float value');
         }
 
         if (is_nan($value)) {
-            throw new FloatTypeException('Not a number float value');
+            throw new FloatTypeException('Not a number "NAN" float value');
         }
 
         $this->value = $value;
@@ -68,6 +70,7 @@ readonly class FloatStandard extends FloatTypeAbstract
     }
 
     /**
+     * @throws IntegerTypeException
      * @throws FloatTypeException
      */
     public static function fromInt(int $value): static
@@ -77,6 +80,7 @@ readonly class FloatStandard extends FloatTypeAbstract
 
     /**
      * @throws FloatTypeException
+     * @throws StringTypeException
      */
     public static function fromString(string $value): static
     {

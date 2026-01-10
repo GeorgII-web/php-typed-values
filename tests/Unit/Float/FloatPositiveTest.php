@@ -17,7 +17,7 @@ it('kills the bool decrement mutant in tryFromMixed', function () {
 it('constructs positive float via constructor', function (): void {
     $v = new FloatPositive(0.1);
     expect($v->value())->toBe(0.1)
-        ->and($v->toString())->toBe('0.1');
+        ->and($v->toString())->toBe('0.10000000000000001');
 });
 
 it('creates from float factory', function (): void {
@@ -112,9 +112,9 @@ it('__toString mirrors toString and value', function (): void {
     $v = FloatPositive::fromFloat(3.14);
 
     expect((string) $v)
-        ->toBe('3.14')
+        ->toBe('3.14000000000000012')
         ->and($v->toString())
-        ->toBe('3.14')
+        ->toBe('3.14000000000000012')
         ->and($v->value())
         ->toBe(3.14);
 });

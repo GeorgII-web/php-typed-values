@@ -15,7 +15,7 @@ it('constructs OptionalFail from scalars and exposes typed values', function ():
 
     expect($vo->getId()->toString())->toBe('1');
     expect($vo->getFirstName()->toString())->toBe('Foobar');
-    expect($vo->getHeight()->toString())->toBe('170');
+    expect($vo->getHeight()->toString())->toBe('170.0');
 });
 
 it('checks string cast', function (): void {
@@ -39,7 +39,7 @@ it('accepts int/float/numeric-string heights and preserves string formatting via
     $asString = OptionalFail::fromScalars(id: 1, firstName: 'Foobar', height: '42.25');
 
     expect($asInt->getHeight())->toBeInstanceOf(FloatPositive::class)
-        ->and($asInt->getHeight()->toString())->toBe('170')
+        ->and($asInt->getHeight()->toString())->toBe('170.0')
         ->and($asFloat->getHeight())->toBeInstanceOf(FloatPositive::class)
         ->and($asFloat->getHeight()->toString())->toBe('170.5')
         ->and($asString->getHeight())->toBeInstanceOf(FloatPositive::class)
@@ -73,7 +73,7 @@ it('jsonSerialize returns associative array of strings when all values are prese
         ->toBe([
             'id' => '1',
             'firstName' => 'Foo',
-            'height' => '170',
+            'height' => '170.0',
         ]);
 });
 
