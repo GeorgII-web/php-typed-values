@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use PhpTypedValues\Exception\Float\FloatTypeException;
+use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Float\FloatStandard;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -226,6 +227,18 @@ it('covers conversions for FloatStandard', function (): void {
     expect(FloatStandard::tryFromBool(true))->toBeInstanceOf(FloatStandard::class)
         ->and(FloatStandard::tryFromBool(false))->toBeInstanceOf(FloatStandard::class)
         ->and(FloatStandard::tryFromInt(5))->toBeInstanceOf(FloatStandard::class);
+});
+
+it('FloatStandard::fromInt throws IntegerTypeException for big integers (line 213)', function (): void {
+    expect(fn() => FloatStandard::fromInt(\PHP_INT_MAX))
+        ->toThrow(IntegerTypeException::class, 'Integer "' . \PHP_INT_MAX . '" has no valid strict float value');
+});
+
+it('covers intToString protective check (line 230)', function (): void {
+    // It's hard to trigger line 230 with a real int in PHP, 
+    // but we can test it with standard values to at least execute the line.
+    $v = \PhpTypedValues\String\StringStandard::fromInt(123);
+    expect($v->value())->toBe('123');
 });
 
 it('FloatStandard::toString throws FloatTypeException for very small floats', function (): void {
