@@ -104,3 +104,62 @@ it('isTypeOf returns true for multiple classNames when one matches', function ()
     $v = StringNonEmpty::fromString('test');
     expect($v->isTypeOf('NonExistentClass', StringNonEmpty::class, 'AnotherClass'))->toBeTrue();
 });
+
+it('covers conversions for StringNonEmpty', function (): void {
+    expect(StringNonEmpty::fromBool(true)->value())->toBe('true')
+        ->and(StringNonEmpty::fromBool(false)->value())->toBe('false')
+        ->and(StringNonEmpty::fromInt(123)->value())->toBe('123')
+        ->and(StringNonEmpty::fromFloat(1.2)->value())->toBe('1.19999999999999996');
+
+    $vTrue = StringNonEmpty::fromString('true');
+    expect($vTrue->toBool())->toBeTrue();
+
+    $vInt = StringNonEmpty::fromString('123');
+    expect($vInt->toInt())->toBe(123);
+
+    $vFloat = StringNonEmpty::fromString('1.2');
+    expect($vFloat->toFloat())->toBe(1.2);
+});
+
+it('tryFromBool, tryFromFloat, tryFromInt return StringNonEmpty for valid inputs', function (): void {
+    expect(StringNonEmpty::tryFromBool(true))->toBeInstanceOf(StringNonEmpty::class)
+        ->and(StringNonEmpty::tryFromFloat(1.2))->toBeInstanceOf(StringNonEmpty::class)
+        ->and(StringNonEmpty::tryFromInt(123))->toBeInstanceOf(StringNonEmpty::class);
+});
+
+/**
+ * @internal
+ *
+ * @psalm-immutable
+ *
+ * @coversNothing
+ */
+readonly class StringNonEmptyTest extends StringNonEmpty
+{
+    public static function fromBool(bool $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromFloat(float $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromInt(int $value): static
+    {
+        throw new Exception('test');
+    }
+}
+
+it('StringNonEmpty::tryFromBool returns Undefined when fromBool throws (coverage)', function (): void {
+    expect(StringNonEmptyTest::tryFromBool(true))->toBeInstanceOf(Undefined::class);
+});
+
+it('StringNonEmpty::tryFromFloat returns Undefined when fromFloat throws (coverage)', function (): void {
+    expect(StringNonEmptyTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class);
+});
+
+it('StringNonEmpty::tryFromInt returns Undefined when fromInt throws (coverage)', function (): void {
+    expect(StringNonEmptyTest::tryFromInt(1))->toBeInstanceOf(Undefined::class);
+});

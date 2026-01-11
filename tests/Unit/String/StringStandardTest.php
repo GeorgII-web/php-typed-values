@@ -259,3 +259,14 @@ it('isTypeOf returns true for multiple classNames when one matches', function ()
     $v = StringStandard::fromString('test');
     expect($v->isTypeOf('NonExistentClass', StringStandard::class, 'AnotherClass'))->toBeTrue();
 });
+
+it('toBool, toFloat, toInt throw for invalid strings in StringStandard', function (): void {
+    $v = StringStandard::fromString('not-a-bool');
+    expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\Integer\IntegerTypeException::class);
+
+    $v2 = StringStandard::fromString('not-a-float');
+    expect(fn() => $v2->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class);
+
+    $v3 = StringStandard::fromString('not-an-int');
+    expect(fn() => $v3->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class);
+});

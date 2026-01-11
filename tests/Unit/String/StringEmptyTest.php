@@ -106,3 +106,23 @@ it('isTypeOf returns true for multiple classNames when one matches', function ()
     $v = StringEmpty::fromString('');
     expect($v->isTypeOf('NonExistentClass', StringEmpty::class, 'AnotherClass'))->toBeTrue();
 });
+
+it('throws on fromBool, fromFloat, fromInt for StringEmpty', function (): void {
+    expect(fn() => StringEmpty::fromBool(true))->toThrow(StringTypeException::class)
+        ->and(fn() => StringEmpty::fromBool(false))->toThrow(StringTypeException::class)
+        ->and(fn() => StringEmpty::fromFloat(0.0))->toThrow(StringTypeException::class)
+        ->and(fn() => StringEmpty::fromInt(0))->toThrow(StringTypeException::class);
+});
+
+it('tryFromBool, tryFromFloat, tryFromInt return Undefined for StringEmpty', function (): void {
+    expect(StringEmpty::tryFromBool(true))->toBeInstanceOf(Undefined::class)
+        ->and(StringEmpty::tryFromFloat(0.0))->toBeInstanceOf(Undefined::class)
+        ->and(StringEmpty::tryFromInt(0))->toBeInstanceOf(Undefined::class);
+});
+
+it('toBool, toFloat, toInt throw for StringEmpty', function (): void {
+    $v = new StringEmpty('');
+    expect(fn() => $v->toBool())->toThrow(\PhpTypedValues\Exception\Integer\IntegerTypeException::class)
+        ->and(fn() => $v->toFloat())->toThrow(StringTypeException::class)
+        ->and(fn() => $v->toInt())->toThrow(StringTypeException::class);
+});
