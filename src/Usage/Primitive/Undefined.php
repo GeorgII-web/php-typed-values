@@ -9,6 +9,7 @@ use const NAN;
 use const PHP_EOL;
 use const PHP_INT_MAX;
 
+use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Exception\Undefined\UndefinedTypeException;
 use PhpTypedValues\Undefined\Alias\NotExist;
@@ -208,23 +209,30 @@ $floats = [
 function floatToString(float $value): string
 {
     // Convert to string without scientific notation
-    $str = sprintf('%.17f', $value);
+    $strValue = sprintf('%.17f', $value);
 
     // Trim trailing zeros but keep at least one decimal
-    $str = rtrim($str, '0');
-    if (str_ends_with($str, '.')) {
-        $str .= '0';
+    $strValue = rtrim($strValue, '0');
+    if (str_ends_with($strValue, '.')) {
+        $strValue .= '0';
     }
 
-    // Ensure leading zero
-    if ($str[0] === '.') {
-        $str = '0' . $str;
-    }
-    if ($str[0] === '-' && $str[1] === '.') {
-        $str = '-0' . substr($str, 1);
+    //    // Ensure leading zero
+    //    if ($strValue[0] === '.') {
+    //        $strValue = '0' . $strValue;
+    //    }
+    //    if ($strValue[0] === '-' && $strValue[1] === '.') {
+    //        $strValue = '-0' . substr($strValue, 1);
+    //    }
+
+    if ($value !== (float) $strValue) {
+        throw new FloatTypeException(sprintf('Float "%s" has no valid strict string value', $value));
     }
 
-    return $str;
+    /**
+     * @var non-empty-string
+     */
+    return $strValue;
 }
 
 printf(
@@ -246,7 +254,11 @@ foreach ($floats as $key => $f) {
 
     $string = (string) $f;
 
-    $stringClass = floatToString($f);
+    try {
+        $stringClass = floatToString($f);
+    } catch (FloatTypeException $e) {
+        $stringClass = 'Invalid *****************';
+    }
 
     printf(
         "%-25s | %-25s | %-25s | %-25s\n",

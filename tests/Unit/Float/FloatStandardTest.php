@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Float\FloatStandard;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -205,4 +206,30 @@ it('isTypeOf returns false when class does not match', function (): void {
 it('isTypeOf returns true for multiple classNames when one matches', function (): void {
     $v = FloatStandard::fromFloat(1.5);
     expect($v->isTypeOf('NonExistentClass', FloatStandard::class, 'AnotherClass'))->toBeTrue();
+});
+
+it('covers conversions for FloatStandard', function (): void {
+    $f = FloatStandard::fromFloat(1.0);
+    expect($f->toBool())->toBeTrue()
+        ->and($f->toInt())->toBe(1)
+        ->and($f->toFloat())->toBe(1.0)
+        ->and($f->toString())->toBe('1.0');
+
+    $f0 = FloatStandard::fromFloat(0.0);
+    expect($f0->toBool())->toBeFalse()
+        ->and($f0->toInt())->toBe(0)
+        ->and($f0->toString())->toBe('0.0');
+
+    expect(fn() => FloatStandard::fromFloat(0.5)->toBool())->toThrow(FloatTypeException::class)
+        ->and(fn() => FloatStandard::fromFloat(0.5)->toInt())->toThrow(FloatTypeException::class);
+
+    expect(FloatStandard::tryFromBool(true))->toBeInstanceOf(FloatStandard::class)
+        ->and(FloatStandard::tryFromBool(false))->toBeInstanceOf(FloatStandard::class)
+        ->and(FloatStandard::tryFromInt(5))->toBeInstanceOf(FloatStandard::class);
+});
+
+it('FloatStandard::toString throws FloatTypeException for very small floats', function (): void {
+    $f = FloatStandard::fromFloat(1e-308);
+    expect(fn() => $f->toString())
+        ->toThrow(FloatTypeException::class, 'Float "1.0E-308" has no valid strict string value');
 });

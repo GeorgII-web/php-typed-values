@@ -209,6 +209,27 @@ it('isUndefined returns false for instances and true for Undefined results', fun
         ->and($u3->isUndefined())->toBeTrue();
 });
 
+it('covers conversions for FloatNonNegative', function (): void {
+    $f = FloatNonNegative::fromFloat(1.0);
+    expect($f->toBool())->toBeTrue()
+        ->and($f->toInt())->toBe(1)
+        ->and($f->toFloat())->toBe(1.0)
+        ->and($f->toString())->toBe('1.0');
+
+    $f0 = FloatNonNegative::fromFloat(0.0);
+    expect($f0->toBool())->toBeFalse()
+        ->and($f0->toInt())->toBe(0)
+        ->and($f0->toString())->toBe('0.0');
+
+    expect(fn() => FloatNonNegative::fromFloat(0.5)->toBool())->toThrow(FloatTypeException::class)
+        ->and(fn() => FloatNonNegative::fromFloat(0.5)->toInt())->toThrow(FloatTypeException::class);
+
+    expect(FloatNonNegative::tryFromBool(true))->toBeInstanceOf(FloatNonNegative::class)
+        ->and(FloatNonNegative::tryFromBool(false))->toBeInstanceOf(FloatNonNegative::class)
+        ->and(FloatNonNegative::tryFromInt(5))->toBeInstanceOf(FloatNonNegative::class)
+        ->and(FloatNonNegative::tryFromInt(-5))->toBeInstanceOf(Undefined::class);
+});
+
 it('isTypeOf returns true when class matches', function (): void {
     $v = FloatNonNegative::fromFloat(1.5);
     expect($v->isTypeOf(FloatNonNegative::class))->toBeTrue();

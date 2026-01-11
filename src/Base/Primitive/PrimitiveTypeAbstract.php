@@ -164,21 +164,13 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
      */
     protected static function floatToString(float $value): string
     {
-        // Convert to string without scientific notation
+        // Convert to string as it stored in memory
         $strValue = sprintf('%.17f', $value);
 
         // Trim trailing zeros but keep at least one decimal
         $strValue = rtrim($strValue, '0');
         if (str_ends_with($strValue, '.')) {
             $strValue .= '0';
-        }
-
-        // Ensure leading zero
-        if ($strValue[0] === '.') {
-            $strValue = '0' . $strValue;
-        }
-        if ($strValue[0] === '-' && $strValue[1] === '.') {
-            $strValue = '-0' . substr($strValue, 1);
         }
 
         if ($value !== (float) $strValue) {

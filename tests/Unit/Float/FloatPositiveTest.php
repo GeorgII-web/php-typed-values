@@ -205,6 +205,22 @@ it('isUndefined returns false for instances and true for Undefined results', fun
         ->and($u3->isUndefined())->toBeTrue();
 });
 
+it('covers conversions for FloatPositive', function (): void {
+    $f = FloatPositive::fromFloat(1.0);
+    expect($f->toBool())->toBeTrue()
+        ->and($f->toInt())->toBe(1)
+        ->and($f->toFloat())->toBe(1.0)
+        ->and($f->toString())->toBe('1.0');
+
+    expect(fn() => FloatPositive::fromFloat(0.5)->toBool())->toThrow(FloatTypeException::class)
+        ->and(fn() => FloatPositive::fromFloat(0.5)->toInt())->toThrow(FloatTypeException::class);
+
+    expect(FloatPositive::tryFromBool(true))->toBeInstanceOf(FloatPositive::class)
+        ->and(FloatPositive::tryFromBool(false))->toBeInstanceOf(Undefined::class)
+        ->and(FloatPositive::tryFromInt(5))->toBeInstanceOf(FloatPositive::class)
+        ->and(FloatPositive::tryFromInt(0))->toBeInstanceOf(Undefined::class);
+});
+
 it('isTypeOf returns true when class matches', function (): void {
     $v = FloatPositive::fromFloat(1.5);
     expect($v->isTypeOf(FloatPositive::class))->toBeTrue();
