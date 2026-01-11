@@ -386,4 +386,32 @@ describe('Edge cases and comprehensive tests', function (): void {
         $result = IntegerTiny::tryFromMixed([]);
         expect($result)->toBeInstanceOf(Undefined::class);
     });
+
+    it('IntegerTiny::tryFrom* methods return default on failure', function (): void {
+        expect(IntegerTiny::tryFromFloat(1.5))->toBeInstanceOf(Undefined::class)
+            ->and(IntegerTiny::tryFromFloat(128.0))->toBeInstanceOf(Undefined::class)
+            ->and(IntegerTiny::tryFromMixed(null))->toBeInstanceOf(Undefined::class)
+            ->and(IntegerTiny::tryFromString('abc'))->toBeInstanceOf(Undefined::class)
+            ->and(IntegerTiny::tryFromString('128'))->toBeInstanceOf(Undefined::class)
+            ->and(IntegerTiny::tryFromInt(128))->toBeInstanceOf(Undefined::class);
+    });
+});
+
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
+readonly class IntegerTinyTest extends IntegerTiny
+{
+    public static function fromBool(bool $value): static
+    {
+        throw new Exception('test');
+    }
+}
+
+describe('IntegerTiny catch block coverage', function (): void {
+    it('IntegerTiny::tryFromBool catch block coverage', function (): void {
+        expect(IntegerTinyTest::tryFromBool(true))->toBeInstanceOf(Undefined::class);
+    });
 });

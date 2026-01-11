@@ -223,6 +223,31 @@ it('toFloat throws when precision would be lost', function (): void {
         ->toThrow(IntegerTypeException::class, 'cannot be converted to float without losing precision');
 });
 
+it('IntegerNonNegative::tryFrom* methods return default on failure', function (): void {
+    expect(IntegerNonNegative::tryFromFloat(1.5))->toBeInstanceOf(Undefined::class)
+        ->and(IntegerNonNegative::tryFromFloat(-1.0))->toBeInstanceOf(Undefined::class)
+        ->and(IntegerNonNegative::tryFromMixed(null))->toBeInstanceOf(Undefined::class)
+        ->and(IntegerNonNegative::tryFromString('abc'))->toBeInstanceOf(Undefined::class)
+        ->and(IntegerNonNegative::tryFromInt(-1))->toBeInstanceOf(Undefined::class);
+});
+
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
+readonly class IntegerNonNegativeTest extends IntegerNonNegative
+{
+    public static function fromBool(bool $value): static
+    {
+        throw new Exception('test');
+    }
+}
+
+it('IntegerNonNegative::tryFromBool catch block coverage', function (): void {
+    expect(IntegerNonNegativeTest::tryFromBool(true))->toBeInstanceOf(Undefined::class);
+});
+
 it('round-trip conversion preserves value: int → string → int', function (): void {
     $original = 42;
     $v1 = IntegerNonNegative::fromInt($original);

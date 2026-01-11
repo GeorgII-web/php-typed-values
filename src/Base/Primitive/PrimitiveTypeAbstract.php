@@ -217,20 +217,15 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
     }
 
     /**
+     * Safe cast to string, no edge cases exist.
+     *
      * @psalm-pure
      *
      * @return non-empty-string
-     *
-     * @throws IntegerTypeException
      */
     protected static function intToString(int $value): string
     {
-        $stringValue = (string) $value;
-        if ($value !== (int) $stringValue) {
-            throw new IntegerTypeException(sprintf('Integer "%s" has no valid strict string value', $value));
-        }
-
-        return $stringValue;
+        return (string) $value;
     }
 
     /**

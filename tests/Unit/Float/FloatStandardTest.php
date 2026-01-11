@@ -173,6 +173,70 @@ it('converts mixed values to correct float state', function (mixed $input, float
     }, 'expected' => 2.5],
 ]);
 
+it('FloatStandard::toString matches expected values', function (float $value, string $expected): void {
+    if (is_nan($value) || is_infinite($value)) {
+        expect(fn() => FloatStandard::fromFloat($value))->toThrow(FloatTypeException::class);
+
+        return;
+    }
+
+    $f = FloatStandard::fromFloat($value);
+
+    // If the expected value is '0.0' but the input is not zero,
+    // it means it's a subnormal or very small number that will fail the strict string value check.
+    if ($expected === '0.0' && $value !== 0.0) {
+        expect(fn() => $f->toString())->toThrow(FloatTypeException::class);
+
+        return;
+    }
+
+    expect($f->toString())->toBe($expected);
+})->with([
+    '0' => [0, '0.0'],
+    '0.0' => [0.0, '0.0'],
+    '-0.0' => [-0.0, '0.0'],
+    '+0.0' => [+0.0, '0.0'],
+    '1.0' => [1.0, '1.0'],
+    '-1.0' => [-1.0, '-1.0'],
+    '0.1' => [0.1, '0.10000000000000001'],
+    '0.10000000000000001' => [0.10000000000000001, '0.10000000000000001'],
+    '0.10000000000000002' => [0.10000000000000002, '0.10000000000000002'],
+    '0.10000000000000012' => [0.10000000000000012, '0.10000000000000012'],
+    '-0.1' => [-0.1, '-0.10000000000000001'],
+    '0.2' => [0.2, '0.20000000000000001'],
+    '0.3' => [0.3, '0.29999999999999999'],
+    '0.1+0.2' => [0.1 + 0.2, '0.30000000000000004'],
+    '1/3' => [1.0 / 3.0, '0.33333333333333331'],
+    '2/3' => [2.0 / 3.0, '0.66666666666666663'],
+    '10/3' => [10.0 / 3.0, '3.33333333333333348'],
+    '1e10' => [1e10, '10000000000.0'],
+    '-1e10' => [-1e10, '-10000000000.0'],
+    '1e308' => [1e308, '100000000000000001097906362944045541740492309677311846336810682903157585404911491537163328978494688899061249669721172515611590283743140088328307009198146046031271664502933027185697489699588559043338384466165001178426897626212945177628091195786707458122783970171784415105291802893207873272974885715430223118336.0'],
+    '-1e308' => [-1e308, '-100000000000000001097906362944045541740492309677311846336810682903157585404911491537163328978494688899061249669721172515611590283743140088328307009198146046031271664502933027185697489699588559043338384466165001178426897626212945177628091195786707458122783970171784415105291802893207873272974885715430223118336.0'],
+    '1e-10' => [1e-10, '0.0000000001'],
+    '-1e-10' => [-1e-10, '-0.0000000001'],
+    '1e-308' => [1e-308, '0.0'], // Exception expected in test function logic or toBe logic
+    '-1e-308' => [-1e-308, '0.0'], // Exception expected
+    '5e-324' => [5e-324, '0.0'], // Exception expected
+    '-5e-324' => [-5e-324, '0.0'], // Exception expected
+    '1.99999999999999' => [1.99999999999999, '1.99999999999999001'],
+    '2.00000000000001' => [2.00000000000001, '2.00000000000001021'],
+    '0.7' => [0.7, '0.69999999999999996'],
+    '0.17' => [0.17, '0.17000000000000001'],
+    '0.57' => [0.57, '0.56999999999999995'],
+    '0.99' => [0.99, '0.98999999999999999'],
+    '001.5' => [001.5, '1.5'],
+    '0.3333333333333333' => [0.3333333333333333, '0.33333333333333331'],
+    '0.6666666666666666' => [0.6666666666666666, '0.66666666666666663'],
+    '2^53-1' => [9007199254740991.0, '9007199254740991.0'],
+    '2^53' => [9007199254740992.0, '9007199254740992.0'],
+    '-2^53' => [-9007199254740992.0, '-9007199254740992.0'],
+    'INF' => [\INF, 'INF'],
+    '-INF' => [-\INF, '-INF'],
+    'NAN' => [\NAN, 'NAN'],
+    'PHP_INT_MAX' => [(float) \PHP_INT_MAX, '9223372036854775808.0'], // todo real 9223372036854775807.0 - fail on round-trip checks
+]);
+
 it('returns Undefined for invalid mixed inputs', function (mixed $input): void {
     $result = FloatStandard::tryFromMixed($input);
 
@@ -235,9 +299,9 @@ it('FloatStandard::fromInt throws IntegerTypeException for big integers (line 21
 });
 
 it('covers intToString protective check (line 230)', function (): void {
-    // It's hard to trigger line 230 with a real int in PHP, 
+    // It's hard to trigger line 230 with a real int in PHP,
     // but we can test it with standard values to at least execute the line.
-    $v = \PhpTypedValues\String\StringStandard::fromInt(123);
+    $v = PhpTypedValues\String\StringStandard::fromInt(123);
     expect($v->value())->toBe('123');
 });
 

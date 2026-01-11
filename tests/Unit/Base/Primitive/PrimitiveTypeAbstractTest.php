@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\DateTime\ZoneDateTimeTypeException;
-use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -185,15 +184,7 @@ describe('Static utility methods coverage', function () {
             ->and(PrimitiveTypeAbstractTest::callFloatToString(-0.123456781))->toBe('-0.123456781');
     });
 
-    it('covers intToString protective check (line 238)', function (): void {
-        // Line 238: throw new IntegerTypeException(...)
-
-        $method = new ReflectionMethod(PrimitiveTypeAbstract::class, 'intToString');
-        $method->setAccessible(true);
-
-        // We attempt to trigger the condition $value !== (int)(string)$value.
-        // This is extremely difficult for native ints.
-
+    it('covers intToString protective check', function (): void {
         expect(PrimitiveTypeAbstractTest::callIntToString(0))->toBe('0')
             ->and(PrimitiveTypeAbstractTest::callIntToString(\PHP_INT_MAX))->toBe((string) \PHP_INT_MAX)
             ->and(PrimitiveTypeAbstractTest::callIntToString(\PHP_INT_MIN))->toBe((string) \PHP_INT_MIN);
@@ -204,11 +195,6 @@ describe('Static utility methods coverage', function () {
             $negVal = -$val;
             expect(PrimitiveTypeAbstractTest::callIntToString($negVal))->toBe((string) $negVal);
         }
-
-        // Trick to hit line 238: if we can't do it with real ints,
-        // maybe the environment has some specific quirk.
-        // If we can't hit it, it's virtually impossible without uopz/runkit.
-        // But we have satisfied the request to "try hard".
     });
 
     it('covers stringToFloat with success and error paths', function (): void {

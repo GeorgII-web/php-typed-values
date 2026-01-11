@@ -247,6 +247,15 @@ it('toFloat throws when precision would be lost', function (): void {
         ->toThrow(IntegerTypeException::class, 'cannot be converted to float without losing precision');
 });
 
+it('IntegerPositive::tryFrom* methods return default on failure', function (): void {
+    expect(IntegerPositive::tryFromFloat(1.5))->toBeInstanceOf(Undefined::class)
+        ->and(IntegerPositive::tryFromFloat(-1.0))->toBeInstanceOf(Undefined::class)
+        ->and(IntegerPositive::tryFromBool(false))->toBeInstanceOf(Undefined::class)
+        ->and(IntegerPositive::tryFromMixed(null))->toBeInstanceOf(Undefined::class)
+        ->and(IntegerPositive::tryFromString('abc'))->toBeInstanceOf(Undefined::class)
+        ->and(IntegerPositive::tryFromInt(-1))->toBeInstanceOf(Undefined::class);
+});
+
 it('round-trip conversion preserves value: int → string → int', function (): void {
     $original = 7;
     $v1 = IntegerPositive::fromInt($original);

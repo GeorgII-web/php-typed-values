@@ -193,6 +193,35 @@ it('returns Undefined for invalid mixed integer inputs', function (mixed $input)
     ['input' => \NAN],                 // NaN
 ]);
 
+it('IntegerStandard::tryFrom* methods return default on failure', function (): void {
+    expect(IntegerStandard::tryFromFloat(1.5))->toBeInstanceOf(Undefined::class)
+        ->and(IntegerStandard::tryFromMixed(null))->toBeInstanceOf(Undefined::class)
+        ->and(IntegerStandard::tryFromString('abc'))->toBeInstanceOf(Undefined::class);
+
+    // Cover tryFromBool catch block using a throwing subclass
+    // We use a dummy class that inherits tryFromBool but we override fromBool
+    // to throw an exception, thus triggering the catch block in the inherited method.
+    // Since we are on PHP 8.2 (per guidelines), we can't use readonly anonymous classes.
+    // We'll define a named class instead.
+});
+
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
+readonly class IntegerStandardTest extends IntegerStandard
+{
+    public static function fromBool(bool $value): static
+    {
+        throw new Exception('test');
+    }
+}
+
+it('IntegerStandard::tryFromBool catch block coverage', function (): void {
+    expect(IntegerStandardTest::tryFromBool(true))->toBeInstanceOf(Undefined::class);
+});
+
 it('IntegerStandard::fromString validates various edge cases', function (
     string $input,
     int|array $expected,
