@@ -151,18 +151,15 @@ readonly class FloatNonNegative extends FloatTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @throws FloatTypeException
      */
     public static function tryFromBool(
         bool $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract {
-        try {
-            /** @var static */
-            return static::fromBool($value);
-        } catch (Exception) {
-            /** @var T */
-            return $default;
-        }
+        /** @var static */
+        return static::fromBool($value);
     }
 
     /**

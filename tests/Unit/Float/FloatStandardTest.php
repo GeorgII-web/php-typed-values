@@ -293,6 +293,11 @@ it('covers conversions for FloatStandard', function (): void {
         ->and(FloatStandard::tryFromInt(5))->toBeInstanceOf(FloatStandard::class);
 });
 
+it('FloatStandard::tryFromInt returns Undefined for big integers (line 198)', function (): void {
+    expect(FloatStandard::tryFromInt(\PHP_INT_MAX))
+        ->toBeInstanceOf(Undefined::class);
+});
+
 it('FloatStandard::fromInt throws IntegerTypeException for big integers (line 213)', function (): void {
     expect(fn() => FloatStandard::fromInt(\PHP_INT_MAX))
         ->toThrow(IntegerTypeException::class, 'Integer "' . \PHP_INT_MAX . '" has no valid strict float value');

@@ -133,6 +133,118 @@ it('isUndefined is always false for StringStandard', function (): void {
         ->and(StringStandard::fromString('')->isUndefined())->toBeFalse();
 });
 
+it('StringStandard::tryFromBool returns instance from bool', function (): void {
+    $fromTrue = StringStandard::tryFromBool(true);
+    $fromFalse = StringStandard::tryFromBool(false);
+
+    expect($fromTrue)->toBeInstanceOf(StringStandard::class)
+        ->and($fromTrue->value())->toBe('true')
+        ->and($fromFalse)->toBeInstanceOf(StringStandard::class)
+        ->and($fromFalse->value())->toBe('false');
+});
+
+it('StringStandard::tryFromFloat returns instance from float', function (): void {
+    $v = StringStandard::tryFromFloat(1.23);
+
+    expect($v)->toBeInstanceOf(StringStandard::class)
+        ->and($v->value())->toBe('1.22999999999999998');
+});
+
+it('StringStandard::tryFromInt returns instance from int', function (): void {
+    $v = StringStandard::tryFromInt(123);
+
+    expect($v)->toBeInstanceOf(StringStandard::class)
+        ->and($v->value())->toBe('123');
+});
+
+it('StringStandard conversions to bool, float, int', function (): void {
+    $vTrue = StringStandard::fromString('true');
+    $vFalse = StringStandard::fromString('false');
+    $vFloat = StringStandard::fromString('1.5');
+    $vInt = StringStandard::fromString('123');
+
+    expect($vTrue->toBool())->toBeTrue()
+        ->and($vFalse->toBool())->toBeFalse()
+        ->and($vFloat->toFloat())->toBe(1.5)
+        ->and($vInt->toInt())->toBe(123);
+});
+
+it('StringStandard::fromBool creates instance', function (): void {
+    expect(StringStandard::fromBool(true)->value())->toBe('true');
+});
+
+it('StringStandard::fromInt creates instance', function (): void {
+    expect(StringStandard::fromInt(456)->value())->toBe('456');
+});
+
+it('StringStandard::fromFloat creates instance', function (): void {
+    expect(StringStandard::fromFloat(0.5)->value())->toBe('0.5');
+});
+
+readonly class ThrowingStringStandard extends StringStandard
+{
+    public static function fromBool(bool $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromFloat(float $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromInt(int $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromString(string $value): static
+    {
+        throw new Exception('test');
+    }
+}
+
+it('StringStandard::tryFromBool returns Undefined when fromBool throws', function (): void {
+    expect(ThrowingStringStandard::tryFromBool(true))->toBeInstanceOf(Undefined::class);
+});
+
+it('StringStandard::tryFromFloat returns Undefined when fromFloat throws', function (): void {
+    expect(ThrowingStringStandard::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class);
+});
+
+it('StringStandard::tryFromInt returns Undefined when fromInt throws', function (): void {
+    expect(ThrowingStringStandard::tryFromInt(1))->toBeInstanceOf(Undefined::class);
+});
+
+it('StringStandard::tryFromString returns Undefined when fromString throws (using throwing class)', function (): void {
+    expect(ThrowingStringStandard::tryFromString('fail'))->toBeInstanceOf(Undefined::class);
+});
+
+it('tryFromMixed covers all arms', function (): void {
+    $v1 = StringStandard::tryFromMixed('test');
+    $v2 = StringStandard::tryFromMixed(1.23);
+    $v3 = StringStandard::tryFromMixed(456);
+    $v4 = StringStandard::tryFromMixed(StringStandard::fromString('nested'));
+    $v5 = StringStandard::tryFromMixed(true);
+    $v6 = StringStandard::tryFromMixed(new class implements Stringable {
+        public function __toString(): string
+        {
+            return 'stringable';
+        }
+    });
+
+    expect($v1->value())->toBe('test')
+        ->and($v2->value())->toBe('1.22999999999999998')
+        ->and($v3->value())->toBe('456')
+        ->and($v4->value())->toBe('nested')
+        ->and($v5->value())->toBe('true')
+        ->and($v6->value())->toBe('stringable');
+});
+
+it('StringStandard::tryFromMixed returns Undefined when static method throws', function (): void {
+    expect(ThrowingStringStandard::tryFromMixed('any'))->toBeInstanceOf(Undefined::class);
+});
+
 it('isTypeOf returns true when class matches', function (): void {
     $v = StringStandard::fromString('test');
     expect($v->isTypeOf(StringStandard::class))->toBeTrue();
