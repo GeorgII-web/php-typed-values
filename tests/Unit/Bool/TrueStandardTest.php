@@ -7,6 +7,8 @@ use PhpTypedValues\Exception\Bool\BoolTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
+covers(TrueStandard::class);
+
 it('constructs only with true and exposes value/toString', function (): void {
     $t = new TrueStandard(true);
     expect($t->value())->toBeTrue()
@@ -106,6 +108,7 @@ it('tryFromMixed handles various inputs returning TrueStandard or Undefined', fu
         ->and($fromInt->value())->toBeTrue()
         ->and($fromBool)->toBeInstanceOf(TrueStandard::class)
         ->and($fromBool->value())->toBeTrue()
+        ->and(TrueStandard::tryFromMixed(new TrueStandard(true))->value())->toBeTrue()
         ->and($fromStringable)->toBeInstanceOf(TrueStandard::class)
         ->and($fromStringable->value())->toBeTrue()
         ->and($fromArray)->toBeInstanceOf(Undefined::class)

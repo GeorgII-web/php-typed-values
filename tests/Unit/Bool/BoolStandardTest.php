@@ -7,6 +7,8 @@ use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
+covers(BoolStandard::class);
+
 describe('BoolStandard - Instantiation and Core Methods', function (): void {
     it('constructs with boolean values', function (bool $value): void {
         $bool = new BoolStandard($value);
