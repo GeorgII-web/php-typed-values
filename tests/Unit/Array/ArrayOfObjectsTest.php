@@ -2,9 +2,6 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Tests\Unit\Array\ArrayOfObjects;
-
-use JsonSerializable;
 use PhpTypedValues\ArrayType\ArrayOfObjectsAbstract;
 use PhpTypedValues\ArrayType\ArrayUndefinedAbstract;
 use PhpTypedValues\Exception\Array\ArrayTypeException;
@@ -12,7 +9,6 @@ use PhpTypedValues\Float\Alias\Positive;
 use PhpTypedValues\Integer\IntegerNonNegative;
 use PhpTypedValues\String\StringNonEmpty;
 use PhpTypedValues\Undefined\Alias\Undefined;
-use stdClass;
 
 use function array_map;
 

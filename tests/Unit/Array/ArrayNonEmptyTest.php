@@ -2,16 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\ArrayType;
-
-use JsonSerializable;
 use PhpTypedValues\ArrayType\ArrayNonEmptyAbstract;
 use PhpTypedValues\Exception\Array\ArrayTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
-use ReflectionClass;
-use ReflectionProperty;
-use stdClass;
-use Stringable;
 
 it('throws ArrayTypeException when constructed with an empty array', function (): void {
     new ArrayNonEmptyAbstract([]);

@@ -2,13 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Tests\Unit\String;
-
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\String\StringEmpty;
 use PhpTypedValues\Undefined\Alias\Undefined;
-use stdClass;
-use Stringable;
 
 covers(StringEmpty::class);
 
@@ -122,7 +118,7 @@ it('tryFromBool, tryFromFloat, tryFromInt return Undefined for StringEmpty', fun
 
 it('toBool, toFloat, toInt throw for StringEmpty', function (): void {
     $v = new StringEmpty('');
-    expect(fn() => $v->toBool())->toThrow(\PhpTypedValues\Exception\Integer\IntegerTypeException::class)
+    expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\Integer\IntegerTypeException::class)
         ->and(fn() => $v->toFloat())->toThrow(StringTypeException::class)
         ->and(fn() => $v->toInt())->toThrow(StringTypeException::class);
 });

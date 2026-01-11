@@ -2,14 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Tests\Unit\String\Specific;
-
-use Exception;
 use PhpTypedValues\Exception\String\LocaleStringTypeException;
 use PhpTypedValues\String\Specific\StringLocaleCode;
 use PhpTypedValues\Undefined\Alias\Undefined;
-use stdClass;
-use Stringable;
 
 covers(StringLocaleCode::class);
 
@@ -91,9 +86,9 @@ it('conversion from other types (that happen to be valid locale codes)', functio
 it('conversions to other types', function (): void {
     $l = new StringLocaleCode('en_US');
     // 'en_US' is not a valid bool, float, or int string.
-    expect(fn() => $l->toBool())->toThrow(\PhpTypedValues\Exception\Integer\IntegerTypeException::class)
-        ->and(fn() => $l->toFloat())->toThrow(\PhpTypedValues\Exception\String\StringTypeException::class)
-        ->and(fn() => $l->toInt())->toThrow(\PhpTypedValues\Exception\String\StringTypeException::class);
+    expect(fn() => $l->toBool())->toThrow(PhpTypedValues\Exception\Integer\IntegerTypeException::class)
+        ->and(fn() => $l->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
+        ->and(fn() => $l->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class);
 });
 
 it('tryFromBool, tryFromFloat, tryFromInt return Undefined', function (): void {

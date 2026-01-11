@@ -2,12 +2,8 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Tests\Unit\Array\ArrayOfObjects;
-
 use PhpTypedValues\ArrayType\ArrayUndefinedAbstract;
 use PhpTypedValues\Exception\Array\ArrayUndefinedTypeException;
-
-use function count;
 
 describe('ArrayUndefined specific tests', function () {
     // Test lines 24-27: fromArray always returns new instance
@@ -57,7 +53,7 @@ describe('ArrayUndefined specific tests', function () {
             ->toThrow(ArrayUndefinedTypeException::class, 'count');
 
         // Also test count() function usage
-        expect(fn() => count($array))
+        expect(fn() => \count($array))
             ->toThrow(ArrayUndefinedTypeException::class);
     });
 
@@ -207,7 +203,7 @@ describe('ArrayUndefined in collection operations', function () {
         expect(fn() => iterator_to_array($array->getIterator()))
             ->toThrow(ArrayUndefinedTypeException::class);
 
-        expect(fn() => count($array))
+        expect(fn() => \count($array))
             ->toThrow(ArrayUndefinedTypeException::class);
     });
 
@@ -220,7 +216,7 @@ describe('ArrayUndefined in collection operations', function () {
 
     it('represents truly undefined state unlike empty array', function () {
         $undefined = new ArrayUndefinedAbstract();
-        $emptyArray = new \PhpTypedValues\ArrayType\ArrayOfObjectsAbstract([]);
+        $emptyArray = new PhpTypedValues\ArrayType\ArrayOfObjectsAbstract([]);
 
         // Both are empty
         expect($undefined->isEmpty())->toBeTrue()

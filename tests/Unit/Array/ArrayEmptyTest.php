@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Tests\Unit\Array;
-
 use PhpTypedValues\ArrayType\ArrayEmptyAbstract;
 use PhpTypedValues\Exception\Array\ArrayTypeException;
 

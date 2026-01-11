@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Tests\Unit\Base\Primitive\Undefined;
-
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Base\Primitive\Undefined\UndefinedTypeAbstract;
 use PhpTypedValues\Exception\Undefined\UndefinedTypeException;
@@ -126,7 +124,7 @@ readonly class UndefinedTypeAbstractMock extends UndefinedTypeAbstract
 }
 
 it('UndefinedTypeAbstract implements UndefinedTypeInterface', function (): void {
-    expect(is_subclass_of(UndefinedTypeAbstract::class, \PhpTypedValues\Base\Primitive\Undefined\UndefinedTypeInterface::class))->toBeTrue();
+    expect(is_subclass_of(UndefinedTypeAbstract::class, PhpTypedValues\Base\Primitive\Undefined\UndefinedTypeInterface::class))->toBeTrue();
 });
 
 it('__toString calls toString and throws if toString throws', function (): void {

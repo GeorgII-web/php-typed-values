@@ -232,6 +232,19 @@ describe('BoolStandard - tryFrom* Methods', function (): void {
     ]);
 });
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
+readonly class BoolStandardTest extends BoolStandard
+{
+    public function __toString(): string
+    {
+        return 'not-a-boolean';
+    }
+}
+
 describe('BoolStandard - tryFromMixed Method', function (): void {
     it('handles boolean inputs', function (bool $value): void {
         $result = BoolStandard::tryFromMixed($value);
@@ -353,6 +366,18 @@ describe('BoolStandard - tryFromMixed Method', function (): void {
         expect($result)->toBeInstanceOf(BoolStandard::class)
             ->and($result->value())->toBe($value);
     })->with([true, false]);
+
+    it('kills InstanceOfToFalse mutant in tryFromMixed', function (): void {
+        $subclass = new BoolStandardTest(true);
+
+        // If mutant replaces ($value instanceof self) with false,
+        // it will fall through to Stringable check and call fromString('not-a-boolean'),
+        // which throws IntegerTypeException, and tryFromMixed will catch it and return Undefined.
+        // If it correctly uses ($value instanceof self), it will call fromBool(true) and succeed.
+        $result = BoolStandard::tryFromMixed($subclass);
+        expect($result)->toBeInstanceOf(BoolStandard::class)
+            ->and($result->value())->toBeTrue();
+    });
 
     it('returns Undefined for unsupported types', function (mixed $invalidValue): void {
         $result = BoolStandard::tryFromMixed($invalidValue);

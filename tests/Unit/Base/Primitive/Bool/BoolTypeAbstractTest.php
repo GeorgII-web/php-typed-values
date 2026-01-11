@@ -2,13 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Unit\Base\Primitive\Bool;
-
 use PhpTypedValues\Base\Primitive\Bool\BoolTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Undefined\Alias\Undefined;
-use stdClass;
-use Stringable;
 
 /**
  * @internal

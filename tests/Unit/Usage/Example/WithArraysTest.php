@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Tests\Unit\Usage\Example\WithArrays;
-
 use PhpTypedValues\ArrayType\ArrayOfObjectsAbstract;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;

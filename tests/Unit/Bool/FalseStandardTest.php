@@ -7,6 +7,19 @@ use PhpTypedValues\Exception\Bool\BoolTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
+readonly class FalseStandardTest extends FalseStandard
+{
+    public function __toString(): string
+    {
+        return 'not-a-boolean';
+    }
+}
+
 covers(FalseStandard::class);
 
 it('constructs only with false and exposes value/toString', function (): void {
@@ -116,6 +129,18 @@ it('tryFromMixed handles various inputs returning FalseStandard or Undefined', f
         ->and($fromObject)->toBeInstanceOf(Undefined::class)
         ->and($fromTrueString)->toBeInstanceOf(Undefined::class)
         ->and($fromTrueInt)->toBeInstanceOf(Undefined::class);
+});
+
+it('kills InstanceOfToFalse mutant in tryFromMixed for FalseStandard', function (): void {
+    $subclass = new FalseStandardTest(false);
+
+    // If mutant replaces ($value instanceof self) with false,
+    // it will fall through to Stringable check and call fromString('not-a-boolean'),
+    // which throws IntegerTypeException, and tryFromMixed will catch it and return Undefined.
+    // If it correctly uses ($value instanceof self), it will call fromBool(false) and succeed.
+    $result = FalseStandard::tryFromMixed($subclass);
+    expect($result)->toBeInstanceOf(FalseStandard::class)
+        ->and($result->value())->toBeFalse();
 });
 
 it('tryFromMixed handles floats 0.0 and 1.0', function (): void {
