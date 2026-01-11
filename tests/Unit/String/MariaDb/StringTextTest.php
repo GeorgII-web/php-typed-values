@@ -134,3 +134,63 @@ it('isTypeOf returns true for multiple classNames when one matches', function ()
     $v = StringText::fromString('test');
     expect($v->isTypeOf('NonExistentClass', StringText::class, 'AnotherClass'))->toBeTrue();
 });
+
+it('covers conversions for StringText', function (): void {
+    expect(StringText::fromBool(true)->value())->toBe('true')
+        ->and(StringText::fromBool(false)->value())->toBe('false')
+        ->and(StringText::fromInt(123)->value())->toBe('123')
+        ->and(StringText::fromFloat(1.2)->value())->toBe('1.19999999999999996');
+
+    $vTrue = StringText::fromString('true');
+    expect($vTrue->toBool())->toBeTrue();
+
+    $vInt = StringText::fromString('123');
+    expect($vInt->toInt())->toBe(123);
+
+    $vFloat = StringText::fromString('1.2');
+    expect($vFloat->toFloat())->toBe(1.2);
+});
+
+it('tryFromBool, tryFromFloat, tryFromInt return StringText for valid inputs', function (): void {
+    expect(StringText::tryFromBool(true))->toBeInstanceOf(StringText::class)
+        ->and(StringText::tryFromFloat(1.2))->toBeInstanceOf(StringText::class)
+        ->and(StringText::tryFromInt(123))->toBeInstanceOf(StringText::class);
+});
+
+/**
+ * @internal
+ *
+ * @psalm-immutable
+ *
+ * @coversNothing
+ */
+readonly class StringTextTest extends StringText
+{
+    public static function fromBool(bool $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromFloat(float $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromInt(int $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromString(string $value): static
+    {
+        throw new Exception('test');
+    }
+}
+
+it('StringText::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
+    expect(StringTextTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
+        ->and(StringTextTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
+        ->and(StringTextTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+        ->and(StringTextTest::tryFromMixed('test'))->toBeInstanceOf(Undefined::class)
+        ->and(StringTextTest::tryFromString('test'))->toBeInstanceOf(Undefined::class);
+});

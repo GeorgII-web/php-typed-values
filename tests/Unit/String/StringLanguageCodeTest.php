@@ -196,3 +196,59 @@ it('isTypeOf returns true for multiple classNames when one matches', function ()
     $v = StringLanguageCode::fromString('en');
     expect($v->isTypeOf('NonExistentClass', StringLanguageCode::class, 'AnotherClass'))->toBeTrue();
 });
+
+it('covers conversions for StringLanguageCode', function (): void {
+    // These throw because "true", "1.2", "123" are not valid language codes
+    expect(fn() => StringLanguageCode::fromBool(true))->toThrow(LanguageCodeStringTypeException::class)
+        ->and(fn() => StringLanguageCode::fromFloat(1.2))->toThrow(LanguageCodeStringTypeException::class)
+        ->and(fn() => StringLanguageCode::fromInt(123))->toThrow(LanguageCodeStringTypeException::class);
+
+    $v = StringLanguageCode::fromString('en');
+    expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\Integer\IntegerTypeException::class)
+        ->and(fn() => $v->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
+        ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class);
+});
+
+it('tryFromBool, tryFromFloat, tryFromInt return Undefined for StringLanguageCode', function (): void {
+    expect(StringLanguageCode::tryFromBool(true))->toBeInstanceOf(Undefined::class)
+        ->and(StringLanguageCode::tryFromFloat(1.2))->toBeInstanceOf(Undefined::class)
+        ->and(StringLanguageCode::tryFromInt(123))->toBeInstanceOf(Undefined::class);
+});
+
+/**
+ * @internal
+ *
+ * @psalm-immutable
+ *
+ * @coversNothing
+ */
+readonly class StringLanguageCodeTest extends StringLanguageCode
+{
+    public static function fromBool(bool $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromFloat(float $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromInt(int $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromString(string $value): static
+    {
+        throw new Exception('test');
+    }
+}
+
+it('StringLanguageCode::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
+    expect(StringLanguageCodeTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
+        ->and(StringLanguageCodeTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
+        ->and(StringLanguageCodeTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+        ->and(StringLanguageCodeTest::tryFromMixed('en'))->toBeInstanceOf(Undefined::class)
+        ->and(StringLanguageCodeTest::tryFromString('en'))->toBeInstanceOf(Undefined::class);
+});

@@ -210,3 +210,63 @@ it('isTypeOf returns true for multiple classNames when one matches', function ()
     $v = StringJson::fromString('{"test":true}');
     expect($v->isTypeOf('NonExistentClass', StringJson::class, 'AnotherClass'))->toBeTrue();
 });
+
+it('covers conversions for StringJson', function (): void {
+    expect(StringJson::fromBool(true)->value())->toBe('true')
+        ->and(StringJson::fromBool(false)->value())->toBe('false')
+        ->and(StringJson::fromInt(123)->value())->toBe('123')
+        ->and(StringJson::fromFloat(1.2)->value())->toBe('1.19999999999999996');
+
+    $vTrue = StringJson::fromString('true');
+    expect($vTrue->toBool())->toBeTrue();
+
+    $vInt = StringJson::fromString('123');
+    expect($vInt->toInt())->toBe(123);
+
+    $vFloat = StringJson::fromString('1.2');
+    expect($vFloat->toFloat())->toBe(1.2);
+});
+
+it('tryFromBool, tryFromFloat, tryFromInt return StringJson for valid inputs', function (): void {
+    expect(StringJson::tryFromBool(true))->toBeInstanceOf(StringJson::class)
+        ->and(StringJson::tryFromFloat(1.2))->toBeInstanceOf(StringJson::class)
+        ->and(StringJson::tryFromInt(123))->toBeInstanceOf(StringJson::class);
+});
+
+/**
+ * @internal
+ *
+ * @psalm-immutable
+ *
+ * @coversNothing
+ */
+readonly class StringJsonTest extends StringJson
+{
+    public static function fromBool(bool $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromFloat(float $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromInt(int $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromString(string $value): static
+    {
+        throw new Exception('test');
+    }
+}
+
+it('StringJson::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
+    expect(StringJsonTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
+        ->and(StringJsonTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
+        ->and(StringJsonTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+        ->and(StringJsonTest::tryFromMixed('{"a":1}'))->toBeInstanceOf(Undefined::class)
+        ->and(StringJsonTest::tryFromString('{"a":1}'))->toBeInstanceOf(Undefined::class);
+});

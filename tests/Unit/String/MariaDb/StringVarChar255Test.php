@@ -140,3 +140,63 @@ it('isTypeOf returns true for multiple classNames when one matches', function ()
     $v = StringVarChar255::fromString('test');
     expect($v->isTypeOf('NonExistentClass', StringVarChar255::class, 'AnotherClass'))->toBeTrue();
 });
+
+it('covers conversions for StringVarChar255', function (): void {
+    expect(StringVarChar255::fromBool(true)->value())->toBe('true')
+        ->and(StringVarChar255::fromBool(false)->value())->toBe('false')
+        ->and(StringVarChar255::fromInt(123)->value())->toBe('123')
+        ->and(StringVarChar255::fromFloat(1.2)->value())->toBe('1.19999999999999996');
+
+    $vTrue = StringVarChar255::fromString('true');
+    expect($vTrue->toBool())->toBeTrue();
+
+    $vInt = StringVarChar255::fromString('123');
+    expect($vInt->toInt())->toBe(123);
+
+    $vFloat = StringVarChar255::fromString('1.2');
+    expect($vFloat->toFloat())->toBe(1.2);
+});
+
+it('tryFromBool, tryFromFloat, tryFromInt return StringVarChar255 for valid inputs', function (): void {
+    expect(StringVarChar255::tryFromBool(true))->toBeInstanceOf(StringVarChar255::class)
+        ->and(StringVarChar255::tryFromFloat(1.2))->toBeInstanceOf(StringVarChar255::class)
+        ->and(StringVarChar255::tryFromInt(123))->toBeInstanceOf(StringVarChar255::class);
+});
+
+/**
+ * @internal
+ *
+ * @psalm-immutable
+ *
+ * @coversNothing
+ */
+readonly class StringVarChar255Test extends StringVarChar255
+{
+    public static function fromBool(bool $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromFloat(float $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromInt(int $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromString(string $value): static
+    {
+        throw new Exception('test');
+    }
+}
+
+it('StringVarChar255::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
+    expect(StringVarChar255Test::tryFromBool(true))->toBeInstanceOf(Undefined::class)
+        ->and(StringVarChar255Test::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
+        ->and(StringVarChar255Test::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+        ->and(StringVarChar255Test::tryFromMixed('test'))->toBeInstanceOf(Undefined::class)
+        ->and(StringVarChar255Test::tryFromString('test'))->toBeInstanceOf(Undefined::class);
+});

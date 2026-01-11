@@ -142,7 +142,53 @@ it('isTypeOf returns false when class does not match', function (): void {
     expect($v->isTypeOf('NonExistentClass'))->toBeFalse();
 });
 
-it('isTypeOf returns true for multiple classNames when one matches', function (): void {
+it('isEmpty is always false for StringMd5', function (): void {
     $v = StringMd5::fromString('5d41402abc4b2a76b9719d911017c592');
-    expect($v->isTypeOf('NonExistentClass', StringMd5::class, 'AnotherClass'))->toBeTrue();
+    expect($v->isEmpty())->toBeFalse();
+});
+
+it('jsonSerialize returns the value', function (): void {
+    $v = StringMd5::fromString('5d41402abc4b2a76b9719d911017c592');
+    expect($v->jsonSerialize())->toBe('5d41402abc4b2a76b9719d911017c592');
+});
+
+it('covers conversions for StringMd5', function (): void {
+    // fromBool, fromFloat, fromInt throw for StringMd5 because values like 'true', '1.0' are not MD5
+    expect(fn() => StringMd5::fromBool(true))->toThrow(Md5StringTypeException::class)
+        ->and(fn() => StringMd5::fromFloat(1.2))->toThrow(Md5StringTypeException::class)
+        ->and(fn() => StringMd5::fromInt(123))->toThrow(Md5StringTypeException::class);
+
+    $v = StringMd5::fromString('5d41402abc4b2a76b9719d911017c592');
+    expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\Integer\IntegerTypeException::class)
+        ->and(fn() => $v->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
+        ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class);
+});
+
+it('tryFromBool, tryFromFloat, tryFromInt return Undefined for StringMd5', function (): void {
+    expect(StringMd5::tryFromBool(true))->toBeInstanceOf(Undefined::class)
+        ->and(StringMd5::tryFromFloat(1.2))->toBeInstanceOf(Undefined::class)
+        ->and(StringMd5::tryFromInt(123))->toBeInstanceOf(Undefined::class);
+});
+
+/**
+ * @internal
+ *
+ * @psalm-immutable
+ *
+ * @coversNothing
+ */
+readonly class StringMd5Test extends StringMd5
+{
+    public function __construct(string $value)
+    {
+        throw new Exception('test');
+    }
+}
+
+it('StringMd5::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
+    expect(StringMd5Test::tryFromBool(true))->toBeInstanceOf(Undefined::class)
+        ->and(StringMd5Test::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
+        ->and(StringMd5Test::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+        ->and(StringMd5Test::tryFromMixed('5d41402abc4b2a76b9719d911017c592'))->toBeInstanceOf(Undefined::class)
+        ->and(StringMd5Test::tryFromString('5d41402abc4b2a76b9719d911017c592'))->toBeInstanceOf(Undefined::class);
 });

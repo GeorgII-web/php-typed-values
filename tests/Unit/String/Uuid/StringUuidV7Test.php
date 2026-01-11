@@ -134,7 +134,43 @@ it('isTypeOf returns false when class does not match', function (): void {
     expect($v->isTypeOf('NonExistentClass'))->toBeFalse();
 });
 
-it('isTypeOf returns true for multiple classNames when one matches', function (): void {
+it('covers conversions for StringUuidV7', function (): void {
+    // Usually throw because 'true', '1.2', '123' are not valid UUIDs
+    expect(fn() => StringUuidV7::fromBool(true))->toThrow(UuidStringTypeException::class)
+        ->and(fn() => StringUuidV7::fromFloat(1.2))->toThrow(UuidStringTypeException::class)
+        ->and(fn() => StringUuidV7::fromInt(123))->toThrow(UuidStringTypeException::class);
+
     $v = StringUuidV7::fromString('01890f2a-5bcd-7def-8abc-1234567890ab');
-    expect($v->isTypeOf('NonExistentClass', StringUuidV7::class, 'AnotherClass'))->toBeTrue();
+    expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\Integer\IntegerTypeException::class)
+        ->and(fn() => $v->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
+        ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class);
+});
+
+it('tryFromBool, tryFromFloat, tryFromInt return Undefined for StringUuidV7', function (): void {
+    expect(StringUuidV7::tryFromBool(true))->toBeInstanceOf(Undefined::class)
+        ->and(StringUuidV7::tryFromFloat(1.2))->toBeInstanceOf(Undefined::class)
+        ->and(StringUuidV7::tryFromInt(123))->toBeInstanceOf(Undefined::class);
+});
+
+/**
+ * @internal
+ *
+ * @psalm-immutable
+ *
+ * @coversNothing
+ */
+readonly class StringUuidV7Test extends StringUuidV7
+{
+    public function __construct(string $value)
+    {
+        throw new Exception('test');
+    }
+}
+
+it('StringUuidV7::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
+    expect(StringUuidV7Test::tryFromBool(true))->toBeInstanceOf(Undefined::class)
+        ->and(StringUuidV7Test::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
+        ->and(StringUuidV7Test::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+        ->and(StringUuidV7Test::tryFromMixed('01890f2a-5bcd-7def-8abc-1234567890ab'))->toBeInstanceOf(Undefined::class)
+        ->and(StringUuidV7Test::tryFromString('01890f2a-5bcd-7def-8abc-1234567890ab'))->toBeInstanceOf(Undefined::class);
 });

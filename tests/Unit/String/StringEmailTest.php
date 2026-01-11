@@ -105,3 +105,59 @@ it('isTypeOf returns true for multiple classNames when one matches', function ()
     $v = StringEmail::fromString('test@example.com');
     expect($v->isTypeOf('NonExistentClass', StringEmail::class, 'AnotherClass'))->toBeTrue();
 });
+
+it('covers conversions for StringEmail', function (): void {
+    // These throw because "true", "1.2", "123" are not valid emails
+    expect(fn() => StringEmail::fromBool(true))->toThrow(EmailStringTypeException::class)
+        ->and(fn() => StringEmail::fromFloat(1.2))->toThrow(EmailStringTypeException::class)
+        ->and(fn() => StringEmail::fromInt(123))->toThrow(EmailStringTypeException::class);
+
+    $v = StringEmail::fromString('user@example.com');
+    expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\Integer\IntegerTypeException::class)
+        ->and(fn() => $v->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
+        ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class);
+});
+
+it('tryFromBool, tryFromFloat, tryFromInt return Undefined for StringEmail', function (): void {
+    expect(StringEmail::tryFromBool(true))->toBeInstanceOf(Undefined::class)
+        ->and(StringEmail::tryFromFloat(1.2))->toBeInstanceOf(Undefined::class)
+        ->and(StringEmail::tryFromInt(123))->toBeInstanceOf(Undefined::class);
+});
+
+/**
+ * @internal
+ *
+ * @psalm-immutable
+ *
+ * @coversNothing
+ */
+readonly class StringEmailTest extends StringEmail
+{
+    public static function fromBool(bool $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromFloat(float $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromInt(int $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromString(string $value): static
+    {
+        throw new Exception('test');
+    }
+}
+
+it('StringEmail::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
+    expect(StringEmailTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
+        ->and(StringEmailTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
+        ->and(StringEmailTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+        ->and(StringEmailTest::tryFromMixed('test@example.com'))->toBeInstanceOf(Undefined::class)
+        ->and(StringEmailTest::tryFromString('test@example.com'))->toBeInstanceOf(Undefined::class);
+});

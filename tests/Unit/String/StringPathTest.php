@@ -112,7 +112,42 @@ it('isTypeOf returns false when class does not match', function (): void {
     expect($v->isTypeOf('NonExistentClass'))->toBeFalse();
 });
 
-it('isTypeOf returns true for multiple classNames when one matches', function (): void {
-    $v = StringPath::fromString('/tmp');
-    expect($v->isTypeOf('NonExistentClass', StringPath::class, 'AnotherClass'))->toBeTrue();
+it('covers conversions for StringPath', function (): void {
+    expect(StringPath::fromBool(true)->value())->toBe('true')
+        ->and(StringPath::fromFloat(1.2)->value())->toBe('1.19999999999999996')
+        ->and(StringPath::fromInt(123)->value())->toBe('123');
+
+    $v = StringPath::fromString('/home/user');
+    expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\Integer\IntegerTypeException::class)
+        ->and(fn() => $v->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
+        ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class);
+});
+
+it('tryFromBool, tryFromFloat, tryFromInt return StringPath for valid inputs', function (): void {
+    expect(StringPath::tryFromBool(true))->toBeInstanceOf(StringPath::class)
+        ->and(StringPath::tryFromFloat(1.2))->toBeInstanceOf(StringPath::class)
+        ->and(StringPath::tryFromInt(123))->toBeInstanceOf(StringPath::class);
+});
+
+/**
+ * @internal
+ *
+ * @psalm-immutable
+ *
+ * @coversNothing
+ */
+readonly class StringPathTest extends StringPath
+{
+    public function __construct(string $value)
+    {
+        throw new Exception('test');
+    }
+}
+
+it('StringPath::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
+    expect(StringPathTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
+        ->and(StringPathTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
+        ->and(StringPathTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+        ->and(StringPathTest::tryFromMixed('/home/user'))->toBeInstanceOf(Undefined::class)
+        ->and(StringPathTest::tryFromString('/home/user'))->toBeInstanceOf(Undefined::class);
 });

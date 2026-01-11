@@ -104,7 +104,43 @@ it('isTypeOf returns false when class does not match', function (): void {
     expect($v->isTypeOf('NonExistentClass'))->toBeFalse();
 });
 
-it('isTypeOf returns true for multiple classNames when one matches', function (): void {
+it('covers conversions for StringUrl', function (): void {
+    // These usually throw because 'true', '1.0' are not valid URLs
+    expect(fn() => StringUrl::fromBool(true))->toThrow(UrlStringTypeException::class)
+        ->and(fn() => StringUrl::fromFloat(1.2))->toThrow(UrlStringTypeException::class)
+        ->and(fn() => StringUrl::fromInt(123))->toThrow(UrlStringTypeException::class);
+
     $v = StringUrl::fromString('https://example.com');
-    expect($v->isTypeOf('NonExistentClass', StringUrl::class, 'AnotherClass'))->toBeTrue();
+    expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\Integer\IntegerTypeException::class)
+        ->and(fn() => $v->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
+        ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class);
+});
+
+it('tryFromBool, tryFromFloat, tryFromInt return Undefined for StringUrl', function (): void {
+    expect(StringUrl::tryFromBool(true))->toBeInstanceOf(Undefined::class)
+        ->and(StringUrl::tryFromFloat(1.2))->toBeInstanceOf(Undefined::class)
+        ->and(StringUrl::tryFromInt(123))->toBeInstanceOf(Undefined::class);
+});
+
+/**
+ * @internal
+ *
+ * @psalm-immutable
+ *
+ * @coversNothing
+ */
+readonly class StringUrlTest extends StringUrl
+{
+    public function __construct(string $value)
+    {
+        throw new Exception('test');
+    }
+}
+
+it('StringUrl::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
+    expect(StringUrlTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
+        ->and(StringUrlTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
+        ->and(StringUrlTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+        ->and(StringUrlTest::tryFromMixed('https://example.com'))->toBeInstanceOf(Undefined::class)
+        ->and(StringUrlTest::tryFromString('https://example.com'))->toBeInstanceOf(Undefined::class);
 });

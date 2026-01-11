@@ -110,3 +110,58 @@ it('isTypeOf returns true for multiple classNames when one matches', function ()
     $v = StringFileName::fromString('test.txt');
     expect($v->isTypeOf('NonExistentClass', StringFileName::class, 'AnotherClass'))->toBeTrue();
 });
+
+it('covers conversions for StringFileName', function (): void {
+    expect(StringFileName::fromBool(true)->value())->toBe('true')
+        ->and(StringFileName::fromFloat(1.2)->value())->toBe('1.19999999999999996')
+        ->and(StringFileName::fromInt(123)->value())->toBe('123');
+
+    $v = StringFileName::fromString('image.jpg');
+    expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\Integer\IntegerTypeException::class)
+        ->and(fn() => $v->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
+        ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class);
+});
+
+it('tryFromBool, tryFromFloat, tryFromInt return StringFileName for valid inputs', function (): void {
+    expect(StringFileName::tryFromBool(true))->toBeInstanceOf(StringFileName::class)
+        ->and(StringFileName::tryFromFloat(1.2))->toBeInstanceOf(StringFileName::class)
+        ->and(StringFileName::tryFromInt(123))->toBeInstanceOf(StringFileName::class);
+});
+
+/**
+ * @internal
+ *
+ * @psalm-immutable
+ *
+ * @coversNothing
+ */
+readonly class StringFileNameTest extends StringFileName
+{
+    public static function fromBool(bool $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromFloat(float $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromInt(int $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromString(string $value): static
+    {
+        throw new Exception('test');
+    }
+}
+
+it('StringFileName::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
+    expect(StringFileNameTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
+        ->and(StringFileNameTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
+        ->and(StringFileNameTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+        ->and(StringFileNameTest::tryFromMixed('image.jpg'))->toBeInstanceOf(Undefined::class)
+        ->and(StringFileNameTest::tryFromString('image.jpg'))->toBeInstanceOf(Undefined::class);
+});

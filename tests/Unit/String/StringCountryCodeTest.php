@@ -157,3 +157,59 @@ it('isTypeOf returns true for multiple classNames when one matches', function ()
     $v = StringCountryCode::fromString('US');
     expect($v->isTypeOf('NonExistentClass', StringCountryCode::class, 'AnotherClass'))->toBeTrue();
 });
+
+it('covers conversions for StringCountryCode', function (): void {
+    // These will throw because "true", "1.2", "123" are not valid country codes
+    expect(fn() => StringCountryCode::fromBool(true))->toThrow(CountryCodeStringTypeException::class)
+        ->and(fn() => StringCountryCode::fromFloat(1.2))->toThrow(CountryCodeStringTypeException::class)
+        ->and(fn() => StringCountryCode::fromInt(123))->toThrow(CountryCodeStringTypeException::class);
+
+    $v = StringCountryCode::fromString('US');
+    expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\Integer\IntegerTypeException::class)
+        ->and(fn() => $v->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
+        ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class);
+});
+
+it('tryFromBool, tryFromFloat, tryFromInt return Undefined for StringCountryCode', function (): void {
+    expect(StringCountryCode::tryFromBool(true))->toBeInstanceOf(Undefined::class)
+        ->and(StringCountryCode::tryFromFloat(1.2))->toBeInstanceOf(Undefined::class)
+        ->and(StringCountryCode::tryFromInt(123))->toBeInstanceOf(Undefined::class);
+});
+
+/**
+ * @internal
+ *
+ * @psalm-immutable
+ *
+ * @coversNothing
+ */
+readonly class StringCountryCodeTest extends StringCountryCode
+{
+    public static function fromBool(bool $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromFloat(float $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromInt(int $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromString(string $value): static
+    {
+        throw new Exception('test');
+    }
+}
+
+it('StringCountryCode::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
+    expect(StringCountryCodeTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
+        ->and(StringCountryCodeTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
+        ->and(StringCountryCodeTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+        ->and(StringCountryCodeTest::tryFromMixed('US'))->toBeInstanceOf(Undefined::class)
+        ->and(StringCountryCodeTest::tryFromString('US'))->toBeInstanceOf(Undefined::class);
+});

@@ -134,3 +134,63 @@ it('isEmpty is always false for StringDecimal', function (): void {
     expect($d->isEmpty())->toBeFalse()
         ->and($d->isEmpty())->not()->toBeTrue();
 });
+
+it('covers conversions for StringDecimal', function (): void {
+    expect(StringDecimal::fromBool(true)->value())->toBe('true')
+        ->and(StringDecimal::fromBool(false)->value())->toBe('false')
+        ->and(StringDecimal::fromInt(123)->value())->toBe('123')
+        ->and(StringDecimal::fromFloat(1.2)->value())->toBe('1.19999999999999996');
+
+    $vTrue = StringDecimal::fromString('true');
+    expect($vTrue->toBool())->toBeTrue();
+
+    $vInt = StringDecimal::fromString('123');
+    expect($vInt->toInt())->toBe(123);
+
+    $vFloat = StringDecimal::fromString('1.2');
+    expect($vFloat->toFloat())->toBe(1.2);
+});
+
+it('tryFromBool, tryFromFloat, tryFromInt return StringDecimal for valid inputs', function (): void {
+    expect(StringDecimal::tryFromBool(true))->toBeInstanceOf(StringDecimal::class)
+        ->and(StringDecimal::tryFromFloat(1.2))->toBeInstanceOf(StringDecimal::class)
+        ->and(StringDecimal::tryFromInt(123))->toBeInstanceOf(StringDecimal::class);
+});
+
+/**
+ * @internal
+ *
+ * @psalm-immutable
+ *
+ * @coversNothing
+ */
+readonly class StringDecimalTest extends StringDecimal
+{
+    public static function fromBool(bool $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromFloat(float $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromInt(int $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromString(string $value): static
+    {
+        throw new Exception('test');
+    }
+}
+
+it('StringDecimal::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
+    expect(StringDecimalTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
+        ->and(StringDecimalTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
+        ->and(StringDecimalTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+        ->and(StringDecimalTest::tryFromMixed('1.23'))->toBeInstanceOf(Undefined::class)
+        ->and(StringDecimalTest::tryFromString('1.23'))->toBeInstanceOf(Undefined::class);
+});
