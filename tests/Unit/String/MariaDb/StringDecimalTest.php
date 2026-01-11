@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\DecimalStringTypeException;
 use PhpTypedValues\String\MariaDb\StringDecimal;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -136,24 +137,23 @@ it('isEmpty is always false for StringDecimal', function (): void {
 });
 
 it('covers conversions for StringDecimal', function (): void {
-    expect(StringDecimal::fromBool(true)->value())->toBe('true')
-        ->and(StringDecimal::fromBool(false)->value())->toBe('false')
+    expect(fn() => StringDecimal::fromBool(true))->toThrow(DecimalStringTypeException::class)
+        ->and(fn() => StringDecimal::fromBool(false))->toThrow(DecimalStringTypeException::class)
         ->and(StringDecimal::fromInt(123)->value())->toBe('123')
         ->and(StringDecimal::fromFloat(1.2)->value())->toBe('1.19999999999999996');
 
-    $vTrue = StringDecimal::fromString('true');
-    expect($vTrue->toBool())->toBeTrue();
+    expect(fn() => StringDecimal::fromString('true'))->toThrow(DecimalStringTypeException::class);
 
     $vInt = StringDecimal::fromString('123');
-    expect($vInt->toInt())->toBe(123);
+    expect($vInt->toInt())->toBe(123)
+        ->and(fn() => $vInt->toBool())->toThrow(IntegerTypeException::class);
 
     $vFloat = StringDecimal::fromString('1.2');
     expect($vFloat->toFloat())->toBe(1.2);
 });
 
 it('tryFromBool, tryFromFloat, tryFromInt return StringDecimal for valid inputs', function (): void {
-    expect(StringDecimal::tryFromBool(true))->toBeInstanceOf(StringDecimal::class)
-        ->and(StringDecimal::tryFromFloat(1.2))->toBeInstanceOf(StringDecimal::class)
+    expect(StringDecimal::tryFromFloat(1.2))->toBeInstanceOf(StringDecimal::class)
         ->and(StringDecimal::tryFromInt(123))->toBeInstanceOf(StringDecimal::class);
 });
 
