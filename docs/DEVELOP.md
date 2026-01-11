@@ -6,7 +6,7 @@ This guide explains how to work on the project locally: running tests, static an
 Requirements
 ------------
 
-- PHP 8.2+
+- PHP 8.4
 - Composer 2.x
 
 Install dependencies

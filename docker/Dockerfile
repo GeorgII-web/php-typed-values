@@ -1,4 +1,4 @@
-FROM php:8.2-cli
+FROM php:8.4-cli
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -40,6 +40,5 @@ WORKDIR /var/www
 # Copy existing application directory contents
 COPY . /var/www
 
-# Expose port 9000 and start php-fpm server
-EXPOSE 9000
-CMD ["php", "-S", "0.0.0.0:9000"]
+# Keep container alive
+CMD ["sleep", "infinity"]

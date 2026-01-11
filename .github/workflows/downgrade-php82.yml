@@ -1,4 +1,4 @@
-name: Release and Downgrade to PHP 7.4
+name: Release and Downgrade to PHP 8.2
 
 on:
   release:
@@ -49,8 +49,8 @@ jobs:
       - name: Run tests
         run: composer run-script test
 
-  downgrade-and-tag:
-    name: Release PHP 7.4 with Tag v1.x
+  downgrade-to-php82:
+    name: Release PHP 8.2 with Tag v2.x
     needs: verify-php84
     runs-on: ubuntu-latest
     steps:
@@ -59,14 +59,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Create/Switch to php7.4 branch from release tag
+      - name: Create/Switch to php8.2 branch from release tag
         run: |
           SRC_TAG="${{ github.event.release.tag_name }}"
           echo "Source tag: $SRC_TAG"
-          # Ensure the tag exists locally (should be fetched by checkout with fetch-depth:0)
           git fetch --tags
-          # Create or reset local branch php7.4 to the release tag commit
-          git checkout -B php7.4 "$SRC_TAG"
+          git checkout -B php8.2 "$SRC_TAG"
 
       - name: Setup PHP 8.4
         uses: shivammathur/setup-php@v2
@@ -78,17 +76,17 @@ jobs:
       - name: Install dependencies (ignore platform reqs to allow downgrade tools)
         run: composer install --no-interaction --prefer-dist --no-progress --ignore-platform-reqs
 
-      - name: Run Rector downgrade to PHP 7.4
-        run: ./vendor/bin/rector process --config rector/toPhp7.4.php
+      - name: Run Rector downgrade to PHP 8.2
+        run: ./vendor/bin/rector process --config rector/toPhp8.2.php
 
-      - name: Update composer.json PHP constraint to ">=7.4,<8.2"
+      - name: Update composer.json PHP constraint to ">=8.2,<8.4"
         run: |
           php -r '
             $f = "composer.json";
             $j = json_decode(file_get_contents($f), true, 512, JSON_THROW_ON_ERROR);
             if (!isset($j["require"])) { $j["require"] = []; }
-            $j["require"]["php"] = ">=7.4,<8.2";
-            $j["description"] = $j["description"] . " (PHP 7.4 version)";
+            $j["require"]["php"] = ">=8.2,<8.4";
+            $j["description"] = $j["description"] . " (PHP 8.2 version)";
             file_put_contents($f, json_encode($j, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES) . "\n");
           '
 
@@ -98,17 +96,17 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           if ! git diff --cached --quiet; then
-            git commit -m "chore(downgrade): apply Rector PHP 7.4 and set composer PHP constraint"
+            git commit -m "chore(downgrade): apply Rector PHP 8.2 and set composer PHP constraint"
           else
             echo "No changes to commit."
           fi
 
-      - name: Compute new v1.x.y tag from release tag v3.x.y
+      - name: Compute new v2.x.y tag from release tag v3.x.y
         id: tag
         run: |
           SRC_TAG="${{ github.event.release.tag_name }}"
-          # Convert v3.M.N -> v1.M.N
-          NEW_TAG="${SRC_TAG/v3./v1.}"
+          # Convert v3.M.N -> v2.M.N
+          NEW_TAG="${SRC_TAG/v3./v2.}"
           echo "new_tag=$NEW_TAG" >> "$GITHUB_OUTPUT"
           echo "New tag: $NEW_TAG"
 
@@ -116,13 +114,9 @@ jobs:
         env:
           NEW_TAG: ${{ steps.tag.outputs.new_tag }}
         run: |
-          # Push the php7.4 branch (create or update). Use force-with-lease to update if it already exists.
-          git push --force-with-lease origin php7.4
-          # Create or move tag to latest commit on php7.4
+          git push --force-with-lease origin php8.2
           if git rev-parse "$NEW_TAG" >/dev/null 2>&1; then
             git tag -d "$NEW_TAG"
           fi
           git tag "$NEW_TAG"
-          # Force push the tag to update it if it already exists on remote
           git push --force origin "$NEW_TAG"
-
