@@ -233,7 +233,7 @@ function formatHumanFloat(?float $value): string
     $string = var_export($value, true);
 
     // If it's scientific notation, keep it as-is
-    if (str_contains($string, 'E')) {
+    if (strpos($string, 'E') !== false) {
         return $string;
     }
 
@@ -339,7 +339,7 @@ function floatToString(float $f): ?string
         }
     } else {
         // ensure .0 for integer-looking numbers
-        if (!str_contains($s, '.')) {
+        if (strpos($s, '.') === false) {
             $s .= '.0';
         }
     }

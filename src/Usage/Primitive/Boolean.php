@@ -74,7 +74,7 @@ echo '   isUndefined(): ' . (BoolStandard::fromBool(true)->isUndefined() ? 'true
 
 echo PHP_EOL . '6. tryFromBool with custom default:' . PHP_EOL;
 $tryFromBoolResult = BoolStandard::tryFromBool(true, UndefinedStandard::create());
-echo '   tryFromBool(true, custom): ' . ($tryFromBoolResult instanceof BoolStandard ? 'BoolStandard' : $tryFromBoolResult::class) . PHP_EOL;
+echo '   tryFromBool(true, custom): ' . ($tryFromBoolResult instanceof BoolStandard ? 'BoolStandard' : get_class($tryFromBoolResult)) . PHP_EOL;
 
 echo PHP_EOL . '7. tryFromMixed:' . PHP_EOL;
 echo '   tryFromMixed(true): ' . (BoolStandard::tryFromMixed(true) instanceof BoolStandard ? 'BoolStandard' : 'Undefined') . PHP_EOL;
@@ -204,13 +204,15 @@ echo '   FalseStandard can only represent false' . PHP_EOL;
 echo '   BoolStandard can represent both true and false' . PHP_EOL;
 
 echo PHP_EOL . '2. Stringable objects:' . PHP_EOL;
-$stringableTrue = new class implements Stringable {
+$stringableTrue = new class
+{
     public function __toString(): string
     {
         return 'true';
     }
 };
-$stringableFalse = new class implements Stringable {
+$stringableFalse = new class
+{
     public function __toString(): string
     {
         return 'false';
@@ -227,7 +229,7 @@ echo PHP_EOL . '4. Undefined value() method usage (to satisfy Psalm):' . PHP_EOL
 $undefinedInstance = UndefinedStandard::create();
 try {
     $undefinedValue = $undefinedInstance->value();
-} catch (Exception) {
+} catch (Exception $exception) {
     $undefinedValue = 'Undefined';
 }
 echo '   Undefined::value() returns: "' . $undefinedValue . '"' . PHP_EOL;
@@ -236,7 +238,7 @@ echo '   Undefined::value() returns: "' . $undefinedValue . '"' . PHP_EOL;
 try {
     $undefinedValue2 = UndefinedStandard::create()->value();
     $undefinedValue3 = Undefined::create()->value();
-} catch (Exception) {
+} catch (Exception $exception) {
     $undefinedValue2 = 'Undefined';
     $undefinedValue3 = 'Undefined';
 }
