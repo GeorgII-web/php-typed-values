@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use PhpTypedValues\ArrayType\ArrayNonEmpty;
-use PhpTypedValues\Exception\Array\ArrayTypeException;
+use PhpTypedValues\Exception\ArrayType\ArrayTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 it('throws ArrayTypeException when constructed with an empty array', function (): void {

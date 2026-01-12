@@ -6,7 +6,7 @@ namespace PhpTypedValues\ArrayType;
 
 use PhpTypedValues\Base\ArrayType\ArrayTypeAbstract;
 use PhpTypedValues\Base\ArrayType\ArrayUndefinedTypeInterface;
-use PhpTypedValues\Exception\Array\ArrayUndefinedTypeException;
+use PhpTypedValues\Exception\ArrayType\ArrayUndefinedTypeException;
 
 /**
  * Immutable undefined collection.

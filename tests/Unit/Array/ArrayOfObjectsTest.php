@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use PhpTypedValues\ArrayType\ArrayOfObjects;
 use PhpTypedValues\ArrayType\ArrayUndefined;
-use PhpTypedValues\Exception\Array\ArrayTypeException;
+use PhpTypedValues\Exception\ArrayType\ArrayTypeException;
 use PhpTypedValues\Float\Alias\Positive;
 use PhpTypedValues\Integer\IntegerNonNegative;
 use PhpTypedValues\String\StringNonEmpty;

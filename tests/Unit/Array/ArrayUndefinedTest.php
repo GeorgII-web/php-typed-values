@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use PhpTypedValues\ArrayType\ArrayUndefined;
-use PhpTypedValues\Exception\Array\ArrayUndefinedTypeException;
+use PhpTypedValues\Exception\ArrayType\ArrayUndefinedTypeException;
 
 describe('ArrayUndefined specific tests', function () {
     // Test lines 24-27: fromArray always returns new instance

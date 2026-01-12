@@ -6,7 +6,7 @@ namespace PhpTypedValues\ArrayType;
 
 use JsonSerializable;
 use PhpTypedValues\Base\ArrayType\ArrayTypeAbstract;
-use PhpTypedValues\Exception\Array\ArrayTypeException;
+use PhpTypedValues\Exception\ArrayType\ArrayTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Traversable;
 

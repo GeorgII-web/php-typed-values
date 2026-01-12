@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use PhpTypedValues\ArrayType\ArrayEmpty;
-use PhpTypedValues\Exception\Array\ArrayTypeException;
+use PhpTypedValues\Exception\ArrayType\ArrayTypeException;
 
 covers(ArrayEmpty::class);
 

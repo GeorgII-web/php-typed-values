@@ -6,7 +6,7 @@ namespace PhpTypedValues\Usage\Example;
 
 use JsonSerializable;
 use PhpTypedValues\ArrayType\ArrayOfObjects;
-use PhpTypedValues\Exception\Array\ArrayTypeException;
+use PhpTypedValues\Exception\ArrayType\ArrayTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;

@@ -11,7 +11,7 @@ use PhpTypedValues\ArrayType\ArrayUndefined;
 use PhpTypedValues\Base\Shared\IsEmptyInterface;
 use PhpTypedValues\Base\Shared\IsUndefinedInterface;
 use PhpTypedValues\Base\TypeInterface;
-use PhpTypedValues\Exception\Array\ArrayTypeException;
+use PhpTypedValues\Exception\ArrayType\ArrayTypeException;
 
 /**
  * Contract for array typed values.
