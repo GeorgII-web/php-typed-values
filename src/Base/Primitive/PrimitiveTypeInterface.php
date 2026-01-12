@@ -45,15 +45,19 @@ interface PrimitiveTypeInterface extends TypeInterface, JsonSerializable
      * Marked as mutation-free so Psalm treats calls as pure in immutable contexts.
      *
      * @psalm-mutation-free
+     * @return mixed
      */
-    public function jsonSerialize(): mixed;
+    public function jsonSerialize();
 
     /**
      * Returns a normalized string representation of the underlying value.
      */
     public function toString(): string;
 
-    public function value(): mixed;
+    /**
+     * @return mixed
+     */
+    public function value();
 
     /**
      * Alias of {@see toString} for convenient casting.
