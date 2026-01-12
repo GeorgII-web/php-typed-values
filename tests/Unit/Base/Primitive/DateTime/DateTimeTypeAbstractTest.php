@@ -29,6 +29,21 @@ readonly class DateTimeTypeAbstractTest extends DateTimeTypeAbstract
         return new self(new DateTimeImmutable($value, static::stringToDateTimeZone($timezone)));
     }
 
+    public static function getBaseFormat(): string
+    {
+        return self::FORMAT;
+    }
+
+    public static function getBaseMaxTimestamp(): int
+    {
+        return self::MAX_TIMESTAMP_SECONDS;
+    }
+
+    public static function getBaseMinTimestamp(): int
+    {
+        return self::MIN_TIMESTAMP_SECONDS;
+    }
+
     public static function getFormat(): string
     {
         return '';
@@ -583,4 +598,12 @@ describe('DateTimeType mutation killing tests', function () {
             });
         }
     });
+});
+
+it('exercises abstract constants through dummy subclass', function (): void {
+    // This is to get coverage for the constant declarations in the abstract class and interface
+    expect(DateTimeTypeAbstractTest::getBaseFormat())->toBe('')
+        ->and(DateTimeTypeAbstractTest::getBaseMaxTimestamp())->toBe(253402300799)
+        ->and(DateTimeTypeAbstractTest::getBaseMinTimestamp())->toBe(-62135596800)
+        ->and(DateTimeTypeAbstractTest::DEFAULT_ZONE)->toBe('UTC');
 });

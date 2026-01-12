@@ -23,7 +23,7 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  */
 interface DateTimeTypeInterface
 {
-    public const DEFAULT_ZONE = 'UTC';
+    public const string DEFAULT_ZONE = 'UTC';
 
     public static function fromDateTime(DateTimeImmutable $value): static;
 

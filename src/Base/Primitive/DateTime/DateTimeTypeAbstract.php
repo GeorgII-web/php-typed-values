@@ -35,9 +35,9 @@ use function sprintf;
  */
 abstract readonly class DateTimeTypeAbstract extends PrimitiveTypeAbstract implements DateTimeTypeInterface
 {
-    protected const FORMAT = '';
-    protected const MAX_TIMESTAMP_SECONDS = 253402300799; // 9999-12-31 23:59:59
-    protected const MIN_TIMESTAMP_SECONDS = -62135596800; // 0001-01-01
+    protected const string FORMAT = '';
+    protected const int MAX_TIMESTAMP_SECONDS = 253402300799; // 9999-12-31 23:59:59
+    protected const int MIN_TIMESTAMP_SECONDS = -62135596800; // 0001-01-01
 
     abstract public static function fromDateTime(DateTimeImmutable $value): static;
 

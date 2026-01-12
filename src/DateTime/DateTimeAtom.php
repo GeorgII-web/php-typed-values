@@ -35,7 +35,7 @@ use function is_string;
  */
 readonly class DateTimeAtom extends DateTimeTypeAbstract
 {
-    protected const FORMAT = DATE_ATOM;
+    protected const string FORMAT = DATE_ATOM;
 
     protected DateTimeImmutable $value;
 
