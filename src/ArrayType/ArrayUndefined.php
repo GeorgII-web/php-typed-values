@@ -7,6 +7,7 @@ namespace PhpTypedValues\ArrayType;
 use PhpTypedValues\Base\ArrayType\ArrayTypeAbstract;
 use PhpTypedValues\Base\ArrayType\ArrayUndefinedTypeInterface;
 use PhpTypedValues\Exception\ArrayType\ArrayUndefinedTypeException;
+use ReturnTypeWillChange;
 
 /**
  * Immutable undefined collection.
@@ -20,6 +21,7 @@ readonly class ArrayUndefined extends ArrayTypeAbstract implements ArrayUndefine
     /**
      * @throws ArrayUndefinedTypeException
      */
+    #[ReturnTypeWillChange]
     public function count(): never
     {
         throw new ArrayUndefinedTypeException('Undefined array has no items to count');
@@ -45,6 +47,7 @@ readonly class ArrayUndefined extends ArrayTypeAbstract implements ArrayUndefine
         throw new ArrayUndefinedTypeException('Undefined array has no defined items');
     }
 
+    #[ReturnTypeWillChange]
     public function getIterator(): never
     {
         throw new ArrayUndefinedTypeException('Undefined array has no items for iterator');
@@ -79,6 +82,7 @@ readonly class ArrayUndefined extends ArrayTypeAbstract implements ArrayUndefine
     /**
      * @throws ArrayUndefinedTypeException
      */
+    #[ReturnTypeWillChange]
     public function jsonSerialize(): never
     {
         throw new ArrayUndefinedTypeException('Undefined array cannot be converted to Json');
