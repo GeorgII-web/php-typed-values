@@ -34,7 +34,10 @@ use function is_string;
  */
 readonly class DateTimeW3C extends DateTimeTypeAbstract
 {
-    public const string FORMAT = DATE_W3C;
+    /**
+     * @var string
+     */
+    public const FORMAT = DATE_W3C;
 
     protected DateTimeImmutable $value;
 
