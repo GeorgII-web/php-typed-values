@@ -39,8 +39,9 @@ interface ArrayTypeInterface extends TypeInterface, JsonSerializable, IteratorAg
      * @param list<mixed> $value
      *
      * @throws ArrayTypeException
+     * @return static
      */
-    public static function fromArray(array $value): static;
+    public static function fromArray(array $value);
 
     /**
      * @template TSelf of ArrayTypeInterface
@@ -86,8 +87,8 @@ interface ArrayTypeInterface extends TypeInterface, JsonSerializable, IteratorAg
      */
     public static function tryFromArray(
         array $value,
-        self $default = new ArrayUndefinedAbstract(),
-    ): static|self;
+        self $default = null
+    );
 
     /**
      * Returns the underlying Objects array.

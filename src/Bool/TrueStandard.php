@@ -35,8 +35,11 @@ use function is_string;
  *
  * @psalm-immutable
  */
-readonly class TrueStandard extends BoolTypeAbstract
+class TrueStandard extends BoolTypeAbstract
 {
+    /**
+     * @readonly
+     */
     protected true $value;
 
     /**
@@ -53,8 +56,9 @@ readonly class TrueStandard extends BoolTypeAbstract
 
     /**
      * @throws BoolTypeException
+     * @return static
      */
-    public static function fromBool(bool $value): static
+    public static function fromBool(bool $value)
     {
         return new static($value);
     }
@@ -62,8 +66,9 @@ readonly class TrueStandard extends BoolTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws BoolTypeException
+     * @return static
      */
-    public static function fromFloat(float $value): static
+    public static function fromFloat(float $value)
     {
         return new static(static::floatToBool($value));
     }
@@ -71,16 +76,18 @@ readonly class TrueStandard extends BoolTypeAbstract
     /**
      * @throws IntegerTypeException
      * @throws BoolTypeException
+     * @return static
      */
-    public static function fromInt(int $value): static
+    public static function fromInt(int $value)
     {
         return new static(static::intToBool($value));
     }
 
     /**
      * @throws BoolTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         return new static(static::stringToBool($value));
     }
@@ -106,7 +113,10 @@ readonly class TrueStandard extends BoolTypeAbstract
         return false;
     }
 
-    public function jsonSerialize(): true
+    /**
+     * @return true
+     */
+    public function jsonSerialize(): bool
     {
         return $this->value();
     }
@@ -143,12 +153,13 @@ readonly class TrueStandard extends BoolTypeAbstract
      */
     public static function tryFromBool(
         bool $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromBool($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -163,12 +174,13 @@ readonly class TrueStandard extends BoolTypeAbstract
      */
     public static function tryFromFloat(
         float $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromFloat($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -183,12 +195,13 @@ readonly class TrueStandard extends BoolTypeAbstract
      */
     public static function tryFromInt(
         int $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromInt($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -200,22 +213,29 @@ readonly class TrueStandard extends BoolTypeAbstract
      * @param T $default
      *
      * @return static|T
+     * @param mixed $value
      */
     public static function tryFromMixed(
-        mixed $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+        $value,
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
-            /** @var static */
-            return match (true) {
-                is_bool($value) => static::fromBool($value),
-                is_int($value) => static::fromInt($value),
-                is_float($value) => static::fromFloat($value),
-                ($value instanceof self) => static::fromBool($value->value()),
-                is_string($value) || $value instanceof Stringable => static::fromString((string) $value),
-                default => throw new TypeException('Value cannot be cast to boolean'),
-            };
-        } catch (Exception) {
+            switch (true) {
+                case is_bool($value):
+                    return static::fromBool($value);
+                case is_int($value):
+                    return static::fromInt($value);
+                case is_float($value):
+                    return static::fromFloat($value);
+                case $value instanceof self:
+                    return static::fromBool($value->value());
+                case is_string($value) || is_object($value) && method_exists($value, '__toString'):
+                    return static::fromString((string) $value);
+                default:
+                    throw new TypeException('Value cannot be cast to boolean');
+            }
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -230,18 +250,22 @@ readonly class TrueStandard extends BoolTypeAbstract
      */
     public static function tryFromString(
         string $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromString($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
     }
 
-    public function value(): true
+    /**
+     * @return true
+     */
+    public function value(): bool
     {
         return $this->value;
     }

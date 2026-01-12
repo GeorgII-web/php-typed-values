@@ -25,12 +25,16 @@ interface DateTimeTypeInterface
 {
     public const DEFAULT_ZONE = 'UTC';
 
-    public static function fromDateTime(DateTimeImmutable $value): static;
+    /**
+     * @return static
+     */
+    public static function fromDateTime(DateTimeImmutable $value);
 
     /**
      * @param non-empty-string $timezone
+     * @return static
      */
-    public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE): static;
+    public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE);
 
     public static function getFormat(): string;
 
@@ -45,12 +49,13 @@ interface DateTimeTypeInterface
      * @param non-empty-string $timezone
      *
      * @return static|T
+     * @param mixed $value
      */
     public static function tryFromMixed(
-        mixed $value,
+        $value,
         string $timezone = self::DEFAULT_ZONE,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract;
+        PrimitiveTypeAbstract $default = null
+    );
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -63,13 +68,14 @@ interface DateTimeTypeInterface
     public static function tryFromString(
         string $value,
         string $timezone = self::DEFAULT_ZONE,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract;
+        PrimitiveTypeAbstract $default = null
+    );
 
     public function value(): DateTimeImmutable;
 
     /**
      * @param non-empty-string $timezone
+     * @return static
      */
-    public function withTimeZone(string $timezone): static;
+    public function withTimeZone(string $timezone);
 }
