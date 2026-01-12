@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace PhpTypedValues\Usage\Example;
 
 use JsonSerializable;
-use PhpTypedValues\ArrayType\ArrayOfObjectsAbstract;
+use PhpTypedValues\ArrayType\ArrayOfObjects;
 use PhpTypedValues\Exception\Array\ArrayTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
@@ -46,7 +46,7 @@ final readonly class WithArrays implements JsonSerializable
         private IntegerPositive $id,
         private StringNonEmpty|Undefined $firstName,
         private FloatPositive|Undefined $height,
-        private ArrayOfObjectsAbstract $nickNames,
+        private ArrayOfObjects $nickNames,
     ) {
     }
 
@@ -81,7 +81,7 @@ final readonly class WithArrays implements JsonSerializable
             $height !== null
                 ? FloatPositive::fromString((string) $height) // Early fail for not NULL
                 : Undefined::create(), // Late fail for NULL
-            ArrayOfObjectsAbstract::fromItems(...$nickNamesObjects)
+            ArrayOfObjects::fromItems(...$nickNamesObjects)
         );
     }
 
@@ -109,7 +109,7 @@ final readonly class WithArrays implements JsonSerializable
         return $this->id;
     }
 
-    public function getNickNames(): ArrayOfObjectsAbstract
+    public function getNickNames(): ArrayOfObjects
     {
         return $this->nickNames;
     }

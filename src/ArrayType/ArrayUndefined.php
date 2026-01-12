@@ -15,7 +15,7 @@ use PhpTypedValues\Exception\Array\ArrayUndefinedTypeException;
  *
  * @psalm-immutable
  */
-readonly class ArrayUndefinedAbstract extends ArrayTypeAbstract implements ArrayUndefinedTypeInterface
+readonly class ArrayUndefined extends ArrayTypeAbstract implements ArrayUndefinedTypeInterface
 {
     /**
      * @throws ArrayUndefinedTypeException

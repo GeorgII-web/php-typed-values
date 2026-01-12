@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Base\ArrayType;
 
-use PhpTypedValues\ArrayType\ArrayUndefinedAbstract;
+use PhpTypedValues\ArrayType\ArrayUndefined;
 use PhpTypedValues\Exception\TypeException;
 
 /**
@@ -34,11 +34,11 @@ abstract readonly class ArrayTypeAbstract implements ArrayTypeInterface
      *
      * @return static|T
      *
-     * @psalm-return ($default is ArrayUndefinedAbstract ? static : static|T)
+     * @psalm-return ($default is ArrayUndefined ? static : static|T)
      */
     public static function tryFromArray(
         array $value,
-        ArrayTypeInterface $default = new ArrayUndefinedAbstract(),
+        ArrayTypeInterface $default = new ArrayUndefined(),
     ): static|ArrayTypeInterface {
         try {
             /** @var static */

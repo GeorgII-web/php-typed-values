@@ -17,7 +17,7 @@ use function count;
  *
  * @psalm-immutable
  */
-readonly class ArrayEmptyAbstract extends ArrayTypeAbstract
+readonly class ArrayEmpty extends ArrayTypeAbstract
 {
     /**
      * @throws ArrayTypeException

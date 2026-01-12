@@ -8,13 +8,15 @@ use JsonSerializable;
 use PhpTypedValues\Base\ArrayType\ArrayTypeAbstract;
 use PhpTypedValues\Exception\Array\ArrayTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use Stringable;
 use Traversable;
 
 use function count;
-use function is_object;
+use function is_scalar;
+use function sprintf;
 
 /**
- * Immutable collection of objects.
+ * Immutable non-empty array.
  *
  * @template TItem of object
  *
@@ -22,7 +24,7 @@ use function is_object;
  *
  * @psalm-immutable
  */
-readonly class ArrayOfObjectsAbstract extends ArrayTypeAbstract
+readonly class ArrayNonEmpty extends ArrayTypeAbstract
 {
     /**
      * @var list<TItem>
@@ -36,10 +38,8 @@ readonly class ArrayOfObjectsAbstract extends ArrayTypeAbstract
      */
     public function __construct(array $value)
     {
-        foreach ($value as $item) {
-            if (!is_object($item)) {
-                throw new ArrayTypeException('Expected array of Object instances');
-            }
+        if ($value === []) {
+            throw new ArrayTypeException('Expected non-empty array');
         }
 
         $this->value = $value;
@@ -62,17 +62,6 @@ readonly class ArrayOfObjectsAbstract extends ArrayTypeAbstract
     {
         /** @var list<TItem> $value */
         return new static($value);
-    }
-
-    /**
-     * @no-named-arguments
-     *
-     * @throws ArrayTypeException
-     */
-    public static function fromItems(object ...$items): static
-    {
-        /** @var list<TItem> $items */
-        return new static($items);
     }
 
     /**
@@ -157,20 +146,34 @@ readonly class ArrayOfObjectsAbstract extends ArrayTypeAbstract
     }
 
     /**
-     * @throws ArrayTypeException
-     *
      * @psalm-mutation-free
+     *
+     * @throws ArrayTypeException
      */
     public function toArray(): array
     {
         $result = [];
         foreach ($this->value as $item) {
-            if (!$item instanceof JsonSerializable) {
-                throw new ArrayTypeException('Conversion to array of Scalars failed, should implement JsonSerializable interface');
+            // 1. Handle objects that know how to serialize themselves
+            if ($item instanceof JsonSerializable) {
+                /** @psalm-suppress ImpureMethodCall */
+                $result[] = $item->jsonSerialize();
+                continue;
             }
 
-            /** @psalm-suppress ImpureMethodCall */
-            $result[] = $item->jsonSerialize();
+            // 2. Handle native PHP scalars (string, int, float, bool) or null
+            if (is_scalar($item) || $item === null) {
+                $result[] = $item;
+                continue;
+            }
+
+            // 3. Fallback for objects that don't implement JsonSerializable but might be Stringable
+            if ($item instanceof Stringable) {
+                $result[] = $item->__toString();
+                continue;
+            }
+
+            throw new ArrayTypeException(sprintf('Item of type "%s" cannot be converted to a scalar or JSON-serializable value.', get_debug_type($item)));
         }
 
         return $result;

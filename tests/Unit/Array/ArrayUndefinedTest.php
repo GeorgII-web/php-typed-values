@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-use PhpTypedValues\ArrayType\ArrayUndefinedAbstract;
+use PhpTypedValues\ArrayType\ArrayUndefined;
 use PhpTypedValues\Exception\Array\ArrayUndefinedTypeException;
 
 describe('ArrayUndefined specific tests', function () {
     // Test lines 24-27: fromArray always returns new instance
     it('fromArray returns new ArrayUndefined instance regardless of input', function () {
-        $result1 = ArrayUndefinedAbstract::fromArray([]);
-        $result2 = ArrayUndefinedAbstract::fromArray([1, 2, 3]);
-        $result3 = ArrayUndefinedAbstract::fromArray(['key' => 'value']);
+        $result1 = ArrayUndefined::fromArray([]);
+        $result2 = ArrayUndefined::fromArray([1, 2, 3]);
+        $result3 = ArrayUndefined::fromArray(['key' => 'value']);
 
-        expect($result1)->toBeInstanceOf(ArrayUndefinedAbstract::class)
-            ->and($result2)->toBeInstanceOf(ArrayUndefinedAbstract::class)
-            ->and($result3)->toBeInstanceOf(ArrayUndefinedAbstract::class)
+        expect($result1)->toBeInstanceOf(ArrayUndefined::class)
+            ->and($result2)->toBeInstanceOf(ArrayUndefined::class)
+            ->and($result3)->toBeInstanceOf(ArrayUndefined::class)
             ->and($result1)->not->toBe($result2) // Different instances
             ->and($result1->isEmpty())->toBeTrue()
             ->and($result1->isUndefined())->toBeTrue();
@@ -22,7 +22,7 @@ describe('ArrayUndefined specific tests', function () {
 
     // Test lines 30-33: value() throws exception
     it('value() throws ArrayUndefinedTypeException', function () {
-        $array = new ArrayUndefinedAbstract();
+        $array = new ArrayUndefined();
 
         expect(fn() => $array->value())
             ->toThrow(ArrayUndefinedTypeException::class, 'Undefined array has no value');
@@ -30,13 +30,13 @@ describe('ArrayUndefined specific tests', function () {
 
     // Test lines 36-39: getIterator() throws exception
     it('getIterator() throws ArrayUndefinedTypeException', function () {
-        $array = new ArrayUndefinedAbstract();
+        $array = new ArrayUndefined();
 
         expect(fn() => $array->getIterator())
             ->toThrow(ArrayUndefinedTypeException::class, 'iterator');
 
         // Also test that foreach throws
-        $array = new ArrayUndefinedAbstract();
+        $array = new ArrayUndefined();
         expect(function () use ($array) {
             foreach ($array as $item) {
                 // This should never execute
@@ -47,7 +47,7 @@ describe('ArrayUndefined specific tests', function () {
 
     // Test lines 42-45: count() throws exception
     it('count() throws ArrayUndefinedTypeException', function () {
-        $array = new ArrayUndefinedAbstract();
+        $array = new ArrayUndefined();
 
         expect(fn() => $array->count())
             ->toThrow(ArrayUndefinedTypeException::class, 'count');
@@ -59,7 +59,7 @@ describe('ArrayUndefined specific tests', function () {
 
     // Test lines 48-51: toArray() throws exception
     it('toArray() throws ArrayUndefinedTypeException', function () {
-        $array = new ArrayUndefinedAbstract();
+        $array = new ArrayUndefined();
 
         expect(fn() => $array->toArray())
             ->toThrow(ArrayUndefinedTypeException::class, 'converted to array');
@@ -67,7 +67,7 @@ describe('ArrayUndefined specific tests', function () {
 
     // Test lines 54-57: jsonSerialize() throws exception
     it('jsonSerialize() throws ArrayUndefinedTypeException', function () {
-        $array = new ArrayUndefinedAbstract();
+        $array = new ArrayUndefined();
 
         expect(fn() => $array->jsonSerialize())
             ->toThrow(ArrayUndefinedTypeException::class, 'Json');
@@ -79,28 +79,28 @@ describe('ArrayUndefined specific tests', function () {
 
     // Test lines 60-62: isEmpty() always returns true
     it('isEmpty() always returns true', function () {
-        $array = new ArrayUndefinedAbstract();
+        $array = new ArrayUndefined();
 
         expect($array->isEmpty())->toBeTrue();
     });
 
     // Test lines 64-66: isUndefined() always returns true
     it('isUndefined() always returns true', function () {
-        $array = new ArrayUndefinedAbstract();
+        $array = new ArrayUndefined();
 
         expect($array->isUndefined())->toBeTrue();
     });
 
     // Test lines 68-70: hasUndefined() always returns true
     it('hasUndefined() always returns true', function () {
-        $array = new ArrayUndefinedAbstract();
+        $array = new ArrayUndefined();
 
         expect($array->hasUndefined())->toBeTrue();
     });
 
     // Test lines 73-78: getDefinedItems() throws exception
     it('getDefinedItems() throws ArrayUndefinedTypeException', function () {
-        $array = new ArrayUndefinedAbstract();
+        $array = new ArrayUndefined();
 
         expect(fn() => $array->getDefinedItems())
             ->toThrow(ArrayUndefinedTypeException::class, 'defined items');
@@ -108,11 +108,11 @@ describe('ArrayUndefined specific tests', function () {
 
     // Test lines 81-83: create() factory method
     it('create() returns new ArrayUndefined instance', function () {
-        $result1 = ArrayUndefinedAbstract::create();
-        $result2 = ArrayUndefinedAbstract::create();
+        $result1 = ArrayUndefined::create();
+        $result2 = ArrayUndefined::create();
 
-        expect($result1)->toBeInstanceOf(ArrayUndefinedAbstract::class)
-            ->and($result2)->toBeInstanceOf(ArrayUndefinedAbstract::class)
+        expect($result1)->toBeInstanceOf(ArrayUndefined::class)
+            ->and($result2)->toBeInstanceOf(ArrayUndefined::class)
             ->and($result1)->not->toBe($result2) // Different instances
             ->and($result1->isEmpty())->toBeTrue()
             ->and($result1->isUndefined())->toBeTrue();
@@ -120,7 +120,7 @@ describe('ArrayUndefined specific tests', function () {
 
     // Test lines 86-89: toInt() throws exception
     it('toInt() throws ArrayUndefinedTypeException', function () {
-        $array = new ArrayUndefinedAbstract();
+        $array = new ArrayUndefined();
 
         expect(fn() => $array->toInt())
             ->toThrow(ArrayUndefinedTypeException::class, 'integer');
@@ -128,7 +128,7 @@ describe('ArrayUndefined specific tests', function () {
 
     // Test lines 92-95: toFloat() throws exception
     it('toFloat() throws ArrayUndefinedTypeException', function () {
-        $array = new ArrayUndefinedAbstract();
+        $array = new ArrayUndefined();
 
         expect(fn() => $array->toFloat())
             ->toThrow(ArrayUndefinedTypeException::class, 'float');
@@ -136,16 +136,16 @@ describe('ArrayUndefined specific tests', function () {
 
     // Test constructor works without arguments
     it('can be instantiated without arguments', function () {
-        $array = new ArrayUndefinedAbstract();
+        $array = new ArrayUndefined();
 
-        expect($array)->toBeInstanceOf(ArrayUndefinedAbstract::class)
+        expect($array)->toBeInstanceOf(ArrayUndefined::class)
             ->and($array->isEmpty())->toBeTrue()
             ->and($array->isUndefined())->toBeTrue();
     });
 
     // Edge case: test all throwing methods with try-catch to verify exception type
     it('all throwing methods throw ArrayUndefinedTypeException specifically', function () {
-        $array = new ArrayUndefinedAbstract();
+        $array = new ArrayUndefined();
         $throwingMethods = [
             'value',
             'getIterator',
@@ -171,7 +171,7 @@ describe('ArrayUndefined specific tests', function () {
 
     // Test that non-throwing methods work as expected
     it('non-throwing methods return expected values', function () {
-        $array = new ArrayUndefinedAbstract();
+        $array = new ArrayUndefined();
 
         expect($array->isEmpty())->toBeTrue()
             ->and($array->isUndefined())->toBeTrue()
@@ -180,25 +180,25 @@ describe('ArrayUndefined specific tests', function () {
 
     // Test isTypeOf method
     it('isTypeOf returns true when class matches', function () {
-        $array = new ArrayUndefinedAbstract();
-        expect($array->isTypeOf(ArrayUndefinedAbstract::class))->toBeTrue();
+        $array = new ArrayUndefined();
+        expect($array->isTypeOf(ArrayUndefined::class))->toBeTrue();
     });
 
     it('isTypeOf returns false when class does not match', function () {
-        $array = new ArrayUndefinedAbstract();
+        $array = new ArrayUndefined();
         expect($array->isTypeOf('NonExistentClass'))->toBeFalse();
     });
 
     it('isTypeOf returns true for multiple classNames when one matches', function () {
-        $array = new ArrayUndefinedAbstract();
-        expect($array->isTypeOf('NonExistentClass', ArrayUndefinedAbstract::class, 'AnotherClass'))->toBeTrue();
+        $array = new ArrayUndefined();
+        expect($array->isTypeOf('NonExistentClass', ArrayUndefined::class, 'AnotherClass'))->toBeTrue();
     });
 });
 
 // Test ArrayUndefined in collection context
 describe('ArrayUndefined in collection operations', function () {
     it('cannot be used in array functions expecting countable', function () {
-        $array = new ArrayUndefinedAbstract();
+        $array = new ArrayUndefined();
 
         expect(fn() => iterator_to_array($array->getIterator()))
             ->toThrow(ArrayUndefinedTypeException::class);
@@ -208,15 +208,15 @@ describe('ArrayUndefined in collection operations', function () {
     });
 
     it('cannot be serialized to JSON', function () {
-        $array = new ArrayUndefinedAbstract();
+        $array = new ArrayUndefined();
 
         expect(fn() => json_encode($array))
             ->toThrow(ArrayUndefinedTypeException::class);
     });
 
     it('represents truly undefined state unlike empty array', function () {
-        $undefined = new ArrayUndefinedAbstract();
-        $emptyArray = new PhpTypedValues\ArrayType\ArrayOfObjectsAbstract([]);
+        $undefined = new ArrayUndefined();
+        $emptyArray = new PhpTypedValues\ArrayType\ArrayOfObjects([]);
 
         // Both are empty
         expect($undefined->isEmpty())->toBeTrue()

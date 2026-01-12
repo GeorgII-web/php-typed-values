@@ -7,7 +7,7 @@ namespace PhpTypedValues\Base\ArrayType;
 use Countable;
 use IteratorAggregate;
 use JsonSerializable;
-use PhpTypedValues\ArrayType\ArrayUndefinedAbstract;
+use PhpTypedValues\ArrayType\ArrayUndefined;
 use PhpTypedValues\Base\Shared\IsEmptyInterface;
 use PhpTypedValues\Base\Shared\IsUndefinedInterface;
 use PhpTypedValues\Base\TypeInterface;
@@ -49,7 +49,7 @@ interface ArrayTypeInterface extends TypeInterface, JsonSerializable, IteratorAg
      *
      * @phpstan-return list<TItem>
      *
-     * @psalm-return (TSelf is ArrayUndefinedAbstract ? never : list<TItem>)
+     * @psalm-return (TSelf is ArrayUndefined ? never : list<TItem>)
      *
      * @psalm-suppress PossiblyUnusedReturnValue
      */
@@ -82,11 +82,11 @@ interface ArrayTypeInterface extends TypeInterface, JsonSerializable, IteratorAg
      *
      * @return static|T
      *
-     * @psalm-return ($default is ArrayUndefinedAbstract ? static : static|T)
+     * @psalm-return ($default is ArrayUndefined ? static : static|T)
      */
     public static function tryFromArray(
         array $value,
-        self $default = new ArrayUndefinedAbstract(),
+        self $default = new ArrayUndefined(),
     ): static|self;
 
     /**
