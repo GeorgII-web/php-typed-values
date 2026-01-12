@@ -213,7 +213,7 @@ function floatToString(float $value): string
 
     // Trim trailing zeros but keep at least one decimal
     $strValue = rtrim($strValue, '0');
-    if (str_ends_with($strValue, '.')) {
+    if (substr_compare($strValue, '.', -strlen('.')) === 0) {
         $strValue .= '0';
     }
 
