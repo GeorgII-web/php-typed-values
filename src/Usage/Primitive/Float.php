@@ -30,21 +30,21 @@ testFloat(FloatStandard::fromFloat(3.14)->value());
 
 echo (string) FloatStandard::tryFromInt(1)->toFloat() . PHP_EOL;
 echo FloatStandard::tryFromBool(true)->toBool() ? 'true' . PHP_EOL : 'false' . PHP_EOL;
-echo FloatStandard::fromString('2.7128')->toString() . PHP_EOL;
-echo (string) FloatStandard::fromString('2')->toInt() . PHP_EOL;
+echo FloatStandard::fromString('1.0')->toString() . PHP_EOL;
+echo (string) FloatStandard::fromString('2.0')->toInt() . PHP_EOL;
 echo FloatStandard::tryFromFloat(2.71828)->toString() . PHP_EOL;
-echo FloatNonNegative::tryFromMixed('2.1828')->toString() . PHP_EOL;
+echo FloatNonNegative::tryFromMixed('2.0')->toString() . PHP_EOL;
 echo FloatNonNegative::tryFromFloat(2.71828)->toString() . PHP_EOL;
-echo NonNegative::fromString('2.7182')->toString() . PHP_EOL;
-echo FloatType::fromString('2.7188')->toString() . PHP_EOL;
-echo DoubleType::fromString('2.7188')->toString() . PHP_EOL;
-echo DoubleType::fromString('2.716828')->toString() . PHP_EOL;
-echo Positive::fromString('2.8')->toString() . PHP_EOL;
-echo FloatStandard::tryFromMixed('2.8')->toString() . PHP_EOL;
+echo NonNegative::fromString('2.0')->toString() . PHP_EOL;
+echo FloatType::fromString('2.0')->toString() . PHP_EOL;
+echo DoubleType::fromString('2.0')->toString() . PHP_EOL;
+echo DoubleType::fromString('2.0')->toString() . PHP_EOL;
+echo Positive::fromString('2.0')->toString() . PHP_EOL;
+echo FloatStandard::tryFromMixed('2.0')->toString() . PHP_EOL;
 
 // PositiveFloat usage
 testPositiveFloat(FloatNonNegative::fromFloat(0.5)->value());
-echo FloatNonNegative::fromString('3.14159')->toString() . PHP_EOL;
+echo FloatNonNegative::fromString('0.123456781')->toString() . PHP_EOL;
 
 // try* usages to satisfy Psalm (ensure both success and failure branches are referenced)
 $ts = FloatStandard::tryFromString('1.23');
@@ -62,7 +62,7 @@ if (!($tn instanceof Undefined)) {
     echo $tn->toString() . PHP_EOL;
 }
 
-echo FloatStandard::fromString('1')->isTypeOf(FloatStandard::class) ? 'Type correct' . PHP_EOL : 'Invalid type' . PHP_EOL;
+echo FloatStandard::fromString('1.0')->isTypeOf(FloatStandard::class) ? 'Type correct' . PHP_EOL : 'Invalid type' . PHP_EOL;
 
 /**
  * Artificial functions.

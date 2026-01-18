@@ -200,6 +200,12 @@ describe('Static utility methods coverage', function () {
     it('covers stringToFloat with success and error paths', function (): void {
         expect(PrimitiveTypeAbstractTest::callStringToFloat('1.5'))->toBe(1.5);
 
+        expect(fn() => PrimitiveTypeAbstractTest::callStringToFloat('0.1'))
+            ->toThrow(StringTypeException::class);
+
+        expect(PrimitiveTypeAbstractTest::callStringToFloat('0.10000000000000001'))
+            ->toBe(0.1); // as it stored in memory 0.10000000000000001
+
         expect(fn() => PrimitiveTypeAbstractTest::callStringToFloat('abc'))
             ->toThrow(StringTypeException::class);
 

@@ -63,7 +63,7 @@ final readonly class OptionalFail implements JsonSerializable
             IntegerPositive::fromInt($id), // Early fail
             StringNonEmpty::tryFromMixed($firstName), // Late fail
             $height !== null
-                ? FloatPositive::fromString((string) $height) // Early fail for not NULL
+                ? FloatPositive::tryFromMixed($height) // Early fail for not NULL
                 : Undefined::create(), // Late fail for NULL
         );
     }

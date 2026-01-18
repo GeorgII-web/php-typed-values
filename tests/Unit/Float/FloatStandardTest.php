@@ -50,6 +50,11 @@ it('FloatStandard::fromString throws on non-numeric strings', function (): void 
         ->toThrow(StringTypeException::class, 'String "NaN" has no valid float value');
 });
 
+it('fails on loose precious', function (): void {
+    expect(fn() => FloatStandard::fromString('0.1'))
+        ->toThrow(StringTypeException::class);
+});
+
 it('FloatStandard::fromString throws exception for a long tail', function (): void {
     expect(fn() => FloatStandard::fromString('12.444144424443444044454446444744484449444'))
         ->toThrow(StringTypeException::class, 'String "12.444144424443444044454446444744484449444" has no valid strict float value');
@@ -123,6 +128,20 @@ it('isUndefined returns false for instances and true for Undefined results', fun
         ->and($v2->isUndefined())->toBeFalse()
         ->and($u1->isUndefined())->toBeTrue()
         ->and($u2->isUndefined())->toBeTrue();
+});
+
+it('checks compare algorithm', function (): void {
+    $f1 = FloatStandard::fromFloat(0.1);
+    $f2 = FloatStandard::fromFloat(0.7);
+    $f3 = FloatStandard::fromFloat(0.8);
+
+    expect($f1->toString())->toBe('0.10000000000000001')
+        ->and($f2->toString())->toBe('0.69999999999999996')
+        ->and($f3->toString())->toBe('0.80000000000000004')
+        ->and($f1->value())->toBe(0.1)
+        ->and($f2->value())->toBe(0.7)
+        ->and($f3->value())->toBe(0.8)
+        ->and(FloatStandard::fromFloat($f1->value() + $f2->value())->toString())->toBe('0.79999999999999993');
 });
 
 it('checks diff between string formatting and native float', function (): void {

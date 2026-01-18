@@ -162,7 +162,7 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
      *
      * @throws FloatTypeException
      */
-    protected static function floatToString(float $value): string
+    protected static function floatToString(float $value, $roundTripConversion = true): string
     {
         // Convert to string as it stored in memory
         $strValue = sprintf('%.17f', $value);
@@ -173,8 +173,10 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
             $strValue .= '0';
         }
 
-        if ($value !== (float) $strValue) {
-            throw new FloatTypeException(sprintf('Float "%s" has no valid strict string value', $value));
+        if ($roundTripConversion) {
+            if ($value !== self::stringToFloat($strValue, false)) {
+                throw new FloatTypeException(sprintf('Float "%s" has no valid strict string value', $value));
+            }
         }
 
         /**
@@ -251,21 +253,24 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
      *
      * @throws StringTypeException
      */
-    protected static function stringToFloat(string $value): float
+    protected static function stringToFloat(string $value, $roundTripConversion = true): float
     {
         if (!is_numeric($value)) {
             throw new StringTypeException(sprintf('String "%s" has no valid float value', $value));
         }
 
-        // Numerical stability check (catches precision loss)
         $floatValue = (float) $value;
-        if ($floatValue !== (float) (string) $floatValue) {
-            throw new StringTypeException(sprintf('String "%s" has no valid strict float value', $value));
-        }
 
         // Formatting check: Ensure no leading zeros (unless it's "0" or "0.something")
         // and that the string isn't an integer formatted with a trailing .0 that PHP would drop.
-        $normalized = (string) $floatValue;
+        $normalized = self::floatToString($floatValue, false);
+
+        // Numerical stability check (catches precision loss)
+        if ($roundTripConversion) {
+            if ($normalized !== $value) {
+                throw new StringTypeException(sprintf('String "%s" has no valid strict float value', $value));
+            }
+        }
 
         // If it's a "clean" float string, PHP's "(string)(float)" cast usually matches
         // the input, UNLESS the input has trailing .0 (like "5.0").
