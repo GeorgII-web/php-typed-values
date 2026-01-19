@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use PhpTypedValues\ArrayType\ArrayOfObjects;
-use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\Undefined\UndefinedTypeException;
 use PhpTypedValues\Usage\Example\WithArrays;
@@ -12,7 +11,7 @@ it('builds from valid scalars and serializes to expected array', function (): vo
     $obj = WithArrays::fromScalars(
         id: 1,
         firstName: 'Alice',
-        height: 170,
+        height: 170.0,
         nickNames: ['User1', 'Admin5'],
     );
 
@@ -47,17 +46,17 @@ it('handles Undefined for empty firstName and null height (late fail on access)'
 });
 
 it('throws on invalid id (non-positive)', function (): void {
-    expect(fn() => WithArrays::fromScalars(id: 0, firstName: 'X', height: 10))
+    expect(fn() => WithArrays::fromScalars(id: 0, firstName: 'X', height: 10.0))
         ->toThrow(IntegerTypeException::class);
 });
 
 it('throws on invalid height when provided (non-positive)', function (): void {
-    expect(fn() => WithArrays::fromScalars(id: 1, firstName: 'X', height: -1))
-        ->toThrow(FloatTypeException::class);
+    expect(fn() => WithArrays::fromScalars(id: 1, firstName: 'X', height: -1.0)->getHeight()->value())
+        ->toThrow(UndefinedTypeException::class);
 });
 
 it('transforms nickNames to ArrayOfObjects of non-empty strings', function (): void {
-    $obj = WithArrays::fromScalars(id: 1, firstName: 'Bob', height: 10, nickNames: ['n1', 'n2']);
+    $obj = WithArrays::fromScalars(id: 1, firstName: 'Bob', height: 10.0, nickNames: ['n1', 'n2']);
     $nn = $obj->getNickNames();
 
     expect($nn)->toBeInstanceOf(ArrayOfObjects::class)

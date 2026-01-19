@@ -223,13 +223,13 @@ it('covers conversions for StringJson', function (): void {
     $vInt = StringJson::fromString('123');
     expect($vInt->toInt())->toBe(123);
 
-    $vFloat = StringJson::fromString('1.2');
+    $vFloat = StringJson::fromString('1.19999999999999996');
     expect($vFloat->toFloat())->toBe(1.2);
 });
 
 it('tryFromBool, tryFromFloat, tryFromInt return StringJson for valid inputs', function (): void {
     expect(StringJson::tryFromBool(true))->toBeInstanceOf(StringJson::class)
-        ->and(StringJson::tryFromFloat(1.2))->toBeInstanceOf(StringJson::class)
+        ->and(StringJson::tryFromFloat(1.19999999999999996))->toBeInstanceOf(StringJson::class)
         ->and(StringJson::tryFromInt(123))->toBeInstanceOf(StringJson::class);
 });
 

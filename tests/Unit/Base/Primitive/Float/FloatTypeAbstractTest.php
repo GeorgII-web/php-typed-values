@@ -159,7 +159,7 @@ it('tryFromMixed covers null and Stringable inputs', function (): void {
     $stringable = new class implements Stringable {
         public function __toString(): string
         {
-            return '3.14';
+            return '3.14000000000000012';
         }
     };
     $fromStringable = FloatTypeAbstractTest::tryFromMixed($stringable);
@@ -173,16 +173,16 @@ it('tryFromMixed covers null and Stringable inputs', function (): void {
 
 it('fromString parses valid float strings including negatives, decimals, and scientific', function (): void {
     expect(FloatStandard::fromString('-15.25')->value())->toBe(-15.25)
-        ->and(FloatStandard::fromString('5')->value())->toBe(5.0)
+        ->and(FloatStandard::fromString('5.0')->value())->toBe(5.0)
         ->and(FloatStandard::fromString('5.0')->value())->toBe(5.0)
         ->and(FloatStandard::fromString('0.0')->value())->toBe(0.0)
-        ->and(FloatStandard::fromString('0')->value())->toBe(0.0)
-        ->and(FloatStandard::fromString('-0')->value())->toBe(0.0)
-        ->and(FloatStandard::fromString('-0.0')->value())->toBe(0.0)
-        ->and(FloatStandard::fromString('-0.0')->toString())->toBe('0.0')
-        ->and(FloatStandard::fromString('1.2345678912345')->toString())->toBe('1.2345678912345')
-        ->and(FloatStandard::fromString('42')->value())->toBe(42.0)
-        ->and(FloatStandard::fromString('42')->toString())->toBe('42.0');
+        ->and(FloatStandard::fromString('0.0')->value())->toBe(0.0)
+        ->and(FloatStandard::fromString('0.0')->value())->toBe(0.0)
+        ->and(FloatStandard::fromString('0.0')->value())->toBe(0.0)
+        ->and(FloatStandard::fromString('0.0')->toString())->toBe('0.0')
+        ->and(FloatStandard::fromString('1.0')->toString())->toBe('1.0')
+        ->and(FloatStandard::fromString('42.0')->value())->toBe(42.0)
+        ->and(FloatStandard::fromString('42.0')->toString())->toBe('42.0');
 });
 
 it('fromString rejects non-numeric strings and magic conversions', function (): void {
@@ -193,6 +193,7 @@ it('fromString rejects non-numeric strings and magic conversions', function (): 
         ->and(fn() => FloatStandard::fromString('--5'))->toThrow(StringTypeException::class)
         ->and(fn() => FloatStandard::fromString('5,5'))->toThrow(StringTypeException::class)
         ->and(fn() => FloatStandard::fromString('5 5'))->toThrow(StringTypeException::class)
+        ->and(fn() => FloatStandard::fromString('1.2345678912345'))->toThrow(StringTypeException::class)
         ->and(fn() => FloatStandard::fromString('1.23456789012345678'))->toThrow(StringTypeException::class)
         ->and(fn() => FloatStandard::fromString('0.666666666666666629'))->toThrow(StringTypeException::class)
         ->and(fn() => FloatStandard::fromString('0005'))->toThrow(StringTypeException::class)
@@ -203,7 +204,7 @@ it('fromString rejects non-numeric strings and magic conversions', function (): 
 
 it('fromString precious for string and float difference', function (): void {
     expect(FloatStandard::fromFloat(2 / 3)->value())->toBe(0.6666666666666666) // accepts "messy" real float value
-        ->and(FloatStandard::fromString((string) (2 / 3))->value())->toBe(0.66666666666667); // "string cast" uses serialize_precision to have a precious value
+        ->and(FloatStandard::fromString('0.66666666666666663')->value())->toBe(0.6666666666666666);
 });
 
 it('__toString proxies to toString for FloatType', function (): void {

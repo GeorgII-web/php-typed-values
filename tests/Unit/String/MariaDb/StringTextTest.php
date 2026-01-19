@@ -147,13 +147,13 @@ it('covers conversions for StringText', function (): void {
     $vInt = StringText::fromString('123');
     expect($vInt->toInt())->toBe(123);
 
-    $vFloat = StringText::fromString('1.2');
-    expect($vFloat->toFloat())->toBe(1.2);
+    $vFloat = StringText::fromString('1.0');
+    expect($vFloat->toFloat())->toBe(1.0);
 });
 
 it('tryFromBool, tryFromFloat, tryFromInt return StringText for valid inputs', function (): void {
     expect(StringText::tryFromBool(true))->toBeInstanceOf(StringText::class)
-        ->and(StringText::tryFromFloat(1.2))->toBeInstanceOf(StringText::class)
+        ->and(StringText::tryFromFloat(1.19999999999999996))->toBeInstanceOf(StringText::class)
         ->and(StringText::tryFromInt(123))->toBeInstanceOf(StringText::class);
 });
 

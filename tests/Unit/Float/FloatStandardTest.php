@@ -61,7 +61,7 @@ it('FloatStandard::fromString throws exception for a long tail', function (): vo
 });
 
 it('jsonSerialize returns float', function (): void {
-    expect(FloatStandard::tryFromString('1.1')->jsonSerialize())->toBeFloat();
+    expect(FloatStandard::tryFromString('1.10000000000000009')->jsonSerialize())->toBeFloat();
 });
 
 it('__toString mirrors toString and value', function (): void {
@@ -77,7 +77,7 @@ it('__toString mirrors toString and value', function (): void {
 
 it('tryFromMixed covers numeric, non-numeric, and stringable inputs', function (): void {
     // Numeric inputs
-    $fromNumericString = FloatStandard::tryFromMixed('1.2');
+    $fromNumericString = FloatStandard::tryFromMixed('1.20000000000000007');
     $fromInt = FloatStandard::tryFromMixed(3);
     $fromFloat = FloatStandard::tryFromMixed(2.5);
 
@@ -89,7 +89,7 @@ it('tryFromMixed covers numeric, non-numeric, and stringable inputs', function (
     $stringable = new class {
         public function __toString(): string
         {
-            return '1.23';
+            return '1.22999999999999998';
         }
     };
     $fromStringable = FloatStandard::tryFromMixed($stringable);
@@ -155,6 +155,10 @@ it('checks diff between string formatting and native float', function (): void {
 it('converts mixed values to correct float state', function (mixed $input, float $expected): void {
     $result = FloatStandard::tryFromMixed($input);
 
+    if ($result instanceof Undefined) {
+        var_dump($input, $expected);
+    }
+
     expect($result)->toBeInstanceOf(FloatStandard::class)
         ->and($result->value())->toBe($expected);
 })->with([
@@ -181,8 +185,10 @@ it('converts mixed values to correct float state', function (mixed $input, float
     ['input' => false, 'expected' => 0.0],
     // Strings
     ['input' => '1.5', 'expected' => 1.5],
-    ['input' => '0', 'expected' => 0.0],
+    ['input' => '0.0', 'expected' => 0.0],
     ['input' => '-10.5', 'expected' => -10.5],
+    ['input' => '0.66666666666666663', 'expected' => 0.6666666666666666],
+    ['input' => '1.20000000000000002', 'expected' => 1.20000000000000002],
     // Stringable Object
     ['input' => new class {
         public function __toString(): string
@@ -230,6 +236,7 @@ it('FloatStandard::toString matches expected values', function (float $value, st
     '10/3' => [10.0 / 3.0, '3.33333333333333348'],
     '1e10' => [1e10, '10000000000.0'],
     '-1e10' => [-1e10, '-10000000000.0'],
+    '1e16' => [1e16, '10000000000000000.0'],
     '1e308' => [1e308, '100000000000000001097906362944045541740492309677311846336810682903157585404911491537163328978494688899061249669721172515611590283743140088328307009198146046031271664502933027185697489699588559043338384466165001178426897626212945177628091195786707458122783970171784415105291802893207873272974885715430223118336.0'],
     '-1e308' => [-1e308, '-100000000000000001097906362944045541740492309677311846336810682903157585404911491537163328978494688899061249669721172515611590283743140088328307009198146046031271664502933027185697489699588559043338384466165001178426897626212945177628091195786707458122783970171784415105291802893207873272974885715430223118336.0'],
     '1e-10' => [1e-10, '0.0000000001'],

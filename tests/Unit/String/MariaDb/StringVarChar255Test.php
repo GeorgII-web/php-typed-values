@@ -153,13 +153,13 @@ it('covers conversions for StringVarChar255', function (): void {
     $vInt = StringVarChar255::fromString('123');
     expect($vInt->toInt())->toBe(123);
 
-    $vFloat = StringVarChar255::fromString('1.2');
+    $vFloat = StringVarChar255::fromString('1.19999999999999996');
     expect($vFloat->toFloat())->toBe(1.2);
 });
 
 it('tryFromBool, tryFromFloat, tryFromInt return StringVarChar255 for valid inputs', function (): void {
     expect(StringVarChar255::tryFromBool(true))->toBeInstanceOf(StringVarChar255::class)
-        ->and(StringVarChar255::tryFromFloat(1.2))->toBeInstanceOf(StringVarChar255::class)
+        ->and(StringVarChar255::tryFromFloat(1.19999999999999996))->toBeInstanceOf(StringVarChar255::class)
         ->and(StringVarChar255::tryFromInt(123))->toBeInstanceOf(StringVarChar255::class);
 });
 

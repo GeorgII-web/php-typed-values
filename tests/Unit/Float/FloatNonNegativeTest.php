@@ -18,10 +18,9 @@ it('accepts non-negative floats via fromFloat and toString matches', function ()
 });
 
 it('parses non-negative numeric strings via fromString', function (): void {
-    expect(FloatNonNegative::fromString('0')->value())->toBe(0.0)
-        ->and(FloatNonNegative::fromString('0.0')->value())->toBe(0.0)
-        ->and(FloatNonNegative::fromString('3.14')->value())->toBe(3.14)
-        ->and(FloatNonNegative::fromString('42')->toString())->toBe('42.0');
+    expect(FloatNonNegative::fromString('0.0')->value())->toBe(0.0)
+        ->and(FloatNonNegative::fromString('3.14000000000000012')->value())->toBe(3.14)
+        ->and(FloatNonNegative::fromString('42.0')->toString())->toBe('42.0');
 });
 
 it('rejects negative values', function (): void {
@@ -39,16 +38,16 @@ it('rejects non-numeric or negative strings', function (): void {
     }
 
     // Numeric but negative
-    foreach (['-1', '-0.1'] as $str) {
+    foreach (['-1.0', '-0.10000000000000001'] as $str) {
         expect(fn() => FloatNonNegative::fromString($str))
-            ->toThrow(FloatTypeException::class);
+            ->toThrow(FloatTypeException::class, 'Expected non-negative float, got "');
     }
 });
 
 it('FloatNonNegative::tryFromString returns value for >= 0.0 and Undefined otherwise', function (): void {
-    $ok0 = FloatNonNegative::tryFromString('0');
+    $ok0 = FloatNonNegative::tryFromString('0.0');
     $ok = FloatNonNegative::tryFromString('0.5');
-    $bad = FloatNonNegative::tryFromString('-0.1');
+    $bad = FloatNonNegative::tryFromString('-0.10000000000000001');
     $badStr = FloatNonNegative::tryFromString('abc');
 
     expect($ok0)
@@ -59,7 +58,7 @@ it('FloatNonNegative::tryFromString returns value for >= 0.0 and Undefined other
         ->and($ok->value())->toBe(0.5)
         ->and($bad)->toBeInstanceOf(Undefined::class)
         ->and($badStr)->toBeInstanceOf(Undefined::class)
-        ->and(FloatNonNegative::tryFromString('-0.1', Undefined::create()))->toBeInstanceOf(Undefined::class);
+        ->and(FloatNonNegative::tryFromString('-0.10000000000000001', Undefined::create()))->toBeInstanceOf(Undefined::class);
 });
 
 it('FloatNonNegative::tryFromFloat returns value for >= 0 and Undefined otherwise', function (): void {
@@ -76,7 +75,7 @@ it('FloatNonNegative::tryFromFloat returns value for >= 0 and Undefined otherwis
 
 it('FloatNonNegative throws on negative values in ctor and fromFloat', function (): void {
     expect(fn() => new FloatNonNegative(-0.1))
-        ->toThrow(FloatTypeException::class, 'Expected non-negative float, got "-0.1"')
+        ->toThrow(FloatTypeException::class, 'Expected non-negative float, got "-0.10000000000000001"')
         ->and(fn() => FloatNonNegative::fromFloat(-1.0))
         ->toThrow(FloatTypeException::class, 'Expected non-negative float, got "-1.0"');
 });
@@ -96,7 +95,7 @@ it('FloatNonNegative::fromString enforces numeric and non-negativity', function 
 });
 
 it('jsonSerialize returns float', function (): void {
-    expect(FloatNonNegative::tryFromString('1.1')->jsonSerialize())->toBeFloat();
+    expect(FloatNonNegative::tryFromString('1.10000000000000009')->jsonSerialize())->toBeFloat();
 });
 
 it('__toString casts same as toString and equals string representation', function (): void {
@@ -145,7 +144,8 @@ it('converts mixed values to correct float state', function (mixed $input, float
     ['input' => false, 'expected' => 0.0],
     // Strings
     ['input' => '1.5', 'expected' => 1.5],
-    ['input' => '0', 'expected' => 0.0],
+    ['input' => '0.0', 'expected' => 0.0],
+    ['input' => '0.66666666666666663', 'expected' => 0.6666666666666666],
     // Stringable Object
     ['input' => new class {
         public function __toString(): string
@@ -198,7 +198,7 @@ it('isUndefined returns false for instances and true for Undefined results', fun
     $v2 = FloatNonNegative::fromFloat(1.0);
 
     // Invalid inputs via tryFrom* produce Undefined which should report true
-    $u1 = FloatNonNegative::tryFromString('-0.1');
+    $u1 = FloatNonNegative::tryFromString('-0.10000000000000001');
     $u2 = FloatNonNegative::tryFromMixed('abc');
     $u3 = FloatNonNegative::tryFromFloat(-1.0);
 

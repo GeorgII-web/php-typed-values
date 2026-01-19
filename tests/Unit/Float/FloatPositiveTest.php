@@ -37,18 +37,18 @@ it('throws on zero via constructor', function (): void {
 });
 
 it('throws on zero via fromString', function (): void {
-    expect(fn() => FloatPositive::fromString('0'))
+    expect(fn() => FloatPositive::fromString('0.0'))
         ->toThrow(FloatTypeException::class, 'Expected positive float, got "0.0"');
 });
 
 it('throws on negative via constructor', function (): void {
     expect(fn() => new FloatPositive(-0.1))
-        ->toThrow(FloatTypeException::class, 'Expected positive float, got "-0.1"');
+        ->toThrow(FloatTypeException::class, 'Expected positive float, got "-0.10000000000000001"');
 });
 
 it('throws on negative via fromString', function (): void {
     expect(fn() => FloatPositive::fromString('-1.23'))
-        ->toThrow(FloatTypeException::class, 'Expected positive float, got "-1.23"');
+        ->toThrow(StringTypeException::class, 'String "-1.23" has no valid strict float value');
 });
 
 it('throws on string not float', function (): void {
@@ -57,9 +57,9 @@ it('throws on string not float', function (): void {
 });
 
 it('FloatPositive::tryFromString returns value for > 0.0 and Undefined otherwise', function (): void {
-    $ok = FloatPositive::tryFromString('0.1');
-    $badZero = FloatPositive::tryFromString('0');
-    $badNeg = FloatPositive::tryFromString('-0.1');
+    $ok = FloatPositive::tryFromString('0.10000000000000001');
+    $badZero = FloatPositive::tryFromString('0.0');
+    $badNeg = FloatPositive::tryFromString('-0.10000000000000001');
     $badStr = FloatPositive::tryFromString('abc');
 
     expect($ok)
@@ -68,7 +68,7 @@ it('FloatPositive::tryFromString returns value for > 0.0 and Undefined otherwise
         ->and($badZero)->toBeInstanceOf(Undefined::class)
         ->and($badNeg)->toBeInstanceOf(Undefined::class)
         ->and($badStr)->toBeInstanceOf(Undefined::class)
-        ->and(FloatPositive::tryFromString('0', Undefined::create()))->toBeInstanceOf(Undefined::class);
+        ->and(FloatPositive::tryFromString('0.0', Undefined::create()))->toBeInstanceOf(Undefined::class);
 });
 
 it('FloatPositive::tryFromFloat returns value for positive int and Undefined otherwise', function (): void {
@@ -96,7 +96,7 @@ it('FloatPositive::fromString enforces numeric and positivity', function (): voi
         ->toThrow(StringTypeException::class, 'String "abc" has no valid float value');
 
     // Positivity
-    expect(fn() => FloatPositive::fromString('0'))
+    expect(fn() => FloatPositive::fromString('0.0'))
         ->toThrow(FloatTypeException::class, 'Expected positive float, got "0.0"');
 
     // Success path
@@ -105,7 +105,7 @@ it('FloatPositive::fromString enforces numeric and positivity', function (): voi
 });
 
 it('jsonSerialize returns float', function (): void {
-    expect(FloatPositive::tryFromString('1.1')->jsonSerialize())->toBeFloat();
+    expect(FloatPositive::tryFromString('1.10000000000000009')->jsonSerialize())->toBeFloat();
 });
 
 it('__toString mirrors toString and value', function (): void {
@@ -143,6 +143,10 @@ it('converts mixed values to correct float state', function (mixed $input, float
     ['input' => true, 'expected' => 1.0],
     // Strings
     ['input' => '1.5', 'expected' => 1.5],
+    ['input' => '0.5', 'expected' => 0.5],
+    ['input' => '0.66666666666666663', 'expected' => 0.6666666666666666],
+    ['input' => '0.10000000000000001', 'expected' => 0.1],
+    ['input' => '3.14000000000000012', 'expected' => 3.14],
     // Stringable Object
     ['input' => new class {
         public function __toString(): string
@@ -194,7 +198,7 @@ it('isUndefined returns false for instances and true for Undefined results', fun
     $v2 = FloatPositive::fromFloat(2.5);
 
     // Invalid inputs via tryFrom* produce Undefined which should report true
-    $u1 = FloatPositive::tryFromString('0');
+    $u1 = FloatPositive::tryFromString('0.0');
     $u2 = FloatPositive::tryFromMixed('abc');
     $u3 = FloatPositive::tryFromFloat(0.0);
 

@@ -111,13 +111,13 @@ it('covers conversions for StringNonBlank', function (): void {
     $vInt = StringNonBlank::fromString('123');
     expect($vInt->toInt())->toBe(123);
 
-    $vFloat = StringNonBlank::fromString('1.2');
+    $vFloat = StringNonBlank::fromString('1.19999999999999996');
     expect($vFloat->toFloat())->toBe(1.2);
 });
 
 it('tryFromBool, tryFromFloat, tryFromInt return StringNonBlank for valid inputs', function (): void {
     expect(StringNonBlank::tryFromBool(true))->toBeInstanceOf(StringNonBlank::class)
-        ->and(StringNonBlank::tryFromFloat(1.2))->toBeInstanceOf(StringNonBlank::class)
+        ->and(StringNonBlank::tryFromFloat(1.19999999999999996))->toBeInstanceOf(StringNonBlank::class)
         ->and(StringNonBlank::tryFromInt(123))->toBeInstanceOf(StringNonBlank::class);
 });
 

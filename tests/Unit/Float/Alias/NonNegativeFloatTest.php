@@ -13,7 +13,7 @@ it('NonNegativeFloat::fromFloat returns NonNegativeFloat instance', function ():
 });
 
 it('NonNegativeFloat::fromString returns NonNegativeFloat instance', function (): void {
-    $v = NonNegative::fromString('2');
+    $v = NonNegative::fromString('2.0');
 
     expect($v)->toBeInstanceOf(NonNegative::class)
         ->and($v::class)->toBe(NonNegative::class)

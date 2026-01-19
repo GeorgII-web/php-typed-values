@@ -117,13 +117,13 @@ it('covers conversions for StringNonEmpty', function (): void {
     $vInt = StringNonEmpty::fromString('123');
     expect($vInt->toInt())->toBe(123);
 
-    $vFloat = StringNonEmpty::fromString('1.2');
+    $vFloat = StringNonEmpty::fromString('1.19999999999999996');
     expect($vFloat->toFloat())->toBe(1.2);
 });
 
 it('tryFromBool, tryFromFloat, tryFromInt return StringNonEmpty for valid inputs', function (): void {
     expect(StringNonEmpty::tryFromBool(true))->toBeInstanceOf(StringNonEmpty::class)
-        ->and(StringNonEmpty::tryFromFloat(1.2))->toBeInstanceOf(StringNonEmpty::class)
+        ->and(StringNonEmpty::tryFromFloat(1.19999999999999996))->toBeInstanceOf(StringNonEmpty::class)
         ->and(StringNonEmpty::tryFromInt(123))->toBeInstanceOf(StringNonEmpty::class);
 });
 

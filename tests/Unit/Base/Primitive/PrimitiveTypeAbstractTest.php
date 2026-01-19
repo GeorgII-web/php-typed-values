@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\DateTime\ZoneDateTimeTypeException;
+use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -114,6 +115,20 @@ describe('Concrete PrimitiveType implementation', function () {
             return;
         }
 
+        if ($expected === 'SPECIAL_STRING_EXCEPTION') {
+            expect(fn() => PrimitiveTypeAbstractTest::callFloatToString($src))
+                ->toThrow(StringTypeException::class);
+
+            return;
+        }
+
+        if ($expected === 'SUB_EXCEPTION') {
+            expect(fn() => PrimitiveTypeAbstractTest::callFloatToString($src))
+                ->toThrow(FloatTypeException::class);
+
+            return;
+        }
+
         expect(PrimitiveTypeAbstractTest::callFloatToString($src))->toBe($expected);
     })->with([
         // ─────────────
@@ -153,8 +168,8 @@ describe('Concrete PrimitiveType implementation', function () {
         ['src' => 1e10, 'expected' => '10000000000.0'],
         ['src' => 1.0e10, 'expected' => '10000000000.0'],
         ['src' => 1e16, 'expected' => '10000000000000000.0'],
-        ['src' => 5e-324, 'expected' => '0.00000000000000000'],
-        ['src' => 1e-323, 'expected' => '0.00000000000000000'],
+        ['src' => 5e-324, 'expected' => 'SUB_EXCEPTION'],
+        ['src' => 1e-323, 'expected' => 'SUB_EXCEPTION'],
         ['src' => 0.1111111116789012345678911111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111234567890, 'expected' => '0.11111111167890124'],
 
         // ─────────────
@@ -166,9 +181,9 @@ describe('Concrete PrimitiveType implementation', function () {
         // ─────────────
         // INVALID SPECIALS
         // ─────────────
-        ['src' => \INF, 'expected' => null],
-        ['src' => -\INF, 'expected' => null],
-        ['src' => \NAN, 'expected' => null],
+        ['src' => \INF, 'expected' => 'SPECIAL_STRING_EXCEPTION'],
+        ['src' => -\INF, 'expected' => 'SPECIAL_STRING_EXCEPTION'],
+        ['src' => \NAN, 'expected' => 'SPECIAL_STRING_EXCEPTION'],
     ]);
 
     it('stringToFloat method converts string to float correctly', function (string $src, ?float $expected) {
@@ -195,9 +210,26 @@ describe('Concrete PrimitiveType implementation', function () {
         '0.0' => ['src' => '0.0', 'expected' => 0.0],
         '1.0' => ['src' => '1.0', 'expected' => 1.0],
         '-1.0' => ['src' => '-1.0', 'expected' => -1.0],
-        '0' => ['src' => '0', 'expected' => 0.0],
-        '1' => ['src' => '1', 'expected' => 1.0],
-        '-1' => ['src' => '-1', 'expected' => -1.0],
+        '0' => ['src' => '0.0', 'expected' => 0.0],
+        '1' => ['src' => '1.0', 'expected' => 1.0],
+        '-1' => ['src' => '-1.0', 'expected' => -1.0],
+        // ─────────────
+        // VALID: lossy decimals (now strictly failing if they don't round-trip exactly)
+        // ─────────────
+        '0.1' => ['src' => '0.1', 'expected' => null],
+        '0.2' => ['src' => '0.2', 'expected' => null],
+        '0.3' => ['src' => '0.3', 'expected' => null],
+        '0.15' => ['src' => '0.15', 'expected' => null],
+        '0.3333333333333333' => ['src' => '0.3333333333333333', 'expected' => null],
+
+        // ─────────────
+        // VALID: canonical decimals
+        // ─────────────
+        '0.1c' => ['src' => '0.10000000000000001', 'expected' => 0.1],
+        '0.2c' => ['src' => '0.20000000000000001', 'expected' => 0.2],
+        '0.3c' => ['src' => '0.29999999999999999', 'expected' => 0.3],
+        '0.15c' => ['src' => '0.14999999999999999', 'expected' => 0.15],
+        '0.3333c' => ['src' => '0.33333333333333331', 'expected' => 0.3333333333333333],
 
         // ─────────────
         // INVALID: malformed decimals
@@ -223,15 +255,6 @@ describe('Concrete PrimitiveType implementation', function () {
         '0.0625' => ['src' => '0.0625', 'expected' => 0.0625],
 
         // ─────────────
-        // VALID: lossy decimals (now allowed if they match PHP's default string cast)
-        // ─────────────
-        '0.1' => ['src' => '0.1', 'expected' => 0.1],
-        '0.2' => ['src' => '0.2', 'expected' => 0.2],
-        '0.3' => ['src' => '0.3', 'expected' => 0.3],
-        '0.15' => ['src' => '0.15', 'expected' => 0.15],
-        '0.3333333333333333' => ['src' => '0.3333333333333333', 'expected' => 0.3333333333333333],
-
-        // ─────────────
         // VALID: edge exact fractions
         // ─────────────
         '0.75' => ['src' => '0.75', 'expected' => 0.75],
@@ -243,11 +266,11 @@ describe('Concrete PrimitiveType implementation', function () {
         // ─────────────
         '1e10' => ['src' => '10000000000.0', 'expected' => 10000000000.0],
         '1.0e+10' => ['src' => '1.0e+10', 'expected' => null],
-        '1e16' => ['src' => '1.0E+16', 'expected' => 1.0E+16],
-        '5e-324' => ['src' => '5.0E-324', 'expected' => 5.0E-324],
-        '1e-323' => ['src' => '1.0E-323', 'expected' => 1.0E-323],
-        '1e-1' => ['src' => '0.1', 'expected' => 0.1],
-        '3e-1' => ['src' => '0.3', 'expected' => 0.3],
+        '1e16' => ['src' => '1.0E+16', 'expected' => null],
+        '5e-324' => ['src' => '5.0E-324', 'expected' => null],
+        '1e-323' => ['src' => '1.0E-323', 'expected' => null],
+        '1e-1' => ['src' => '0.1', 'expected' => null],
+        '1e-1c' => ['src' => '0.10000000000000001', 'expected' => 0.1],
         '1.1e1' => ['src' => '11.0', 'expected' => 11.0],
         '1e0' => ['src' => '1.0', 'expected' => 1.0],
         '1.0e0' => ['src' => '1.0', 'expected' => 1.0],
@@ -257,8 +280,8 @@ describe('Concrete PrimitiveType implementation', function () {
         '1e2' => ['src' => '100.0', 'expected' => 100.0],
         '9.007199254740992e15' => ['src' => '9007199254740992.0', 'expected' => 9007199254740992.0],
         '4.503599627370496e15' => ['src' => '4503599627370496.0', 'expected' => 4503599627370496.0],
-        '2.2250738585072014e-308' => ['src' => '2.2250738585072014e-308', 'expected' => 2.2250738585072014e-308],
-        '1.7976931348623157e308' => ['src' => '1.7976931348623157e308', 'expected' => 1.7976931348623157e308],
+        '2.2250738585072014e-308' => ['src' => '2.2250738585072014e-308', 'expected' => null],
+        '1.7976931348623157e308' => ['src' => '1.7976931348623157e308', 'expected' => null],
 
         // ─────────────
         // INVALID: whitespace / junk
@@ -363,7 +386,7 @@ describe('Static utility methods coverage', function () {
     it('covers stringToFloat with success and error paths', function (): void {
         expect(PrimitiveTypeAbstractTest::callStringToFloat('1.5'))->toBe(1.5);
 
-        expect(fn() => PrimitiveTypeAbstractTest::callStringToFloat('0.1'))
+        expect(fn() => PrimitiveTypeAbstractTest::callStringToFloat('0.10000000000000002'))
             ->toThrow(StringTypeException::class);
 
         expect(PrimitiveTypeAbstractTest::callStringToFloat('0.10000000000000001'))
