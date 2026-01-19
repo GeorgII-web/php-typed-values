@@ -163,7 +163,7 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
      * @throws FloatTypeException
      * @throws StringTypeException
      */
-    protected static function floatToString(float $value, $roundTripConversion = true): string
+    protected static function floatToString(float $value, bool $roundTripConversion = true): string
     {
         // Convert to string as it stored in memory
         $strValue = sprintf('%.17f', $value);
@@ -253,7 +253,7 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
      * @throws StringTypeException
      * @throws FloatTypeException
      */
-    protected static function stringToFloat(string $value, $roundTripConversion = true): float
+    protected static function stringToFloat(string $value, bool $roundTripConversion = true): float
     {
         if (!is_numeric($value)) {
             throw new StringTypeException(sprintf('String "%s" has no valid float value', $value));

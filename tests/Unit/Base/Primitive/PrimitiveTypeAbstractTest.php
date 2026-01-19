@@ -23,9 +23,17 @@ readonly class PrimitiveTypeAbstractTest extends PrimitiveTypeAbstract
     {
     }
 
-    public static function callFloatToString(float $value, bool $roundTripConversion = true): string
+    public static function callFloatToString(float $value, ?bool $roundTripConversion = null): string
     {
-        return self::floatToString($value, $roundTripConversion);
+        if ($roundTripConversion === true) {
+            return self::floatToString($value, true);
+        }
+
+        if ($roundTripConversion === false) {
+            return self::floatToString($value, false);
+        }
+
+        return self::floatToString($value);
     }
 
     public static function callIntToFloat(int $value): float
@@ -38,9 +46,17 @@ readonly class PrimitiveTypeAbstractTest extends PrimitiveTypeAbstract
         return self::intToString($value);
     }
 
-    public static function callStringToFloat(string $value, bool $roundTripConversion = true): float
+    public static function callStringToFloat(string $value, ?bool $roundTripConversion = null): float
     {
-        return self::stringToFloat($value, $roundTripConversion);
+        if ($roundTripConversion === true) {
+            return self::stringToFloat($value, true);
+        }
+
+        if ($roundTripConversion === false) {
+            return self::stringToFloat($value, false);
+        }
+
+        return self::stringToFloat($value);
     }
 
     public function isEmpty(): bool
@@ -386,6 +402,9 @@ describe('Static utility methods coverage', function () {
     it('covers stringToFloat with success and error paths', function (): void {
         expect(PrimitiveTypeAbstractTest::callStringToFloat('1.5'))->toBe(1.5);
 
+        // Exercise the default value for $roundTripConversion
+        expect(PrimitiveTypeAbstractTest::callStringToFloat('1.5', null))->toBe(1.5);
+
         expect(fn() => PrimitiveTypeAbstractTest::callStringToFloat('0.100000000'))
             ->toThrow(StringTypeException::class);
 
@@ -399,5 +418,23 @@ describe('Static utility methods coverage', function () {
         $precisionLoss = '0.1234567890123456789';
         expect(fn() => PrimitiveTypeAbstractTest::callStringToFloat($precisionLoss))
             ->toThrow(StringTypeException::class);
+
+        // Exercise $roundTripConversion = false
+        expect(PrimitiveTypeAbstractTest::callStringToFloat('0.1', false))->toBe(0.1);
+
+        // Exercise explicit $roundTripConversion = true
+        expect(fn() => PrimitiveTypeAbstractTest::callStringToFloat('0.1', true))
+            ->toThrow(StringTypeException::class);
+    });
+
+    it('covers floatToString with roundTripConversion false', function (): void {
+        // Exercise $roundTripConversion = false
+        expect(PrimitiveTypeAbstractTest::callFloatToString(0.1, false))->toBe('0.10000000000000001');
+
+        // Exercise the default value for $roundTripConversion
+        expect(PrimitiveTypeAbstractTest::callFloatToString(0.1, null))->toBe('0.10000000000000001');
+
+        // Exercise explicit $roundTripConversion = true
+        expect(PrimitiveTypeAbstractTest::callFloatToString(0.1, true))->toBe('0.10000000000000001');
     });
 });
