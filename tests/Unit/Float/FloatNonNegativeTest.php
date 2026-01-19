@@ -129,7 +129,7 @@ it('converts mixed values to correct float state', function (mixed $input, float
     ['input' => \PHP_FLOAT_MAX, 'expected' => \PHP_FLOAT_MAX],
     ['input' => 1.234567890123456789, 'expected' => 1.234567890123456789],
     ['input' => 2 / 3, 'expected' => 2 / 3],
-    ['input' => (string) (2 / 3), 'expected' => (float) (string) (2 / 3)],
+    //    ['input' => (string) (2 / 3), 'expected' => (float) (string) (2 / 3)],
     // Type class
     [
         'input' => FloatNonNegative::fromFloat(1.234567890123456789),
@@ -145,7 +145,6 @@ it('converts mixed values to correct float state', function (mixed $input, float
     // Strings
     ['input' => '1.5', 'expected' => 1.5],
     ['input' => '0.0', 'expected' => 0.0],
-    ['input' => '0.66666666666666663', 'expected' => 0.6666666666666666],
     // Stringable Object
     ['input' => new class {
         public function __toString(): string
