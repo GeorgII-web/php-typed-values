@@ -4,6 +4,10 @@ namespace PhpTypedValues\Usage\Primitive;
 
 require_once 'vendor/autoload.php';
 
+use Exception;
+use PhpTypedValues\Base\Primitive\Float\FloatTypeAbstract;
+use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
+use PhpTypedValues\Exception\TypeException;
 use const INF;
 use const M_PI;
 use const NAN;
@@ -79,36 +83,82 @@ function testPositiveFloat(float $f): float
 
 echo ' -------------------------------------------------------------- ' . PHP_EOL;
 
-function stringToFloat(string $s): ?float
+
+readonly class ConversionTest extends PrimitiveTypeAbstract
 {
-    // reject any whitespace
-    if ($s !== trim($s)) {
-        return null;
+    public function __construct(private float $val) {}
+
+    public static function floatToStringTest(float $value, $roundTripConversion = true): string
+    {
+        return self::floatToString($value, $roundTripConversion);
     }
 
-    // strict DECIMAL float literal only (no exponent)
-    // rules:
-    // - optional leading "-"
-    // - NO leading "+"
-    // - must contain a decimal point
-    // - no trailing dot, no leading dot
-    // - no leading zeroes like 01.0
-    if (!preg_match(
-        '/^-?(?:0|[1-9]\d*)\.\d+$/',
-        $s
-    )) {
-        return null;
+    public static function stringToFloatTest(string $value, $roundTripConversion = true): float
+    {
+        return self::stringToFloat($value, $roundTripConversion);
     }
 
-    $f = (float) $s;
-
-    // reject NaN / INF explicitly
-    if (is_nan($f) || is_infinite($f)) {
-        return null;
+    public function isEmpty(): bool
+    {
+        return false;
     }
 
-    return $f;
+    public function isTypeOf(string ...$classNames): bool
+    {
+        return false;
+    }
+
+    public function isUndefined(): bool
+    {
+        return false;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return false;
+    }
+
+    public function toString(): string
+    {
+        return '';
+    }
+
+    public function value(): mixed
+    {
+        return false;
+    }
 }
+
+//function stringToFloat(string $s): ?float
+//{
+//    // reject any whitespace
+//    if ($s !== trim($s)) {
+//        return null;
+//    }
+//
+//    // strict DECIMAL float literal only (no exponent)
+//    // rules:
+//    // - optional leading "-"
+//    // - NO leading "+"
+//    // - must contain a decimal point
+//    // - no trailing dot, no leading dot
+//    // - no leading zeroes like 01.0
+//    if (!preg_match(
+//        '/^-?(?:0|[1-9]\d*)\.\d+$/',
+//        $s
+//    )) {
+//        return null;
+//    }
+//
+//    $f = (float) $s;
+//
+//    // reject NaN / INF explicitly
+//    if (is_nan($f) || is_infinite($f)) {
+//        return null;
+//    }
+//
+//    return $f;
+//}
 
 $tests = [
     // ─────────────
@@ -123,7 +173,7 @@ $tests = [
     // VALID: minimal floats
     // ─────────────
     '0.0' => 0.0,
-    '-0.0' => -0.0,
+    '-0.0' => null,
     '1.0' => 1.0,
     '-1.0' => -1.0,
 
@@ -153,11 +203,11 @@ $tests = [
     // ─────────────
     // VALID: lossy decimals
     // ─────────────
-    '0.1' => 0.1,
-    '0.2' => 0.2,
-    '0.3' => 0.3,
-    '0.15' => 0.15,
-    '0.3333333333333333' => 0.3333333333333333,
+    '0.1' => null,
+    '0.2' => null,
+    '0.3' => null,
+    '0.15' => null,
+    '0.3333333333333333' => null,
 
     // ─────────────
     // VALID: edge exact fractions
@@ -191,12 +241,12 @@ $tests = [
     // ─────────────
     // VALID: beyond integer precision (rounded by IEEE-754)
     // ─────────────
-    '9007199254740993.0' => 9007199254740992.0, // rounded to 2^53
+    '9007199254740993.0' => null, // rounded to 2^53
 
     // ─────────────
     // VALID: beyond float precision
     // ─────────────
-    '179769313486231000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000.0' => 179769313486231000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000.0,
+    '179769313486231000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000.0' => null,
 
     // ─────────────
     // INVALID: special values
@@ -252,7 +302,11 @@ printf(
 echo str_repeat('-', 115) . "\n";
 
 foreach ($tests as $src => $expected) {
-    $got = stringToFloat((string) $src);
+    try {
+        $got = ConversionTest::stringToFloatTest((string) $src);
+    } catch (Exception) {
+        $got = null;
+    }
 
     // EXPECTED columns
     $expMemory = ($expected === null)
@@ -291,116 +345,116 @@ foreach ($tests as $src => $expected) {
 
 echo ' -------------------------------------------------------------- ' . PHP_EOL;
 
-function floatToString(float $f): ?string
-{
-    // handle special values
-    if (is_nan($f) || is_infinite($f)) {
-        return null;
-    }
-
-    // canonical zero
-    if ($f == 0.0) {
-        return '0.0';
-    }
-
-    // preserve negative sign
-    $neg = ($f < 0);
-    $abs = abs($f);
-
-    // try %.17g first
-    $s = sprintf('%.17g', $abs);
-
-    // force no exponent: if 'e' found, expand manually
-    if (stripos($s, 'e') !== false) {
-        // separate mantissa and exponent
-        if (!preg_match('/([0-9.]+)[eE]([+-]?\d+)/', $s, $m)) {
-            return null; // shouldn't happen
-        }
-        $mant = $m[1];
-        $exp = (int) $m[2];
-
-        // split mantissa into integer and fraction
-        $parts = explode('.', $mant, 2);
-        $intPart = $parts[0];
-        $fracPart = $parts[1] ?? '';
-
-        if ($exp >= 0) {
-            // shift decimal to the right
-            $fracLen = strlen($fracPart);
-            if ($exp >= $fracLen) {
-                $fracPart .= str_repeat('0', $exp - $fracLen);
-                $s = $intPart . $fracPart . '.0';
-            } else {
-                $s = $intPart . substr($fracPart, 0, $exp) . '.' . substr($fracPart, $exp);
-            }
-        } else {
-            // shift decimal to the left
-            $s = '0.' . str_repeat('0', -$exp - strlen($intPart)) . $intPart . $fracPart;
-        }
-    } else {
-        // ensure .0 for integer-looking numbers
-        if (!str_contains($s, '.')) {
-            $s .= '.0';
-        }
-    }
-
-    return $neg ? "-{$s}" : $s;
-}
+//function floatToString(float $f): ?string
+//{
+//    // handle special values
+//    if (is_nan($f) || is_infinite($f)) {
+//        return null;
+//    }
+//
+//    // canonical zero
+//    if ($f == 0.0) {
+//        return '0.0';
+//    }
+//
+//    // preserve negative sign
+//    $neg = ($f < 0);
+//    $abs = abs($f);
+//
+//    // try %.17g first
+//    $s = sprintf('%.17g', $abs);
+//
+//    // force no exponent: if 'e' found, expand manually
+//    if (stripos($s, 'e') !== false) {
+//        // separate mantissa and exponent
+//        if (!preg_match('/([0-9.]+)[eE]([+-]?\d+)/', $s, $m)) {
+//            return null; // shouldn't happen
+//        }
+//        $mant = $m[1];
+//        $exp = (int) $m[2];
+//
+//        // split mantissa into integer and fraction
+//        $parts = explode('.', $mant, 2);
+//        $intPart = $parts[0];
+//        $fracPart = $parts[1] ?? '';
+//
+//        if ($exp >= 0) {
+//            // shift decimal to the right
+//            $fracLen = strlen($fracPart);
+//            if ($exp >= $fracLen) {
+//                $fracPart .= str_repeat('0', $exp - $fracLen);
+//                $s = $intPart . $fracPart . '.0';
+//            } else {
+//                $s = $intPart . substr($fracPart, 0, $exp) . '.' . substr($fracPart, $exp);
+//            }
+//        } else {
+//            // shift decimal to the left
+//            $s = '0.' . str_repeat('0', -$exp - strlen($intPart)) . $intPart . $fracPart;
+//        }
+//    } else {
+//        // ensure .0 for integer-looking numbers
+//        if (!str_contains($s, '.')) {
+//            $s .= '.0';
+//        }
+//    }
+//
+//    return $neg ? "-{$s}" : $s;
+//}
 
 $tests2 = [
     // ─────────────
     // ZEROES
     // ─────────────
-    ['src' => 0.0,    'expected' => '0.0'],
-    ['src' => -0.0,   'expected' => '0.0'],  // canonical zero
-    ['src' => +0.0,   'expected' => '0.0'],
+    ['src' => 0.0, 'expected' => '0.0'],
+    ['src' => -0.0, 'expected' => '0.0'],  // canonical zero
+    ['src' => +0.0, 'expected' => '0.0'],
 
     // ─────────────
     // SIMPLE INTEGERS
     // ─────────────
-    ['src' => 1.0,    'expected' => '1.0'],
-    ['src' => -1.0,   'expected' => '-1.0'],
-    ['src' => +1.0,   'expected' => '1.0'],
+    ['src' => 1.0, 'expected' => '1.0'],
+    ['src' => -1.0, 'expected' => '-1.0'],
+    ['src' => +1.0, 'expected' => '1.0'],
 
-    ['src' => 2.0,    'expected' => '2.0'],
-    ['src' => 10.0,   'expected' => '10.0'],
+    ['src' => 2.0, 'expected' => '2.0'],
+    ['src' => 10.0, 'expected' => '10.0'],
 
     // ─────────────
     // NORMAL DECIMALS
     // ─────────────
-    ['src' => 0.5,    'expected' => '0.5'],
-    ['src' => 0.25,   'expected' => '0.25'],
-    ['src' => 0.75,   'expected' => '0.75'],
-    ['src' => 1.5,    'expected' => '1.5'],
-    ['src' => 3.75,   'expected' => '3.75'],
-    ['src' => 0.1,    'expected' => '0.1'],
-    ['src' => 0.2,    'expected' => '0.20000000000000001'],
-    ['src' => 0.3,    'expected' => '0.29999999999999999'],
-    ['src' => 0.15,   'expected' => '0.14999999999999999'],
+    ['src' => 0.5, 'expected' => '0.5'],
+    ['src' => 0.25, 'expected' => '0.25'],
+    ['src' => 0.75, 'expected' => '0.75'],
+    ['src' => 1.5, 'expected' => '1.5'],
+    ['src' => 3.75, 'expected' => '3.75'],
+    ['src' => 0.1, 'expected' => '0.10000000000000001'],
+    ['src' => 0.2, 'expected' => '0.20000000000000001'],
+    ['src' => 0.3, 'expected' => '0.29999999999999999'],
+    ['src' => 0.15, 'expected' => '0.14999999999999999'],
     ['src' => 0.3333333333333333, 'expected' => '0.33333333333333331'],
 
     // ─────────────
     // LONG FLOATS (originally exponential)
     // ─────────────
-    ['src' => 1e10,     'expected' => '10000000000.0'],
-    ['src' => 1.0e10,   'expected' => '10000000000.0'],
-    ['src' => 1e16,     'expected' => '10000000000000000.0'],
-    ['src' => 5e-324,   'expected' => '0.0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000049406564584124654'],
-    ['src' => 1e-323,   'expected' => '0.0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000098813129168249309'],
-    ['src' => 0.11111111167890123456789111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111234567890,   'expected' => '0.11111111167890124'],
+    ['src' => 1e10, 'expected' => '10000000000.0'],
+    ['src' => 1.0e10, 'expected' => '10000000000.0'],
+    ['src' => 1e16, 'expected' => '10000000000000000.0'],
+    ['src' => 5e-324, 'expected' => null],
+    ['src' => 1e-323, 'expected' => null],
+    ['src' => 0.11111111167890123456789111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111234567890, 'expected' => '0.11111111167890124'],
 
     // ─────────────
     // FRACTIONS / IRRATIONALS
     // ─────────────
-    ['src' => 2 / 3,    'expected' => '0.66666666666666663'],
-    ['src' => M_PI,   'expected' => '3.1415926535897931'],
+    ['src' => 2 / 3, 'expected' => '0.66666666666666663'],
+    ['src' => M_PI, 'expected' => '3.14159265358979312'],
 
     // ─────────────
     // INVALID SPECIALS
     // ─────────────
-    ['src' => INF,    'expected' => null],
-    ['src' => -INF,   'expected' => null],
-    ['src' => NAN,    'expected' => null],
+    ['src' => INF, 'expected' => null],
+    ['src' => -INF, 'expected' => null],
+    ['src' => NAN, 'expected' => null],
 ];
 
 // Header
@@ -417,7 +471,11 @@ foreach ($tests2 as $row) {
     $src = $row['src'];
     $expected = $row['expected'];
 
-    $got = floatToString($src);
+    try {
+        $got = ConversionTest::floatToStringTest($src);
+    } catch (Exception) {
+        $got = null;
+    }
 
     // canonicalize null as string
     $expStr = ($expected === null) ? 'null' : $expected;

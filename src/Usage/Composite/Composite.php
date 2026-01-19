@@ -18,7 +18,7 @@ use PhpTypedValues\Usage\Example\WithArrays;
  */
 echo PHP_EOL . '> COMPOSITE' . PHP_EOL;
 
-$testEarly = EarlyFail::fromScalars(id: 1, firstName: 'Foobar', height: 170);
+$testEarly = EarlyFail::fromScalars(id: 1, firstName: 'Foobar', height: 170.0);
 echo $testEarly->getId()->toString() . PHP_EOL;
 echo $testEarly->getFirstName()->toString() . PHP_EOL;
 echo $testEarly->getHeight()->toString() . PHP_EOL;
