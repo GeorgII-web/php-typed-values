@@ -97,7 +97,7 @@ it('FloatPositive::fromString enforces numeric and positivity', function (): voi
 
     // Positivity
     expect(fn() => FloatPositive::fromString('0'))
-        ->toThrow(FloatTypeException::class, 'Expected positive float, got "0"');
+        ->toThrow(FloatTypeException::class, 'Expected positive float, got "0.0"');
 
     // Success path
     $v = FloatPositive::fromString('1.25');

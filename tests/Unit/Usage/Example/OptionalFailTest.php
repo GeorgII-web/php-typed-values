@@ -30,7 +30,7 @@ it('treats empty firstName as Undefined (late-fail semantics)', function (): voi
 
 it('fails early when height is negative', function (): void {
     expect(fn() => OptionalFail::fromScalars(id: 1, firstName: 'Foobar', height: -10.0))
-        ->toThrow(FloatTypeException::class, 'Expected positive float, got "-10"');
+        ->toThrow(FloatTypeException::class, 'Expected positive float, got "-10.0"');
 });
 
 it('accepts int/float/numeric-string heights and preserves string formatting via fromString casting', function (): void {

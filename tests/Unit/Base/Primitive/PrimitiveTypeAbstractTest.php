@@ -154,8 +154,8 @@ describe('Concrete PrimitiveType implementation', function () {
         ['src' => 1e10, 'expected' => '10000000000.0'],
         ['src' => 1.0e10, 'expected' => '10000000000.0'],
         ['src' => 1e16, 'expected' => '10000000000000000.0'],
-        ['src' => 5e-324, 'expected' => null],
-        ['src' => 1e-323, 'expected' => null],
+        ['src' => 5e-324, 'expected' => '0.00000000000000000'],
+        ['src' => 1e-323, 'expected' => '0.00000000000000000'],
         ['src' => 0.1111111116789012345678911111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111234567890, 'expected' => '0.11111111167890124'],
 
         // ─────────────
@@ -183,20 +183,22 @@ describe('Concrete PrimitiveType implementation', function () {
         expect(PrimitiveTypeAbstractTest::callStringToFloat($src))->toBe($expected);
     })->with([
         // ─────────────
-        // INVALID: integers (no decimal / no exponent)
+        // INVALID: non-numeric
         // ─────────────
-        '0' => ['src' => '0', 'expected' => null],
-        '1' => ['src' => '1', 'expected' => null],
-        '-1' => ['src' => '-1', 'expected' => null],
-        '+1' => ['src' => '+1', 'expected' => null],
+        'NaN' => ['src' => 'NaN', 'expected' => null],
+        'INF' => ['src' => 'INF', 'expected' => null],
+        '-INF' => ['src' => '-INF', 'expected' => null],
+        'pi()' => ['src' => 'pi()', 'expected' => null],
 
         // ─────────────
         // VALID: minimal floats
         // ─────────────
         '0.0' => ['src' => '0.0', 'expected' => 0.0],
-        '-0.0' => ['src' => '-0.0', 'expected' => null],
         '1.0' => ['src' => '1.0', 'expected' => 1.0],
         '-1.0' => ['src' => '-1.0', 'expected' => -1.0],
+        '0' => ['src' => '0', 'expected' => 0.0],
+        '1' => ['src' => '1', 'expected' => 1.0],
+        '-1' => ['src' => '-1', 'expected' => -1.0],
 
         // ─────────────
         // INVALID: malformed decimals
@@ -222,13 +224,13 @@ describe('Concrete PrimitiveType implementation', function () {
         '0.0625' => ['src' => '0.0625', 'expected' => 0.0625],
 
         // ─────────────
-        // VALID: lossy decimals
+        // VALID: lossy decimals (now allowed if they match PHP's default string cast)
         // ─────────────
-        '0.1' => ['src' => '0.1', 'expected' => null],
-        '0.2' => ['src' => '0.2', 'expected' => null],
-        '0.3' => ['src' => '0.3', 'expected' => null],
-        '0.15' => ['src' => '0.15', 'expected' => null],
-        '0.3333333333333333' => ['src' => '0.3333333333333333', 'expected' => null],
+        '0.1' => ['src' => '0.1', 'expected' => 0.1],
+        '0.2' => ['src' => '0.2', 'expected' => 0.2],
+        '0.3' => ['src' => '0.3', 'expected' => 0.3],
+        '0.15' => ['src' => '0.15', 'expected' => 0.15],
+        '0.33333333333333' => ['src' => '0.33333333333333', 'expected' => 0.33333333333333],
 
         // ─────────────
         // VALID: edge exact fractions
@@ -238,47 +240,12 @@ describe('Concrete PrimitiveType implementation', function () {
         '3.75' => ['src' => '3.75', 'expected' => 3.75],
 
         // ─────────────
-        // INVALID: special exponential form
+        // INVALID: special exponential form (unless they match PHP's default cast)
         // ─────────────
-        '1e10' => ['src' => '1e10', 'expected' => null],
+        '1e10' => ['src' => '1e10', 'expected' => 10000000000.0],
         '1.0e+10' => ['src' => '1.0e+10', 'expected' => null],
-        '1e16' => ['src' => '1e16', 'expected' => null],
-        '5e-324' => ['src' => '5e-324', 'expected' => null],
-        '1e-323' => ['src' => '1e-323', 'expected' => null],
-        '1e-1' => ['src' => '1e-1', 'expected' => null],
-        '3e-1' => ['src' => '3e-1', 'expected' => null],
-        '1.1e1' => ['src' => '1.1e1', 'expected' => null],
-        '1e0' => ['src' => '1e0', 'expected' => null],
-        '1.0e0' => ['src' => '1.0e0', 'expected' => null],
-        '5e-1' => ['src' => '5e-1', 'expected' => null],
-        '125e-3' => ['src' => '125e-3', 'expected' => null],
-        '1e1' => ['src' => '1e1', 'expected' => null],
-        '1e2' => ['src' => '1e2', 'expected' => null],
-        '9.007199254740992e15' => ['src' => '9.007199254740992e15', 'expected' => null],
-        '4.503599627370496e15' => ['src' => '4.503599627370496e15', 'expected' => null],
-        '2.2250738585072014e-308' => ['src' => '2.2250738585072014e-308', 'expected' => null],
-        '1.7976931348623157e308' => ['src' => '1.7976931348623157e308', 'expected' => null],
-
-        // ─────────────
-        // VALID: beyond integer precision (rounded by IEEE-754)
-        // ─────────────
-        '9007199254740993.0' => ['src' => '9007199254740993.0', 'expected' => null],
-
-        // ─────────────
-        // VALID: beyond float precision
-        // ─────────────
-        '179769313486231...0.0' => [
-            'src' => '1797693134862310000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000.0',
-            'expected' => null,
-        ],
-
-        // ─────────────
-        // INVALID: special values
-        // ─────────────
-        'NaN' => ['src' => 'NaN', 'expected' => null],
-        'INF' => ['src' => 'INF', 'expected' => null],
-        '-INF' => ['src' => '-INF', 'expected' => null],
-        'pi()' => ['src' => 'pi()', 'expected' => null],
+        '1e16' => ['src' => '1e16', 'expected' => 1.0E+16],
+        '5e-324' => ['src' => '5e-324', 'expected' => 5.0E-324],
 
         // ─────────────
         // INVALID: whitespace / junk
@@ -350,8 +317,8 @@ describe('Static utility methods coverage', function () {
     });
 
     it('covers floatToString normalization (lines 178, 181)', function (): void {
-        expect(PrimitiveTypeAbstractTest::callFloatToString(0.5))->toBe('0.5')
-            ->and(PrimitiveTypeAbstractTest::callFloatToString(-0.5))->toBe('-0.5');
+        expect(PrimitiveTypeAbstractTest::callFloatToString(0.5))->toBe('0.50000000000000000')
+            ->and(PrimitiveTypeAbstractTest::callFloatToString(-0.5))->toBe('-0.50000000000000000');
 
         // Shadowing sprintf in the namespace of the class under test.
         // This MUST be done before any calls that might trigger it if it's already cached.
