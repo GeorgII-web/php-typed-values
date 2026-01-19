@@ -161,6 +161,7 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
      * @return non-empty-string
      *
      * @throws FloatTypeException
+     * @throws StringTypeException
      */
     protected static function floatToString(float $value, $roundTripConversion = true): string
     {
@@ -173,10 +174,8 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
             $strValue .= '0';
         }
 
-        if ($roundTripConversion) {
-            if ($value !== self::stringToFloat($strValue, false)) {
-                throw new FloatTypeException(sprintf('Float "%s" has no valid strict string value', $value));
-            }
+        if ($roundTripConversion && $value !== self::stringToFloat($strValue, false)) {
+            throw new FloatTypeException(sprintf('Float "%s" has no valid strict string value', $value));
         }
 
         /**
@@ -252,6 +251,7 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
      * @psalm-pure
      *
      * @throws StringTypeException
+     * @throws FloatTypeException
      */
     protected static function stringToFloat(string $value, $roundTripConversion = true): float
     {
@@ -266,23 +266,9 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
         $normalized = self::floatToString($floatValue, false);
 
         // Numerical stability check (catches precision loss)
-        if ($roundTripConversion) {
-            if ($normalized !== $value) {
-                throw new StringTypeException(sprintf('String "%s" has no valid strict float value', $value));
-            }
+        if ($roundTripConversion && $normalized !== $value) {
+            throw new StringTypeException(sprintf('String "%s" has no valid strict float value', $value));
         }
-
-        // If it's a "clean" float string, PHP's "(string)(float)" cast usually matches
-        // the input, UNLESS the input has trailing .0 (like "5.0").
-        // If we want to be very strict and reject "0005"
-        //        if (
-        //            $value !== '0'
-        //            && $value !== $normalized
-        //            && $value !== $normalized . '.0'
-        //        ) {
-        //            var_dump($normalized);
-        //            throw new StringTypeException(sprintf('String "%s" has no valid strict float formatting (leading zeros or redundant characters)', $value));
-        //        }
 
         return $floatValue;
     }
