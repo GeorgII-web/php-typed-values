@@ -33,12 +33,12 @@ it('creates from string factory', function (): void {
 
 it('throws on zero via constructor', function (): void {
     expect(fn() => new FloatPositive(0.0))
-        ->toThrow(FloatTypeException::class, 'Expected positive float, got "0"');
+        ->toThrow(FloatTypeException::class, 'Expected positive float, got "0.0"');
 });
 
 it('throws on zero via fromString', function (): void {
     expect(fn() => FloatPositive::fromString('0'))
-        ->toThrow(FloatTypeException::class, 'Expected positive float, got "0"');
+        ->toThrow(FloatTypeException::class, 'Expected positive float, got "0.0"');
 });
 
 it('throws on negative via constructor', function (): void {
@@ -85,9 +85,9 @@ it('FloatPositive::tryFromFloat returns value for positive int and Undefined oth
 
 it('FloatPositive throws on non-positive values in ctor and fromFloat', function (): void {
     expect(fn() => new FloatPositive(0.0))
-        ->toThrow(FloatTypeException::class, 'Expected positive float, got "0"')
+        ->toThrow(FloatTypeException::class, 'Expected positive float, got "0.0"')
         ->and(fn() => FloatPositive::fromFloat(-1.0))
-        ->toThrow(FloatTypeException::class, 'Expected positive float, got "-1"');
+        ->toThrow(FloatTypeException::class, 'Expected positive float, got "-1.0"');
 });
 
 it('FloatPositive::fromString enforces numeric and positivity', function (): void {

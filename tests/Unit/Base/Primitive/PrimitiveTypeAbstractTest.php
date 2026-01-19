@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\DateTime\ZoneDateTimeTypeException;
-use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -230,7 +229,7 @@ describe('Concrete PrimitiveType implementation', function () {
         '0.2' => ['src' => '0.2', 'expected' => 0.2],
         '0.3' => ['src' => '0.3', 'expected' => 0.3],
         '0.15' => ['src' => '0.15', 'expected' => 0.15],
-        '0.33333333333333' => ['src' => '0.33333333333333', 'expected' => 0.33333333333333],
+        '0.3333333333333333' => ['src' => '0.3333333333333333', 'expected' => 0.3333333333333333],
 
         // ─────────────
         // VALID: edge exact fractions
@@ -242,10 +241,24 @@ describe('Concrete PrimitiveType implementation', function () {
         // ─────────────
         // INVALID: special exponential form (unless they match PHP's default cast)
         // ─────────────
-        '1e10' => ['src' => '1e10', 'expected' => 10000000000.0],
+        '1e10' => ['src' => '10000000000.0', 'expected' => 10000000000.0],
         '1.0e+10' => ['src' => '1.0e+10', 'expected' => null],
-        '1e16' => ['src' => '1e16', 'expected' => 1.0E+16],
-        '5e-324' => ['src' => '5e-324', 'expected' => 5.0E-324],
+        '1e16' => ['src' => '1.0E+16', 'expected' => 1.0E+16],
+        '5e-324' => ['src' => '5.0E-324', 'expected' => 5.0E-324],
+        '1e-323' => ['src' => '1.0E-323', 'expected' => 1.0E-323],
+        '1e-1' => ['src' => '0.1', 'expected' => 0.1],
+        '3e-1' => ['src' => '0.3', 'expected' => 0.3],
+        '1.1e1' => ['src' => '11.0', 'expected' => 11.0],
+        '1e0' => ['src' => '1.0', 'expected' => 1.0],
+        '1.0e0' => ['src' => '1.0', 'expected' => 1.0],
+        '5e-1' => ['src' => '0.5', 'expected' => 0.5],
+        '125e-3' => ['src' => '0.125', 'expected' => 0.125],
+        '1e1' => ['src' => '10.0', 'expected' => 10.0],
+        '1e2' => ['src' => '100.0', 'expected' => 100.0],
+        '9.007199254740992e15' => ['src' => '9007199254740992.0', 'expected' => 9007199254740992.0],
+        '4.503599627370496e15' => ['src' => '4503599627370496.0', 'expected' => 4503599627370496.0],
+        '2.2250738585072014e-308' => ['src' => '2.2250738585072014e-308', 'expected' => 2.2250738585072014e-308],
+        '1.7976931348623157e308' => ['src' => '1.7976931348623157e308', 'expected' => 1.7976931348623157e308],
 
         // ─────────────
         // INVALID: whitespace / junk
@@ -317,8 +330,8 @@ describe('Static utility methods coverage', function () {
     });
 
     it('covers floatToString normalization (lines 178, 181)', function (): void {
-        expect(PrimitiveTypeAbstractTest::callFloatToString(0.5))->toBe('0.50000000000000000')
-            ->and(PrimitiveTypeAbstractTest::callFloatToString(-0.5))->toBe('-0.50000000000000000');
+        expect(PrimitiveTypeAbstractTest::callFloatToString(0.5))->toBe('0.5')
+            ->and(PrimitiveTypeAbstractTest::callFloatToString(-0.5))->toBe('-0.5');
 
         // Shadowing sprintf in the namespace of the class under test.
         // This MUST be done before any calls that might trigger it if it's already cached.

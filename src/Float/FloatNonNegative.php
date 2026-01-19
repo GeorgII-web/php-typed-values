@@ -42,7 +42,7 @@ readonly class FloatNonNegative extends FloatTypeAbstract
     public function __construct(float $value)
     {
         if ($value < 0.0) {
-            throw new FloatTypeException(sprintf('Expected non-negative float, got "%s"', $value));
+            throw new FloatTypeException(sprintf('Expected non-negative float, got "%s"', self::floatToString($value, false)));
         }
 
         if (is_infinite($value)) {

@@ -78,9 +78,7 @@ final readonly class WithArrays implements JsonSerializable
         return new self(
             IntegerPositive::fromInt($id), // Early fail
             StringNonEmpty::tryFromMixed($firstName), // Late fail
-            $height !== null
-                ? FloatPositive::tryFromMixed($height) // Early fail for not NULL
-                : Undefined::create(), // Late fail for NULL
+            FloatPositive::tryFromMixed($height), // Late fail
             ArrayOfObjects::fromItems(...$nickNamesObjects)
         );
     }
