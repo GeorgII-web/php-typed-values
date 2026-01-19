@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\DateTime\ZoneDateTimeTypeException;
+use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -22,9 +23,9 @@ readonly class PrimitiveTypeAbstractTest extends PrimitiveTypeAbstract
     {
     }
 
-    public static function callFloatToString(float $value): string
+    public static function callFloatToString(float $value, bool $roundTripConversion = true): string
     {
-        return self::floatToString($value);
+        return self::floatToString($value, $roundTripConversion);
     }
 
     public static function callIntToFloat(int $value): float
@@ -37,9 +38,9 @@ readonly class PrimitiveTypeAbstractTest extends PrimitiveTypeAbstract
         return self::intToString($value);
     }
 
-    public static function callStringToFloat(string $value): float
+    public static function callStringToFloat(string $value, bool $roundTripConversion = true): float
     {
-        return self::stringToFloat($value);
+        return self::stringToFloat($value, $roundTripConversion);
     }
 
     public function isEmpty(): bool
@@ -105,6 +106,188 @@ describe('Concrete PrimitiveType implementation', function () {
         expect($undefined->isUndefined())->toBeTrue()
             ->and($defined->isUndefined())->toBeFalse();
     });
+
+    it('floatToString method converts float to string correctly', function (float $src, ?string $expected) {
+        if ($expected === null) {
+            expect(fn() => PrimitiveTypeAbstractTest::callFloatToString($src))
+                ->toThrow(FloatTypeException::class);
+
+            return;
+        }
+
+        expect(PrimitiveTypeAbstractTest::callFloatToString($src))->toBe($expected);
+    })->with([
+        // ─────────────
+        // ZEROES
+        // ─────────────
+        ['src' => 0.0, 'expected' => '0.0'],
+        ['src' => -0.0, 'expected' => '0.0'],  // canonical zero
+        ['src' => +0.0, 'expected' => '0.0'],
+
+        // ─────────────
+        // SIMPLE INTEGERS
+        // ─────────────
+        ['src' => 1.0, 'expected' => '1.0'],
+        ['src' => -1.0, 'expected' => '-1.0'],
+        ['src' => +1.0, 'expected' => '1.0'],
+
+        ['src' => 2.0, 'expected' => '2.0'],
+        ['src' => 10.0, 'expected' => '10.0'],
+
+        // ─────────────
+        // NORMAL DECIMALS
+        // ─────────────
+        ['src' => 0.5, 'expected' => '0.5'],
+        ['src' => 0.25, 'expected' => '0.25'],
+        ['src' => 0.75, 'expected' => '0.75'],
+        ['src' => 1.5, 'expected' => '1.5'],
+        ['src' => 3.75, 'expected' => '3.75'],
+        ['src' => 0.1, 'expected' => '0.10000000000000001'],
+        ['src' => 0.2, 'expected' => '0.20000000000000001'],
+        ['src' => 0.3, 'expected' => '0.29999999999999999'],
+        ['src' => 0.15, 'expected' => '0.14999999999999999'],
+        ['src' => 0.3333333333333333, 'expected' => '0.33333333333333331'],
+
+        // ─────────────
+        // LONG FLOATS (originally exponential)
+        // ─────────────
+        ['src' => 1e10, 'expected' => '10000000000.0'],
+        ['src' => 1.0e10, 'expected' => '10000000000.0'],
+        ['src' => 1e16, 'expected' => '10000000000000000.0'],
+        ['src' => 5e-324, 'expected' => null],
+        ['src' => 1e-323, 'expected' => null],
+        ['src' => 0.1111111116789012345678911111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111234567890, 'expected' => '0.11111111167890124'],
+
+        // ─────────────
+        // FRACTIONS / IRRATIONALS
+        // ─────────────
+        ['src' => 2 / 3, 'expected' => '0.66666666666666663'],
+        ['src' => \M_PI, 'expected' => '3.14159265358979312'],
+
+        // ─────────────
+        // INVALID SPECIALS
+        // ─────────────
+        ['src' => \INF, 'expected' => null],
+        ['src' => -\INF, 'expected' => null],
+        ['src' => \NAN, 'expected' => null],
+    ]);
+
+    it('stringToFloat method converts string to float correctly', function (string $src, ?float $expected) {
+        if ($expected === null) {
+            expect(fn() => PrimitiveTypeAbstractTest::callStringToFloat($src))
+                ->toThrow(StringTypeException::class);
+
+            return;
+        }
+
+        expect(PrimitiveTypeAbstractTest::callStringToFloat($src))->toBe($expected);
+    })->with([
+        // ─────────────
+        // INVALID: integers (no decimal / no exponent)
+        // ─────────────
+        '0' => ['src' => '0', 'expected' => null],
+        '1' => ['src' => '1', 'expected' => null],
+        '-1' => ['src' => '-1', 'expected' => null],
+        '+1' => ['src' => '+1', 'expected' => null],
+
+        // ─────────────
+        // VALID: minimal floats
+        // ─────────────
+        '0.0' => ['src' => '0.0', 'expected' => 0.0],
+        '-0.0' => ['src' => '-0.0', 'expected' => null],
+        '1.0' => ['src' => '1.0', 'expected' => 1.0],
+        '-1.0' => ['src' => '-1.0', 'expected' => -1.0],
+
+        // ─────────────
+        // INVALID: malformed decimals
+        // ─────────────
+        '+0.0' => ['src' => '+0.0', 'expected' => null],
+        '.' => ['src' => '.', 'expected' => null],
+        '.0' => ['src' => '.0', 'expected' => null],
+        '0.' => ['src' => '0.', 'expected' => null],
+        '+.0' => ['src' => '+.0', 'expected' => null],
+        '1.' => ['src' => '1.', 'expected' => null],
+        '00.0' => ['src' => '00.0', 'expected' => null],
+        '01.0' => ['src' => '01.0', 'expected' => null],
+
+        // ─────────────
+        // VALID: normal decimals (exact)
+        // ─────────────
+        '2.0' => ['src' => '2.0', 'expected' => 2.0],
+        '10.5' => ['src' => '10.5', 'expected' => 10.5],
+        '-10.5' => ['src' => '-10.5', 'expected' => -10.5],
+        '0.25' => ['src' => '0.25', 'expected' => 0.25],
+        '0.5' => ['src' => '0.5', 'expected' => 0.5],
+        '0.125' => ['src' => '0.125', 'expected' => 0.125],
+        '0.0625' => ['src' => '0.0625', 'expected' => 0.0625],
+
+        // ─────────────
+        // VALID: lossy decimals
+        // ─────────────
+        '0.1' => ['src' => '0.1', 'expected' => null],
+        '0.2' => ['src' => '0.2', 'expected' => null],
+        '0.3' => ['src' => '0.3', 'expected' => null],
+        '0.15' => ['src' => '0.15', 'expected' => null],
+        '0.3333333333333333' => ['src' => '0.3333333333333333', 'expected' => null],
+
+        // ─────────────
+        // VALID: edge exact fractions
+        // ─────────────
+        '0.75' => ['src' => '0.75', 'expected' => 0.75],
+        '1.5' => ['src' => '1.5', 'expected' => 1.5],
+        '3.75' => ['src' => '3.75', 'expected' => 3.75],
+
+        // ─────────────
+        // INVALID: special exponential form
+        // ─────────────
+        '1e10' => ['src' => '1e10', 'expected' => null],
+        '1.0e+10' => ['src' => '1.0e+10', 'expected' => null],
+        '1e16' => ['src' => '1e16', 'expected' => null],
+        '5e-324' => ['src' => '5e-324', 'expected' => null],
+        '1e-323' => ['src' => '1e-323', 'expected' => null],
+        '1e-1' => ['src' => '1e-1', 'expected' => null],
+        '3e-1' => ['src' => '3e-1', 'expected' => null],
+        '1.1e1' => ['src' => '1.1e1', 'expected' => null],
+        '1e0' => ['src' => '1e0', 'expected' => null],
+        '1.0e0' => ['src' => '1.0e0', 'expected' => null],
+        '5e-1' => ['src' => '5e-1', 'expected' => null],
+        '125e-3' => ['src' => '125e-3', 'expected' => null],
+        '1e1' => ['src' => '1e1', 'expected' => null],
+        '1e2' => ['src' => '1e2', 'expected' => null],
+        '9.007199254740992e15' => ['src' => '9.007199254740992e15', 'expected' => null],
+        '4.503599627370496e15' => ['src' => '4.503599627370496e15', 'expected' => null],
+        '2.2250738585072014e-308' => ['src' => '2.2250738585072014e-308', 'expected' => null],
+        '1.7976931348623157e308' => ['src' => '1.7976931348623157e308', 'expected' => null],
+
+        // ─────────────
+        // VALID: beyond integer precision (rounded by IEEE-754)
+        // ─────────────
+        '9007199254740993.0' => ['src' => '9007199254740993.0', 'expected' => null],
+
+        // ─────────────
+        // VALID: beyond float precision
+        // ─────────────
+        '179769313486231...0.0' => [
+            'src' => '1797693134862310000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000.0',
+            'expected' => null,
+        ],
+
+        // ─────────────
+        // INVALID: special values
+        // ─────────────
+        'NaN' => ['src' => 'NaN', 'expected' => null],
+        'INF' => ['src' => 'INF', 'expected' => null],
+        '-INF' => ['src' => '-INF', 'expected' => null],
+        'pi()' => ['src' => 'pi()', 'expected' => null],
+
+        // ─────────────
+        // INVALID: whitespace / junk
+        // ─────────────
+        ' 1.0' => ['src' => ' 1.0', 'expected' => null],
+        '1.0 ' => ['src' => '1.0 ', 'expected' => null],
+        "1.0\n" => ['src' => "1.0\n", 'expected' => null],
+        '1.0foo' => ['src' => '1.0foo', 'expected' => null],
+    ]);
 
     it('toString method returns string representation', function ($value, $expected) {
         $primitive = new PrimitiveTypeAbstractTest($value);

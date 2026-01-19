@@ -1,86 +1,87 @@
 <?php
 
-namespace PhpTypedValues\Usage\Primitive;
-
-require_once 'vendor/autoload.php';
-
-use const JSON_THROW_ON_ERROR;
-use const PHP_EOL;
-
-use PhpTypedValues\ArrayType\ArrayEmpty;
-use PhpTypedValues\ArrayType\ArrayNonEmpty;
-use PhpTypedValues\ArrayType\ArrayOfObjects;
-use PhpTypedValues\ArrayType\ArrayUndefined;
-use PhpTypedValues\Bool\Alias\BooleanType;
-use PhpTypedValues\Exception\ArrayType\ArrayTypeException;
-use PhpTypedValues\Exception\ArrayType\ArrayUndefinedTypeException;
-use PhpTypedValues\Integer\IntegerNonNegative;
-use PhpTypedValues\Integer\IntegerStandard;
-use PhpTypedValues\String\Alias\NonEmpty;
-use PhpTypedValues\Undefined\Alias\Undefined;
-use PhpTypedValues\Usage\Example\OptionalFail;
-
-/**
- * Array.
- */
-echo PHP_EOL . '> ARRAY' . PHP_EOL;
-
-try {
-    throw new ArrayTypeException('Array type exception occurred');
-} catch (ArrayTypeException) {
-    // suppress
-}
-
-// Defined items
-$collection = ArrayOfObjects::fromArray(
-    [
-        IntegerNonNegative::fromInt(1), // Primitive
-        OptionalFail::fromScalars(id: 1, firstName: 'Foobar', height: 170), // value object
-    ],
-);
-echo json_encode($collection->toArray(), JSON_THROW_ON_ERROR) . PHP_EOL;
-echo $collection->count() . PHP_EOL;
-echo BooleanType::fromBool($collection->hasUndefined())->toString() . PHP_EOL;
-echo BooleanType::fromBool($collection->isEmpty())->toString() . PHP_EOL;
-echo BooleanType::fromBool($collection->isUndefined())->toString() . PHP_EOL;
-
-foreach ($collection->value() as $item) {
-    if (!$item instanceof Undefined) {
-        echo json_encode($item->jsonSerialize(), JSON_THROW_ON_ERROR) . PHP_EOL;
-    } else {
-        echo 'Undefined' . PHP_EOL;
-    }
-}
-
-$collection = ArrayOfObjects::tryFromArray([1, 2, 3]);
-echo $collection->isUndefined() ? 'Undefined array' . PHP_EOL : 'ERROR' . PHP_EOL;
-
-echo ArrayUndefined::create()->isUndefined() ? 'Undefined array' . PHP_EOL : 'ERROR' . PHP_EOL;
-
-echo ArrayEmpty::fromArray([])->isTypeOf(ArrayEmpty::class) ? 'Type correct' . PHP_EOL : 'Invalid type' . PHP_EOL;
-echo ArrayNonEmpty::fromArray([1])->isTypeOf(ArrayNonEmpty::class) ? 'Type correct' . PHP_EOL : 'Invalid type' . PHP_EOL;
-echo ArrayOfObjects::fromArray([IntegerStandard::fromString('1')])->isTypeOf(ArrayOfObjects::class) ? 'Type correct' . PHP_EOL : 'Invalid type' . PHP_EOL;
-echo ArrayUndefined::create()->isTypeOf(ArrayUndefined::class) ? 'Type correct' . PHP_EOL : 'Invalid type' . PHP_EOL;
-
-try {
-    ArrayUndefined::create()->getDefinedItems();
-} catch (ArrayUndefinedTypeException) {
-    // suppress
-}
-
-try {
-    ArrayUndefined::create()->toInt();
-} catch (ArrayUndefinedTypeException) {
-    // suppress
-}
-
-try {
-    ArrayUndefined::create()->toFloat();
-} catch (ArrayUndefinedTypeException) {
-    // suppress
-}
-
-echo (ArrayOfObjects::tryFromArray(
-    [1, 2],
-    ArrayOfObjects::tryFromArray([NonEmpty::fromString('One typed item in array as fallback')])
-)->isUndefined() ? 'Error' : 'ArrayOfObjects fallback: yes') . PHP_EOL;
+//
+// namespace PhpTypedValues\Usage\Primitive;
+//
+// require_once 'vendor/autoload.php';
+//
+// use const JSON_THROW_ON_ERROR;
+// use const PHP_EOL;
+//
+// use PhpTypedValues\ArrayType\ArrayEmpty;
+// use PhpTypedValues\ArrayType\ArrayNonEmpty;
+// use PhpTypedValues\ArrayType\ArrayOfObjects;
+// use PhpTypedValues\ArrayType\ArrayUndefined;
+// use PhpTypedValues\Bool\Alias\BooleanType;
+// use PhpTypedValues\Exception\ArrayType\ArrayTypeException;
+// use PhpTypedValues\Exception\ArrayType\ArrayUndefinedTypeException;
+// use PhpTypedValues\Integer\IntegerNonNegative;
+// use PhpTypedValues\Integer\IntegerStandard;
+// use PhpTypedValues\String\Alias\NonEmpty;
+// use PhpTypedValues\Undefined\Alias\Undefined;
+// use PhpTypedValues\Usage\Example\OptionalFail;
+//
+// /**
+// * Array.
+// */
+// echo PHP_EOL . '> ARRAY' . PHP_EOL;
+//
+// try {
+//    throw new ArrayTypeException('Array type exception occurred');
+// } catch (ArrayTypeException) {
+//    // suppress
+// }
+//
+// // Defined items
+// $collection = ArrayOfObjects::fromArray(
+//    [
+//        IntegerNonNegative::fromInt(1), // Primitive
+//        OptionalFail::fromScalars(id: 1, firstName: 'Foobar', height: 170), // value object
+//    ],
+// );
+// echo json_encode($collection->toArray(), JSON_THROW_ON_ERROR) . PHP_EOL;
+// echo $collection->count() . PHP_EOL;
+// //echo BooleanType::fromBool($collection->hasUndefined())->toString() . PHP_EOL;
+// echo BooleanType::fromBool($collection->isEmpty())->toString() . PHP_EOL;
+// echo BooleanType::fromBool($collection->isUndefined())->toString() . PHP_EOL;
+//
+// foreach ($collection->value() as $item) {
+//    if (!$item instanceof Undefined) {
+//        echo json_encode($item->jsonSerialize(), JSON_THROW_ON_ERROR) . PHP_EOL;
+//    } else {
+//        echo 'Undefined' . PHP_EOL;
+//    }
+// }
+//
+// $collection = ArrayOfObjects::tryFromArray([1, 2, 3]);
+// echo $collection->isUndefined() ? 'Undefined array' . PHP_EOL : 'ERROR' . PHP_EOL;
+//
+// echo ArrayUndefined::create()->isUndefined() ? 'Undefined array' . PHP_EOL : 'ERROR' . PHP_EOL;
+//
+// echo ArrayEmpty::fromArray([])->isTypeOf(ArrayEmpty::class) ? 'Type correct' . PHP_EOL : 'Invalid type' . PHP_EOL;
+// echo ArrayNonEmpty::fromArray([1])->isTypeOf(ArrayNonEmpty::class) ? 'Type correct' . PHP_EOL : 'Invalid type' . PHP_EOL;
+// echo ArrayOfObjects::fromArray([IntegerStandard::fromString('1')])->isTypeOf(ArrayOfObjects::class) ? 'Type correct' . PHP_EOL : 'Invalid type' . PHP_EOL;
+// echo ArrayUndefined::create()->isTypeOf(ArrayUndefined::class) ? 'Type correct' . PHP_EOL : 'Invalid type' . PHP_EOL;
+//
+// try {
+//    ArrayUndefined::create()->getDefinedItems();
+// } catch (ArrayUndefinedTypeException) {
+//    // suppress
+// }
+//
+// try {
+//    ArrayUndefined::create()->toInt();
+// } catch (ArrayUndefinedTypeException) {
+//    // suppress
+// }
+//
+// try {
+//    ArrayUndefined::create()->toFloat();
+// } catch (ArrayUndefinedTypeException) {
+//    // suppress
+// }
+//
+// echo (ArrayOfObjects::tryFromArray(
+//    [1, 2],
+//    ArrayOfObjects::tryFromArray([NonEmpty::fromString('One typed item in array as fallback')])
+// )->isUndefined() ? 'Error' : 'ArrayOfObjects fallback: yes') . PHP_EOL;

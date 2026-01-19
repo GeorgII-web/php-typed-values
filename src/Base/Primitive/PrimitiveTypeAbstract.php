@@ -275,14 +275,14 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
         // If it's a "clean" float string, PHP's "(string)(float)" cast usually matches
         // the input, UNLESS the input has trailing .0 (like "5.0").
         // If we want to be very strict and reject "0005"
-//        if (
-//            $value !== '0'
-//            && $value !== $normalized
-//            && $value !== $normalized . '.0'
-//        ) {
-//            var_dump($normalized);
-//            throw new StringTypeException(sprintf('String "%s" has no valid strict float formatting (leading zeros or redundant characters)', $value));
-//        }
+        //        if (
+        //            $value !== '0'
+        //            && $value !== $normalized
+        //            && $value !== $normalized . '.0'
+        //        ) {
+        //            var_dump($normalized);
+        //            throw new StringTypeException(sprintf('String "%s" has no valid strict float formatting (leading zeros or redundant characters)', $value));
+        //        }
 
         return $floatValue;
     }
