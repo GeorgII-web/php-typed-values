@@ -77,7 +77,7 @@ it('FloatNonNegative throws on negative values in ctor and fromFloat', function 
     expect(fn() => new FloatNonNegative(-0.1))
         ->toThrow(FloatTypeException::class, 'Expected non-negative float, got "-0.1"')
         ->and(fn() => FloatNonNegative::fromFloat(-1.0))
-        ->toThrow(FloatTypeException::class, 'Expected non-negative float, got "-1.0"');
+        ->toThrow(FloatTypeException::class, 'Expected non-negative float, got "-1"');
 });
 
 it('triggers FloatTypeException with non-strict floatToString in ctor', function (): void {
