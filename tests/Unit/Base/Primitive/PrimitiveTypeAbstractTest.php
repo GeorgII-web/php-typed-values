@@ -364,8 +364,12 @@ describe('Equality and comparison', function () {
 
 describe('Static utility methods coverage', function () {
     it('covers stringToDateTimeZone exception (lines 75-76)', function (): void {
-        expect(fn() => PrimitiveTypeAbstractTest::stringToDateTimeZone('Invalid/Timezone'))
-            ->toThrow(ZoneDateTimeTypeException::class);
+        try {
+            PrimitiveTypeAbstractTest::stringToDateTimeZone('Invalid/Timezone');
+            $this->fail('Expected ZoneDateTimeTypeException was not thrown');
+        } catch (ZoneDateTimeTypeException $e) {
+            expect($e->getCode())->toBe(0);
+        }
     });
 
     it('covers floatToString normalization (lines 178, 181)', function (): void {
