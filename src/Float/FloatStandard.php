@@ -217,7 +217,7 @@ readonly class FloatStandard extends FloatTypeAbstract
             return match (true) {
                 is_float($value) => static::fromFloat($value),
                 is_int($value) => static::fromInt($value),
-                ($value instanceof self) => static::fromFloat($value->value()),
+                //                ($value instanceof self) => static::fromFloat($value->value()),
                 is_bool($value) => static::fromBool($value),
                 is_string($value) || $value instanceof Stringable => static::fromString((string) $value),
                 default => throw new TypeException('Value cannot be cast to float'),

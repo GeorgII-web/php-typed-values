@@ -11,6 +11,7 @@ use PhpTypedValues\Exception\DateTime\ZoneDateTimeTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
+use PhpTypedValues\Integer\IntegerPositive;
 
 use function sprintf;
 
@@ -73,7 +74,7 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
         try {
             return new DateTimeZone($timezone);
         } catch (Exception $e) {
-            throw new ZoneDateTimeTypeException(sprintf('Invalid timezone "%s": %s', $timezone, $e->getMessage()), (int) $e->getCode(), $e);
+            throw new ZoneDateTimeTypeException(sprintf('Invalid timezone "%s": %s', $timezone, $e->getMessage()), IntegerPositive::tryFromMixed($e->getCode(), IntegerPositive::fromInt(0))->value(), $e);
         }
     }
 

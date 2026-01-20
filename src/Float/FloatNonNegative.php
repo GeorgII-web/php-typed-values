@@ -42,7 +42,7 @@ readonly class FloatNonNegative extends FloatTypeAbstract
     public function __construct(float $value)
     {
         if ($value < 0.0) {
-            throw new FloatTypeException(sprintf('Expected non-negative float, got "%s"', self::floatToString($value, false)));
+            throw new FloatTypeException(sprintf('Expected non-negative float, got "%s"', $value));
         }
 
         if (is_infinite($value)) {
@@ -218,7 +218,7 @@ readonly class FloatNonNegative extends FloatTypeAbstract
             return match (true) {
                 is_float($value) => static::fromFloat($value),
                 is_int($value) => static::fromInt($value),
-                ($value instanceof self) => static::fromFloat($value->value()),
+                //                ($value instanceof self) => static::fromFloat($value->value()),
                 is_bool($value) => static::fromBool($value),
                 is_string($value) || $value instanceof Stringable => static::fromString((string) $value),
                 default => throw new TypeException('Value cannot be cast to float'),
