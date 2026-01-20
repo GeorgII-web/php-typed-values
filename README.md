@@ -68,7 +68,6 @@ Id::fromInt(123);
 
 ```php
 use PhpTypedValues\Base\ValueObjectInterface;use PhpTypedValues\Float\FloatPositive;use PhpTypedValues\Integer\IntegerPositive;use PhpTypedValues\String\StringNonEmpty;use PhpTypedValues\Undefined\Alias\Undefined;
-// represents an intentionally missing value
 
 final readonly class Profile implements ValueObjectInterface
 {
@@ -99,13 +98,13 @@ final readonly class Profile implements ValueObjectInterface
 ##### Early fail (invalid input prevents creation)
 
 ```php
-Profile::fromArray(['id' => 0, 'firstName' => 'Alice', 'height' => 172.5]); // throws exception
+Profile::fromArray(['id' => -1, 'firstName' => 'Alice', 'height' => 172.5]); // throws exception, id not positive
 ```
 
-##### Late fail with `Undefined` (an object exists, fail on access)
+##### Late fail with `Undefined` (an object exists, but fail on access)
 
 ```php
-$profile = Profile::fromArray(['id' => 101, 'firstName' => '', 'height' => '172.5']); // created
+$profile = Profile::fromArray(['id' => 101, 'firstName' => '', 'height' => '172.5']); // created with Undefined firstName
 $profile->getFirstName()->value(); // throws an exception on access the Undefined value
 ```
 
@@ -142,7 +141,7 @@ $profile->getHeight()->value(); // throws an exception on access the Undefined v
 ### Documentation
 
 - Development guide: [docs/DEVELOP.md](docs/DEVELOP.md)
-- Usage examples in [src/Usage](src/Usage) and [tests/Unit](tests/Unit)
+- Usage examples in [tests/Unit](tests/Unit)
 
 ### License
 
