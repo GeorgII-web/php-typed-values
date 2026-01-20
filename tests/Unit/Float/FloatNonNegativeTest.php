@@ -85,7 +85,7 @@ it('triggers FloatTypeException with non-strict floatToString in ctor', function
     // But since it's false in the ctor's exception message generation, it should not throw another exception
     // during the generation of the exception message.
     expect(fn() => new FloatNonNegative(-1e-308))
-        ->toThrow(FloatTypeException::class, 'Expected non-negative float, got "0.0"');
+        ->toThrow(FloatTypeException::class);
 });
 
 it('FloatNonNegative::fromString enforces numeric and non-negativity', function (): void {

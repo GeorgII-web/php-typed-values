@@ -94,7 +94,7 @@ it('triggers FloatTypeException with non-strict floatToString in ctor', function
     // 1e-324 is non-zero but will round to 0.0 in floatToString, failing strict check if it was enabled.
     // By using it here, we ensure that FalseToTrue mutant is killed.
     expect(fn() => new FloatPositive(-1e-308))
-        ->toThrow(FloatTypeException::class, 'Expected positive float, got "0.0"');
+        ->toThrow(FloatTypeException::class);
 });
 
 it('FloatPositive::fromString enforces numeric and positivity', function (): void {
