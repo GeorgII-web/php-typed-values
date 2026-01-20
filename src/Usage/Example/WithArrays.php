@@ -40,14 +40,36 @@ require_once 'vendor/autoload.php';
  *
  * @psalm-immutable
  */
-final readonly class WithArrays implements JsonSerializable
+final class WithArrays implements JsonSerializable
 {
-    public function __construct(
-        private IntegerPositive $id,
-        private StringNonEmpty|Undefined $firstName,
-        private FloatPositive|Undefined $height,
-        private ArrayOfObjects $nickNames,
-    ) {
+    /**
+     * @readonly
+     */
+    private IntegerPositive $id;
+    /**
+     * @readonly
+     * @var \PhpTypedValues\String\StringNonEmpty|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    private $firstName;
+    /**
+     * @readonly
+     * @var \PhpTypedValues\Float\FloatPositive|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    private $height;
+    /**
+     * @readonly
+     */
+    private ArrayOfObjects $nickNames;
+    /**
+     * @param \PhpTypedValues\String\StringNonEmpty|\PhpTypedValues\Undefined\Alias\Undefined $firstName
+     * @param \PhpTypedValues\Float\FloatPositive|\PhpTypedValues\Undefined\Alias\Undefined $height
+     */
+    public function __construct(IntegerPositive $id, $firstName, $height, ArrayOfObjects $nickNames)
+    {
+        $this->id = $id;
+        $this->firstName = $firstName;
+        $this->height = $height;
+        $this->nickNames = $nickNames;
     }
 
     /**
@@ -66,8 +88,8 @@ final readonly class WithArrays implements JsonSerializable
     public static function fromScalars(
         int $id,
         ?string $firstName,
-        string|float|int|null $height = null,
-        array $nickNames = [],
+        $height = null,
+        array $nickNames = []
     ): self {
         // Make the array of Primitives
         $nickNamesObjects = [];
@@ -85,16 +107,18 @@ final readonly class WithArrays implements JsonSerializable
 
     /**
      * Returns first name or `Undefined` when the input was empty/invalid.
+     * @return \PhpTypedValues\String\StringNonEmpty|\PhpTypedValues\Undefined\Alias\Undefined
      */
-    public function getFirstName(): StringNonEmpty|Undefined
+    public function getFirstName()
     {
         return $this->firstName;
     }
 
     /**
      * Returns height, which may be `Undefined` when it was omitted.
+     * @return \PhpTypedValues\Float\FloatPositive|\PhpTypedValues\Undefined\Alias\Undefined
      */
-    public function getHeight(): FloatPositive|Undefined
+    public function getHeight()
     {
         return $this->height;
     }

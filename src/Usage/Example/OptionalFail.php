@@ -35,13 +35,31 @@ require_once 'vendor/autoload.php';
  *
  * @psalm-immutable
  */
-final readonly class OptionalFail implements JsonSerializable
+final class OptionalFail implements JsonSerializable
 {
-    public function __construct(
-        private IntegerPositive $id,
-        private StringNonEmpty|Undefined $firstName,
-        private FloatPositive|Undefined $height,
-    ) {
+    /**
+     * @readonly
+     */
+    private IntegerPositive $id;
+    /**
+     * @readonly
+     * @var \PhpTypedValues\String\StringNonEmpty|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    private $firstName;
+    /**
+     * @readonly
+     * @var \PhpTypedValues\Float\FloatPositive|\PhpTypedValues\Undefined\Alias\Undefined
+     */
+    private $height;
+    /**
+     * @param \PhpTypedValues\String\StringNonEmpty|\PhpTypedValues\Undefined\Alias\Undefined $firstName
+     * @param \PhpTypedValues\Float\FloatPositive|\PhpTypedValues\Undefined\Alias\Undefined $height
+     */
+    public function __construct(IntegerPositive $id, $firstName, $height)
+    {
+        $this->id = $id;
+        $this->firstName = $firstName;
+        $this->height = $height;
     }
 
     /**
@@ -57,7 +75,7 @@ final readonly class OptionalFail implements JsonSerializable
     public static function fromScalars(
         int $id,
         ?string $firstName,
-        string|float|int|null $height = null,
+        $height = null
     ): self {
         return new self(
             IntegerPositive::fromInt($id), // Early fail
@@ -70,16 +88,18 @@ final readonly class OptionalFail implements JsonSerializable
 
     /**
      * Returns first name or `Undefined` when the input was empty/invalid.
+     * @return \PhpTypedValues\String\StringNonEmpty|\PhpTypedValues\Undefined\Alias\Undefined
      */
-    public function getFirstName(): StringNonEmpty|Undefined
+    public function getFirstName()
     {
         return $this->firstName;
     }
 
     /**
      * Returns height, which may be `Undefined` when it was omitted.
+     * @return \PhpTypedValues\Float\FloatPositive|\PhpTypedValues\Undefined\Alias\Undefined
      */
-    public function getHeight(): FloatPositive|Undefined
+    public function getHeight()
     {
         return $this->height;
     }

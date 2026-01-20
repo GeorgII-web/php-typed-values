@@ -18,6 +18,6 @@ use PhpTypedValues\Bool\BoolStandard;
  *
  * @psalm-immutable
  */
-final readonly class Flag extends BoolStandard
+final class Flag extends BoolStandard
 {
 }

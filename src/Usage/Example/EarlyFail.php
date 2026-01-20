@@ -33,16 +33,31 @@ use PhpTypedValues\String\StringNonEmpty;
  *
  * @psalm-immutable
  */
-final readonly class EarlyFail implements ValueObjectInterface
+final class EarlyFail implements ValueObjectInterface
 {
-    public function __construct(
-        private IntegerPositive $id,
-        private StringNonEmpty $firstName,
-        private FloatPositive $height,
-    ) {
+    /**
+     * @readonly
+     */
+    private IntegerPositive $id;
+    /**
+     * @readonly
+     */
+    private StringNonEmpty $firstName;
+    /**
+     * @readonly
+     */
+    private FloatPositive $height;
+    public function __construct(IntegerPositive $id, StringNonEmpty $firstName, FloatPositive $height)
+    {
+        $this->id = $id;
+        $this->firstName = $firstName;
+        $this->height = $height;
     }
 
-    public static function fromArray(array $value): static
+    /**
+     * @return static
+     */
+    public static function fromArray(array $value)
     {
         return new self(
             IntegerPositive::fromInt($value['id'] ?? 0),
@@ -65,7 +80,7 @@ final readonly class EarlyFail implements ValueObjectInterface
     public static function fromScalars(
         int $id,
         string $firstName,
-        float $height,
+        float $height
     ): self {
         return new self(
             IntegerPositive::fromInt($id), // Early fail

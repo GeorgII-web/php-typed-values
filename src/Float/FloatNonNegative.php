@@ -32,8 +32,11 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class FloatNonNegative extends FloatTypeAbstract
+class FloatNonNegative extends FloatTypeAbstract
 {
+    /**
+     * @readonly
+     */
     protected float $value;
 
     /**
@@ -58,32 +61,36 @@ readonly class FloatNonNegative extends FloatTypeAbstract
 
     /**
      * @throws FloatTypeException
+     * @return static
      */
-    public static function fromBool(bool $value): static
+    public static function fromBool(bool $value)
     {
         return new static(parent::boolToFloat($value));
     }
 
     /**
      * @throws FloatTypeException
+     * @return static
      */
-    public static function fromFloat(float $value): static
+    public static function fromFloat(float $value)
     {
         return new static($value);
     }
 
     /**
      * @throws FloatTypeException
+     * @return static
      */
-    public static function fromInt(int $value): static
+    public static function fromInt(int $value)
     {
         return new static(parent::intToFloat($value));
     }
 
     /**
      * @throws FloatTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         return new static(parent::stringToFloat($value));
     }
@@ -156,8 +163,9 @@ readonly class FloatNonNegative extends FloatTypeAbstract
      */
     public static function tryFromBool(
         bool $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         /** @var static */
         return static::fromBool($value);
     }
@@ -171,12 +179,13 @@ readonly class FloatNonNegative extends FloatTypeAbstract
      */
     public static function tryFromFloat(
         float $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromFloat($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -191,12 +200,13 @@ readonly class FloatNonNegative extends FloatTypeAbstract
      */
     public static function tryFromInt(
         int $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromInt($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -208,22 +218,27 @@ readonly class FloatNonNegative extends FloatTypeAbstract
      * @param T $default
      *
      * @return static|T
+     * @param mixed $value
      */
     public static function tryFromMixed(
-        mixed $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+        $value,
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
-            /** @var static */
-            return match (true) {
-                is_float($value) => static::fromFloat($value),
-                is_int($value) => static::fromInt($value),
-                //                ($value instanceof self) => static::fromFloat($value->value()),
-                is_bool($value) => static::fromBool($value),
-                is_string($value) || $value instanceof Stringable => static::fromString((string) $value),
-                default => throw new TypeException('Value cannot be cast to float'),
-            };
-        } catch (Exception) {
+            switch (true) {
+                case is_float($value):
+                    return static::fromFloat($value);
+                case is_int($value):
+                    return static::fromInt($value);
+                case is_bool($value):
+                    return static::fromBool($value);
+                case is_string($value) || is_object($value) && method_exists($value, '__toString'):
+                    return static::fromString((string) $value);
+                default:
+                    throw new TypeException('Value cannot be cast to float');
+            }
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -238,12 +253,13 @@ readonly class FloatNonNegative extends FloatTypeAbstract
      */
     public static function tryFromString(
         string $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromString($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }

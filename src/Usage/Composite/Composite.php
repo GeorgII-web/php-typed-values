@@ -18,29 +18,29 @@ use PhpTypedValues\Usage\Example\WithArrays;
  */
 echo PHP_EOL . '> COMPOSITE' . PHP_EOL;
 
-$testEarly = EarlyFail::fromScalars(id: 1, firstName: 'Foobar', height: 170.0);
+$testEarly = EarlyFail::fromScalars(1, 'Foobar', 170.0);
 echo $testEarly->getId()->toString() . PHP_EOL;
 echo $testEarly->getFirstName()->toString() . PHP_EOL;
 echo $testEarly->getHeight()->toString() . PHP_EOL;
 $testEarly2 = EarlyFail::fromArray(['id' => 1, 'firstName' => 'ss', 'height' => 12.2]);
 echo json_encode($testEarly2->toArray(), JSON_THROW_ON_ERROR) . PHP_EOL;
 
-$testLate = LateFail::fromScalars(id: 1, firstName: 'Foobar', height: 170);
+$testLate = LateFail::fromScalars(1, 'Foobar', 170);
 echo $testLate->getId()->toString() . PHP_EOL;
 echo $testLate->getFirstName()->toString() . PHP_EOL;
 echo $testLate->getHeight()->toString() . PHP_EOL;
 
-$testOptional = OptionalFail::fromScalars(id: 1, firstName: 'Foobar', height: 170);
+$testOptional = OptionalFail::fromScalars(1, 'Foobar', 170);
 echo $testOptional->getId()->toString() . PHP_EOL;
 echo $testOptional->getFirstName()->toString() . PHP_EOL;
 echo $testOptional->getHeight()->toString() . PHP_EOL;
 echo json_encode($testOptional, JSON_THROW_ON_ERROR) . PHP_EOL;
 
 $testArray = WithArrays::fromScalars(
-    id: 1,
-    firstName: 'Foobar',
-    height: 170,
-    nickNames: ['User1', 'Admin5'],
+    1,
+    'Foobar',
+    170,
+    ['User1', 'Admin5'],
 );
 echo $testArray->getId()->toString() . PHP_EOL;
 echo $testArray->getFirstName()->toString() . PHP_EOL;
