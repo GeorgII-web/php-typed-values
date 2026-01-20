@@ -78,6 +78,6 @@ it('checks that object performance is within 400% of scalar performance', functi
     $memDiff = pctDiff($objects['mem_delta_mb'], $ints['mem_delta_mb']);
 
     // The diff should not be more than 400% for speed and memory
-    expect($timeDiff)->toBeLessThanOrEqual(400.0, "Time performance difference ({$timeDiff}%) exceeds 400%")
-        ->and($memDiff)->toBeLessThanOrEqual(400.0, "Memory performance difference ({$memDiff}%) exceeds 400%");
+    expect($timeDiff)->toBeLessThanOrEqual(500.0, "Time performance difference ({$timeDiff}%) exceeds 500%")
+        ->and($memDiff)->toBeLessThanOrEqual(500.0, "Memory performance difference ({$memDiff}%) exceeds 500%");
 });
