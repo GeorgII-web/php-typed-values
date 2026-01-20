@@ -80,6 +80,14 @@ it('FloatNonNegative throws on negative values in ctor and fromFloat', function 
         ->toThrow(FloatTypeException::class, 'Expected non-negative float, got "-1.0"');
 });
 
+it('triggers FloatTypeException with non-strict floatToString in ctor', function (): void {
+    // 1e-308 will fail strict conversion in floatToString if the second parameter was true.
+    // But since it's false in the ctor's exception message generation, it should not throw another exception
+    // during the generation of the exception message.
+    expect(fn() => new FloatNonNegative(-1e-308))
+        ->toThrow(FloatTypeException::class, 'Expected non-negative float, got "0.0"');
+});
+
 it('FloatNonNegative::fromString enforces numeric and non-negativity', function (): void {
     // Non-numeric
     expect(fn() => FloatNonNegative::fromString('abc'))
@@ -134,6 +142,11 @@ it('converts mixed values to correct float state', function (mixed $input, float
     [
         'input' => FloatNonNegative::fromFloat(1.234567890123456789),
         'expected' => 1.234567890123456789,
+    ],
+    // Self instance input
+    [
+        'input' => FloatNonNegative::fromFloat(4.5),
+        'expected' => 4.5,
     ],
     // Integers
     ['input' => 1, 'expected' => 1.0],

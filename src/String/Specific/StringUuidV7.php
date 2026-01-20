@@ -232,7 +232,7 @@ readonly class StringUuidV7 extends StringTypeAbstract
                 is_string($value) => static::fromString($value),
                 is_float($value) => static::fromFloat($value),
                 is_int($value) => static::fromInt($value),
-//                ($value instanceof self) => static::fromString($value->value()),
+                //                ($value instanceof self) => static::fromString($value->value()),
                 is_bool($value) => static::fromBool($value),
                 $value instanceof Stringable, is_scalar($value) => static::fromString((string) $value),
                 default => throw new TypeException('Value cannot be cast to string'),

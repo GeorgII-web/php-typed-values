@@ -85,6 +85,10 @@ it('tryFromMixed covers numeric, non-numeric, and stringable inputs', function (
     $fromArray = FloatStandard::tryFromMixed([1]);
     $fromNull = FloatStandard::tryFromMixed(null);
 
+    // Self instance input
+    $selfInstance = FloatStandard::fromFloat(4.5);
+    $fromSelf = FloatStandard::tryFromMixed($selfInstance);
+
     // Stringable object
     $stringable = new class {
         public function __toString(): string
@@ -100,6 +104,8 @@ it('tryFromMixed covers numeric, non-numeric, and stringable inputs', function (
         ->and($fromInt->value())->toBe(3.0)
         ->and($fromFloat)->toBeInstanceOf(FloatStandard::class)
         ->and($fromFloat->value())->toBe(2.5)
+        ->and($fromSelf)->toBeInstanceOf(FloatStandard::class)
+        ->and($fromSelf->value())->toBe(4.5)
         ->and($fromArray)->toBeInstanceOf(Undefined::class)
         ->and($fromNull)->toBeInstanceOf(Undefined::class)
         ->and($fromStringable)->toBeInstanceOf(FloatStandard::class)

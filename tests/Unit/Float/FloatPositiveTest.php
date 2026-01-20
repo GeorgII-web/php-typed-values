@@ -90,6 +90,13 @@ it('FloatPositive throws on non-positive values in ctor and fromFloat', function
         ->toThrow(FloatTypeException::class, 'Expected positive float, got "-1.0"');
 });
 
+it('triggers FloatTypeException with non-strict floatToString in ctor', function (): void {
+    // 1e-324 is non-zero but will round to 0.0 in floatToString, failing strict check if it was enabled.
+    // By using it here, we ensure that FalseToTrue mutant is killed.
+    expect(fn() => new FloatPositive(-1e-308))
+        ->toThrow(FloatTypeException::class, 'Expected positive float, got "0.0"');
+});
+
 it('FloatPositive::fromString enforces numeric and positivity', function (): void {
     // Non-numeric
     expect(fn() => FloatPositive::fromString('abc'))
@@ -135,6 +142,11 @@ it('converts mixed values to correct float state', function (mixed $input, float
     [
         'input' => FloatPositive::fromFloat(1.234567890123456789),
         'expected' => 1.234567890123456789,
+    ],
+    // Self instance input
+    [
+        'input' => FloatPositive::fromFloat(4.5),
+        'expected' => 4.5,
     ],
     // Integers
     ['input' => 1, 'expected' => 1.0],
