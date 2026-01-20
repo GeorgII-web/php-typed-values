@@ -1,64 +1,170 @@
 # Usage examples
 
-#### Fallback value
+This guide demonstrates common patterns for using typed values in your application, organized by topic.
+
+### Table of Contents
+
+1. [Basic Usage](#basic-usage)
+2. [Validation Semantics](#validation-semantics)
+3. [Composite Objects & DTOs](#composite-objects--dtos)
+4. [Collections (Arrays of Objects)](#collections-arrays-of-objects)
+5. [Fallback & Error Handling](#fallback--error-handling)
+
+---
+
+### Basic Usage
+
+Existing typed values provide multiple factory methods to create objects from various inputs.
+
+#### Creating from strings and primitives
 
 ```php
-$email = StringEmail::tryFromString($someString, StringEmpty::fromString('')); // Or email or empty string
-$email->isEmpty();
-$email->isUndefined();
+use PhpTypedValues\Integer\IntegerPositive;
+use PhpTypedValues\String\StringNonEmpty;
+
+// Direct factories (throw exceptions on invalid input)
+$id = IntegerPositive::fromInt(123);
+$name = StringNonEmpty::fromString('Alice');
+
+// Casting from mixed types
+$price = FloatPositive::tryFromMixed('19.99'); // Returns FloatPositive or Undefined
 ```
 
-#### Compose value objects
+#### Idempotent conversions
+
+Typed values guarantee that `fromString($s)->toString() === $s` for valid inputs, ensuring no precision loss or formatting surprises.
 
 ```php
-use PhpTypedValues\Base\ValueObjectInterface;use PhpTypedValues\Float\FloatPositive;use PhpTypedValues\Integer\IntegerPositive;use PhpTypedValues\String\StringNonEmpty;use PhpTypedValues\Undefined\Alias\Undefined;
+use PhpTypedValues\Float\FloatStandard;
 
-final readonly class Profile implements ValueObjectInterface
+$v = FloatStandard::fromString('0.10000000000000001');
+echo $v->toString(); // "0.10000000000000001"
+```
+
+---
+
+### Validation Semantics
+
+The library supports different strategies for handling invalid data, allowing you to choose between strict early failure or lenient late failure.
+
+#### Early Fail
+
+Invalid input prevents object creation immediately. Best for strictly required data.
+
+```php
+// Throws IntegerTypeException immediately
+$id = IntegerPositive::fromInt(-1); 
+```
+
+#### Late Fail with `Undefined`
+
+The `tryFrom*` methods return an `Undefined` object instead of throwing an exception. Failure only happens when you try to access the primitive value.
+
+```php
+use PhpTypedValues\Undefined\Alias\Undefined;
+
+$name = StringNonEmpty::tryFromString(''); // Returns Undefined instance
+
+if ($name->isUndefined()) {
+    echo "Name is missing or invalid";
+}
+
+$name->value(); // Throws UndefinedTypeException
+```
+
+#### Optional Fail
+
+A combination where you only fail if a value is provided but invalid. If it's `null`, it becomes `Undefined`.
+
+```php
+$height = ($input !== null) 
+    ? FloatPositive::fromFloat($input) // Early fail if provided and <= 0
+    : Undefined::create();             // Late fail if accessed
+```
+
+---
+
+### Composite Objects & DTOs
+
+Combine multiple typed values into domain objects.
+
+```php
+use PhpTypedValues\Base\ValueObjectInterface;
+use PhpTypedValues\Integer\IntegerPositive;
+use PhpTypedValues\String\StringNonEmpty;
+use PhpTypedValues\Float\FloatPositive;
+use PhpTypedValues\Undefined\Alias\Undefined;
+
+final readonly class UserProfile implements ValueObjectInterface
 {
     public function __construct(
         private IntegerPositive $id,
-        private StringNonEmpty|Undefined $firstName,
-        private FloatPositive|Undefined $height,
+        private StringNonEmpty $username,
+        private FloatPositive|Undefined $rating,
     ) {}
 
-    public static function fromArray(array $value): self {
+    public static function fromArray(array $data): self 
+    {
         return new self(
-            IntegerPositive::fromInt($value['id']),                    // early fail (must be valid)
-            StringNonEmpty::tryFromMixed($value['firstName']),         // late fail (maybe undefined)
-            ($value['height'] ?? null) !== null
-                ? FloatPositive::fromString((string) $value['height']) // early fail if provided
-                : Undefined::create(),                                 // late fail when accessed
+            IntegerPositive::fromInt($data['id']),           // Required
+            StringNonEmpty::fromString($data['username']),   // Required
+            FloatPositive::tryFromMixed($data['rating'] ?? null), // Optional
         );
     }
-    public function toArray(): array { return ['id' => $this->id->value()]; }
-    public function jsonSerialize(): array { return $this->toArray(); }
+
+    public function jsonSerialize(): array 
+    {
+        return [
+            'id' => $this->id->value(),
+            'username' => $this->username->value(),
+            'rating' => $this->rating->isUndefined() ? null : $this->rating->value(),
+        ];
+    }
     
-    public function getId(): IntegerPositive { return $this->id; }
-    public function getFirstName(): StringNonEmpty|Undefined { return $this->firstName; }
-    public function getHeight(): FloatPositive|Undefined { return $this->height; }
+    public function isEmpty(): bool { return false; }
+    public function isUndefined(): bool { return false; }
+    public function toString(): string { return $this->username->value(); }
 }
 ```
 
-##### Early fail (invalid input prevents creation)
+---
+
+### Collections (Arrays of Objects)
+
+Use `ArrayOfObjects` to manage immutable lists of typed values.
 
 ```php
-Profile::fromArray(['id' => -1, 'firstName' => 'Alice', 'height' => 172.5]); // throws exception, id not positive
+use PhpTypedValues\ArrayType\ArrayOfObjects;
+use PhpTypedValues\String\StringNonEmpty;
+
+$tags = ArrayOfObjects::fromItems(
+    StringNonEmpty::fromString('php'),
+    StringNonEmpty::fromString('types'),
+);
+
+foreach ($tags as $tag) {
+    echo $tag->value(); // "php", then "types"
+}
+
+// Convert back to a native array of strings
+$rawTags = $tags->toArray(); // ['php', 'types']
 ```
 
-##### Late fail with `Undefined` (an object exists, but fail on access)
+#### Safe check for defined values
 
 ```php
-$profile = Profile::fromArray(['id' => 101, 'firstName' => '', 'height' => '172.5']); // created with Undefined firstName
-$profile->getFirstName()->value(); // throws an exception on access the Undefined value
+/** @var ArrayOfObjects<StringNonEmpty|Undefined> $list */
+$definedOnly = $list->getDefinedItems(); // Filters out all Undefined objects
 ```
 
-##### Optional fail (only fail if the optional value is provided and invalid)
+---
 
-Ideal for partial data handling (e.g., requests where only specific fields, like ID, are required), allowing access to valid fields without failing on missing ones.
+### Fallback & Error Handling
+
+Use `tryFrom*` with a default value to provide a graceful fallback.
+
+#### Custom Fallback Value
 
 ```php
-Profile::fromArray(['id' => 101, 'firstName' => 'Alice', 'height' => -1]); // invalid provided value -> early fail
-
-$profile = Profile::fromArray(['id' => 101, 'firstName' => 'Alice', 'height' => null]); // value omitted -> created, fails only on access
-$profile->getHeight()->value(); // throws an exception on access the Undefined value
+$email = StringEmail::tryFromString($input, StringEmpty::fromString('')); // Email string OR Empty string
 ```
