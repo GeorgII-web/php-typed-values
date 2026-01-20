@@ -228,7 +228,7 @@ readonly class StringCountryCode extends StringTypeAbstract
             /** @var static */
             return match (true) {
                 is_string($value) => static::fromString($value),
-                ($value instanceof self) => static::fromString($value->value()),
+//                ($value instanceof self) => static::fromString($value->value()),
                 is_float($value) => static::fromFloat($value),
                 is_int($value) => static::fromInt($value),
                 is_bool($value) => static::fromBool($value),

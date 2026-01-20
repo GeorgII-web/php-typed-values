@@ -48,6 +48,7 @@ readonly class StringStandard extends StringTypeAbstract
 
     /**
      * @throws FloatTypeException
+     * @throws StringTypeException
      */
     public static function fromFloat(float $value): static
     {
@@ -100,6 +101,7 @@ readonly class StringStandard extends StringTypeAbstract
 
     /**
      * @throws StringTypeException
+     * @throws FloatTypeException
      */
     public function toFloat(): float
     {
@@ -196,7 +198,7 @@ readonly class StringStandard extends StringTypeAbstract
                 is_string($value) => static::fromString($value),
                 is_float($value) => static::fromFloat($value),
                 is_int($value) => static::fromInt($value),
-                ($value instanceof self) => static::fromString($value->value()),
+//                ($value instanceof self) => static::fromString($value->value()),
                 is_bool($value) => static::fromBool($value),
                 $value instanceof Stringable => static::fromString((string) $value),
                 default => throw new TypeException('Value cannot be cast to string'),
