@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use JsonSerializable;
 use PhpTypedValues\ArrayType\ArrayOfObjects;
 use PhpTypedValues\Exception\ArrayType\ArrayTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;

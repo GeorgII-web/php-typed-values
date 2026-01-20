@@ -119,6 +119,14 @@ $profile = Profile::fromArray(['id' => 101, 'firstName' => 'Alice', 'height' => 
 $profile->getHeight()->value(); // throws an exception on access the Undefined value
 ```
 
+#### Fallback value
+
+```php
+$email = StringEmail::tryFromString($someString, StringEmpty::fromString('')); // Or email or empty string
+$email->isEmpty();
+$email->isUndefined();
+```
+
 ### Key features
 
 - Idempotent conversion on fromString() > toString(): "1" > 1 > "1"
@@ -141,7 +149,7 @@ $profile->getHeight()->value(); // throws an exception on access the Undefined v
 ### Documentation
 
 - Development guide: [docs/DEVELOP.md](docs/DEVELOP.md)
-- Usage examples in [tests/Unit](tests/Unit)
+- More usage examples in [tests/Unit](tests/Unit)
 
 ### License
 
