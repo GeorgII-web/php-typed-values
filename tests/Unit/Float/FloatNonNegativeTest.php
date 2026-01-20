@@ -75,7 +75,7 @@ it('FloatNonNegative::tryFromFloat returns value for >= 0 and Undefined otherwis
 
 it('FloatNonNegative throws on negative values in ctor and fromFloat', function (): void {
     expect(fn() => new FloatNonNegative(-0.1))
-        ->toThrow(FloatTypeException::class, 'Expected non-negative float, got "-0.10000000000000001"')
+        ->toThrow(FloatTypeException::class, 'Expected non-negative float, got "-0.1"')
         ->and(fn() => FloatNonNegative::fromFloat(-1.0))
         ->toThrow(FloatTypeException::class, 'Expected non-negative float, got "-1.0"');
 });

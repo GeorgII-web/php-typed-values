@@ -27,7 +27,7 @@ it('fails early when firstName is empty', function (): void {
 
 it('fails early when height is negative', function (): void {
     expect(fn() => EarlyFail::fromScalars(id: 1, firstName: 'Foobar', height: -10.0))
-        ->toThrow(FloatTypeException::class, 'Expected positive float, got "-10.0"');
+        ->toThrow(FloatTypeException::class, 'Expected positive float, got "-10"');
 });
 
 it('returns false for isEmpty and isUndefined', function (): void {
@@ -69,7 +69,7 @@ it('fails in fromArray when firstName is missing (defaults to empty)', function 
 
 it('fails in fromArray when height is missing (defaults to 0.0)', function (): void {
     expect(fn() => EarlyFail::fromArray(['id' => 1, 'firstName' => 'A']))
-        ->toThrow(FloatTypeException::class, 'Expected positive float, got "0.0"');
+        ->toThrow(FloatTypeException::class, 'Expected positive float, got "0"');
 });
 
 it('serializes to JSON correctly', function (): void {

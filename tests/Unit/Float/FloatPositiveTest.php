@@ -33,17 +33,17 @@ it('creates from string factory', function (): void {
 
 it('throws on zero via constructor', function (): void {
     expect(fn() => new FloatPositive(0.0))
-        ->toThrow(FloatTypeException::class, 'Expected positive float, got "0.0"');
+        ->toThrow(FloatTypeException::class, 'Expected positive float, got "0"');
 });
 
 it('throws on zero via fromString', function (): void {
     expect(fn() => FloatPositive::fromString('0.0'))
-        ->toThrow(FloatTypeException::class, 'Expected positive float, got "0.0"');
+        ->toThrow(FloatTypeException::class, 'Expected positive float, got "0"');
 });
 
 it('throws on negative via constructor', function (): void {
     expect(fn() => new FloatPositive(-0.1))
-        ->toThrow(FloatTypeException::class, 'Expected positive float, got "-0.10000000000000001"');
+        ->toThrow(FloatTypeException::class, 'Expected positive float, got "-0.1"');
 });
 
 it('throws on negative via fromString', function (): void {
@@ -85,9 +85,9 @@ it('FloatPositive::tryFromFloat returns value for positive int and Undefined oth
 
 it('FloatPositive throws on non-positive values in ctor and fromFloat', function (): void {
     expect(fn() => new FloatPositive(0.0))
-        ->toThrow(FloatTypeException::class, 'Expected positive float, got "0.0"')
+        ->toThrow(FloatTypeException::class, 'Expected positive float, got "0"')
         ->and(fn() => FloatPositive::fromFloat(-1.0))
-        ->toThrow(FloatTypeException::class, 'Expected positive float, got "-1.0"');
+        ->toThrow(FloatTypeException::class, 'Expected positive float, got "-1"');
 });
 
 it('triggers FloatTypeException with non-strict floatToString in ctor', function (): void {
@@ -104,7 +104,7 @@ it('FloatPositive::fromString enforces numeric and positivity', function (): voi
 
     // Positivity
     expect(fn() => FloatPositive::fromString('0.0'))
-        ->toThrow(FloatTypeException::class, 'Expected positive float, got "0.0"');
+        ->toThrow(FloatTypeException::class, 'Expected positive float, got "0"');
 
     // Success path
     $v = FloatPositive::fromString('1.25');
