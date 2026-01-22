@@ -35,9 +35,10 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class IntegerWeekDay extends IntegerTypeAbstract
+class IntegerWeekDay extends IntegerTypeAbstract
 {
-    /** @var int<1, 7> */
+    /** @var int<1, 7>
+     * @readonly */
     protected int $value;
 
     /**
@@ -60,8 +61,9 @@ readonly class IntegerWeekDay extends IntegerTypeAbstract
      * @throws IntegerTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromBool(bool $value): static
+    public static function fromBool(bool $value)
     {
         return new static(static::boolToInt($value));
     }
@@ -71,8 +73,9 @@ readonly class IntegerWeekDay extends IntegerTypeAbstract
      * @throws IntegerTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromFloat(float $value): static
+    public static function fromFloat(float $value)
     {
         return new static(static::floatToInt($value));
     }
@@ -81,8 +84,9 @@ readonly class IntegerWeekDay extends IntegerTypeAbstract
      * @throws IntegerTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromInt(int $value): static
+    public static function fromInt(int $value)
     {
         return new static($value);
     }
@@ -91,19 +95,35 @@ readonly class IntegerWeekDay extends IntegerTypeAbstract
      * @throws IntegerTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromLabel(string $label): static
+    public static function fromLabel(string $label)
     {
-        $value = match ($label) {
-            'Monday' => 1,
-            'Tuesday' => 2,
-            'Wednesday' => 3,
-            'Thursday' => 4,
-            'Friday' => 5,
-            'Saturday' => 6,
-            'Sunday' => 7,
-            default => throw new IntegerTypeException(sprintf('Invalid weekday label "%s"', $label)),
-        };
+        switch ($label) {
+            case 'Monday':
+                $value = 1;
+                break;
+            case 'Tuesday':
+                $value = 2;
+                break;
+            case 'Wednesday':
+                $value = 3;
+                break;
+            case 'Thursday':
+                $value = 4;
+                break;
+            case 'Friday':
+                $value = 5;
+                break;
+            case 'Saturday':
+                $value = 6;
+                break;
+            case 'Sunday':
+                $value = 7;
+                break;
+            default:
+                throw new IntegerTypeException(sprintf('Invalid weekday label "%s"', $label));
+        }
 
         return new static($value);
     }
@@ -113,13 +133,17 @@ readonly class IntegerWeekDay extends IntegerTypeAbstract
      * @throws IntegerTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         return new static(static::stringToInt($value));
     }
 
-    public function isEmpty(): false
+    /**
+     * @return false
+     */
+    public function isEmpty(): bool
     {
         return false;
     }
@@ -135,7 +159,10 @@ readonly class IntegerWeekDay extends IntegerTypeAbstract
         return false;
     }
 
-    public function isUndefined(): false
+    /**
+     * @return false
+     */
+    public function isUndefined(): bool
     {
         return false;
     }
@@ -171,15 +198,22 @@ readonly class IntegerWeekDay extends IntegerTypeAbstract
      */
     public function toLabel(): string
     {
-        return match ($this->value) {
-            1 => 'Monday',
-            2 => 'Tuesday',
-            3 => 'Wednesday',
-            4 => 'Thursday',
-            5 => 'Friday',
-            6 => 'Saturday',
-            7 => 'Sunday',
-        };
+        switch ($this->value) {
+            case 1:
+                return 'Monday';
+            case 2:
+                return 'Tuesday';
+            case 3:
+                return 'Wednesday';
+            case 4:
+                return 'Thursday';
+            case 5:
+                return 'Friday';
+            case 6:
+                return 'Saturday';
+            case 7:
+                return 'Sunday';
+        }
     }
 
     /**
@@ -201,12 +235,13 @@ readonly class IntegerWeekDay extends IntegerTypeAbstract
      */
     public static function tryFromBool(
         bool $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromBool($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -223,12 +258,13 @@ readonly class IntegerWeekDay extends IntegerTypeAbstract
      */
     public static function tryFromFloat(
         float $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromFloat($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -245,12 +281,13 @@ readonly class IntegerWeekDay extends IntegerTypeAbstract
      */
     public static function tryFromInt(
         int $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromInt($value);
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             /* @var T */
             return $default;
         }
@@ -264,21 +301,27 @@ readonly class IntegerWeekDay extends IntegerTypeAbstract
      * @return static|T
      *
      * @psalm-pure
+     * @param mixed $value
      */
     public static function tryFromMixed(
-        mixed $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+        $value,
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
-            /** @var static */
-            return match (true) {
-                is_int($value) => static::fromInt($value),
-                is_float($value) => static::fromFloat($value),
-                is_bool($value) => static::fromBool($value),
-                is_string($value) || $value instanceof Stringable => static::fromString((string) $value),
-                default => throw new TypeException('Value cannot be cast to int'),
-            };
-        } catch (Exception) {
+            switch (true) {
+                case is_int($value):
+                    return static::fromInt($value);
+                case is_float($value):
+                    return static::fromFloat($value);
+                case is_bool($value):
+                    return static::fromBool($value);
+                case is_string($value) || is_object($value) && method_exists($value, '__toString'):
+                    return static::fromString((string) $value);
+                default:
+                    throw new TypeException('Value cannot be cast to int');
+            }
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -295,12 +338,13 @@ readonly class IntegerWeekDay extends IntegerTypeAbstract
      */
     public static function tryFromString(
         string $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromString($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
