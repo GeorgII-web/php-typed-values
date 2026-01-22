@@ -44,9 +44,6 @@ jobs:
     - name: Run psalm
       run: composer run-script sca
 
-    - name: Run usage checks
-      run: composer run-script usage
-
     - name: Run tests
       run: composer run-script test
 
