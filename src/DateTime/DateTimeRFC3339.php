@@ -50,6 +50,8 @@ readonly class DateTimeRFC3339 extends DateTimeTypeAbstract
 
     /**
      * @throws ZoneDateTimeTypeException
+     *
+     * @psalm-pure
      */
     public static function fromDateTime(DateTimeImmutable $value): static
     {
@@ -60,6 +62,8 @@ readonly class DateTimeRFC3339 extends DateTimeTypeAbstract
      * @param non-empty-string $timezone
      *
      * @throws DateTimeTypeException
+     *
+     * @psalm-pure
      */
     public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE): static
     {
@@ -115,6 +119,8 @@ readonly class DateTimeRFC3339 extends DateTimeTypeAbstract
      * @param non-empty-string $timezone
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromMixed(
         mixed $value,
@@ -142,6 +148,8 @@ readonly class DateTimeRFC3339 extends DateTimeTypeAbstract
      * @param non-empty-string $timezone
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromString(
         string $value,
