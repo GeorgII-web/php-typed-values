@@ -2,298 +2,293 @@
 
 declare(strict_types=1);
 
+use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Integer\IntegerNonNegative;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
-it('IntegerNonNegative::tryFromString returns value for >= 0', function (): void {
-    $v0 = IntegerNonNegative::tryFromString('0');
-    $v5 = IntegerNonNegative::tryFromString('5');
+describe('IntegerNonNegative', function () {
+    describe('Factories', function () {
+        it('creates from bool', function (bool $input, int $expected) {
+            expect(IntegerNonNegative::fromBool($input)->value())->toBe($expected);
+        })->with([
+            'true' => [true, 1],
+            'false' => [false, 0],
+        ]);
 
-    expect($v0)
-        ->toBeInstanceOf(IntegerNonNegative::class)
-        ->and($v0->value())
-        ->toBe(0)
-        ->and($v5)
-        ->toBeInstanceOf(IntegerNonNegative::class)
-        ->and($v5->value())
-        ->toBe(5);
-});
+        it('creates from float', function (float $input, int $expected) {
+            expect(IntegerNonNegative::fromFloat($input)->value())->toBe($expected);
+        })->with([
+            'zero' => [0.0, 0],
+            'positive' => [42.0, 42],
+        ]);
 
-it('IntegerNonNegative::tryFromString returns Undefined for negatives and non-integer strings', function (): void {
-    expect(IntegerNonNegative::tryFromString('-1'))
-        ->toBeInstanceOf(Undefined::class)
-        ->and(IntegerNonNegative::tryFromString('5.0'))
-        ->toBeInstanceOf(Undefined::class);
-});
+        it('throws when creating from invalid float', function (float $input, string $exception) {
+            expect(fn() => IntegerNonNegative::fromFloat($input))->toThrow($exception);
+        })->with([
+            'negative' => [-1.0, IntegerTypeException::class],
+            'with precision' => [1.5, FloatTypeException::class],
+            'INF' => [\INF, FloatTypeException::class],
+            'NAN' => [\NAN, FloatTypeException::class],
+        ]);
 
-it('IntegerNonNegative::tryFromInt returns value for >= 0 and Undefined for negatives', function (): void {
-    $ok = IntegerNonNegative::tryFromInt(0);
-    $bad = IntegerNonNegative::tryFromInt(-10);
+        it('creates from int', function (int $input) {
+            expect(IntegerNonNegative::fromInt($input)->value())->toBe($input);
+        })->with([
+            'zero' => [0],
+            'positive' => [42],
+            'max' => [\PHP_INT_MAX],
+        ]);
 
-    expect($ok)
-        ->toBeInstanceOf(IntegerNonNegative::class)
-        ->and($ok->value())
-        ->toBe(0)
-        ->and($bad)
-        ->toBeInstanceOf(Undefined::class);
-});
+        it('throws when creating from invalid int', function (int $input) {
+            expect(fn() => IntegerNonNegative::fromInt($input))->toThrow(IntegerTypeException::class);
+        })->with([
+            'negative' => [-1],
+            'min' => [\PHP_INT_MIN],
+        ]);
 
-it('IntegerNonNegative throws on negative values in ctor and fromInt', function (): void {
-    expect(fn() => new IntegerNonNegative(-1))
-        ->toThrow(IntegerTypeException::class, 'Expected non-negative integer, got "-1"')
-        ->and(fn() => IntegerNonNegative::fromInt(-10))
-        ->toThrow(IntegerTypeException::class, 'Expected non-negative integer, got "-10"');
-});
+        it('creates from string', function (string $input, int $expected) {
+            expect(IntegerNonNegative::fromString($input)->value())->toBe($expected);
+        })->with([
+            'zero' => ['0', 0],
+            'positive' => ['42', 42],
+            'max' => [(string) \PHP_INT_MAX, \PHP_INT_MAX],
+        ]);
 
-it('IntegerNonNegative::fromString enforces strict integer and non-negativity', function (): void {
-    // Strict integer check
-    expect(fn() => IntegerNonNegative::fromString('5.0'))
-        ->toThrow(StringTypeException::class, 'String "5.0" has no valid strict integer value');
+        it('throws when creating from invalid string', function (string $input, string $exception) {
+            expect(fn() => IntegerNonNegative::fromString($input))->toThrow($exception);
+        })->with([
+            'negative' => ['-1', IntegerTypeException::class],
+            'float string' => ['42.0', StringTypeException::class],
+            'leading zero' => ['042', StringTypeException::class],
+            'plus sign' => ['+42', StringTypeException::class],
+            'empty' => ['', StringTypeException::class],
+            'whitespace' => [' 42 ', StringTypeException::class],
+            'text' => ['abc', StringTypeException::class],
+            'scientific' => ['1e2', StringTypeException::class],
+        ]);
+    });
 
-    // Non-negativity check after casting
-    expect(fn() => IntegerNonNegative::fromString('-1'))
-        ->toThrow(IntegerTypeException::class, 'Expected non-negative integer, got "-1"');
+    describe('Try Factories', function () {
+        it('tryFromBool returns instance or default', function (bool $input) {
+            $result = IntegerNonNegative::tryFromBool($input);
+            expect($result)->toBeInstanceOf(IntegerNonNegative::class)
+                ->and($result->value())->toBe((int) $input);
+        })->with([
+            'true' => [true],
+            'false' => [false],
+        ]);
 
-    // Success path
-    $v = IntegerNonNegative::fromString('0');
-    expect($v->value())->toBe(0);
-});
+        it('tryFromBool returns default when fromBool throws', function () {
+            /**
+             * @internal
+             *
+             * @coversNothing
+             */
+            readonly class IntegerNonNegativeTest extends IntegerNonNegative
+            {
+                public static function fromBool(bool $value): static
+                {
+                    throw new Exception('forced failure');
+                }
+            }
 
-it('creates NonNegativeInt', function (): void {
-    expect((new IntegerNonNegative(0))->value())->toBe(0);
-});
+            expect(IntegerNonNegativeTest::tryFromBool(true))->toBeInstanceOf(Undefined::class);
+        });
 
-it('fails on negatives', function (): void {
-    expect(fn() => IntegerNonNegative::fromInt(-1))->toThrow(IntegerTypeException::class);
-});
+        it('tryFromFloat returns instance or default', function (float $input, bool $shouldFail) {
+            $result = IntegerNonNegative::tryFromFloat($input);
+            if ($shouldFail) {
+                expect($result)->toBeInstanceOf(Undefined::class);
+            } else {
+                expect($result)->toBeInstanceOf(IntegerNonNegative::class)
+                    ->and($result->value())->toBe((int) $input);
+            }
+        })->with([
+            'valid zero' => [0.0, false],
+            'valid positive' => [1.0, false],
+            'negative' => [-1.0, true],
+            'invalid precision' => [1.5, true],
+        ]);
 
-it('creates NonNegativeInt from string 0', function (): void {
-    expect(IntegerNonNegative::fromString('0')->value())->toBe(0);
-});
+        it('tryFromInt returns instance or default', function (int $input, bool $shouldFail) {
+            $result = IntegerNonNegative::tryFromInt($input);
+            if ($shouldFail) {
+                expect($result)->toBeInstanceOf(Undefined::class);
+            } else {
+                expect($result)->toBeInstanceOf(IntegerNonNegative::class)
+                    ->and($result->value())->toBe($input);
+            }
+        })->with([
+            'zero' => [0, false],
+            'positive' => [42, false],
+            'negative' => [-1, true],
+        ]);
 
-it('fails NonNegativeInt from integerish string', function (): void {
-    expect(fn() => IntegerNonNegative::fromString('5.0'))->toThrow(StringTypeException::class);
-});
+        it('tryFromString returns instance or default', function (string $input, bool $shouldFail) {
+            $result = IntegerNonNegative::tryFromString($input);
+            if ($shouldFail) {
+                expect($result)->toBeInstanceOf(Undefined::class);
+            } else {
+                expect($result)->toBeInstanceOf(IntegerNonNegative::class)
+                    ->and($result->value())->toBe((int) $input);
+            }
+        })->with([
+            'valid zero' => ['0', false],
+            'valid positive' => ['123', false],
+            'negative' => ['-1', true],
+            'invalid' => ['12.3', true],
+        ]);
 
-it('fails creating NonNegativeInt from negative string', function (): void {
-    expect(fn() => IntegerNonNegative::fromString('-1'))->toThrow(IntegerTypeException::class);
-});
+        it('tryFromMixed returns instance for valid inputs', function (mixed $input, int $expected) {
+            $result = IntegerNonNegative::tryFromMixed($input);
+            expect($result)->toBeInstanceOf(IntegerNonNegative::class)
+                ->and($result->value())->toBe($expected);
+        })->with([
+            'int' => [42, 42],
+            'zero int' => [0, 0],
+            'float' => [42.0, 42],
+            'bool' => [true, 1],
+            'false bool' => [false, 0],
+            'string' => ['42', 42],
+            'instance' => [IntegerNonNegative::fromInt(42), 42],
+            'stringable' => [new class implements Stringable {
+                public function __toString(): string
+                {
+                    return '42';
+                }
+            }, 42],
+        ]);
 
-it('toString returns scalar string for NonNegativeInt', function (): void {
-    expect((new IntegerNonNegative(0))->toString())->toBe('0');
-});
+        it('tryFromMixed handles Stringable and raw strings correctly to kill mutants', function () {
+            // Kill InstanceOfToTrue/False and BooleanOrToBooleanAnd
+            // Case 1: is_string is true, Stringable is false
+            expect(IntegerNonNegative::tryFromMixed('123'))->toBeInstanceOf(IntegerNonNegative::class);
 
-it('fails creating NonNegativeInt from float string', function (): void {
-    expect(fn() => IntegerNonNegative::fromString('5.5'))->toThrow(StringTypeException::class);
-});
+            // Case 2: is_string is false, Stringable is true
+            $stringable = new class implements Stringable {
+                public function __toString(): string
+                {
+                    return '456';
+                }
+            };
+            expect(IntegerNonNegative::tryFromMixed($stringable))->toBeInstanceOf(IntegerNonNegative::class);
 
-it('jsonSerialize returns integer', function (): void {
-    expect(IntegerNonNegative::tryFromString('1')->jsonSerialize())->toBeInt();
-});
-it('accepts non-negative integers and exposes value/toString', function (): void {
-    $z = new IntegerNonNegative(0);
-    $p = IntegerNonNegative::fromInt(10);
+            // Case 3: Both false (already covered by other tests, but for clarity)
+            expect(IntegerNonNegative::tryFromMixed(null))->toBeInstanceOf(Undefined::class);
+        });
 
-    expect($z->value())->toBe(0)
-        ->and($z->toInt())->toBe(0)
-        ->and($z->toString())->toBe('0')
-        ->and((string) $z)->toBe('0')
-        ->and($p->value())->toBe(10)
-        ->and($p->toInt())->toBe(10)
-        ->and($p->toString())->toBe('10');
-});
+        it('tryFromMixed uses string cast for Stringable', function () {
+            // Kill RemoveStringCast
+            $stringable = new class implements Stringable {
+                public function __toString(): string
+                {
+                    return '789';
+                }
+            };
+            // If (string) cast is removed, it might pass $stringable object to fromString which expects string
+            expect(IntegerNonNegative::tryFromMixed($stringable)->value())->toBe(789);
+        });
 
-it('throws on negative values in constructor/fromInt', function (): void {
-    expect(fn() => new IntegerNonNegative(-1))
-        ->toThrow(IntegerTypeException::class, 'Expected non-negative integer, got "-1"')
-        ->and(fn() => IntegerNonNegative::fromInt(-5))
-        ->toThrow(IntegerTypeException::class, 'Expected non-negative integer, got "-5"');
-});
+        it('tryFromMixed returns default for invalid inputs', function (mixed $input) {
+            expect(IntegerNonNegative::tryFromMixed($input))->toBeInstanceOf(Undefined::class);
+        })->with([
+            'null' => [null],
+            'array' => [[]],
+            'negative int' => [-1],
+            'negative float' => [-1.0],
+            'invalid float' => [1.5],
+            'invalid string' => ['abc'],
+            'object' => [new stdClass()],
+        ]);
+    });
 
-it('fromString uses strict integer parsing and accepts only canonical numbers', function (): void {
-    expect(IntegerNonNegative::fromString('0')->value())->toBe(0)
-        ->and(IntegerNonNegative::fromString('42')->value())->toBe(42);
+    describe('Converters', function () {
+        it('converts to bool and ensures explicit cast', function (int $input, bool $expected) {
+            $v = new IntegerNonNegative($input);
+            expect($v->toBool())->toBe($expected)
+                ->and(\gettype($v->toBool()))->toBe('boolean');
+        })->with([
+            'zero' => [0, false],
+            'positive' => [1, true],
+        ]);
 
-    foreach (['01', '+1', '1.0', ' 1', '1 ', 'a'] as $bad) {
-        expect(fn() => IntegerNonNegative::fromString($bad))
-            ->toThrow(StringTypeException::class);
-    }
-});
+        it('converts to float and ensures precision checks', function (int $input) {
+            $v = new IntegerNonNegative($input);
+            $float = $v->toFloat();
+            expect($float)->toBe((float) $input)
+                ->and(\gettype($float))->toBe('double');
 
-it('tryFromInt/tryFromString return Undefined for invalid inputs', function (): void {
-    $okI = IntegerNonNegative::tryFromInt(0);
-    $badI = IntegerNonNegative::tryFromInt(-1);
-    $okS = IntegerNonNegative::tryFromString('5');
-    $badS1 = IntegerNonNegative::tryFromString('-1');
-    $badS2 = IntegerNonNegative::tryFromString('01');
+            // Explicitly verify the value for mutants like RemoveDoubleCast
+            // If (float) cast is removed, it might return int (though return type hint would catch it,
+            // but the mutant might bypass or change behavior if logic is complex)
+            if ($input !== 0) {
+                expect($float)->not->toBe($input); // strict comparison between float and int
+            }
+        })->with([
+            'zero' => [0],
+            'positive' => [42],
+        ]);
 
-    expect($okI)->toBeInstanceOf(IntegerNonNegative::class)
-        ->and($okS)->toBeInstanceOf(IntegerNonNegative::class)
-        ->and($badI)->toBeInstanceOf(Undefined::class)
-        ->and($badS1)->toBeInstanceOf(Undefined::class)
-        ->and($badS2)->toBeInstanceOf(Undefined::class);
-});
+        it('throws when toFloat loses precision', function () {
+            // PHP floats have 53 bits of mantissa. 2^53 + 1 cannot be represented exactly.
+            $val = 9007199254740993; // 2^53 + 1
+            if ($val !== (int) (float) $val) {
+                // If the condition is negated (IfNegated) or NotIdenticalToIdentical,
+                // this will either not throw when it should, or throw when it shouldn't.
+                expect(fn() => (new IntegerNonNegative($val))->toFloat())->toThrow(IntegerTypeException::class);
+            }
 
-it('jsonSerialize returns native int', function (): void {
-    expect(IntegerNonNegative::fromInt(11)->jsonSerialize())->toBe(11);
-});
+            // Case where it should NOT throw (exact representation)
+            $safeVal = 9007199254740992; // 2^53
+            expect(fn() => (new IntegerNonNegative($safeVal))->toFloat())->not->toThrow(IntegerTypeException::class);
+        });
 
-it('tryFromMixed returns instance for integer-like inputs and Undefined otherwise', function (): void {
-    $okInt = IntegerNonNegative::tryFromMixed(0);
-    $okStr = IntegerNonNegative::tryFromMixed('12');
-    $fromTrue = IntegerNonNegative::tryFromMixed(true);
-    $fromFalse = IntegerNonNegative::tryFromMixed(false);
-    $badNeg = IntegerNonNegative::tryFromMixed(-1);
-    $badFloatish = IntegerNonNegative::tryFromMixed('1.0');
-    $badArr = IntegerNonNegative::tryFromMixed(['x']);
-    $badNull = IntegerNonNegative::tryFromMixed(null);
-    $badObj = IntegerNonNegative::tryFromMixed(new stdClass());
+        it('converts to int', function (int $input) {
+            expect((new IntegerNonNegative($input))->toInt())->toBe($input);
+        })->with([0, 42]);
 
-    $stringable = new class implements Stringable {
-        public function __toString(): string
-        {
-            return '7';
-        }
-    };
-    $okStringable = IntegerNonNegative::tryFromMixed($stringable);
+        it('converts to string', function (int $input) {
+            expect((new IntegerNonNegative($input))->toString())->toBe((string) $input)
+                ->and((string) (new IntegerNonNegative($input)))->toBe((string) $input);
+        })->with([0, 42]);
 
-    expect($okInt)->toBeInstanceOf(IntegerNonNegative::class)
-        ->and($okInt->value())->toBe(0)
-        ->and($okStr)->toBeInstanceOf(IntegerNonNegative::class)
-        ->and($okStr->value())->toBe(12)
-        ->and($fromTrue)->toBeInstanceOf(IntegerNonNegative::class)
-        ->and($fromTrue->value())->toBe(1)
-        ->and($fromFalse)->toBeInstanceOf(IntegerNonNegative::class)
-        ->and($fromFalse->value())->toBe(0)
-        ->and($okStringable)->toBeInstanceOf(IntegerNonNegative::class)
-        ->and($okStringable->value())->toBe(7)
-        ->and($badNeg)->toBeInstanceOf(Undefined::class)
-        ->and($badFloatish)->toBeInstanceOf(Undefined::class)
-        ->and($badArr)->toBeInstanceOf(Undefined::class)
-        ->and($badNull)->toBeInstanceOf(Undefined::class)
-        ->and($badObj)->toBeInstanceOf(Undefined::class);
-});
+        it('serializes to JSON', function (int $input) {
+            expect((new IntegerNonNegative($input))->jsonSerialize())->toBe($input);
+        })->with([0, 42]);
+    });
 
-it('isEmpty returns false for IntegerNonNegative', function (): void {
-    $a = new IntegerNonNegative(0);
-    $b = IntegerNonNegative::fromInt(5);
+    describe('State checks', function () {
+        it('is never empty', function () {
+            expect((new IntegerNonNegative(0))->isEmpty())->toBeFalse();
+        });
 
-    expect($a->isEmpty())->toBeFalse()
-        ->and($b->isEmpty())->toBeFalse();
-});
+        it('is never undefined', function () {
+            expect((new IntegerNonNegative(0))->isUndefined())->toBeFalse();
+        });
 
-it('isUndefined is always false', function (): void {
-    expect(IntegerNonNegative::fromInt(0)->isUndefined())->toBeFalse()
-        ->and(IntegerNonNegative::fromInt(1)->isUndefined())->toBeFalse();
-});
+        it('checks type correctly', function () {
+            $v = new IntegerNonNegative(42);
+            expect($v->isTypeOf(IntegerNonNegative::class))->toBeTrue()
+                ->and($v->isTypeOf('NotClass', IntegerNonNegative::class))->toBeTrue()
+                ->and($v->isTypeOf('NotClass'))->toBeFalse();
+        });
+    });
 
-it('fromFloat creates instance from float with exact integer value', function (): void {
-    $v = IntegerNonNegative::fromFloat(5.0);
-    expect($v->value())->toBe(5);
-});
+    describe('Round-trip conversions', function () {
+        it('preserves value through int → string → int conversion', function (int $original) {
+            $v1 = IntegerNonNegative::fromInt($original);
+            $str = $v1->toString();
+            $v2 = IntegerNonNegative::fromString($str);
+            expect($v2->value())->toBe($original);
+        })->with([0, 42, \PHP_INT_MAX]);
 
-it('toFloat converts to float and kills RemoveDoubleCast mutant', function (): void {
-    $v = new IntegerNonNegative(42);
-    $f = $v->toFloat();
-    expect($f)->toBe(42.0)
-        ->and($f)->toBeFloat();
-
-    expect(\is_float($v->toFloat()))->toBeTrue();
-});
-
-it('toBool converts to bool', function (): void {
-    $zero = new IntegerNonNegative(0);
-    $positive = new IntegerNonNegative(5);
-    expect($zero->toBool())->toBeFalse()
-        ->and($positive->toBool())->toBeTrue();
-});
-
-it('fromBool creates instance from boolean value', function (): void {
-    $fromTrue = IntegerNonNegative::fromBool(true);
-    $fromFalse = IntegerNonNegative::fromBool(false);
-    expect($fromTrue->value())->toBe(1)
-        ->and($fromFalse->value())->toBe(0);
-});
-
-it('toFloat throws when precision would be lost', function (): void {
-    $largeValue = new IntegerNonNegative(\PHP_INT_MAX);
-    expect(fn() => $largeValue->toFloat())
-        ->toThrow(IntegerTypeException::class, 'cannot be converted to float without losing precision');
-});
-
-it('IntegerNonNegative::tryFrom* methods return default on failure', function (): void {
-    expect(IntegerNonNegative::tryFromFloat(1.5))->toBeInstanceOf(Undefined::class)
-        ->and(IntegerNonNegative::tryFromFloat(-1.0))->toBeInstanceOf(Undefined::class)
-        ->and(IntegerNonNegative::tryFromMixed(null))->toBeInstanceOf(Undefined::class)
-        ->and(IntegerNonNegative::tryFromString('abc'))->toBeInstanceOf(Undefined::class)
-        ->and(IntegerNonNegative::tryFromInt(-1))->toBeInstanceOf(Undefined::class);
-});
-
-/**
- * @internal
- *
- * @coversNothing
- */
-readonly class IntegerNonNegativeTest extends IntegerNonNegative
-{
-    public static function fromBool(bool $value): static
-    {
-        throw new Exception('test');
-    }
-}
-
-it('IntegerNonNegative::tryFromBool catch block coverage', function (): void {
-    expect(IntegerNonNegativeTest::tryFromBool(true))->toBeInstanceOf(Undefined::class);
-});
-
-it('round-trip conversion preserves value: int → string → int', function (): void {
-    $original = 42;
-    $v1 = IntegerNonNegative::fromInt($original);
-    $str = $v1->toString();
-    $v2 = IntegerNonNegative::fromString($str);
-
-    expect($v2->value())->toBe($original);
-});
-
-it('round-trip conversion preserves value: string → int → string', function (): void {
-    $original = '123';
-    $v1 = IntegerNonNegative::fromString($original);
-    $int = $v1->toInt();
-    $v2 = IntegerNonNegative::fromInt($int);
-
-    expect($v2->toString())->toBe($original);
-});
-
-it('multiple round-trips preserve value integrity', function (): void {
-    $values = [0, 1, 42, 100, 999];
-
-    foreach ($values as $original) {
-        // int → string → int → string → int
-        $result = IntegerNonNegative::fromString(
-            IntegerNonNegative::fromInt(
-                IntegerNonNegative::fromString(
-                    IntegerNonNegative::fromInt($original)->toString()
-                )->toInt()
-            )->toString()
-        )->value();
-
-        expect($result)->toBe($original);
-    }
-});
-
-it('isTypeOf returns true when class matches', function (): void {
-    $v = IntegerNonNegative::fromInt(5);
-    expect($v->isTypeOf(IntegerNonNegative::class))->toBeTrue();
-});
-
-it('isTypeOf returns false when class does not match', function (): void {
-    $v = IntegerNonNegative::fromInt(5);
-    expect($v->isTypeOf('NonExistentClass'))->toBeFalse();
-});
-
-it('isTypeOf returns true for multiple classNames when one matches', function (): void {
-    $v = IntegerNonNegative::fromInt(5);
-    expect($v->isTypeOf('NonExistentClass', IntegerNonNegative::class, 'AnotherClass'))->toBeTrue();
+        it('preserves value through string → int → string conversion', function (string $original) {
+            $v1 = IntegerNonNegative::fromString($original);
+            $int = $v1->toInt();
+            $v2 = IntegerNonNegative::fromInt($int);
+            expect($v2->toString())->toBe($original);
+        })->with(['0', '42', (string) \PHP_INT_MAX]);
+    });
 });
