@@ -3,6 +3,7 @@
 **Every prompt setting**
 *   DO NOT RUN ANY TERMINAL COMMANDS!!! 
 *   Try to fix existing test-files in the first place, in exceptional cases, fix src classes.
+*   Create classes names in test files with proper names (like `IntegerStandardTest`), bc CSFIXER changes it. 
 
 **Tech-Stack & Style**
 *   **Core:** PHP 8.4 with `declare(strict_types=1);`.

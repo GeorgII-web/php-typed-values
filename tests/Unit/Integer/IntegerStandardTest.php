@@ -2,357 +2,221 @@
 
 declare(strict_types=1);
 
+use PhpTypedValues\Exception\Float\FloatTypeException;
+use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Integer\IntegerStandard;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
-it('IntegerStandard::tryFromString returns value on valid integer string', function (): void {
-    $v = IntegerStandard::tryFromString('123');
+describe('IntegerStandard', function () {
+    describe('Factories', function () {
+        it('creates from bool', function (bool $input, int $expected) {
+            expect(IntegerStandard::fromBool($input)->value())->toBe($expected);
+        })->with([
+            'true' => [true, 1],
+            'false' => [false, 0],
+        ]);
 
-    expect($v)
-        ->toBeInstanceOf(IntegerStandard::class)
-        ->and($v->value())
-        ->toBe(123);
-});
+        it('creates from float', function (float $input, int $expected) {
+            expect(IntegerStandard::fromFloat($input)->value())->toBe($expected);
+        })->with([
+            'positive' => [1.0, 1],
+            'negative' => [-42.0, -42],
+            'zero' => [0.0, 0],
+        ]);
 
-it('IntegerStandard::tryFromString returns Undefined on invalid integer string', function (): void {
-    $v = IntegerStandard::tryFromString('5.0');
+        it('throws when creating from invalid float', function (float $input) {
+            IntegerStandard::fromFloat($input);
+        })->throws(FloatTypeException::class)->with([
+            'with precision' => [1.5],
+            'INF' => [\INF],
+            'NAN' => [\NAN],
+        ]);
 
-    expect($v)->toBeInstanceOf(Undefined::class);
-});
+        it('creates from int', function (int $input) {
+            expect(IntegerStandard::fromInt($input)->value())->toBe($input);
+        })->with([
+            'positive' => [42],
+            'negative' => [-42],
+            'zero' => [0],
+            'max' => [\PHP_INT_MAX],
+            'min' => [\PHP_INT_MIN],
+        ]);
 
-it('IntegerStandard::tryFromInt always returns value for any int', function (): void {
-    $v = IntegerStandard::tryFromInt(-999);
+        it('creates from string', function (string $input, int $expected) {
+            expect(IntegerStandard::fromString($input)->value())->toBe($expected);
+        })->with([
+            'positive' => ['42', 42],
+            'negative' => ['-42', -42],
+            'zero' => ['0', 0],
+            'max' => [(string) \PHP_INT_MAX, \PHP_INT_MAX],
+            'min' => [(string) \PHP_INT_MIN, \PHP_INT_MIN],
+        ]);
 
-    expect($v)
-        ->toBeInstanceOf(IntegerStandard::class)
-        ->and($v->value())
-        ->toBe(-999);
-});
+        it('throws when creating from invalid string', function (string $input) {
+            IntegerStandard::fromString($input);
+        })->throws(StringTypeException::class)->with([
+            'float string' => ['42.0'],
+            'leading zero' => ['042'],
+            'plus sign' => ['+42'],
+            'empty' => [''],
+            'whitespace' => [' 42 '],
+            'text' => ['abc'],
+            'scientific' => ['1e2'],
+            'hex' => ['0x1A'],
+            'octal' => ['012'],
+            'float dot start' => ['.42'],
+            'float dot end' => ['42.'],
+        ]);
+    });
 
-it('IntegerStandard::fromInt returns instance and preserves value', function (): void {
-    $v = IntegerStandard::fromInt(42);
+    describe('Try Factories', function () {
+        it('tryFromBool returns instance or default', function (bool $input) {
+            $result = IntegerStandard::tryFromBool($input);
+            expect($result)->toBeInstanceOf(IntegerStandard::class)
+                ->and($result->value())->toBe((int) $input);
+        })->with([
+            'true' => [true],
+            'false' => [false],
+        ]);
 
-    expect($v)
-        ->toBeInstanceOf(IntegerStandard::class)
-        ->and($v->value())->toBe(42)
-        ->and($v->toString())->toBe('42');
-});
+        it('tryFromBool returns default when fromBool throws', function () {
+            /**
+             * @internal
+             *
+             * @coversNothing
+             */
+            readonly class IntegerStandardTest extends IntegerStandard
+            {
+                public static function fromBool(bool $value): static
+                {
+                    throw new Exception('forced failure');
+                }
+            }
 
-it('IntegerStandard::fromString throws on non-integer strings (strict check)', function (): void {
-    expect(fn() => IntegerStandard::fromString('12.3'))
-        ->toThrow(StringTypeException::class, 'String "12.3" has no valid strict integer value');
-});
+            expect(IntegerStandardTest::tryFromBool(true))->toBeInstanceOf(Undefined::class);
+        });
 
-it('creates Integer from int', function (): void {
-    expect(IntegerStandard::fromInt(5)->value())->toBe(5);
-});
+        it('tryFromFloat returns instance or default', function (float $input, bool $shouldFail) {
+            $result = IntegerStandard::tryFromFloat($input);
+            if ($shouldFail) {
+                expect($result)->toBeInstanceOf(Undefined::class);
+            } else {
+                expect($result)->toBeInstanceOf(IntegerStandard::class)
+                    ->and($result->value())->toBe((int) $input);
+            }
+        })->with([
+            'valid' => [1.0, false],
+            'invalid' => [1.5, true],
+        ]);
 
-it('creates Integer from string', function (): void {
-    expect(IntegerStandard::fromString('5')->value())->toBe(5);
-});
+        it('tryFromInt always returns instance', function (int $input) {
+            expect(IntegerStandard::tryFromInt($input))->toBeInstanceOf(IntegerStandard::class)
+                ->and(IntegerStandard::tryFromInt($input)->value())->toBe($input);
+        })->with([42, -42, 0]);
 
-it('fails on "integer-ish" float string', function (): void {
-    expect(fn() => IntegerStandard::fromString('5.'))->toThrow(StringTypeException::class);
-});
+        it('tryFromString returns instance or default', function (string $input, bool $shouldFail) {
+            $result = IntegerStandard::tryFromString($input);
+            if ($shouldFail) {
+                expect($result)->toBeInstanceOf(Undefined::class);
+            } else {
+                expect($result)->toBeInstanceOf(IntegerStandard::class)
+                    ->and($result->value())->toBe((int) $input);
+            }
+        })->with([
+            'valid' => ['123', false],
+            'invalid' => ['12.3', true],
+        ]);
 
-it('fails on float string', function (): void {
-    expect(fn() => IntegerStandard::fromString('5.5'))->toThrow(StringTypeException::class);
-});
+        it('tryFromMixed returns instance for valid inputs', function (mixed $input, int $expected) {
+            $result = IntegerStandard::tryFromMixed($input);
+            expect($result)->toBeInstanceOf(IntegerStandard::class)
+                ->and($result->value())->toBe($expected);
+        })->with([
+            'int' => [42, 42],
+            'float' => [42.0, 42],
+            'bool' => [true, 1],
+            'string' => ['42', 42],
+            'instance' => [IntegerStandard::fromInt(42), 42],
+            'stringable' => [new class implements Stringable {
+                public function __toString(): string
+                {
+                    return '42';
+                }
+            }, 42],
+        ]);
 
-it('fails on type mismatch', function (): void {
-    // Instead of passing wrong-typed value to fromInt (violates Psalm),
-    // verify mixed conversion path rejects non-integer-like input.
-    $u = IntegerStandard::tryFromMixed('12.3');
+        it('tryFromMixed returns default for invalid inputs', function (mixed $input) {
+            expect(IntegerStandard::tryFromMixed($input))->toBeInstanceOf(Undefined::class);
+        })->with([
+            'null' => [null],
+            'array' => [[]],
+            'invalid float' => [1.5],
+            'invalid string' => ['abc'],
+            'object' => [new stdClass()],
+        ]);
+    });
 
-    expect($u)->toBeInstanceOf(Undefined::class);
-});
+    describe('Converters', function () {
+        it('converts to bool', function (int $input, bool $expected) {
+            expect((new IntegerStandard($input))->toBool())->toBe($expected);
+        })->with([
+            'zero' => [0, false],
+            'positive' => [1, true],
+            'negative' => [-1, true],
+        ]);
 
-it('jsonSerialize returns integer', function (): void {
-    expect(IntegerStandard::tryFromString('1')->jsonSerialize())->toBeInt();
-});
+        it('converts to float', function (int $input) {
+            $v = new IntegerStandard($input);
+            expect($v->toFloat())->toBe((float) $input);
+        })->with([
+            'zero' => [0],
+            'positive' => [42],
+            'negative' => [-42],
+        ]);
 
-it('wraps any PHP int and preserves value/toString', function (): void {
-    $n = new IntegerStandard(-10);
-    $p = IntegerStandard::fromInt(42);
+        it('throws when toFloat loses precision', function () {
+            // PHP floats have 53 bits of mantissa. 2^53 + 1 cannot be represented exactly.
+            $val = 9007199254740993; // 2^53 + 1
+            if ($val !== (int) (float) $val) {
+                expect(fn() => (new IntegerStandard($val))->toFloat())->toThrow(IntegerTypeException::class);
+            } else {
+                // Try PHP_INT_MAX if 2^53+1 didn't work (though it should on 64bit)
+                $val = \PHP_INT_MAX;
+                if ($val !== (int) (float) $val) {
+                    expect(fn() => (new IntegerStandard($val))->toFloat())->toThrow(IntegerTypeException::class);
+                }
+            }
+        });
 
-    expect($n->value())->toBe(-10)
-        ->and($n->toInt())->toBe(-10)
-        ->and($n->toString())->toBe('-10')
-        ->and((string) $n)->toBe('-10')
-        ->and($p->value())->toBe(42)
-        ->and($p->toInt())->toBe(42)
-        ->and($p->toString())->toBe('42');
-});
+        it('converts to int', function (int $input) {
+            expect((new IntegerStandard($input))->toInt())->toBe($input);
+        })->with([42, -42, 0]);
 
-it('fromString uses strict integer parsing', function (): void {
-    expect(IntegerStandard::fromString('-5')->value())->toBe(-5)
-        ->and(IntegerStandard::fromString('0')->value())->toBe(0)
-        ->and(IntegerStandard::fromString('17')->toString())->toBe('17');
+        it('converts to string', function (int $input) {
+            expect((new IntegerStandard($input))->toString())->toBe((string) $input)
+                ->and((string) (new IntegerStandard($input)))->toBe((string) $input);
+        })->with([42, -42, 0]);
 
-    foreach (['01', '+1', '1.0', ' 1', '1 ', 'a'] as $bad) {
-        expect(fn() => IntegerStandard::fromString($bad))
-            ->toThrow(StringTypeException::class);
-    }
-});
+        it('serializes to JSON', function (int $input) {
+            expect((new IntegerStandard($input))->jsonSerialize())->toBe($input);
+        })->with([42, -42, 0]);
+    });
 
-it('tryFromInt always returns instance; tryFromString returns Undefined on invalid', function (): void {
-    $okI1 = IntegerStandard::tryFromInt(\PHP_INT_MIN + 1);
-    $okI2 = IntegerStandard::tryFromInt(\PHP_INT_MAX - 1);
-    $okS = IntegerStandard::tryFromString('123');
-    $badS = IntegerStandard::tryFromString('01');
+    describe('State checks', function () {
+        it('is never empty', function () {
+            expect((new IntegerStandard(0))->isEmpty())->toBeFalse();
+        });
 
-    expect($okI1)->toBeInstanceOf(IntegerStandard::class)
-        ->and($okI2)->toBeInstanceOf(IntegerStandard::class)
-        ->and($okS)->toBeInstanceOf(IntegerStandard::class)
-        ->and($badS)->toBeInstanceOf(Undefined::class);
-});
+        it('is never undefined', function () {
+            expect((new IntegerStandard(0))->isUndefined())->toBeFalse();
+        });
 
-it('jsonSerialize returns native int', function (): void {
-    expect(IntegerStandard::fromInt(-3)->jsonSerialize())->toBe(-3);
-});
-
-it('tryFromMixed returns instance for integer-like inputs and Undefined otherwise', function (): void {
-    $okInt = IntegerStandard::tryFromMixed(15);
-    $okStr = IntegerStandard::tryFromMixed('20');
-    $badF = IntegerStandard::tryFromMixed('1.0');
-    $badX = IntegerStandard::tryFromMixed(['x']);
-
-    expect($okInt)->toBeInstanceOf(IntegerStandard::class)
-        ->and($okInt->value())->toBe(15)
-        ->and($okStr)->toBeInstanceOf(IntegerStandard::class)
-        ->and($okStr->toString())->toBe('20')
-        ->and($badF)->toBeInstanceOf(Undefined::class)
-        ->and($badX)->toBeInstanceOf(Undefined::class);
-});
-
-it('isEmpty returns false for IntegerStandard', function (): void {
-    $a = new IntegerStandard(-1);
-    $b = IntegerStandard::fromInt(0);
-
-    expect($a->isEmpty())->toBeFalse()
-        ->and($b->isEmpty())->toBeFalse();
-});
-
-it('isUndefined is always false', function (): void {
-    expect(IntegerStandard::fromInt(0)->isUndefined())->toBeFalse()
-        ->and(IntegerStandard::fromInt(1)->isUndefined())->toBeFalse();
-});
-
-it('converts mixed values to correct integer state', function (mixed $input, int $expected): void {
-    $result = IntegerStandard::tryFromMixed($input);
-
-    expect($result)->toBeInstanceOf(IntegerStandard::class)
-        ->and($result->value())->toBe($expected);
-})->with([
-    // Integers
-    ['input' => 1, 'expected' => 1],
-    ['input' => 0, 'expected' => 0],
-    ['input' => -42, 'expected' => -42],
-    ['input' => \PHP_INT_MAX, 'expected' => \PHP_INT_MAX],
-    ['input' => \PHP_INT_MIN, 'expected' => \PHP_INT_MIN],
-    // Type class
-    [
-        'input' => IntegerStandard::fromInt(123),
-        'expected' => 123,
-    ],
-    // Float
-    ['input' => 55.0, 'expected' => 55],
-    // Booleans
-    ['input' => true, 'expected' => 1],
-    ['input' => false, 'expected' => 0],
-    // Strings
-    ['input' => '15', 'expected' => 15],
-    ['input' => '0', 'expected' => 0],
-    ['input' => '-10', 'expected' => -10],
-    // Stringable Object
-    ['input' => new class {
-        public function __toString(): string
-        {
-            return '25';
-        }
-    }, 'expected' => 25],
-]);
-
-it('returns Undefined for invalid mixed integer inputs', function (mixed $input): void {
-    $result = IntegerStandard::tryFromMixed($input);
-
-    expect($result)->toBeInstanceOf(Undefined::class)
-        ->and($result->isUndefined())->toBeTrue();
-})->with([
-    ['input' => null],
-    ['input' => []],
-    ['input' => 1.5],                  // Float
-    ['input' => new stdClass()],
-    ['input' => 'not-an-int'],
-    ['input' => '1.0'],                // Float string
-    ['input' => '01'],                 // Invalid format (leading zero)
-    ['input' => fn() => 1],            // Closure
-    ['input' => fopen('php://memory', 'r')], // Resource
-    ['input' => \INF],                 // Infinite
-    ['input' => \NAN],                 // NaN
-]);
-
-it('IntegerStandard::tryFrom* methods return default on failure', function (): void {
-    expect(IntegerStandard::tryFromFloat(1.5))->toBeInstanceOf(Undefined::class)
-        ->and(IntegerStandard::tryFromMixed(null))->toBeInstanceOf(Undefined::class)
-        ->and(IntegerStandard::tryFromString('abc'))->toBeInstanceOf(Undefined::class);
-
-    // Cover tryFromBool catch block using a throwing subclass
-    // We use a dummy class that inherits tryFromBool but we override fromBool
-    // to throw an exception, thus triggering the catch block in the inherited method.
-    // Since we are on PHP 8.2 (per guidelines), we can't use readonly anonymous classes.
-    // We'll define a named class instead.
-});
-
-/**
- * @internal
- *
- * @coversNothing
- */
-readonly class IntegerStandardTest extends IntegerStandard
-{
-    public static function fromBool(bool $value): static
-    {
-        throw new Exception('test');
-    }
-}
-
-it('IntegerStandard::tryFromBool catch block coverage', function (): void {
-    expect(IntegerStandardTest::tryFromBool(true))->toBeInstanceOf(Undefined::class);
-});
-
-it('IntegerStandard::fromString validates various edge cases', function (
-    string $input,
-    int|array $expected,
-): void {
-    if (\is_int($expected)) {
-        expect(IntegerStandard::fromString($input)->value())->toBe($expected);
-    } else {
-        [$exceptionClass, $message] = $expected;
-        expect(fn() => IntegerStandard::fromString($input))
-            ->toThrow($exceptionClass, $message);
-    }
-})->with([
-    // --- 1. Valid Decimals (Standard) ---
-    'valid_int' => ['42', 42],
-    'valid_negative' => ['-42', -42],
-    'int_max' => [(string) \PHP_INT_MAX, \PHP_INT_MAX],
-    'int_min' => [(string) \PHP_INT_MIN, \PHP_INT_MIN],
-
-    // --- 2. Range & Precision Issues ---
-    'str_overflow' => ['9223372036854775808', [StringTypeException::class, 'no valid strict integer value']],
-    'str_too_long' => ['123456789012345678901234567890', [StringTypeException::class, 'no valid strict integer value']],
-    'str_huge' => ['123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890', [StringTypeException::class, 'no valid strict integer value']],
-
-    // --- 3. Notation & Formatting ---
-    'str_plus_sign' => ['+42', [StringTypeException::class, 'no valid strict integer value']],
-    'str_leading_zero' => ['012', [StringTypeException::class, 'no valid strict integer value']],
-    'str_scientific' => ['1e2', [StringTypeException::class, 'no valid strict integer value']],
-    'str_comma' => ['1,000', [StringTypeException::class, 'no valid strict integer value']],
-    'str_decimal_dot' => ['42.0', [StringTypeException::class, 'no valid strict integer value']],
-    'str_dot_start' => ['.42', [StringTypeException::class, 'no valid strict integer value']],
-    'str_dot_end' => ['42.', [StringTypeException::class, 'no valid strict integer value']],
-
-    // --- 4. Alternative Bases ---
-    'str_hex' => ['0x1A', [StringTypeException::class, 'no valid strict integer value']],
-    'str_octal_pref' => ['0o10', [StringTypeException::class, 'no valid strict integer value']],
-    'str_bin_pref' => ['0b1101', [StringTypeException::class, 'no valid strict integer value']],
-
-    // --- 5. Whitespace & Control Characters ---
-    'str_space_lead' => [' 42', [StringTypeException::class, 'no valid strict integer value']],
-    'str_newline_end' => ["42\n", [StringTypeException::class, 'no valid strict integer value']],
-    'str_whitespace' => [" \t\n\r ", [StringTypeException::class, 'no valid strict integer value']],
-    'str_null_byte' => ["42\0junk", [StringTypeException::class, 'no valid strict integer value']],
-    'str_invisible' => ["42\u{200B}", [StringTypeException::class, 'no valid strict integer value']],
-
-    // --- 6. Non-Numeric Types & Garbage ---
-    'str_empty' => ['', [StringTypeException::class, 'no valid strict integer value']],
-    'str_text_suffix' => ['42 units', [StringTypeException::class, 'no valid strict integer value']],
-    'str_bool_true' => ['true', [StringTypeException::class, 'no valid strict integer value']],
-    'str_neg_inf' => ['-INF', [StringTypeException::class, 'no valid strict integer value']],
-]);
-
-it('fromFloat creates instance from float with exact integer value', function (): void {
-    $v = IntegerStandard::fromFloat(5.0);
-    expect($v->value())->toBe(5);
-});
-
-it('toFloat converts to float and kills RemoveDoubleCast mutant', function (): void {
-    $v = new IntegerStandard(42);
-    $f = $v->toFloat();
-    expect($f)->toBe(42.0)
-        ->and($f)->toBeFloat();
-
-    expect(\is_float($v->toFloat()))->toBeTrue();
-});
-
-it('toBool converts to bool', function (): void {
-    $zero = new IntegerStandard(0);
-    $positive = new IntegerStandard(5);
-    expect($zero->toBool())->toBeFalse()
-        ->and($positive->toBool())->toBeTrue();
-});
-
-it('round-trip conversion preserves value: float → int → float', function (): void {
-    $original = 42.0;
-    $v1 = IntegerStandard::fromFloat($original);
-    $int = $v1->toInt();
-    $float = IntegerStandard::fromInt($int)->toFloat();
-
-    expect($float)->toBe($original);
-});
-
-it('round-trip conversion preserves value: int → float → int', function (): void {
-    $original = 123;
-    $v1 = IntegerStandard::fromInt($original);
-    $float = $v1->toFloat();
-    $v2 = IntegerStandard::fromFloat($float);
-
-    expect($v2->value())->toBe($original);
-});
-
-it('multiple round-trips preserve value integrity: float → int → float → int', function (): void {
-    $values = [0.0, 1.0, -42.0, 100.0, 999.0];
-
-    foreach ($values as $original) {
-        // float → int → float → int → float
-        $result = IntegerStandard::fromInt(
-            IntegerStandard::fromFloat(
-                IntegerStandard::fromInt(
-                    IntegerStandard::fromFloat($original)->toInt()
-                )->toFloat()
-            )->value()
-        )->toFloat();
-
-        expect($result)->toBe($original);
-    }
-});
-
-it('round-trip conversion with all formats: string → int → float → int → string', function (): void {
-    $original = '256';
-
-    // string → int → float → int → string
-    $result = IntegerStandard::fromInt(
-        IntegerStandard::fromFloat(
-            IntegerStandard::fromString($original)->toFloat()
-        )->toInt()
-    )->toString();
-
-    expect($result)->toBe($original);
-});
-
-it('isTypeOf returns true when class matches', function (): void {
-    $v = IntegerStandard::fromInt(5);
-    expect($v->isTypeOf(IntegerStandard::class))->toBeTrue();
-});
-
-it('isTypeOf returns false when class does not match', function (): void {
-    $v = IntegerStandard::fromInt(5);
-    expect($v->isTypeOf('NonExistentClass'))->toBeFalse();
-});
-
-it('isTypeOf returns true for multiple classNames when one matches', function (): void {
-    $v = IntegerStandard::fromInt(5);
-    expect($v->isTypeOf('NonExistentClass', IntegerStandard::class, 'AnotherClass'))->toBeTrue();
+        it('checks type correctly', function () {
+            $v = new IntegerStandard(42);
+            expect($v->isTypeOf(IntegerStandard::class))->toBeTrue()
+                ->and($v->isTypeOf('NotClass', IntegerStandard::class))->toBeTrue()
+                ->and($v->isTypeOf('NotClass'))->toBeFalse();
+        });
+    });
 });

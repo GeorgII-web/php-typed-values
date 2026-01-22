@@ -51,6 +51,9 @@ readonly class IntegerPositive extends IntegerTypeAbstract
         $this->value = $value;
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function fromBool(bool $value): static
     {
         return new static(static::boolToInt($value));
@@ -59,6 +62,8 @@ readonly class IntegerPositive extends IntegerTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws IntegerTypeException
+     *
+     * @psalm-pure
      */
     public static function fromFloat(float $value): static
     {
@@ -66,6 +71,8 @@ readonly class IntegerPositive extends IntegerTypeAbstract
     }
 
     /**
+     * @psalm-pure
+     *
      * @throws IntegerTypeException
      */
     public static function fromInt(int $value): static
@@ -76,6 +83,8 @@ readonly class IntegerPositive extends IntegerTypeAbstract
     /**
      * @throws StringTypeException
      * @throws IntegerTypeException
+     *
+     * @psalm-pure
      */
     public static function fromString(string $value): static
     {

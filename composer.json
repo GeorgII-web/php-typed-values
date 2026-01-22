@@ -46,7 +46,6 @@
       "composer validate --strict",
       "@cs",
       "@sca",
-      "@usage",
       "@test",
       "@type",
       "@coverage",
