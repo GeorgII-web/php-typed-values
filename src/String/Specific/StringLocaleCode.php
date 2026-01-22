@@ -80,6 +80,8 @@ readonly class StringLocaleCode extends StringTypeAbstract
     /**
      * @throws StringTypeException
      * @throws LocaleStringTypeException
+     *
+     * @psalm-pure
      */
     public static function fromBool(bool $value): static
     {
@@ -89,6 +91,8 @@ readonly class StringLocaleCode extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws LocaleStringTypeException
+     *
+     * @psalm-pure
      */
     public static function fromFloat(float $value): static
     {
@@ -98,6 +102,8 @@ readonly class StringLocaleCode extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws LocaleStringTypeException
+     *
+     * @psalm-pure
      */
     public static function fromInt(int $value): static
     {
@@ -106,6 +112,8 @@ readonly class StringLocaleCode extends StringTypeAbstract
 
     /**
      * @throws LocaleStringTypeException
+     *
+     * @psalm-pure
      */
     public static function fromString(string $value): static
     {
@@ -196,6 +204,8 @@ readonly class StringLocaleCode extends StringTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromBool(
         bool $value,
@@ -216,6 +226,8 @@ readonly class StringLocaleCode extends StringTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromFloat(
         float $value,
@@ -236,6 +248,8 @@ readonly class StringLocaleCode extends StringTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromInt(
         int $value,
@@ -256,6 +270,8 @@ readonly class StringLocaleCode extends StringTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromMixed(
         mixed $value,
@@ -284,6 +300,8 @@ readonly class StringLocaleCode extends StringTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromString(
         string $value,

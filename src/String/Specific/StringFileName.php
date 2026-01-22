@@ -10,7 +10,6 @@ use const PATHINFO_FILENAME;
 use Exception;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
-use PhpTypedValues\Exception\Bool\BoolTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\FileNameStringTypeException;
@@ -66,6 +65,8 @@ readonly class StringFileName extends StringTypeAbstract
     /**
      * @throws StringTypeException
      * @throws FileNameStringTypeException
+     *
+     * @psalm-pure
      */
     public static function fromBool(bool $value): static
     {
@@ -75,6 +76,9 @@ readonly class StringFileName extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws FileNameStringTypeException
+     * @throws StringTypeException
+     *
+     * @psalm-pure
      */
     public static function fromFloat(float $value): static
     {
@@ -82,8 +86,9 @@ readonly class StringFileName extends StringTypeAbstract
     }
 
     /**
-     * @throws FloatTypeException
      * @throws FileNameStringTypeException
+     *
+     * @psalm-pure
      */
     public static function fromInt(int $value): static
     {
@@ -92,6 +97,8 @@ readonly class StringFileName extends StringTypeAbstract
 
     /**
      * @throws FileNameStringTypeException
+     *
+     * @psalm-pure
      */
     public static function fromString(string $value): static
     {
@@ -141,7 +148,7 @@ readonly class StringFileName extends StringTypeAbstract
     }
 
     /**
-     * @throws BoolTypeException
+     * @throws IntegerTypeException
      */
     public function toBool(): bool
     {
@@ -150,6 +157,7 @@ readonly class StringFileName extends StringTypeAbstract
 
     /**
      * @throws FloatTypeException
+     * @throws StringTypeException
      */
     public function toFloat(): float
     {
@@ -157,7 +165,7 @@ readonly class StringFileName extends StringTypeAbstract
     }
 
     /**
-     * @throws IntegerTypeException
+     * @throws StringTypeException
      */
     public function toInt(): int
     {
@@ -178,6 +186,8 @@ readonly class StringFileName extends StringTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromBool(
         bool $value,
@@ -198,6 +208,8 @@ readonly class StringFileName extends StringTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromFloat(
         float $value,
@@ -218,6 +230,8 @@ readonly class StringFileName extends StringTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromInt(
         int $value,
@@ -238,6 +252,8 @@ readonly class StringFileName extends StringTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromMixed(
         mixed $value,
@@ -266,6 +282,8 @@ readonly class StringFileName extends StringTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromString(
         string $value,

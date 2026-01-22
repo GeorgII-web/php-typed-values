@@ -57,6 +57,8 @@ readonly class StringMd5 extends StringTypeAbstract
 
     /**
      * @throws Md5StringTypeException
+     *
+     * @psalm-pure
      */
     public static function fromBool(bool $value): static
     {
@@ -66,6 +68,8 @@ readonly class StringMd5 extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws Md5StringTypeException
+     *
+     * @psalm-pure
      */
     public static function fromFloat(float $value): static
     {
@@ -75,6 +79,8 @@ readonly class StringMd5 extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws Md5StringTypeException
+     *
+     * @psalm-pure
      */
     public static function fromInt(int $value): static
     {
@@ -85,6 +91,8 @@ readonly class StringMd5 extends StringTypeAbstract
      * Creates an MD5 instance from an existing MD5 hash string.
      *
      * @throws Md5StringTypeException
+     *
+     * @psalm-pure
      */
     public static function fromString(string $value): static
     {
@@ -157,6 +165,8 @@ readonly class StringMd5 extends StringTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromBool(
         bool $value,
@@ -177,6 +187,8 @@ readonly class StringMd5 extends StringTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromFloat(
         float $value,
@@ -197,6 +209,8 @@ readonly class StringMd5 extends StringTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromInt(
         int $value,
@@ -217,6 +231,8 @@ readonly class StringMd5 extends StringTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromMixed(
         mixed $value,
@@ -245,6 +261,8 @@ readonly class StringMd5 extends StringTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromString(
         string $value,

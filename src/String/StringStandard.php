@@ -41,6 +41,9 @@ readonly class StringStandard extends StringTypeAbstract
         $this->value = $value;
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function fromBool(bool $value): static
     {
         return new static(static::boolToString($value));
@@ -49,17 +52,25 @@ readonly class StringStandard extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws StringTypeException
+     *
+     * @psalm-pure
      */
     public static function fromFloat(float $value): static
     {
         return new static(static::floatToString($value));
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function fromInt(int $value): static
     {
         return new static(static::intToString($value));
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function fromString(string $value): static
     {
         return new static($value);
@@ -127,6 +138,8 @@ readonly class StringStandard extends StringTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromBool(
         bool $value,
@@ -147,6 +160,8 @@ readonly class StringStandard extends StringTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromFloat(
         float $value,
@@ -167,6 +182,8 @@ readonly class StringStandard extends StringTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromInt(
         int $value,
@@ -187,6 +204,8 @@ readonly class StringStandard extends StringTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromMixed(
         mixed $value,
@@ -215,6 +234,8 @@ readonly class StringStandard extends StringTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromString(
         string $value,

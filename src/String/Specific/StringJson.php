@@ -14,6 +14,7 @@ use PhpTypedValues\Exception\Bool\BoolTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\JsonStringTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
@@ -79,6 +80,8 @@ readonly class StringJson extends StringTypeAbstract
 
     /**
      * @throws JsonStringTypeException
+     *
+     * @psalm-pure
      */
     public static function fromBool(bool $value): static
     {
@@ -88,6 +91,9 @@ readonly class StringJson extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws JsonStringTypeException
+     * @throws StringTypeException
+     *
+     * @psalm-pure
      */
     public static function fromFloat(float $value): static
     {
@@ -95,8 +101,9 @@ readonly class StringJson extends StringTypeAbstract
     }
 
     /**
-     * @throws FloatTypeException
      * @throws JsonStringTypeException
+     *
+     * @psalm-pure
      */
     public static function fromInt(int $value): static
     {
@@ -105,6 +112,8 @@ readonly class StringJson extends StringTypeAbstract
 
     /**
      * @throws JsonStringTypeException
+     *
+     * @psalm-pure
      */
     public static function fromString(string $value): static
     {
@@ -194,6 +203,8 @@ readonly class StringJson extends StringTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromBool(
         bool $value,
@@ -214,6 +225,8 @@ readonly class StringJson extends StringTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromFloat(
         float $value,
@@ -234,6 +247,8 @@ readonly class StringJson extends StringTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromInt(
         int $value,
@@ -254,6 +269,8 @@ readonly class StringJson extends StringTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromMixed(
         mixed $value,
@@ -283,6 +300,8 @@ readonly class StringJson extends StringTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromString(
         string $value,
