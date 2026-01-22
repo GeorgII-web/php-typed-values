@@ -11,6 +11,7 @@ use Exception;
 use PhpTypedValues\Base\Primitive\DateTime\DateTimeTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\DateTime\DateTimeTypeException;
+use PhpTypedValues\Exception\DateTime\ZoneDateTimeTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
@@ -39,12 +40,18 @@ readonly class DateTimeRFC3339Extended extends DateTimeTypeAbstract
 
     protected DateTimeImmutable $value;
 
+    /**
+     * @throws ZoneDateTimeTypeException
+     */
     public function __construct(DateTimeImmutable $value)
     {
         // normalized time zone
         $this->value = $value->setTimezone(static::stringToDateTimeZone(static::DEFAULT_ZONE));
     }
 
+    /**
+     * @throws ZoneDateTimeTypeException
+     */
     public static function fromDateTime(DateTimeImmutable $value): static
     {
         return new static($value);
@@ -156,15 +163,13 @@ readonly class DateTimeRFC3339Extended extends DateTimeTypeAbstract
         return $this->value;
     }
 
+    /**
+     * @throws ZoneDateTimeTypeException
+     */
     public function withTimeZone(string $timezone): static
     {
         return new static(
             $this->value()->setTimezone(static::stringToDateTimeZone($timezone))
         );
-    }
-
-    public function __toString(): string
-    {
-        return $this->toString();
     }
 }

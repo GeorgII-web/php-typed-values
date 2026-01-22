@@ -146,6 +146,7 @@ readonly class FloatStandard extends FloatTypeAbstract
      * @return non-empty-string
      *
      * @throws FloatTypeException
+     * @throws StringTypeException
      */
     public function toString(): string
     {

@@ -39,12 +39,18 @@ readonly class DateTimeAtom extends DateTimeTypeAbstract
 
     protected DateTimeImmutable $value;
 
+    /**
+     * @throws ZoneDateTimeTypeException
+     */
     public function __construct(DateTimeImmutable $value)
     {
         // normalized time zone
         $this->value = $value->setTimezone(static::stringToDateTimeZone(static::DEFAULT_ZONE));
     }
 
+    /**
+     * @throws ZoneDateTimeTypeException
+     */
     public static function fromDateTime(DateTimeImmutable $value): static
     {
         return new static($value);
@@ -164,10 +170,5 @@ readonly class DateTimeAtom extends DateTimeTypeAbstract
         return new static(
             $this->value()->setTimezone(static::stringToDateTimeZone($timezone))
         );
-    }
-
-    public function __toString(): string
-    {
-        return $this->toString();
     }
 }

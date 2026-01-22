@@ -7,7 +7,6 @@ namespace PhpTypedValues\Bool;
 use Exception;
 use PhpTypedValues\Base\Primitive\Bool\BoolTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
-use PhpTypedValues\Exception\Bool\BoolTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\TypeException;
@@ -64,7 +63,7 @@ readonly class BoolStandard extends BoolTypeAbstract
     }
 
     /**
-     * @throws BoolTypeException
+     * @throws IntegerTypeException
      */
     public static function fromString(string $value): static
     {
@@ -225,10 +224,5 @@ readonly class BoolStandard extends BoolTypeAbstract
     public function value(): bool
     {
         return $this->value;
-    }
-
-    public function __toString(): string
-    {
-        return $this->toString();
     }
 }

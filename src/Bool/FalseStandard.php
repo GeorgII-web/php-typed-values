@@ -79,6 +79,7 @@ readonly class FalseStandard extends BoolTypeAbstract
 
     /**
      * @throws BoolTypeException
+     * @throws IntegerTypeException
      */
     public static function fromString(string $value): static
     {

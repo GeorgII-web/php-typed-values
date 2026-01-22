@@ -8,6 +8,8 @@ use Exception;
 use PhpTypedValues\Base\Primitive\Float\FloatTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\Float\FloatTypeException;
+use PhpTypedValues\Exception\Integer\IntegerTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
@@ -78,6 +80,7 @@ readonly class FloatPositive extends FloatTypeAbstract
 
     /**
      * @throws FloatTypeException
+     * @throws IntegerTypeException
      *
      * @psalm-pure
      */
@@ -88,6 +91,7 @@ readonly class FloatPositive extends FloatTypeAbstract
 
     /**
      * @throws FloatTypeException
+     * @throws StringTypeException
      *
      * @psalm-pure
      */
@@ -147,6 +151,7 @@ readonly class FloatPositive extends FloatTypeAbstract
      * @return non-empty-string
      *
      * @throws FloatTypeException
+     * @throws StringTypeException
      */
     public function toString(): string
     {

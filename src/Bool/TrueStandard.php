@@ -79,6 +79,7 @@ readonly class TrueStandard extends BoolTypeAbstract
 
     /**
      * @throws BoolTypeException
+     * @throws IntegerTypeException
      */
     public static function fromString(string $value): static
     {
