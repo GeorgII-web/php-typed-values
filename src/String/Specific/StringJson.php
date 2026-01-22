@@ -10,7 +10,6 @@ use Exception;
 use JsonException;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
-use PhpTypedValues\Exception\Bool\BoolTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\JsonStringTypeException;
@@ -158,7 +157,7 @@ readonly class StringJson extends StringTypeAbstract
     }
 
     /**
-     * @throws BoolTypeException
+     * @throws IntegerTypeException
      */
     public function toBool(): bool
     {
@@ -167,6 +166,7 @@ readonly class StringJson extends StringTypeAbstract
 
     /**
      * @throws FloatTypeException
+     * @throws StringTypeException
      */
     public function toFloat(): float
     {
@@ -174,7 +174,7 @@ readonly class StringJson extends StringTypeAbstract
     }
 
     /**
-     * @throws IntegerTypeException
+     * @throws StringTypeException
      */
     public function toInt(): int
     {

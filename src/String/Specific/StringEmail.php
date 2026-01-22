@@ -9,7 +9,6 @@ use const FILTER_VALIDATE_EMAIL;
 use Exception;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
-use PhpTypedValues\Exception\Bool\BoolTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\EmailStringTypeException;
@@ -73,6 +72,7 @@ readonly class StringEmail extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws EmailStringTypeException
+     * @throws StringTypeException
      *
      * @psalm-pure
      */
@@ -82,7 +82,6 @@ readonly class StringEmail extends StringTypeAbstract
     }
 
     /**
-     * @throws FloatTypeException
      * @throws EmailStringTypeException
      *
      * @psalm-pure
@@ -129,7 +128,7 @@ readonly class StringEmail extends StringTypeAbstract
     }
 
     /**
-     * @throws BoolTypeException
+     * @throws IntegerTypeException
      */
     public function toBool(): bool
     {
@@ -138,6 +137,7 @@ readonly class StringEmail extends StringTypeAbstract
 
     /**
      * @throws FloatTypeException
+     * @throws StringTypeException
      */
     public function toFloat(): float
     {
@@ -145,7 +145,7 @@ readonly class StringEmail extends StringTypeAbstract
     }
 
     /**
-     * @throws IntegerTypeException
+     * @throws StringTypeException
      */
     public function toInt(): int
     {

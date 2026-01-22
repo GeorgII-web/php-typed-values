@@ -7,10 +7,10 @@ namespace PhpTypedValues\String\Specific;
 use Exception;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
-use PhpTypedValues\Exception\Bool\BoolTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\LanguageCodeStringTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
@@ -72,6 +72,7 @@ readonly class StringLanguageCode extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws LanguageCodeStringTypeException
+     * @throws StringTypeException
      *
      * @psalm-pure
      */
@@ -81,7 +82,6 @@ readonly class StringLanguageCode extends StringTypeAbstract
     }
 
     /**
-     * @throws FloatTypeException
      * @throws LanguageCodeStringTypeException
      *
      * @psalm-pure
@@ -128,7 +128,7 @@ readonly class StringLanguageCode extends StringTypeAbstract
     }
 
     /**
-     * @throws BoolTypeException
+     * @throws IntegerTypeException
      */
     public function toBool(): bool
     {
@@ -137,6 +137,7 @@ readonly class StringLanguageCode extends StringTypeAbstract
 
     /**
      * @throws FloatTypeException
+     * @throws StringTypeException
      */
     public function toFloat(): float
     {
@@ -144,7 +145,7 @@ readonly class StringLanguageCode extends StringTypeAbstract
     }
 
     /**
-     * @throws IntegerTypeException
+     * @throws StringTypeException
      */
     public function toInt(): int
     {

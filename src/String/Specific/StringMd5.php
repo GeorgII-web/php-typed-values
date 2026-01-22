@@ -7,10 +7,10 @@ namespace PhpTypedValues\String\Specific;
 use Exception;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
-use PhpTypedValues\Exception\Bool\BoolTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\Md5StringTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
@@ -20,7 +20,6 @@ use function is_float;
 use function is_int;
 use function is_scalar;
 use function is_string;
-use function md5;
 use function preg_match;
 use function sprintf;
 
@@ -68,6 +67,7 @@ readonly class StringMd5 extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws Md5StringTypeException
+     * @throws StringTypeException
      *
      * @psalm-pure
      */
@@ -77,7 +77,6 @@ readonly class StringMd5 extends StringTypeAbstract
     }
 
     /**
-     * @throws FloatTypeException
      * @throws Md5StringTypeException
      *
      * @psalm-pure
@@ -126,7 +125,7 @@ readonly class StringMd5 extends StringTypeAbstract
     }
 
     /**
-     * @throws BoolTypeException
+     * @throws IntegerTypeException
      */
     public function toBool(): bool
     {
@@ -135,6 +134,7 @@ readonly class StringMd5 extends StringTypeAbstract
 
     /**
      * @throws FloatTypeException
+     * @throws StringTypeException
      */
     public function toFloat(): float
     {
@@ -142,7 +142,7 @@ readonly class StringMd5 extends StringTypeAbstract
     }
 
     /**
-     * @throws IntegerTypeException
+     * @throws StringTypeException
      */
     public function toInt(): int
     {

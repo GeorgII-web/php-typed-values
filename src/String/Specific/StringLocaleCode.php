@@ -7,7 +7,6 @@ namespace PhpTypedValues\String\Specific;
 use Exception;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
-use PhpTypedValues\Exception\Bool\BoolTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\LocaleStringTypeException;
@@ -91,6 +90,7 @@ readonly class StringLocaleCode extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws LocaleStringTypeException
+     * @throws StringTypeException
      *
      * @psalm-pure
      */
@@ -100,7 +100,6 @@ readonly class StringLocaleCode extends StringTypeAbstract
     }
 
     /**
-     * @throws FloatTypeException
      * @throws LocaleStringTypeException
      *
      * @psalm-pure
@@ -167,7 +166,7 @@ readonly class StringLocaleCode extends StringTypeAbstract
     }
 
     /**
-     * @throws BoolTypeException
+     * @throws IntegerTypeException
      */
     public function toBool(): bool
     {
@@ -176,6 +175,7 @@ readonly class StringLocaleCode extends StringTypeAbstract
 
     /**
      * @throws FloatTypeException
+     * @throws StringTypeException
      */
     public function toFloat(): float
     {
@@ -183,7 +183,7 @@ readonly class StringLocaleCode extends StringTypeAbstract
     }
 
     /**
-     * @throws IntegerTypeException
+     * @throws StringTypeException
      */
     public function toInt(): int
     {

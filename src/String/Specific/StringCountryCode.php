@@ -7,7 +7,6 @@ namespace PhpTypedValues\String\Specific;
 use Exception;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
-use PhpTypedValues\Exception\Bool\BoolTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\CountryCodeStringTypeException;
@@ -74,6 +73,7 @@ readonly class StringCountryCode extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws CountryCodeStringTypeException
+     * @throws StringTypeException
      *
      * @psalm-pure
      */
@@ -83,7 +83,6 @@ readonly class StringCountryCode extends StringTypeAbstract
     }
 
     /**
-     * @throws FloatTypeException
      * @throws CountryCodeStringTypeException
      *
      * @psalm-pure
@@ -130,7 +129,7 @@ readonly class StringCountryCode extends StringTypeAbstract
     }
 
     /**
-     * @throws BoolTypeException
+     * @throws IntegerTypeException
      */
     public function toBool(): bool
     {
@@ -139,6 +138,7 @@ readonly class StringCountryCode extends StringTypeAbstract
 
     /**
      * @throws FloatTypeException
+     * @throws StringTypeException
      */
     public function toFloat(): float
     {
@@ -146,7 +146,7 @@ readonly class StringCountryCode extends StringTypeAbstract
     }
 
     /**
-     * @throws IntegerTypeException
+     * @throws StringTypeException
      */
     public function toInt(): int
     {

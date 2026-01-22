@@ -69,6 +69,7 @@ readonly class StringDecimal extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws DecimalStringTypeException
+     * @throws StringTypeException
      *
      * @psalm-pure
      */

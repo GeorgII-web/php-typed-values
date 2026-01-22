@@ -9,9 +9,9 @@ use const FILTER_VALIDATE_URL;
 use Exception;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
-use PhpTypedValues\Exception\Bool\BoolTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\String\UrlStringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -69,6 +69,7 @@ readonly class StringUrl extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws UrlStringTypeException
+     * @throws StringTypeException
      *
      * @psalm-pure
      */
@@ -78,7 +79,6 @@ readonly class StringUrl extends StringTypeAbstract
     }
 
     /**
-     * @throws FloatTypeException
      * @throws UrlStringTypeException
      *
      * @psalm-pure
@@ -125,7 +125,7 @@ readonly class StringUrl extends StringTypeAbstract
     }
 
     /**
-     * @throws BoolTypeException
+     * @throws IntegerTypeException
      */
     public function toBool(): bool
     {
@@ -134,6 +134,7 @@ readonly class StringUrl extends StringTypeAbstract
 
     /**
      * @throws FloatTypeException
+     * @throws StringTypeException
      */
     public function toFloat(): float
     {
@@ -141,7 +142,7 @@ readonly class StringUrl extends StringTypeAbstract
     }
 
     /**
-     * @throws IntegerTypeException
+     * @throws StringTypeException
      */
     public function toInt(): int
     {
