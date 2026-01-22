@@ -23,31 +23,49 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  */
 readonly class UndefinedStandard extends UndefinedTypeAbstract
 {
+    /**
+     * @psalm-pure
+     */
     public static function create(): static
     {
         return new static();
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function fromArray(array $value): static
     {
         return new static();
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function fromBool(bool $value): static
     {
         return new static();
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function fromFloat(float $value): static
     {
         return new static();
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function fromInt(int $value): static
     {
         return new static();
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function fromString(string $value): static
     {
         return new static();
@@ -122,6 +140,9 @@ readonly class UndefinedStandard extends UndefinedTypeAbstract
         throw new UndefinedTypeException('UndefinedType cannot be converted to string.');
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function tryFromArray(
         array $value,
         PrimitiveTypeAbstract $default = new Undefined(),
@@ -129,6 +150,9 @@ readonly class UndefinedStandard extends UndefinedTypeAbstract
         return static::fromArray($value);
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function tryFromBool(
         bool $value,
         PrimitiveTypeAbstract $default = new Undefined(),
@@ -136,6 +160,9 @@ readonly class UndefinedStandard extends UndefinedTypeAbstract
         return static::fromBool($value);
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function tryFromFloat(
         float $value,
         PrimitiveTypeAbstract $default = new Undefined(),
@@ -143,6 +170,9 @@ readonly class UndefinedStandard extends UndefinedTypeAbstract
         return static::fromFloat($value);
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function tryFromInt(
         int $value,
         PrimitiveTypeAbstract $default = new Undefined(),
@@ -150,6 +180,9 @@ readonly class UndefinedStandard extends UndefinedTypeAbstract
         return static::fromInt($value);
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function tryFromMixed(
         mixed $value,
         PrimitiveTypeAbstract $default = new Undefined(),
@@ -157,6 +190,9 @@ readonly class UndefinedStandard extends UndefinedTypeAbstract
         return new static();
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function tryFromString(
         string $value,
         PrimitiveTypeAbstract $default = new Undefined(),

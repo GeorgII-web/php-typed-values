@@ -43,6 +43,9 @@ readonly class IntegerStandard extends IntegerTypeAbstract
         $this->value = $value;
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function fromBool(bool $value): static
     {
         return new static(static::boolToInt($value));
@@ -50,12 +53,17 @@ readonly class IntegerStandard extends IntegerTypeAbstract
 
     /**
      * @throws FloatTypeException
+     *
+     * @psalm-pure
      */
     public static function fromFloat(float $value): static
     {
         return new static(static::floatToInt($value));
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function fromInt(int $value): static
     {
         return new static($value);
@@ -63,6 +71,8 @@ readonly class IntegerStandard extends IntegerTypeAbstract
 
     /**
      * @throws StringTypeException
+     *
+     * @psalm-pure
      */
     public static function fromString(string $value): static
     {
@@ -135,6 +145,8 @@ readonly class IntegerStandard extends IntegerTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromBool(
         bool $value,
@@ -155,6 +167,8 @@ readonly class IntegerStandard extends IntegerTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromFloat(
         float $value,
@@ -175,6 +189,8 @@ readonly class IntegerStandard extends IntegerTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromInt(
         int $value,
@@ -190,6 +206,8 @@ readonly class IntegerStandard extends IntegerTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromMixed(
         mixed $value,
@@ -216,6 +234,8 @@ readonly class IntegerStandard extends IntegerTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromString(
         string $value,

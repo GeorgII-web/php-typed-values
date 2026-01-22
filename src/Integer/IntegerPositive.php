@@ -161,6 +161,8 @@ readonly class IntegerPositive extends IntegerTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromBool(
         bool $value,
@@ -181,6 +183,8 @@ readonly class IntegerPositive extends IntegerTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromFloat(
         float $value,
@@ -201,6 +205,8 @@ readonly class IntegerPositive extends IntegerTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromInt(
         int $value,
@@ -221,6 +227,8 @@ readonly class IntegerPositive extends IntegerTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromMixed(
         mixed $value,
@@ -247,6 +255,8 @@ readonly class IntegerPositive extends IntegerTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromString(
         string $value,

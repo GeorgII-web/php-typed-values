@@ -58,6 +58,8 @@ readonly class FloatNonNegative extends FloatTypeAbstract
 
     /**
      * @throws FloatTypeException
+     *
+     * @psalm-pure
      */
     public static function fromBool(bool $value): static
     {
@@ -66,6 +68,8 @@ readonly class FloatNonNegative extends FloatTypeAbstract
 
     /**
      * @throws FloatTypeException
+     *
+     * @psalm-pure
      */
     public static function fromFloat(float $value): static
     {
@@ -74,6 +78,8 @@ readonly class FloatNonNegative extends FloatTypeAbstract
 
     /**
      * @throws FloatTypeException
+     *
+     * @psalm-pure
      */
     public static function fromInt(int $value): static
     {
@@ -82,6 +88,8 @@ readonly class FloatNonNegative extends FloatTypeAbstract
 
     /**
      * @throws FloatTypeException
+     *
+     * @psalm-pure
      */
     public static function fromString(string $value): static
     {
@@ -153,6 +161,8 @@ readonly class FloatNonNegative extends FloatTypeAbstract
      * @return static|T
      *
      * @throws FloatTypeException
+     *
+     * @psalm-pure
      */
     public static function tryFromBool(
         bool $value,
@@ -168,6 +178,8 @@ readonly class FloatNonNegative extends FloatTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromFloat(
         float $value,
@@ -188,6 +200,8 @@ readonly class FloatNonNegative extends FloatTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromInt(
         int $value,
@@ -208,6 +222,8 @@ readonly class FloatNonNegative extends FloatTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromMixed(
         mixed $value,
@@ -235,6 +251,8 @@ readonly class FloatNonNegative extends FloatTypeAbstract
      * @param T $default
      *
      * @return static|T
+     *
+     * @psalm-pure
      */
     public static function tryFromString(
         string $value,
