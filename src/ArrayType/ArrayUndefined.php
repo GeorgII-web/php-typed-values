@@ -32,6 +32,9 @@ readonly class ArrayUndefined extends ArrayTypeAbstract implements ArrayUndefine
         return new static();
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function fromArray(array $value): static
     {
         return new static();

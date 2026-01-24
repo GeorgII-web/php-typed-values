@@ -52,6 +52,8 @@ readonly class FalseStandard extends BoolTypeAbstract
     }
 
     /**
+     * @psalm-pure
+     *
      * @throws BoolTypeException
      */
     public static function fromBool(bool $value): static
@@ -60,6 +62,8 @@ readonly class FalseStandard extends BoolTypeAbstract
     }
 
     /**
+     * @psalm-pure
+     *
      * @throws FloatTypeException
      * @throws BoolTypeException
      */
@@ -69,6 +73,8 @@ readonly class FalseStandard extends BoolTypeAbstract
     }
 
     /**
+     * @psalm-pure
+     *
      * @throws IntegerTypeException
      * @throws BoolTypeException
      */
@@ -78,6 +84,8 @@ readonly class FalseStandard extends BoolTypeAbstract
     }
 
     /**
+     * @psalm-pure
+     *
      * @throws BoolTypeException
      * @throws IntegerTypeException
      */
@@ -136,6 +144,8 @@ readonly class FalseStandard extends BoolTypeAbstract
     }
 
     /**
+     * @psalm-pure
+     *
      * @template T of PrimitiveTypeAbstract
      *
      * @param T $default
@@ -156,6 +166,8 @@ readonly class FalseStandard extends BoolTypeAbstract
     }
 
     /**
+     * @psalm-pure
+     *
      * @template T of PrimitiveTypeAbstract
      *
      * @param T $default
@@ -176,6 +188,8 @@ readonly class FalseStandard extends BoolTypeAbstract
     }
 
     /**
+     * @psalm-pure
+     *
      * @template T of PrimitiveTypeAbstract
      *
      * @param T $default
@@ -196,6 +210,8 @@ readonly class FalseStandard extends BoolTypeAbstract
     }
 
     /**
+     * @psalm-pure
+     *
      * @template T of PrimitiveTypeAbstract
      *
      * @param T $default
@@ -223,6 +239,8 @@ readonly class FalseStandard extends BoolTypeAbstract
     }
 
     /**
+     * @psalm-pure
+     *
      * @template T of PrimitiveTypeAbstract
      *
      * @param T $default

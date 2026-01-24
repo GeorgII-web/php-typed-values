@@ -54,6 +54,8 @@ readonly class ArrayNonEmpty extends ArrayTypeAbstract
     }
 
     /**
+     * @psalm-pure
+     *
      * @param list<mixed> $value
      *
      * @throws ArrayTypeException

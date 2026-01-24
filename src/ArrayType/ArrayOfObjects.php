@@ -54,6 +54,8 @@ readonly class ArrayOfObjects extends ArrayTypeAbstract
     }
 
     /**
+     * @psalm-pure
+     *
      * @param list<mixed> $value
      *
      * @throws ArrayTypeException
