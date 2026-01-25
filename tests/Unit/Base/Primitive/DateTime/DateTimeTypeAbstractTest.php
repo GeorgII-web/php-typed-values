@@ -5,7 +5,6 @@ declare(strict_types=1);
 use PhpTypedValues\Base\Primitive\DateTime\DateTimeTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\DateTime\DateTimeTypeException;
-use PhpTypedValues\Exception\DateTime\ReasonableRangeDateTimeTypeException;
 use PhpTypedValues\Exception\DateTime\ZoneDateTimeTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -166,7 +165,7 @@ describe('DateTimeTypeAbstract', function () {
 
         it('throws exception on out of range timestamp', function (string $date) {
             expect(fn() => DateTimeTypeAbstractTest::testStringToDateTime($date, 'Y-m-d H:i:s'))
-                ->toThrow(ReasonableRangeDateTimeTypeException::class);
+                ->toThrow(DateTimeTypeException::class);
         })->with([
             'before min' => ['0000-12-31 23:59:59'],
             'after max' => ['10000-01-01 00:00:00'],
