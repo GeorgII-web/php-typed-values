@@ -8,6 +8,7 @@ use DateTimeZone;
 use Exception;
 use PhpTypedValues\Base\Primitive\DateTime\DateTimeTypeInterface;
 use PhpTypedValues\Exception\DateTime\ZoneDateTimeTypeException;
+use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
@@ -245,6 +246,29 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
         }
 
         throw new IntegerTypeException(sprintf('Integer "%s" has no valid strict bool value', $value));
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @return non-empty-string
+     *
+     * @throws DecimalTypeException
+     */
+    protected static function stringToDecimal(string $value): string
+    {
+        if (trim($value) === '') {
+            throw new DecimalTypeException(sprintf('String "%s" has no valid decimal value', $value));
+        }
+
+        if (preg_match('/^-?\d+(?:\.\d+)?$/', $value) !== 1) {
+            throw new DecimalTypeException(sprintf('String "%s" has no valid strict decimal value', $value));
+        }
+
+        /**
+         * @var non-empty-string $value
+         */
+        return $value;
     }
 
     /**

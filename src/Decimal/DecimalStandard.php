@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\String\MariaDb;
+namespace PhpTypedValues\Decimal;
 
 use Exception;
+use PhpTypedValues\Base\Primitive\Decimal\DecimalTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
-use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
+use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
-use PhpTypedValues\Exception\String\DecimalStringTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -20,28 +20,26 @@ use function is_float;
 use function is_int;
 use function is_scalar;
 use function is_string;
-use function preg_match;
-use function sprintf;
 
 /**
- * MariaDB DECIMAL value encoded as a string.
+ * DECIMAL value encoded as a string.
  *
  * Accepts canonical decimal strings like "123", "-5", or "3.14". No leading
  * plus sign and no invalid forms like ".5" or "1." are allowed. The original
  * string is preserved as provided.
  *
  * Example
- *  - $d = StringDecimal::fromString('3.14');
+ *  - $d = Decimal::fromString('3.14');
  *    $d->toString(); // '3.14'
- *  - StringDecimal::fromString('abc'); // throws DecimalStringTypeException
+ *  - Decimal::fromString('abc'); // throws DecimalTypeException
  *
  * Note: Use toFloat() only when the decimal can be represented exactly by a
- * PHP float. The method verifies an exact round‑trip: (string)(float)$src must
- * equal the original string and throws otherwise.
+ * PHP float. The method verifies an exact round‑trip cast, must
+ * equal the original string, and throws otherwise.
  *
  * @psalm-immutable
  */
-readonly class StringDecimal extends StringTypeAbstract
+readonly class DecimalStandard extends DecimalTypeAbstract
 {
     /**
      * @var non-empty-string
@@ -49,15 +47,15 @@ readonly class StringDecimal extends StringTypeAbstract
     protected string $value;
 
     /**
-     * @throws DecimalStringTypeException
+     * @throws DecimalTypeException
      */
     public function __construct(string $value)
     {
-        $this->value = self::getFromDecimalString($value);
+        $this->value = self::stringToDecimal($value);
     }
 
     /**
-     * @throws DecimalStringTypeException
+     * @throws DecimalTypeException
      *
      * @psalm-pure
      */
@@ -68,8 +66,8 @@ readonly class StringDecimal extends StringTypeAbstract
 
     /**
      * @throws FloatTypeException
-     * @throws DecimalStringTypeException
      * @throws StringTypeException
+     * @throws DecimalTypeException
      *
      * @psalm-pure
      */
@@ -79,7 +77,7 @@ readonly class StringDecimal extends StringTypeAbstract
     }
 
     /**
-     * @throws DecimalStringTypeException
+     * @throws DecimalTypeException
      *
      * @psalm-pure
      */
@@ -89,7 +87,7 @@ readonly class StringDecimal extends StringTypeAbstract
     }
 
     /**
-     * @throws DecimalStringTypeException
+     * @throws DecimalTypeException
      *
      * @psalm-pure
      */
@@ -136,17 +134,12 @@ readonly class StringDecimal extends StringTypeAbstract
     }
 
     /**
-     * @throws DecimalStringTypeException
+     * @throws FloatTypeException
+     * @throws StringTypeException
      */
     public function toFloat(): float
     {
-        $src = $this->value;
-        $casted = (string) ((float) $src);
-        if ($src !== $casted) {
-            throw new DecimalStringTypeException(sprintf('Unexpected float conversion, source "%s" != casted "%s"', $src, $casted));
-        }
-
-        return (float) $src;
+        return static::stringToFloat($this->value());
     }
 
     /**
@@ -289,26 +282,5 @@ readonly class StringDecimal extends StringTypeAbstract
     public function value(): string
     {
         return $this->value;
-    }
-
-    /**
-     * Accepts optional leading minus, digits, and optional fractional part with at least one digit.
-     * Disallows leading/trailing spaces, plus sign, and missing integer or fractional digits like ".5" or "1.".
-     *
-     * @return non-empty-string
-     *
-     * @throws DecimalStringTypeException
-     */
-    private static function getFromDecimalString(string $value): string
-    {
-        if ($value === '') {
-            throw new DecimalStringTypeException('Expected non-empty decimal string');
-        }
-
-        if (preg_match('/^-?\d+(?:\.\d+)?$/', $value) !== 1) {
-            throw new DecimalStringTypeException(sprintf('Expected decimal string (e.g., "123", "-1", "3.14"), got "%s"', $value));
-        }
-
-        return $value;
     }
 }
