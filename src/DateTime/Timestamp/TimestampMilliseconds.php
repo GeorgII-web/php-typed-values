@@ -224,10 +224,13 @@ readonly class TimestampMilliseconds extends DateTimeTypeAbstract
     }
 
     /**
+     * @psalm-pure
+     *
      * @throws ZoneDateTimeTypeException
      */
     public function withTimeZone(string $timezone): static
     {
+        /** @psalm-suppress ImpureVariable */
         return new static(
             $this->value()->setTimezone(static::stringToDateTimeZone($timezone))
         );
