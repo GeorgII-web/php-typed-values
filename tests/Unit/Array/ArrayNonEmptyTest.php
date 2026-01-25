@@ -3,230 +3,200 @@
 declare(strict_types=1);
 
 use PhpTypedValues\ArrayType\ArrayNonEmpty;
+use PhpTypedValues\ArrayType\ArrayUndefined;
 use PhpTypedValues\Exception\ArrayType\ArrayTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
-it('throws ArrayTypeException when constructed with an empty array', function (): void {
-    new ArrayNonEmpty([]);
-})->throws(ArrayTypeException::class, 'Expected non-empty array');
+describe('ArrayNonEmpty', function () {
+    describe('Creation', function () {
+        describe('Constructor', function () {
+            it('throws ArrayTypeException when constructed with an empty array', function () {
+                new ArrayNonEmpty([]);
+            })->throws(ArrayTypeException::class, 'Expected non-empty array');
 
-it('accepts a non-empty array of objects', function (): void {
-    $items = [new stdClass(), new stdClass()];
-    $vo = new ArrayNonEmpty($items);
+            it('accepts a non-empty array of objects', function () {
+                $items = [new stdClass(), new stdClass()];
+                $vo = new ArrayNonEmpty($items);
 
-    expect($vo->value())->toBe($items)
-        ->and($vo->count())->toBe(2)
-        ->and($vo->isEmpty())->toBeFalse();
-});
+                expect($vo->value())->toBe($items)
+                    ->and($vo->count())->toBe(2);
+            });
+        });
 
-it('can be created fromArray', function (): void {
-    $items = [new stdClass()];
-    $vo = ArrayNonEmpty::fromArray($items);
+        describe('fromArray', function () {
+            it('creates instance from valid array', function () {
+                $items = [new stdClass()];
+                $vo = ArrayNonEmpty::fromArray($items);
 
-    expect($vo)->toBeInstanceOf(ArrayNonEmpty::class)
-        ->and($vo->value())->toBe($items);
-});
+                expect($vo)->toBeInstanceOf(ArrayNonEmpty::class)
+                    ->and($vo->value())->toBe($items);
+            });
 
-it('can be created tryFromArray', function (): void {
-    $items = [new stdClass()];
-    $vo = ArrayNonEmpty::tryFromArray($items);
+            it('throws exception on empty array', function () {
+                ArrayNonEmpty::fromArray([]);
+            })->throws(ArrayTypeException::class, 'Expected non-empty array');
+        });
 
-    expect($vo)->toBeInstanceOf(ArrayNonEmpty::class)
-        ->and($vo->value())->toBe($items);
-});
+        describe('tryFromArray', function () {
+            it('returns instance for valid array', function () {
+                $items = [new stdClass()];
+                $vo = ArrayNonEmpty::tryFromArray($items);
 
-it('implements IteratorAggregate via getIterator', function (): void {
-    $items = [new stdClass(), new stdClass()];
-    $vo = new ArrayNonEmpty($items);
+                expect($vo)->toBeInstanceOf(ArrayNonEmpty::class)
+                    ->and($vo->value())->toBe($items);
+            });
 
-    $collected = [];
-    foreach ($vo as $item) {
-        $collected[] = $item;
-    }
+            it('returns default value on failure', function () {
+                $default = new ArrayUndefined();
+                expect(ArrayNonEmpty::tryFromArray([], $default))->toBe($default);
+            });
 
-    expect($collected)->toBe($items);
-});
+            it('returns ArrayUndefined by default on failure', function () {
+                expect(ArrayNonEmpty::tryFromArray([]))->toBeInstanceOf(ArrayUndefined::class);
+            });
+        });
+    });
 
-it('toArray returns the serialized array', function (): void {
-    $item = new class implements JsonSerializable {
-        public function jsonSerialize(): string
-        {
-            return 'serialized';
-        }
-    };
-    $vo = new ArrayNonEmpty([$item]);
+    describe('Collection Methods', function () {
+        it('count() returns correct number of items', function (array $items, int $expected) {
+            $vo = new ArrayNonEmpty($items);
+            expect($vo->count())->toBe($expected);
+        })->with([
+            'one item' => [[new stdClass()], 1],
+            'two items' => [[new stdClass(), new stdClass()], 2],
+        ]);
 
-    expect($vo->toArray())->toBe(['serialized']);
-});
+        it('getIterator() yields all items in order', function () {
+            $items = [new stdClass(), new stdClass()];
+            $vo = new ArrayNonEmpty($items);
 
-it('jsonSerialize returns the serialized array', function (): void {
-    $item = new class implements JsonSerializable {
-        public function jsonSerialize(): string
-        {
-            return 'serialized';
-        }
-    };
-    $vo = new ArrayNonEmpty([$item]);
+            $collected = [];
+            foreach ($vo as $item) {
+                $collected[] = $item;
+            }
 
-    expect($vo->jsonSerialize())->toBe(['serialized']);
-});
+            expect($collected)->toBe($items);
+        });
 
-it('toArray handles scalars and null', function (): void {
-    $items = ['string', 123, 1.23, true, null];
-    // We need to bypass the @template TItem of object for this test if we want to test scalars
-    // but the class is not strictly enforcing objects at runtime in the constructor,
-    // though the docblock says list<TItem>.
-    // Let's see if the constructor allows them.
-    /** @var array<any> $items */
-    $vo = new ArrayNonEmpty($items);
+        it('isEmpty() returns correct boolean', function () {
+            $vo = new ArrayNonEmpty([new stdClass()]);
+            expect($vo->isEmpty())->toBeFalse();
+        });
 
-    expect($vo->toArray())->toBe($items);
-});
+        it('isEmpty returns true if empty (unreachable via constructor)', function () {
+            $vo = (new ReflectionClass(ArrayNonEmpty::class))->newInstanceWithoutConstructor();
+            $reflectionProperty = new ReflectionProperty(ArrayNonEmpty::class, 'value');
+            $reflectionProperty->setValue($vo, []);
 
-it('toArray handles Stringable objects', function (): void {
-    $item = new class implements Stringable {
-        public function __toString(): string
-        {
-            return 'stringable';
-        }
-    };
-    $vo = new ArrayNonEmpty([$item]);
+            expect($vo->isEmpty())->toBeTrue();
+        });
 
-    expect($vo->toArray())->toBe(['stringable']);
-});
+        it('isUndefined() returns true only if all items are Undefined', function (array $items, bool $expected) {
+            $vo = new ArrayNonEmpty($items);
+            expect($vo->isUndefined())->toBe($expected);
+        })->with([
+            'all Undefined' => [[Undefined::create(), Undefined::create()], true],
+            'mixed' => [[Undefined::create(), new stdClass()], false],
+            'none Undefined' => [[new stdClass()], false],
+        ]);
 
-it('toArray throws ArrayTypeException for unsupported types', function (): void {
-    $item = new stdClass();
-    $vo = new ArrayNonEmpty([$item]);
+        it('isUndefined returns false if empty (unreachable via constructor)', function () {
+            $vo = (new ReflectionClass(ArrayNonEmpty::class))->newInstanceWithoutConstructor();
+            $reflectionProperty = new ReflectionProperty(ArrayNonEmpty::class, 'value');
+            $reflectionProperty->setValue($vo, []);
 
-    $vo->toArray();
-})->throws(ArrayTypeException::class, 'Item of type "stdClass" cannot be converted to a scalar or JSON-serializable value.');
+            expect($vo->isUndefined())->toBeFalse();
+        });
 
-it('toArray continues processing multiple JsonSerializable items', function (): void {
-    $item1 = new class implements JsonSerializable {
-        public function jsonSerialize(): string
-        {
-            return 'item1';
-        }
-    };
-    $item2 = new class implements JsonSerializable {
-        public function jsonSerialize(): string
-        {
-            return 'item2';
-        }
-    };
-    $vo = new ArrayNonEmpty([$item1, $item2]);
+        it('hasUndefined() detects presence of Undefined items', function (array $items, bool $expected) {
+            $vo = new ArrayNonEmpty($items);
+            expect($vo->hasUndefined())->toBe($expected);
+        })->with([
+            'mixed' => [[Undefined::create(), new stdClass()], true],
+            'none Undefined' => [[new stdClass()], false],
+        ]);
 
-    expect($vo->toArray())->toBe(['item1', 'item2']);
-});
+        it('getDefinedItems() filters out Undefined instances', function () {
+            $u1 = Undefined::create();
+            $o1 = new stdClass();
+            $o2 = new stdClass();
 
-it('toArray continues processing multiple Stringable items', function (): void {
-    $item1 = new class implements Stringable {
-        public function __toString(): string
-        {
-            return 'item1';
-        }
-    };
-    $item2 = new class implements Stringable {
-        public function __toString(): string
-        {
-            return 'item2';
-        }
-    };
-    $vo = new ArrayNonEmpty([$item1, $item2]);
+            $vo = new ArrayNonEmpty([$u1, $o1, $u1, $o2]);
 
-    expect($vo->toArray())->toBe(['item1', 'item2']);
-});
+            expect($vo->getDefinedItems())->toBe([$o1, $o2]);
+        });
+    });
 
-it('toArray continues processing mixed items', function (): void {
-    $json = new class implements JsonSerializable {
-        public function jsonSerialize(): string
-        {
-            return 'json';
-        }
-    };
-    $stringable = new class implements Stringable {
-        public function __toString(): string
-        {
-            return 'stringable';
-        }
-    };
-    $items = [$json, 'scalar', $stringable, null];
-    /** @var array<any> $items */
-    $vo = new ArrayNonEmpty($items);
+    describe('Instance Methods', function () {
+        it('value() returns the internal array', function () {
+            $items = [new stdClass()];
+            $vo = new ArrayNonEmpty($items);
+            expect($vo->value())->toBe($items);
+        });
 
-    expect($vo->toArray())->toBe(['json', 'scalar', 'stringable', null]);
-});
+        it('toArray() and jsonSerialize() return expected representations', function (array $items, array $expected) {
+            $vo = new ArrayNonEmpty($items);
+            expect($vo->toArray())->toBe($expected)
+                ->and($vo->jsonSerialize())->toBe($expected);
+        })->with([
+            'scalars' => [
+                ['string', 123, 1.23, true, null],
+                ['string', 123, 1.23, true, null],
+            ],
+            'JsonSerializable' => [
+                [new class implements JsonSerializable {
+                    public function jsonSerialize(): string { return 'serialized'; }
+                }],
+                ['serialized'],
+            ],
+            'Stringable' => [
+                [new class implements Stringable {
+                    public function __toString(): string { return 'stringable'; }
+                }],
+                ['stringable'],
+            ],
+            'Mixed supported items' => [
+                [
+                    new class implements JsonSerializable { public function jsonSerialize(): string { return 'json'; } },
+                    'scalar',
+                    new class implements Stringable { public function __toString(): string { return 'stringable'; } },
+                    null
+                ],
+                ['json', 'scalar', 'stringable', null],
+            ],
+        ]);
 
-it('isUndefined returns true only if all items are Undefined', function (): void {
-    $u1 = Undefined::create();
-    $u2 = Undefined::create();
-    $o1 = new stdClass();
+        it('toArray throws ArrayTypeException for unsupported types', function () {
+            $item = new stdClass();
+            $vo = new ArrayNonEmpty([$item]);
+            $vo->toArray();
+        })->throws(ArrayTypeException::class, 'Item of type "stdClass" cannot be converted to a scalar or JSON-serializable value.');
 
-    $allUndefined = new ArrayNonEmpty([$u1, $u2]);
-    $mixed = new ArrayNonEmpty([$u1, $o1]);
-    $noneUndefined = new ArrayNonEmpty([$o1]);
+        describe('isTypeOf', function () {
+            it('returns true when class matches', function () {
+                $vo = new ArrayNonEmpty([new stdClass()]);
+                expect($vo->isTypeOf(ArrayNonEmpty::class))->toBeTrue();
+            });
 
-    expect($allUndefined->isUndefined())->toBeTrue()
-        ->and($mixed->isUndefined())->toBeFalse()
-        ->and($noneUndefined->isUndefined())->toBeFalse();
-});
+            it('returns false when class does not match', function () {
+                $vo = new ArrayNonEmpty([new stdClass()]);
+                expect($vo->isTypeOf('NonExistentClass'))->toBeFalse();
+            });
 
-it('hasUndefined returns true if any item is Undefined', function (): void {
-    $u1 = Undefined::create();
-    $o1 = new stdClass();
+            it('returns true for multiple classNames when one matches', function () {
+                $vo = new ArrayNonEmpty([new stdClass()]);
+                expect($vo->isTypeOf('NonExistentClass', ArrayNonEmpty::class, 'AnotherClass'))->toBeTrue();
+            });
 
-    $mixed = new ArrayNonEmpty([$u1, $o1]);
-    $noneUndefined = new ArrayNonEmpty([$o1]);
+            it('returns false for multiple classNames when none match', function () {
+                $vo = new ArrayNonEmpty([new stdClass()]);
+                expect($vo->isTypeOf('NonExistentClass', 'AnotherClass'))->toBeFalse();
+            });
 
-    expect($mixed->hasUndefined())->toBeTrue()
-        ->and($noneUndefined->hasUndefined())->toBeFalse();
-});
-
-it('getDefinedItems filters out Undefined instances', function (): void {
-    $u1 = Undefined::create();
-    $o1 = new stdClass();
-    $o2 = new stdClass();
-
-    $vo = new ArrayNonEmpty([$u1, $o1, $u1, $o2]);
-
-    expect($vo->getDefinedItems())->toBe([$o1, $o2]);
-});
-
-it('isUndefined returns false if empty (unreachable via constructor)', function (): void {
-    $vo = (new ReflectionClass(ArrayNonEmpty::class))->newInstanceWithoutConstructor();
-
-    // Set 'value' property to [] using reflection since it's uninitialized
-    $reflectionProperty = new ReflectionProperty(ArrayNonEmpty::class, 'value');
-    $reflectionProperty->setValue($vo, []);
-
-    expect($vo->isUndefined())->toBeFalse();
-});
-
-it('isEmpty returns false even for a single element array', function (): void {
-    $vo = new ArrayNonEmpty([new stdClass()]);
-    expect($vo->isEmpty())->toBeFalse();
-});
-
-it('isEmpty returns true if empty (unreachable via constructor)', function (): void {
-    $vo = (new ReflectionClass(ArrayNonEmpty::class))->newInstanceWithoutConstructor();
-    $reflectionProperty = new ReflectionProperty(ArrayNonEmpty::class, 'value');
-    $reflectionProperty->setValue($vo, []);
-
-    expect($vo->isEmpty())->toBeTrue();
-});
-
-it('isTypeOf returns true when class matches', function (): void {
-    $vo = new ArrayNonEmpty([new stdClass()]);
-    expect($vo->isTypeOf(ArrayNonEmpty::class))->toBeTrue();
-});
-
-it('isTypeOf returns false when class does not match', function (): void {
-    $vo = new ArrayNonEmpty([new stdClass()]);
-    expect($vo->isTypeOf('NonExistentClass'))->toBeFalse();
-});
-
-it('isTypeOf returns true for multiple classNames when one matches', function (): void {
-    $vo = new ArrayNonEmpty([new stdClass()]);
-    expect($vo->isTypeOf('NonExistentClass', ArrayNonEmpty::class))->toBeTrue();
+            it('returns false for empty classNames', function () {
+                $vo = new ArrayNonEmpty([new stdClass()]);
+                expect($vo->isTypeOf())->toBeFalse();
+            });
+        });
+    });
 });
