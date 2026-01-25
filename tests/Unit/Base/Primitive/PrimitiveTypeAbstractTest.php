@@ -90,16 +90,16 @@ readonly class PrimitiveTypeAbstractTest extends PrimitiveTypeAbstract
     }
 }
 
-it('PrimitiveType is abstract and cannot be instantiated', function () {
-    expect(PrimitiveTypeAbstract::class)
-        ->toBeAbstract()
-        ->and(class_exists(PrimitiveTypeAbstractTest::class))
-        ->toBeTrue();
-});
-
 describe('Concrete PrimitiveType implementation', function () {
     beforeEach(function () {
         $this->primitive = new PrimitiveTypeAbstractTest('test value');
+    });
+
+    it('abstract and cannot be instantiated', function () {
+        expect(PrimitiveTypeAbstract::class)
+            ->toBeAbstract()
+            ->and(class_exists(PrimitiveTypeAbstractTest::class))
+            ->toBeTrue();
     });
 
     it('isEmpty method works correctly', function ($value, $expected) {

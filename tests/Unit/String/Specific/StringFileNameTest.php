@@ -56,7 +56,8 @@ describe('StringFileName', function () {
         expect(StringFileName::tryFromString('test.jpg')->jsonSerialize())->toBeString();
     });
 
-    it('tryFromMixed returns instance for valid filenames and Undefined for invalid or non-convertible', function (): void {
+    it('tryFromMixed returns instance for valid filenames and Undefined for invalid or non-convertible', function (
+    ): void {
         $fromString = StringFileName::tryFromMixed('image.png');
         $fromStringable = StringFileName::tryFromMixed(new class {
             public function __toString(): string
@@ -160,10 +161,12 @@ readonly class StringFileNameTest extends StringFileName
     }
 }
 
-it('StringFileName::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
-    expect(StringFileNameTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
-        ->and(StringFileNameTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
-        ->and(StringFileNameTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
-        ->and(StringFileNameTest::tryFromMixed('image.jpg'))->toBeInstanceOf(Undefined::class)
-        ->and(StringFileNameTest::tryFromString('image.jpg'))->toBeInstanceOf(Undefined::class);
+describe('Throwing static', function () {
+    it('StringFileName::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
+        expect(StringFileNameTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
+            ->and(StringFileNameTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
+            ->and(StringFileNameTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+            ->and(StringFileNameTest::tryFromMixed('image.jpg'))->toBeInstanceOf(Undefined::class)
+            ->and(StringFileNameTest::tryFromString('image.jpg'))->toBeInstanceOf(Undefined::class);
+    });
 });

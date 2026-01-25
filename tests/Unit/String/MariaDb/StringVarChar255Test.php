@@ -195,10 +195,12 @@ readonly class StringVarChar255Test extends StringVarChar255
     }
 }
 
-it('StringVarChar255::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
-    expect(StringVarChar255Test::tryFromBool(true))->toBeInstanceOf(Undefined::class)
-        ->and(StringVarChar255Test::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
-        ->and(StringVarChar255Test::tryFromInt(1))->toBeInstanceOf(Undefined::class)
-        ->and(StringVarChar255Test::tryFromMixed('test'))->toBeInstanceOf(Undefined::class)
-        ->and(StringVarChar255Test::tryFromString('test'))->toBeInstanceOf(Undefined::class);
+describe('Throwing static', function () {
+    it('StringVarChar255::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
+        expect(StringVarChar255Test::tryFromBool(true))->toBeInstanceOf(Undefined::class)
+            ->and(StringVarChar255Test::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
+            ->and(StringVarChar255Test::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+            ->and(StringVarChar255Test::tryFromMixed('test'))->toBeInstanceOf(Undefined::class)
+            ->and(StringVarChar255Test::tryFromString('test'))->toBeInstanceOf(Undefined::class);
+    });
 });

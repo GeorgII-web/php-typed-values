@@ -207,11 +207,12 @@ readonly class StringCountryCodeTest extends StringCountryCode
         throw new Exception('test');
     }
 }
-
-it('StringCountryCode::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
-    expect(StringCountryCodeTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
-        ->and(StringCountryCodeTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
-        ->and(StringCountryCodeTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
-        ->and(StringCountryCodeTest::tryFromMixed('US'))->toBeInstanceOf(Undefined::class)
-        ->and(StringCountryCodeTest::tryFromString('US'))->toBeInstanceOf(Undefined::class);
+describe('Throwing static', function () {
+    it('StringCountryCode::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
+        expect(StringCountryCodeTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
+            ->and(StringCountryCodeTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
+            ->and(StringCountryCodeTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+            ->and(StringCountryCodeTest::tryFromMixed('US'))->toBeInstanceOf(Undefined::class)
+            ->and(StringCountryCodeTest::tryFromString('US'))->toBeInstanceOf(Undefined::class);
+    });
 });

@@ -146,10 +146,12 @@ readonly class StringPathTest extends StringPath
     }
 }
 
-it('StringPath::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
-    expect(StringPathTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
-        ->and(StringPathTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
-        ->and(StringPathTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
-        ->and(StringPathTest::tryFromMixed('/home/user'))->toBeInstanceOf(Undefined::class)
-        ->and(StringPathTest::tryFromString('/home/user'))->toBeInstanceOf(Undefined::class);
+describe('Throwing static', function () {
+    it('StringPath::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
+        expect(StringPathTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
+            ->and(StringPathTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
+            ->and(StringPathTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+            ->and(StringPathTest::tryFromMixed('/home/user'))->toBeInstanceOf(Undefined::class)
+            ->and(StringPathTest::tryFromString('/home/user'))->toBeInstanceOf(Undefined::class);
+    });
 });

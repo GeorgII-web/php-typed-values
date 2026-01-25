@@ -156,10 +156,12 @@ readonly class StringEmailTest extends StringEmail
     }
 }
 
-it('StringEmail::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
-    expect(StringEmailTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
-        ->and(StringEmailTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
-        ->and(StringEmailTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
-        ->and(StringEmailTest::tryFromMixed('test@example.com'))->toBeInstanceOf(Undefined::class)
-        ->and(StringEmailTest::tryFromString('test@example.com'))->toBeInstanceOf(Undefined::class);
+describe('Throwing static', function () {
+    it('StringEmail::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
+        expect(StringEmailTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
+            ->and(StringEmailTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
+            ->and(StringEmailTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+            ->and(StringEmailTest::tryFromMixed('test@example.com'))->toBeInstanceOf(Undefined::class)
+            ->and(StringEmailTest::tryFromString('test@example.com'))->toBeInstanceOf(Undefined::class);
+    });
 });

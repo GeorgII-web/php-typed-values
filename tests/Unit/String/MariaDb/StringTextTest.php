@@ -189,10 +189,12 @@ readonly class StringTextTest extends StringText
     }
 }
 
-it('StringText::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
-    expect(StringTextTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
-        ->and(StringTextTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
-        ->and(StringTextTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
-        ->and(StringTextTest::tryFromMixed('test'))->toBeInstanceOf(Undefined::class)
-        ->and(StringTextTest::tryFromString('test'))->toBeInstanceOf(Undefined::class);
+describe('Throwing static', function () {
+    it('StringText::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
+        expect(StringTextTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
+            ->and(StringTextTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
+            ->and(StringTextTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+            ->and(StringTextTest::tryFromMixed('test'))->toBeInstanceOf(Undefined::class)
+            ->and(StringTextTest::tryFromString('test'))->toBeInstanceOf(Undefined::class);
+    });
 });

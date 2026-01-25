@@ -91,7 +91,8 @@ describe('StringLanguageCode', function () {
         }
     });
 
-    it('explicitly accepts tail-list language codes yi, yo, za, zh, zu (guards against element removal mutations)', function (): void {
+    it('explicitly accepts tail-list language codes yi, yo, za, zh, zu (guards against element removal mutations)', function (
+    ): void {
         expect(StringLanguageCode::fromString('yi')->value())->toBe('yi')
             ->and(StringLanguageCode::fromString('yo')->value())->toBe('yo')
             ->and(StringLanguageCode::fromString('za')->value())->toBe('za')
@@ -247,10 +248,12 @@ readonly class StringLanguageCodeTest extends StringLanguageCode
     }
 }
 
-it('StringLanguageCode::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
-    expect(StringLanguageCodeTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
-        ->and(StringLanguageCodeTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
-        ->and(StringLanguageCodeTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
-        ->and(StringLanguageCodeTest::tryFromMixed('en'))->toBeInstanceOf(Undefined::class)
-        ->and(StringLanguageCodeTest::tryFromString('en'))->toBeInstanceOf(Undefined::class);
+describe('Throwing static', function () {
+    it('StringLanguageCode::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
+        expect(StringLanguageCodeTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
+            ->and(StringLanguageCodeTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
+            ->and(StringLanguageCodeTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+            ->and(StringLanguageCodeTest::tryFromMixed('en'))->toBeInstanceOf(Undefined::class)
+            ->and(StringLanguageCodeTest::tryFromString('en'))->toBeInstanceOf(Undefined::class);
+    });
 });

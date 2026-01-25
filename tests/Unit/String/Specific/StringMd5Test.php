@@ -187,10 +187,12 @@ readonly class StringMd5Test extends StringMd5
     }
 }
 
-it('StringMd5::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
-    expect(StringMd5Test::tryFromBool(true))->toBeInstanceOf(Undefined::class)
-        ->and(StringMd5Test::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
-        ->and(StringMd5Test::tryFromInt(1))->toBeInstanceOf(Undefined::class)
-        ->and(StringMd5Test::tryFromMixed('5d41402abc4b2a76b9719d911017c592'))->toBeInstanceOf(Undefined::class)
-        ->and(StringMd5Test::tryFromString('5d41402abc4b2a76b9719d911017c592'))->toBeInstanceOf(Undefined::class);
+describe('Throwing static', function () {
+    it('StringMd5::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
+        expect(StringMd5Test::tryFromBool(true))->toBeInstanceOf(Undefined::class)
+            ->and(StringMd5Test::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
+            ->and(StringMd5Test::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+            ->and(StringMd5Test::tryFromMixed('5d41402abc4b2a76b9719d911017c592'))->toBeInstanceOf(Undefined::class)
+            ->and(StringMd5Test::tryFromString('5d41402abc4b2a76b9719d911017c592'))->toBeInstanceOf(Undefined::class);
+    });
 });

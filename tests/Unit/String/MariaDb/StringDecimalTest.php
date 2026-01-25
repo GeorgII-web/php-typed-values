@@ -189,10 +189,12 @@ readonly class StringDecimalTest extends StringDecimal
     }
 }
 
-it('StringDecimal::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
-    expect(StringDecimalTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
-        ->and(StringDecimalTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
-        ->and(StringDecimalTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
-        ->and(StringDecimalTest::tryFromMixed('1.23'))->toBeInstanceOf(Undefined::class)
-        ->and(StringDecimalTest::tryFromString('1.23'))->toBeInstanceOf(Undefined::class);
+describe('Throwing static', function () {
+    it('StringDecimal::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
+        expect(StringDecimalTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
+            ->and(StringDecimalTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
+            ->and(StringDecimalTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+            ->and(StringDecimalTest::tryFromMixed('1.23'))->toBeInstanceOf(Undefined::class)
+            ->and(StringDecimalTest::tryFromString('1.23'))->toBeInstanceOf(Undefined::class);
+    });
 });

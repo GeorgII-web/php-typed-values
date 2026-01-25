@@ -139,10 +139,12 @@ readonly class StringUrlTest extends StringUrl
     }
 }
 
-it('StringUrl::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
-    expect(StringUrlTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
-        ->and(StringUrlTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
-        ->and(StringUrlTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
-        ->and(StringUrlTest::tryFromMixed('https://example.com'))->toBeInstanceOf(Undefined::class)
-        ->and(StringUrlTest::tryFromString('https://example.com'))->toBeInstanceOf(Undefined::class);
+describe('Throwing static', function () {
+    it('StringUrl::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
+        expect(StringUrlTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
+            ->and(StringUrlTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
+            ->and(StringUrlTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+            ->and(StringUrlTest::tryFromMixed('https://example.com'))->toBeInstanceOf(Undefined::class)
+            ->and(StringUrlTest::tryFromString('https://example.com'))->toBeInstanceOf(Undefined::class);
+    });
 });

@@ -265,10 +265,12 @@ readonly class StringJsonTest extends StringJson
     }
 }
 
-it('StringJson::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
-    expect(StringJsonTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
-        ->and(StringJsonTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
-        ->and(StringJsonTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
-        ->and(StringJsonTest::tryFromMixed('{"a":1}'))->toBeInstanceOf(Undefined::class)
-        ->and(StringJsonTest::tryFromString('{"a":1}'))->toBeInstanceOf(Undefined::class);
+describe('Throwing static', function () {
+    it('StringJson::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
+        expect(StringJsonTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
+            ->and(StringJsonTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
+            ->and(StringJsonTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+            ->and(StringJsonTest::tryFromMixed('{"a":1}'))->toBeInstanceOf(Undefined::class)
+            ->and(StringJsonTest::tryFromString('{"a":1}'))->toBeInstanceOf(Undefined::class);
+    });
 });
