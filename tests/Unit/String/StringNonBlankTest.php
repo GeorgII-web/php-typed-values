@@ -148,14 +148,16 @@ readonly class StringNonBlankTest extends StringNonBlank
     }
 }
 
-it('StringNonBlank::tryFromBool returns Undefined when fromBool throws (coverage)', function (): void {
-    expect(StringNonBlankTest::tryFromBool(true))->toBeInstanceOf(Undefined::class);
-});
+describe('Throwing static', function () {
+    it('StringNonBlank::tryFromBool returns Undefined when fromBool throws (coverage)', function (): void {
+        expect(StringNonBlankTest::tryFromBool(true))->toBeInstanceOf(Undefined::class);
+    });
 
-it('StringNonBlank::tryFromFloat returns Undefined when fromFloat throws (coverage)', function (): void {
-    expect(StringNonBlankTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class);
-});
+    it('StringNonBlank::tryFromFloat returns Undefined when fromFloat throws (coverage)', function (): void {
+        expect(StringNonBlankTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class);
+    });
 
-it('StringNonBlank::tryFromInt returns Undefined when fromInt throws (coverage)', function (): void {
-    expect(StringNonBlankTest::tryFromInt(1))->toBeInstanceOf(Undefined::class);
+    it('StringNonBlank::tryFromInt returns Undefined when fromInt throws (coverage)', function (): void {
+        expect(StringNonBlankTest::tryFromInt(1))->toBeInstanceOf(Undefined::class);
+    });
 });

@@ -136,13 +136,15 @@ readonly class StringLocaleCodeTest extends StringLocaleCode
     }
 }
 
-it('tryFrom* methods return Undefined when exception occurs (coverage)', function (): void {
-    // We need to trigger the catch blocks in tryFrom* methods.
-    // Since StringLocaleCode uses 'new static', we can use a throwing subclass.
+describe('Throwing static', function () {
+    it('tryFrom* methods return Undefined when exception occurs (coverage)', function (): void {
+        // We need to trigger the catch blocks in tryFrom* methods.
+        // Since StringLocaleCode uses 'new static', we can use a throwing subclass.
 
-    expect(StringLocaleCodeTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
-        ->and(StringLocaleCodeTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
-        ->and(StringLocaleCodeTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
-        ->and(StringLocaleCodeTest::tryFromMixed('en_US'))->toBeInstanceOf(Undefined::class)
-        ->and(StringLocaleCodeTest::tryFromString('en_US'))->toBeInstanceOf(Undefined::class);
+        expect(StringLocaleCodeTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
+            ->and(StringLocaleCodeTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
+            ->and(StringLocaleCodeTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+            ->and(StringLocaleCodeTest::tryFromMixed('en_US'))->toBeInstanceOf(Undefined::class)
+            ->and(StringLocaleCodeTest::tryFromString('en_US'))->toBeInstanceOf(Undefined::class);
+    });
 });
