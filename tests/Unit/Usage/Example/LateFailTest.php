@@ -78,42 +78,41 @@ final readonly class LateFailTest
     }
 }
 
-it('constructs LateFailTest from scalars/mixed and exposes typed values', function (): void {
-    $vo = LateFailTest::fromScalars(id: 1, firstName: 'Foobar', height: 170);
+describe('LateFailTest', function () {
+    describe('Creation', function () {
+        it('constructs from scalars/mixed and exposes typed values', function (int $id, mixed $firstName, mixed $height, string $expectedId, string $expectedFirstName, string $expectedHeight) {
+            $vo = LateFailTest::fromScalars(id: $id, firstName: $firstName, height: $height);
 
-    expect($vo->getId()->toString())->toBe('1');
-    expect($vo->getFirstName()->toString())->toBe('Foobar');
-    expect($vo->getHeight()->toString())->toBe('170.0');
-});
+            expect($vo->getId()->toString())->toBe($expectedId)
+                ->and($vo->getFirstName()->toString())->toBe($expectedFirstName)
+                ->and($vo->getHeight()->toString())->toBe($expectedHeight);
+        })->with([
+            'valid standard' => [1, 'Foobar', 170, '1', 'Foobar', '170.0'],
+            'coerced mixed' => [2, 123, '170.5', '2', '123', '170.5'],
+        ]);
 
-it('coerces mixed valid values via tryFromMixed', function (): void {
-    $vo = LateFailTest::fromScalars(id: 2, firstName: 123, height: '170.5');
+        it('fails early on invalid id', function () {
+            expect(fn() => LateFailTest::fromScalars(id: 0, firstName: 'Foo', height: 10))
+                ->toThrow(IntegerTypeException::class, 'Expected positive integer, got "0"');
+        });
+    });
 
-    expect($vo->getId()->toString())->toBe('2');
-    expect($vo->getFirstName()->toString())->toBe('123');
-    expect($vo->getHeight()->toString())->toBe('170.5');
-});
+    describe('Late Fail Semantics', function () {
+        it('keeps Undefined for invalid optional firstName', function () {
+            $vo = LateFailTest::fromScalars(id: 1, firstName: '', height: 10);
 
-it('keeps Undefined for invalid optional firstName (late fail)', function (): void {
-    $vo = LateFailTest::fromScalars(id: 1, firstName: '', height: 10);
+            expect($vo->getFirstName())->toBeInstanceOf(Undefined::class);
+            // height remains valid
+            expect($vo->getHeight()->toString())->toBe('10.0');
+        });
 
-    expect($vo->getFirstName())->toBeInstanceOf(Undefined::class);
-    // height remains valid
-    expect($vo->getHeight()->toString())->toBe('10.0');
-});
-
-it('keeps Undefined for invalid optional height values (late fail)', function (): void {
-    $vo1 = LateFailTest::fromScalars(id: 1, firstName: 'Foo', height: -10);
-    expect($vo1->getHeight())->toBeInstanceOf(Undefined::class);
-
-    $vo2 = LateFailTest::fromScalars(id: 1, firstName: 'Foo', height: null);
-    expect($vo2->getHeight())->toBeInstanceOf(Undefined::class);
-
-    $vo3 = LateFailTest::fromScalars(id: 1, firstName: 'Foo', height: 'abc');
-    expect($vo3->getHeight())->toBeInstanceOf(Undefined::class);
-});
-
-it('fails early on invalid id', function (): void {
-    expect(fn() => LateFailTest::fromScalars(id: 0, firstName: 'Foo', height: 10))
-        ->toThrow(IntegerTypeException::class, 'Expected positive integer, got "0"');
+        it('keeps Undefined for invalid optional height values', function (mixed $height) {
+            $vo = LateFailTest::fromScalars(id: 1, firstName: 'Foo', height: $height);
+            expect($vo->getHeight())->toBeInstanceOf(Undefined::class);
+        })->with([
+            'negative' => [-10],
+            'null' => [null],
+            'non-numeric string' => ['abc'],
+        ]);
+    });
 });
