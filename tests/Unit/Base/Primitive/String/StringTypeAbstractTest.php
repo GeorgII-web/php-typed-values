@@ -16,7 +16,7 @@ covers(StringTypeAbstract::class);
 /**
  * @internal
  *
- * @covers \PhpTypedValues\Base\Primitive\String\StringTypeAbstract
+ * @coversNothing
  */
 readonly class StringTypeAbstractTest extends StringTypeAbstract
 {
@@ -119,7 +119,7 @@ readonly class StringTypeAbstractTest extends StringTypeAbstract
         try {
             /** @var static */
             return static::fromBool($value);
-        } catch (Exception) {
+        } catch (Throwable) {
             /** @var T */
             return $default;
         }
@@ -139,7 +139,7 @@ readonly class StringTypeAbstractTest extends StringTypeAbstract
         try {
             /** @var static */
             return static::fromFloat($value);
-        } catch (Exception) {
+        } catch (Throwable) {
             /** @var T */
             return $default;
         }
@@ -159,7 +159,7 @@ readonly class StringTypeAbstractTest extends StringTypeAbstract
         try {
             /** @var static */
             return static::fromInt($value);
-        } catch (Exception) {
+        } catch (Throwable) {
             /** @var T */
             return $default;
         }
@@ -187,7 +187,7 @@ readonly class StringTypeAbstractTest extends StringTypeAbstract
                 $value instanceof Stringable => static::fromString((string) $value),
                 default => throw new TypeException('Value cannot be cast to string'),
             };
-        } catch (Exception) {
+        } catch (Throwable) {
             /** @var T */
             return $default;
         }
@@ -207,7 +207,7 @@ readonly class StringTypeAbstractTest extends StringTypeAbstract
         try {
             /** @var static */
             return static::fromString($value);
-        } catch (Exception) {
+        } catch (Throwable) {
             /** @var T */
             return $default;
         }
@@ -219,56 +219,124 @@ readonly class StringTypeAbstractTest extends StringTypeAbstract
     }
 }
 
-it('exercises StrType through a concrete stub', function (): void {
-    $strType = new StringTypeAbstractTest('test');
+describe('StringTypeAbstract', function () {
+    describe('Creation via Mock', function () {
+        it('creates instance from string', function () {
+            $mock = StringTypeAbstractTest::fromString('test');
+            expect($mock)->toBeInstanceOf(StringTypeAbstractTest::class)
+                ->and($mock->value())->toBe('test');
+        });
 
-    expect($strType)->toBeInstanceOf(StringTypeAbstract::class)
-        ->and($strType->value())->toBe('test')
-        ->and($strType->toString())->toBe('test')
-        ->and((string) $strType)->toBe('test')
-        ->and($strType->jsonSerialize())->toBe('test')
-        ->and($strType->isEmpty())->toBeFalse()
-        ->and($strType->isUndefined())->toBeFalse();
+        it('tryFromMixed returns instance for valid inputs', function (mixed $input, string $expected) {
+            $result = StringTypeAbstractTest::tryFromMixed($input);
+            expect($result)->toBeInstanceOf(StringTypeAbstractTest::class)
+                ->and($result->value())->toBe($expected);
+        })->with([
+            'string' => ['hello', 'hello'],
+            'float' => [3.14, '3.14000000000000012'],
+            'int' => [42, '42'],
+            'bool true' => [true, 'true'],
+            'bool false' => [false, 'false'],
+            'StringTypeAbstractTest instance' => [new StringTypeAbstractTest('instance'), 'instance'],
+            'Stringable' => [
+                new class implements Stringable {
+                    public function __toString(): string
+                    {
+                        return 'stringable';
+                    }
+                },
+                'stringable',
+            ],
+        ]);
 
-    $emptyStrType = new StringTypeAbstractTest('');
-    expect($emptyStrType->isEmpty())->toBeTrue();
-});
+        it('tryFromMixed returns default for invalid inputs', function (mixed $input) {
+            expect(StringTypeAbstractTest::tryFromMixed($input))->toBeInstanceOf(Undefined::class);
+        })->with([
+            'array' => [[]],
+            'object' => [new stdClass()],
+            'null' => [null],
+        ]);
 
-it('exercises abstract static methods via stub', function (): void {
-    expect(StringTypeAbstractTest::tryFromMixed('hello'))->toBeInstanceOf(StringTypeAbstractTest::class)
-        ->and(StringTypeAbstractTest::tryFromMixed('hello')->value())->toBe('hello')
-        ->and(StringTypeAbstractTest::tryFromMixed(['invalid']))->toBeInstanceOf(Undefined::class)
-        ->and(StringTypeAbstractTest::tryFromMixed(['invalid'], Undefined::create()))->toBeInstanceOf(Undefined::class)
-        ->and(StringTypeAbstractTest::tryFromString('world'))->toBeInstanceOf(StringTypeAbstractTest::class)
-        ->and(StringTypeAbstractTest::tryFromString('world')->value())->toBe('world')
-        ->and(StringTypeAbstractTest::fromString('hello'))->toBeInstanceOf(StringTypeAbstractTest::class);
-});
+        it('tryFromString returns instance or default', function (string $input, bool $isSuccess) {
+            $result = StringTypeAbstractTest::tryFromString($input);
+            if ($isSuccess) {
+                expect($result)->toBeInstanceOf(StringTypeAbstractTest::class)
+                    ->and($result->value())->toBe($input);
+            } else {
+                expect($result)->toBeInstanceOf(Undefined::class);
+            }
+        })->with([
+            'valid' => ['world', true],
+        ]);
+    });
 
-it('__toString proxies to toString for StrType', function (): void {
-    $v = new StringStandard('abc');
+    describe('Instance Methods', function () {
+        it('exposes internal value and formats', function () {
+            $mock = new StringTypeAbstractTest('test');
+            expect($mock->value())->toBe('test')
+                ->and($mock->toString())->toBe('test')
+                ->and((string) $mock)->toBe('test')
+                ->and($mock->jsonSerialize())->toBe('test')
+                ->and($mock->isUndefined())->toBeFalse();
+        });
 
-    expect((string) $v)
-        ->toBe($v->toString())
-        ->and((string) $v)
-        ->toBe('abc');
-});
+        it('isEmpty returns correct boolean', function (string $input, bool $expected) {
+            expect((new StringTypeAbstractTest($input))->isEmpty())->toBe($expected);
+        })->with([
+            'empty' => ['', true],
+            'not empty' => ['not-empty', false],
+        ]);
+    });
 
-it('fromString returns exact value and toString matches', function (): void {
-    $s1 = StringStandard::fromString('hello');
-    expect($s1->value())->toBe('hello')
-        ->and($s1->toString())->toBe('hello');
+    describe('isTypeOf', function () {
+        it('returns true when class matches', function () {
+            $mock = new StringTypeAbstractTest('test');
+            expect($mock->isTypeOf(StringTypeAbstractTest::class))->toBeTrue();
+        });
 
-    $s2 = StringStandard::fromString('');
-    expect($s2->value())->toBe('')
-        ->and($s2->toString())->toBe('');
-});
+        it('returns false when class does not match', function () {
+            $mock = new StringTypeAbstractTest('test');
+            expect($mock->isTypeOf('NonExistentClass'))->toBeFalse();
+        });
 
-it('handles unicode and whitespace transparently', function (): void {
-    $unicode = StringStandard::fromString('hi 🌟');
-    expect($unicode->value())->toBe('hi 🌟')
-        ->and($unicode->toString())->toBe('hi 🌟');
+        it('returns true for multiple classNames when one matches', function () {
+            $mock = new StringTypeAbstractTest('test');
+            expect($mock->isTypeOf('NonExistentClass', StringTypeAbstractTest::class, 'AnotherClass'))->toBeTrue();
+        });
 
-    $ws = StringStandard::fromString('  spaced  ');
-    expect($ws->value())->toBe('  spaced  ')
-        ->and($ws->toString())->toBe('  spaced  ');
+        it('returns false for multiple classNames when none match (kills FalseToTrue)', function () {
+            $mock = new StringTypeAbstractTest('test');
+            expect($mock->isTypeOf('NonExistentClass', 'AnotherClass'))->toBeFalse();
+        });
+
+        it('returns false for empty classNames (kills ForeachEmptyIterable)', function () {
+            $mock = new StringTypeAbstractTest('test');
+            expect($mock->isTypeOf())->toBeFalse();
+        });
+
+        it('returns false if IfNegated mutant triggers', function () {
+            $mock = new StringTypeAbstractTest('test');
+            // If mutated to "if (!$this instanceof $className)" it would return true for non-matching class
+            expect($mock->isTypeOf('stdClass'))->toBeFalse();
+        });
+    });
+
+    describe('Concrete implementation check (StringStandard)', function () {
+        it('__toString proxies to toString', function () {
+            $v = new StringStandard('abc');
+            expect((string) $v)->toBe($v->toString())
+                ->and((string) $v)->toBe('abc');
+        });
+
+        it('fromString handles various inputs', function (string $input) {
+            $s = StringStandard::fromString($input);
+            expect($s->value())->toBe($input)
+                ->and($s->toString())->toBe($input);
+        })->with([
+            'standard' => ['hello'],
+            'empty' => [''],
+            'unicode' => ['hi 🌟'],
+            'whitespace' => ['  spaced  '],
+        ]);
+    });
 });
