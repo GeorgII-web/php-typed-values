@@ -15,7 +15,8 @@
 *   **Frameworks:** PEST v3 (use `it` syntax) & PHPUnit v11.
 *   **Structure:** Test files must mirror the `src` directory structure.
 *   **Requirements:** Maintain **100%** code coverage, type coverage, and mutation score.
-*   **Classes in test-files:** Test abstract classes extending them with test implementation and name a new class with the suffix 'Test' 
+*   **Classes in test-files:** Test abstract classes extending them with test implementation and name a new class with the suffix 'Test'
+*   **Style** Use describe() it() with() methods, wrap all tests in describe().
 
 **Workflow: Adding a New Type**
 *   **Implementation:** Add the new type class to `src/{TypeName}/`.

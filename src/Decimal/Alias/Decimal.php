@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\String\Alias\MariaDb;
+namespace PhpTypedValues\Decimal\Alias;
 
-use PhpTypedValues\String\MariaDb\StringDecimal;
+use PhpTypedValues\Decimal\DecimalStandard;
 
 /**
  * Alias for MariaDB DECIMAL value represented as a string.
@@ -18,6 +18,6 @@ use PhpTypedValues\String\MariaDb\StringDecimal;
  *
  * @psalm-immutable
  */
-final readonly class Decimal extends StringDecimal
+final readonly class Decimal extends DecimalStandard
 {
 }
