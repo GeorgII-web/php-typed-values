@@ -7,252 +7,280 @@ use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Float\FloatNonNegative;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
-it('accepts non-negative floats via fromFloat and toString matches', function (): void {
-    $f0 = FloatNonNegative::fromFloat(0.0);
-    expect($f0->value())->toBe(0.0)
-        ->and($f0->toString())->toBe('0.0');
+describe('FloatNonNegative', function () {
+    describe('Creation', function () {
+        describe('tryFromString', function () {
+            it('returns instance or default value', function (string $input, mixed $expected) {
+                $result = FloatNonNegative::tryFromString($input);
+                if ($expected instanceof FloatNonNegative) {
+                    expect($result)->toBeInstanceOf(FloatNonNegative::class)
+                        ->and($result->value())->toBe($expected->value());
+                } else {
+                    expect($result)->toBeInstanceOf(Undefined::class);
+                }
+            })->with([
+                'valid positive' => ['0.5', FloatNonNegative::fromFloat(0.5)],
+                'zero' => ['0.0', FloatNonNegative::fromFloat(0.0)],
+                'negative' => ['-0.10000000000000001', Undefined::create()],
+                'non-numeric' => ['abc', Undefined::create()],
+            ]);
 
-    $f1 = FloatNonNegative::fromFloat(1.5);
-    expect($f1->value())->toBe(1.5)
-        ->and($f1->toString())->toBe('1.5');
-});
+            it('returns custom default on failure', function () {
+                expect(FloatNonNegative::tryFromString('abc', Undefined::create()))->toBeInstanceOf(Undefined::class);
+            });
+        });
 
-it('parses non-negative numeric strings via fromString', function (): void {
-    expect(FloatNonNegative::fromString('0.0')->value())->toBe(0.0)
-        ->and(FloatNonNegative::fromString('3.14000000000000012')->value())->toBe(3.14)
-        ->and(FloatNonNegative::fromString('42.0')->toString())->toBe('42.0');
-});
+        describe('fromString', function () {
+            it('creates instance from valid non-negative string', function (string $input, float $expected) {
+                expect(FloatNonNegative::fromString($input)->value())->toBe($expected);
+            })->with([
+                'standard positive' => ['2.5', 2.5],
+                'zero' => ['0.0', 0.0],
+                'scientific representation' => ['3.14000000000000012', 3.14],
+                'integer-like' => ['42.0', 42.0],
+            ]);
 
-it('rejects negative values', function (): void {
-    expect(fn() => new FloatNonNegative(-0.001))
-        ->toThrow(FloatTypeException::class);
-    expect(fn() => FloatNonNegative::fromFloat(-0.001))
-        ->toThrow(FloatTypeException::class);
-});
+            it('throws exception on invalid string', function (string $input, string $exception, string $message) {
+                expect(fn() => FloatNonNegative::fromString($input))->toThrow($exception, $message);
+            })->with([
+                'empty' => ['', StringTypeException::class, 'String "" has no valid float value'],
+                'non-numeric' => ['abc', StringTypeException::class, 'String "abc" has no valid float value'],
+                'comma separator' => ['5,5', StringTypeException::class, 'String "5,5" has no valid float value'],
+                'negative' => ['-1.0', FloatTypeException::class, 'Expected non-negative float, got "-1"'],
+                'negative small' => ['-0.10000000000000001', FloatTypeException::class, 'Expected non-negative float, got "-0.1"'],
+            ]);
+        });
 
-it('rejects non-numeric or negative strings', function (): void {
-    // Non-numeric
-    foreach (['', 'abc', '5,5'] as $str) {
-        expect(fn() => FloatNonNegative::fromString($str))
-            ->toThrow(StringTypeException::class);
-    }
+        describe('tryFromFloat', function () {
+            it('returns instance or default value', function (float $input, mixed $expected) {
+                $result = FloatNonNegative::tryFromFloat($input);
+                if ($expected instanceof FloatNonNegative) {
+                    expect($result)->toBeInstanceOf(FloatNonNegative::class)
+                        ->and($result->value())->toBe($expected->value());
+                } else {
+                    expect($result)->toBeInstanceOf(Undefined::class);
+                }
+            })->with([
+                'positive' => [2.0, FloatNonNegative::fromFloat(2.0)],
+                'zero' => [0.0, FloatNonNegative::fromFloat(0.0)],
+                'negative' => [-1.0, Undefined::create()],
+            ]);
+        });
 
-    // Numeric but negative
-    foreach (['-1.0', '-0.10000000000000001'] as $str) {
-        expect(fn() => FloatNonNegative::fromString($str))
-            ->toThrow(FloatTypeException::class, 'Expected non-negative float, got "');
-    }
-});
+        describe('fromFloat', function () {
+            it('creates instance from valid non-negative float', function (float $input) {
+                expect(FloatNonNegative::fromFloat($input)->value())->toBe($input);
+            })->with([
+                'standard positive' => [1.5],
+                'zero' => [0.0],
+                'negative zero' => [-0.0],
+            ]);
 
-it('FloatNonNegative::tryFromString returns value for >= 0.0 and Undefined otherwise', function (): void {
-    $ok0 = FloatNonNegative::tryFromString('0.0');
-    $ok = FloatNonNegative::tryFromString('0.5');
-    $bad = FloatNonNegative::tryFromString('-0.10000000000000001');
-    $badStr = FloatNonNegative::tryFromString('abc');
+            it('throws exception on invalid float', function (float $input, string $message) {
+                expect(fn() => FloatNonNegative::fromFloat($input))->toThrow(FloatTypeException::class, $message);
+            })->with([
+                'negative' => [-1.0, 'Expected non-negative float, got "-1"'],
+                'negative small' => [-0.001, 'Expected non-negative float, got "-0.001"'],
+            ]);
+        });
 
-    expect($ok0)
-        ->toBeInstanceOf(FloatNonNegative::class)
-        ->and($ok0->value())->toBe(0.0)
-        ->and($ok)
-        ->toBeInstanceOf(FloatNonNegative::class)
-        ->and($ok->value())->toBe(0.5)
-        ->and($bad)->toBeInstanceOf(Undefined::class)
-        ->and($badStr)->toBeInstanceOf(Undefined::class)
-        ->and(FloatNonNegative::tryFromString('-0.10000000000000001', Undefined::create()))->toBeInstanceOf(Undefined::class);
-});
+        describe('tryFromInt', function () {
+            it('returns instance or default value', function (int $input, mixed $expected) {
+                $result = FloatNonNegative::tryFromInt($input);
+                if ($expected instanceof FloatNonNegative) {
+                    expect($result)->toBeInstanceOf(FloatNonNegative::class)
+                        ->and($result->value())->toBe($expected->value());
+                } else {
+                    expect($result)->toBeInstanceOf(Undefined::class);
+                }
+            })->with([
+                'positive int' => [5, FloatNonNegative::fromFloat(5.0)],
+                'zero int' => [0, FloatNonNegative::fromFloat(0.0)],
+                'negative int' => [-5, Undefined::create()],
+            ]);
+        });
 
-it('FloatNonNegative::tryFromFloat returns value for >= 0 and Undefined otherwise', function (): void {
-    $ok = FloatNonNegative::tryFromFloat(0);
-    $bad = FloatNonNegative::tryFromFloat(-1);
+        describe('tryFromBool', function () {
+            it('returns instance or default value', function (bool $input, mixed $expected) {
+                $result = FloatNonNegative::tryFromBool($input);
+                if ($expected instanceof FloatNonNegative) {
+                    expect($result)->toBeInstanceOf(FloatNonNegative::class)
+                        ->and($result->value())->toBe($expected->value());
+                } else {
+                    expect($result)->toBeInstanceOf(Undefined::class);
+                }
+            })->with([
+                'true' => [true, FloatNonNegative::fromFloat(1.0)],
+                'false' => [false, FloatNonNegative::fromFloat(0.0)],
+            ]);
+        });
 
-    expect($ok)
-        ->toBeInstanceOf(FloatNonNegative::class)
-        ->and($ok->value())
-        ->toBe(0.0)
-        ->and($bad)
-        ->toBeInstanceOf(Undefined::class);
-});
+        describe('tryFromMixed', function () {
+            it('returns instance for valid mixed inputs', function (mixed $input, float $expected) {
+                $result = FloatNonNegative::tryFromMixed($input);
+                expect($result)->toBeInstanceOf(FloatNonNegative::class)
+                    ->and($result->value())->toBe($expected);
+            })->with([
+                'float 1.5' => [1.5, 1.5],
+                'float 0.0' => [0.0, 0.0],
+                'PHP_FLOAT_MAX' => [\PHP_FLOAT_MAX, \PHP_FLOAT_MAX],
+                'long float' => [1.234567890123456789, 1.234567890123456789],
+                '2/3' => [2 / 3, 2 / 3],
+                'FloatNonNegative instance' => [FloatNonNegative::fromFloat(1.234567890123456789), 1.234567890123456789],
+                'another FloatNonNegative instance' => [FloatNonNegative::fromFloat(4.5), 4.5],
+                'int 1' => [1, 1.0],
+                'int 0' => [0, 0.0],
+                'int 111' => [111, 111.0],
+                'bool true' => [true, 1.0],
+                'bool false' => [false, 0.0],
+                'string 1.5' => ['1.5', 1.5],
+                'string 0.0' => ['0.0', 0.0],
+                'stringable object' => [
+                    new class {
+                        public function __toString(): string
+                        {
+                            return '2.5';
+                        }
+                    },
+                    2.5,
+                ],
+            ]);
 
-it('FloatNonNegative throws on negative values in ctor and fromFloat', function (): void {
-    expect(fn() => new FloatNonNegative(-0.1))
-        ->toThrow(FloatTypeException::class, 'Expected non-negative float, got "-0.1"')
-        ->and(fn() => FloatNonNegative::fromFloat(-1.0))
-        ->toThrow(FloatTypeException::class, 'Expected non-negative float, got "-1"');
-});
+            it('works with closure', function () {
+                expect(FloatNonNegative::tryFromMixed(fn() => 1.5))
+                    ->toBeInstanceOf(Undefined::class);
+            });
 
-it('triggers FloatTypeException with non-strict floatToString in ctor', function (): void {
-    // 1e-308 will fail strict conversion in floatToString if the second parameter was true.
-    // But since it's false in the ctor's exception message generation, it should not throw another exception
-    // during the generation of the exception message.
-    expect(fn() => new FloatNonNegative(-1e-308))
-        ->toThrow(FloatTypeException::class);
-});
+            it('returns Undefined for invalid mixed inputs', function (mixed $input) {
+                $result = FloatNonNegative::tryFromMixed($input);
+                expect($result)->toBeInstanceOf(Undefined::class)
+                    ->and($result->isUndefined())->toBeTrue();
+            })->with([
+                'null' => [null],
+                'array' => [[]],
+                'object' => [new stdClass()],
+                'non-numeric string' => ['not-a-float'],
+                'invalid format string' => ['1.2.3'],
+                'octal-like string' => ['007'],
+                'Callable array' => [['FloatNonNegative', 'fromInt']],
+                'Resource' => [fopen('php://memory', 'r')],
+                'Array of objects' => [[new stdClass()]],
+                'INF' => [\INF],
+                'NAN' => [\NAN],
+                'Null byte string' => ["\0"],
+                'negative float' => [-3.14],
+                'negative integer' => [-42],
+                'negative string' => ['-10.5'],
+            ]);
+        });
 
-it('FloatNonNegative::fromString enforces numeric and non-negativity', function (): void {
-    // Non-numeric
-    expect(fn() => FloatNonNegative::fromString('abc'))
-        ->toThrow(StringTypeException::class, 'String "abc" has no valid float value');
+        describe('Constructor', function () {
+            it('constructs non-negative float via constructor', function () {
+                $v = new FloatNonNegative(0.0);
+                expect($v->value())->toBe(0.0)
+                    ->and($v->toString())->toBe('0.0');
+            });
 
-    // Non-negativity
-    expect(fn() => FloatNonNegative::fromString('-0.5'))
-        ->toThrow(FloatTypeException::class, 'Expected non-negative float, got "-0.5"');
+            it('throws on negative values', function (float $input, string $message) {
+                expect(fn() => new FloatNonNegative($input))
+                    ->toThrow(FloatTypeException::class, $message);
+            })->with([
+                'negative' => [-0.1, 'Expected non-negative float, got "-0.1"'],
+                'negative small' => [-0.001, 'Expected non-negative float, got "-0.001"'],
+                'very small negative' => [-1e-308, 'Expected non-negative float, got "-1.0E-308"'],
+            ]);
+        });
+    });
 
-    // Success path
-    $v = FloatNonNegative::fromString('0.75');
-    expect($v->value())->toBe(0.75);
-});
+    describe('Instance Methods', function () {
+        it('value() returns the internal float value', function () {
+            expect(FloatNonNegative::fromFloat(1.5)->value())->toBe(1.5);
+        });
 
-it('jsonSerialize returns float', function (): void {
-    expect(FloatNonNegative::tryFromString('1.10000000000000009')->jsonSerialize())->toBeFloat();
-});
+        describe('toString and __toString', function () {
+            it('returns string representation', function (float $value, string $expected) {
+                $f = FloatNonNegative::fromFloat($value);
+                expect($f->toString())->toBe($expected)
+                    ->and((string) $f)->toBe($expected);
+            })->with([
+                '0.0' => [0.0, '0.0'],
+                '1.5' => [1.5, '1.5'],
+                '2.5' => [2.5, '2.5'],
+                '42.0' => [42.0, '42.0'],
+                'negative zero normalized' => [-0.0, '0.0'],
+            ]);
+        });
 
-it('__toString casts same as toString and equals string representation', function (): void {
-    $v = FloatNonNegative::fromFloat(2.5);
+        it('jsonSerialize() returns float', function () {
+            $v = FloatNonNegative::fromString('10.5');
+            expect($v->jsonSerialize())->toBeFloat()
+                ->and($v->jsonSerialize())->toBe($v->value());
 
-    expect((string) $v)
-        ->toBe($v->toString())
-        ->and((string) $v)
-        ->toBe('2.5');
-});
+            expect(FloatNonNegative::tryFromString('1.10000000000000009')->jsonSerialize())->toBeFloat();
+        });
 
-it('accepts negative zero and normalizes to "-0" in toString', function (): void {
-    // fromFloat with -0.0 must be treated as non-negative
-    $v = FloatNonNegative::fromFloat(-0.0);
+        it('isEmpty() returns false', function () {
+            expect((new FloatNonNegative(0.0))->isEmpty())->toBeFalse()
+                ->and(FloatNonNegative::fromFloat(3.14)->isEmpty())->toBeFalse();
+        });
 
-    expect($v->value())
-        ->toBe(0.0)
-        ->and($v->toString())
-        ->toBe('0.0');
-});
+        it('isUndefined() returns false for instances and true for Undefined results', function () {
+            $v1 = new FloatNonNegative(0.0);
+            $v2 = FloatNonNegative::fromFloat(1.0);
+            $u1 = FloatNonNegative::tryFromString('-0.10000000000000001');
+            $u2 = FloatNonNegative::tryFromMixed('abc');
+            $u3 = FloatNonNegative::tryFromFloat(-1.0);
 
-it('converts mixed values to correct float state', function (mixed $input, float $expected): void {
-    $result = FloatNonNegative::tryFromMixed($input);
+            expect($v1->isUndefined())->toBeFalse()
+                ->and($v2->isUndefined())->toBeFalse()
+                ->and($u1->isUndefined())->toBeTrue()
+                ->and($u2->isUndefined())->toBeTrue()
+                ->and($u3->isUndefined())->toBeTrue();
+        });
 
-    expect($result)->toBeInstanceOf(FloatNonNegative::class)
-        ->and($result->value())->toBe($expected);
-})->with([
-    // Floats
-    ['input' => 1.5, 'expected' => 1.5],
-    ['input' => 0.0, 'expected' => 0.0],
-    ['input' => \PHP_FLOAT_MAX, 'expected' => \PHP_FLOAT_MAX],
-    ['input' => 1.234567890123456789, 'expected' => 1.234567890123456789],
-    ['input' => 2 / 3, 'expected' => 2 / 3],
-    //    ['input' => (string) (2 / 3), 'expected' => (float) (string) (2 / 3)],
-    // Type class
-    [
-        'input' => FloatNonNegative::fromFloat(1.234567890123456789),
-        'expected' => 1.234567890123456789,
-    ],
-    // Self instance input
-    [
-        'input' => FloatNonNegative::fromFloat(4.5),
-        'expected' => 4.5,
-    ],
-    // Integers
-    ['input' => 1, 'expected' => 1.0],
-    ['input' => 0, 'expected' => 0.0],
-    ['input' => 111, 'expected' => 111.0],
-    // Booleans
-    ['input' => true, 'expected' => 1.0],
-    ['input' => false, 'expected' => 0.0],
-    // Strings
-    ['input' => '1.5', 'expected' => 1.5],
-    ['input' => '0.0', 'expected' => 0.0],
-    // Stringable Object
-    ['input' => new class {
-        public function __toString(): string
-        {
-            return '2.5';
-        }
-    }, 'expected' => 2.5],
-]);
+        describe('isTypeOf', function () {
+            it('returns true when class matches', function () {
+                $v = FloatNonNegative::fromFloat(1.5);
+                expect($v->isTypeOf(FloatNonNegative::class))->toBeTrue();
+            });
 
-it('returns Undefined for invalid mixed inputs', function (mixed $input): void {
-    $result = FloatNonNegative::tryFromMixed($input);
+            it('returns false when class does not match', function () {
+                $v = FloatNonNegative::fromFloat(1.5);
+                expect($v->isTypeOf('NonExistentClass'))->toBeFalse();
+            });
 
-    expect($result)->toBeInstanceOf(Undefined::class)
-        ->and($result->isUndefined())->toBeTrue();
-})->with([
-    ['input' => null],
-    ['input' => []],
-    ['input' => new stdClass()],
-    ['input' => 'not-a-float'],
-    ['input' => '1.2.3'],
-    ['input' => '007'],
-    ['input' => fn() => 1.5],                  // Closure
-    ['input' => ['FloatNonNegative', 'fromInt']], // Callable array
-    ['input' => fopen('php://memory', 'r')],   // Resource
-    ['input' => [new stdClass()]],             // Array of objects
-    ['input' => \INF],                          // Infinite value
-    ['input' => \NAN],                          // Not a Number
-    ['input' => "\0"],                         // Null byte string
-    ['input' => -3.14],                        // Negative float
-    ['input' => -42],                          // Negative integer
-    ['input' => '-10.5'],                      // Negative string
-]);
+            it('returns true for multiple classNames when one matches', function () {
+                $v = FloatNonNegative::fromFloat(1.5);
+                expect($v->isTypeOf('NonExistentClass', FloatNonNegative::class, 'AnotherClass'))->toBeTrue();
+            });
+        });
+    });
 
-it('jsonSerialize equals value() for valid instances', function (): void {
-    $v = FloatNonNegative::fromString('10.5');
-    expect($v->jsonSerialize())->toBe($v->value());
-});
+    describe('Conversions', function () {
+        it('converts to bool', function (float $value, bool $expected) {
+            expect(FloatNonNegative::fromFloat($value)->toBool())->toBe($expected);
+        })->with([
+            '1.0 to true' => [1.0, true],
+            '0.0 to false' => [0.0, false],
+        ]);
 
-it('isEmpty returns false for FloatNonNegative', function (): void {
-    $a = new FloatNonNegative(0.0);
-    $b = FloatNonNegative::fromFloat(3.14);
+        it('throws when converting non-integer-like float to bool', function () {
+            expect(fn() => FloatNonNegative::fromFloat(0.5)->toBool())->toThrow(FloatTypeException::class);
+        });
 
-    expect($a->isEmpty())->toBeFalse()
-        ->and($b->isEmpty())->toBeFalse();
-});
+        it('converts to int', function (float $value, int $expected) {
+            expect(FloatNonNegative::fromFloat($value)->toInt())->toBe($expected);
+        })->with([
+            '1.0 to 1' => [1.0, 1],
+            '0.0 to 0' => [0.0, 0],
+        ]);
 
-it('isUndefined returns false for instances and true for Undefined results', function (): void {
-    // Valid instances should report isUndefined() = false
-    $v1 = new FloatNonNegative(0.0);
-    $v2 = FloatNonNegative::fromFloat(1.0);
+        it('throws when converting non-integer-like float to int', function () {
+            expect(fn() => FloatNonNegative::fromFloat(0.5)->toInt())->toThrow(FloatTypeException::class);
+        });
 
-    // Invalid inputs via tryFrom* produce Undefined which should report true
-    $u1 = FloatNonNegative::tryFromString('-0.10000000000000001');
-    $u2 = FloatNonNegative::tryFromMixed('abc');
-    $u3 = FloatNonNegative::tryFromFloat(-1.0);
-
-    expect($v1->isUndefined())->toBeFalse()
-        ->and($v2->isUndefined())->toBeFalse()
-        ->and($u1->isUndefined())->toBeTrue()
-        ->and($u2->isUndefined())->toBeTrue()
-        ->and($u3->isUndefined())->toBeTrue();
-});
-
-it('covers conversions for FloatNonNegative', function (): void {
-    $f = FloatNonNegative::fromFloat(1.0);
-    expect($f->toBool())->toBeTrue()
-        ->and($f->toInt())->toBe(1)
-        ->and($f->toFloat())->toBe(1.0)
-        ->and($f->toString())->toBe('1.0');
-
-    $f0 = FloatNonNegative::fromFloat(0.0);
-    expect($f0->toBool())->toBeFalse()
-        ->and($f0->toInt())->toBe(0)
-        ->and($f0->toString())->toBe('0.0');
-
-    expect(fn() => FloatNonNegative::fromFloat(0.5)->toBool())->toThrow(FloatTypeException::class)
-        ->and(fn() => FloatNonNegative::fromFloat(0.5)->toInt())->toThrow(FloatTypeException::class);
-
-    expect(FloatNonNegative::tryFromBool(true))->toBeInstanceOf(FloatNonNegative::class)
-        ->and(FloatNonNegative::tryFromBool(false))->toBeInstanceOf(FloatNonNegative::class)
-        ->and(FloatNonNegative::tryFromInt(5))->toBeInstanceOf(FloatNonNegative::class)
-        ->and(FloatNonNegative::tryFromInt(-5))->toBeInstanceOf(Undefined::class);
-});
-
-it('isTypeOf returns true when class matches', function (): void {
-    $v = FloatNonNegative::fromFloat(1.5);
-    expect($v->isTypeOf(FloatNonNegative::class))->toBeTrue();
-});
-
-it('isTypeOf returns false when class does not match', function (): void {
-    $v = FloatNonNegative::fromFloat(1.5);
-    expect($v->isTypeOf('NonExistentClass'))->toBeFalse();
-});
-
-it('isTypeOf returns true for multiple classNames when one matches', function (): void {
-    $v = FloatNonNegative::fromFloat(1.5);
-    expect($v->isTypeOf('NonExistentClass', FloatNonNegative::class, 'AnotherClass'))->toBeTrue();
+        it('converts to float', function () {
+            expect(FloatNonNegative::fromFloat(1.0)->toFloat())->toBe(1.0);
+        });
+    });
 });
