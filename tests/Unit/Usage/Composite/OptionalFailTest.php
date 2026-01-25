@@ -11,7 +11,7 @@ use PhpTypedValues\String\StringNonEmpty;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
- * Example of optional/late‑fail semantics.
+ * Composite of optional/late‑fail semantics.
  *
  * - `id` must be valid at construction time (early fail).
  * - `firstName` uses `tryFromMixed` and may be `Undefined` (late fail on access).
@@ -114,9 +114,9 @@ describe('OptionalFailTest', function () {
             expect($vo->getHeight()->value())->toBe(99.0);
         });
 
-        it('handles optional and invalid inputs as Undefined (late-fail)', function (string|null $firstName, mixed $height, string $getterName) {
+        it('handles optional and invalid inputs as Undefined (late-fail)', function (?string $firstName, mixed $height, string $getterName) {
             $vo = OptionalFailTest::fromScalars(id: 1, firstName: $firstName, height: $height);
-            expect($vo->$getterName())->toBeInstanceOf(Undefined::class);
+            expect($vo->{$getterName}())->toBeInstanceOf(Undefined::class);
         })->with([
             'empty firstName' => ['', 10.0, 'getFirstName'],
             'null firstName' => [null, 10.0, 'getFirstName'],
