@@ -9,7 +9,7 @@ use PhpTypedValues\String\StringNonEmpty;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
- * Example of late‑fail semantics using `Undefined` for optional/invalid inputs.
+ * Composite of late‑fail semantics using `Undefined` for optional/invalid inputs.
  *
  * - `id` must be valid at construction time (early fail).
  * - `firstName` and `height` accept mixed inputs and may become `Undefined`;
