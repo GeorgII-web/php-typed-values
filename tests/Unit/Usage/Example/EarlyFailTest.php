@@ -112,72 +112,79 @@ final readonly class EarlyFailTest implements ValueObjectInterface
     }
 }
 
-it('constructs EarlyFailTest from scalars and exposes typed values', function (): void {
-    $vo = EarlyFailTest::fromScalars(id: 1, firstName: 'Foobar', height: 170.5);
+describe('EarlyFailTest', function () {
+    describe('Creation', function () {
+        it('constructs from scalars and exposes typed values', function (): void {
+            $vo = EarlyFailTest::fromScalars(id: 1, firstName: 'Foobar', height: 170.5);
 
-    expect($vo->getId()->value())->toBe(1);
-    expect($vo->getFirstName()->value())->toBe('Foobar');
-    expect($vo->getHeight()->value())->toBe(170.5);
-});
+            expect($vo->getId()->value())->toBe(1)
+                ->and($vo->getFirstName()->value())->toBe('Foobar')
+                ->and($vo->getHeight()->value())->toBe(170.5);
+        });
 
-it('fails early when id is zero or negative', function (): void {
-    expect(fn() => EarlyFailTest::fromScalars(id: 0, firstName: 'Foobar', height: 10.0))
-        ->toThrow(IntegerTypeException::class, 'Expected positive integer, got "0"');
-});
+        it('fails early on invalid scalar inputs', function (int $id, string $firstName, float $height, string $exception, string $message) {
+            expect(fn() => EarlyFailTest::fromScalars(id: $id, firstName: $firstName, height: $height))
+                ->toThrow($exception, $message);
+        })->with([
+            'id zero' => [0, 'Foobar', 10.0, IntegerTypeException::class, 'Expected positive integer, got "0"'],
+            'id negative' => [-1, 'Foobar', 10.0, IntegerTypeException::class, 'Expected positive integer, got "-1"'],
+            'firstName empty' => [1, '', 10.0, StringTypeException::class, 'Expected non-empty string, got ""'],
+            'height negative' => [1, 'Foobar', -10.0, FloatTypeException::class, 'Expected positive float, got "-10"'],
+            'height zero' => [1, 'Foobar', 0.0, FloatTypeException::class, 'Expected positive float, got "0"'],
+        ]);
 
-it('fails early when firstName is empty', function (): void {
-    expect(fn() => EarlyFailTest::fromScalars(id: 1, firstName: '', height: 10.0))
-        ->toThrow(StringTypeException::class, 'Expected non-empty string, got ""');
-});
+        describe('fromArray', function () {
+            it('constructs from valid array', function (): void {
+                $data = [
+                    'id' => 1,
+                    'firstName' => 'Foobar',
+                    'height' => 170.5,
+                ];
+                $vo = EarlyFailTest::fromArray($data);
+                expect($vo->getId()->value())->toBe(1)
+                    ->and($vo->getFirstName()->value())->toBe('Foobar')
+                    ->and($vo->getHeight()->value())->toBe(170.5);
+            });
 
-it('fails early when height is negative', function (): void {
-    expect(fn() => EarlyFailTest::fromScalars(id: 1, firstName: 'Foobar', height: -10.0))
-        ->toThrow(FloatTypeException::class, 'Expected positive float, got "-10"');
-});
+            it('fails when fields are missing (triggers defaults that fail validation)', function (array $data, string $exception, string $message) {
+                expect(fn() => EarlyFailTest::fromArray($data))
+                    ->toThrow($exception, $message);
+            })->with([
+                'id missing' => [['firstName' => 'A', 'height' => 1.0], IntegerTypeException::class, 'Expected positive integer, got "0"'],
+                'firstName missing' => [['id' => 1, 'height' => 1.0], StringTypeException::class, 'Expected non-empty string, got ""'],
+                'height missing' => [['id' => 1, 'firstName' => 'A'], FloatTypeException::class, 'Expected positive float, got "0"'],
+            ]);
+        });
+    });
 
-it('returns false for isEmpty and isUndefined', function (): void {
-    $vo = EarlyFailTest::fromScalars(id: 1, firstName: 'Foobar', height: 170.5);
-    expect($vo->isEmpty())->toBeFalse()
-        ->and($vo->isUndefined())->toBeFalse();
-});
+    describe('State and Accessors', function () {
+        it('returns false for isEmpty and isUndefined', function (): void {
+            $vo = EarlyFailTest::fromScalars(id: 1, firstName: 'Foobar', height: 170.5);
+            expect($vo->isEmpty())->toBeFalse()
+                ->and($vo->isUndefined())->toBeFalse();
+        });
 
-it('converts to array', function (): void {
-    $vo = EarlyFailTest::fromScalars(id: 1, firstName: 'Foobar', height: 170.5);
-    expect($vo->toArray())->toBe([
-        'id' => 1,
-        'firstName' => 'Foobar',
-        'height' => 170.5,
-    ]);
-});
+        it('exposes internal typed values via getters', function () {
+            $vo = EarlyFailTest::fromScalars(id: 1, firstName: 'Foobar', height: 170.5);
+            expect($vo->getId())->toBeInstanceOf(IntegerPositive::class)
+                ->and($vo->getFirstName())->toBeInstanceOf(StringNonEmpty::class)
+                ->and($vo->getHeight())->toBeInstanceOf(FloatPositive::class);
+        });
+    });
 
-it('can call fromArray', function (): void {
-    $data = [
-        'id' => 1,
-        'firstName' => 'Foobar',
-        'height' => 170.5,
-    ];
-    $vo = EarlyFailTest::fromArray($data);
-    expect($vo->getId()->value())->toBe(1)
-        ->and($vo->getFirstName()->value())->toBe('Foobar')
-        ->and($vo->getHeight()->value())->toBe(170.5);
-});
+    describe('Serialization', function () {
+        it('converts to array', function (): void {
+            $vo = EarlyFailTest::fromScalars(id: 1, firstName: 'Foobar', height: 170.5);
+            expect($vo->toArray())->toBe([
+                'id' => 1,
+                'firstName' => 'Foobar',
+                'height' => 170.5,
+            ]);
+        });
 
-it('fails in fromArray when id is missing (defaults to 0)', function (): void {
-    expect(fn() => EarlyFailTest::fromArray(['firstName' => 'A', 'height' => 1.0]))
-        ->toThrow(IntegerTypeException::class, 'Expected positive integer, got "0"');
-});
-
-it('fails in fromArray when firstName is missing (defaults to empty)', function (): void {
-    expect(fn() => EarlyFailTest::fromArray(['id' => 1, 'height' => 1.0]))
-        ->toThrow(StringTypeException::class, 'Expected non-empty string, got ""');
-});
-
-it('fails in fromArray when height is missing (defaults to 0.0)', function (): void {
-    expect(fn() => EarlyFailTest::fromArray(['id' => 1, 'firstName' => 'A']))
-        ->toThrow(FloatTypeException::class, 'Expected positive float, got "0"');
-});
-
-it('serializes to JSON correctly', function (): void {
-    $vo = EarlyFailTest::fromScalars(id: 1, firstName: 'Foobar', height: 170.5);
-    expect(json_encode($vo))->toBe('{"id":1,"firstName":"Foobar","height":170.5}');
+        it('serializes to JSON correctly', function (): void {
+            $vo = EarlyFailTest::fromScalars(id: 1, firstName: 'Foobar', height: 170.5);
+            expect(json_encode($vo))->toBe('{"id":1,"firstName":"Foobar","height":170.5}');
+        });
+    });
 });
