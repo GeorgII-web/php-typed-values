@@ -56,7 +56,7 @@ describe('DateTimeW3C', function () {
                 } catch (DateTimeTypeException $e) {
                     $msg = $e->getMessage();
                     expect($msg)->toContain('Invalid date time value "2025-13-40T25:61:61+00:00", use format "Y-m-d\TH:i:sP"')
-                        ->and($msg)->toContain('Warning at 25: The parsed date was invalid')
+                        ->and($msg)->toContain('Warning at 25: The parsed date was invalid' . \PHP_EOL)
                         ->and($msg)->not->toContain('PEST Mutator was here!');
                 }
             });
