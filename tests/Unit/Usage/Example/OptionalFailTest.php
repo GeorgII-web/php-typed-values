@@ -95,81 +95,77 @@ final readonly class OptionalFailTest implements JsonSerializable
     }
 }
 
-it('constructs OptionalFailTest from scalars and exposes typed values', function (): void {
-    $vo = OptionalFailTest::fromScalars(id: 1, firstName: 'Foobar', height: 170.0);
+describe('OptionalFailTest', function () {
+    describe('Creation', function () {
+        it('constructs from scalars and exposes typed values', function (int $id, ?string $firstName, mixed $height, string $expectedId, string $expectedFirstName, string $expectedHeight) {
+            $vo = OptionalFailTest::fromScalars(id: $id, firstName: $firstName, height: $height);
 
-    expect($vo->getId()->toString())->toBe('1');
-    expect($vo->getFirstName()->toString())->toBe('Foobar');
-    expect($vo->getHeight()->toString())->toBe('170.0');
-});
-
-it('checks string cast', function (): void {
-    $voInt = OptionalFailTest::fromScalars(id: 1, firstName: 'Test', height: 99.0);
-    expect($voInt->getHeight()->value())->toBe(99.0);
-});
-
-it('treats empty firstName as Undefined (late-fail semantics)', function (): void {
-    $vo = OptionalFailTest::fromScalars(id: 1, firstName: '', height: 10.0);
-    expect($vo->getFirstName())->toBeInstanceOf(Undefined::class);
-});
-
-it('fails early when height is negative', function (): void {
-    expect(fn() => OptionalFailTest::fromScalars(id: 1, firstName: 'Foobar', height: -10.0)->getHeight()->value())
-        ->toThrow(UndefinedTypeException::class);
-});
-
-it('accepts int/float/numeric-string heights and preserves string formatting via fromString casting', function (): void {
-    $asInt = OptionalFailTest::fromScalars(id: 1, firstName: 'Foobar', height: 170.0);
-    $asFloat = OptionalFailTest::fromScalars(id: 1, firstName: 'Foobar', height: 170.5);
-    $asString = OptionalFailTest::fromScalars(id: 1, firstName: 'Foobar', height: '42.25');
-
-    expect($asInt->getHeight())->toBeInstanceOf(FloatPositive::class)
-        ->and($asInt->getHeight()->toString())->toBe('170.0')
-        ->and($asFloat->getHeight())->toBeInstanceOf(FloatPositive::class)
-        ->and($asFloat->getHeight()->toString())->toBe('170.5')
-        ->and($asString->getHeight())->toBeInstanceOf(FloatPositive::class)
-        ->and($asString->getHeight()->toString())->toBe('42.25');
-});
-
-it('treats null height as Undefined (late-fail semantics)', function (): void {
-    $obj = OptionalFailTest::fromScalars(id: 1, firstName: 'Foobar', height: null);
-    expect($obj->getHeight())->toBeInstanceOf(Undefined::class);
-});
-
-it('null firstName produces Undefined via tryFromMixed while height succeeds', function (): void {
-    $obj = OptionalFailTest::fromScalars(id: 1, firstName: null, height: 180.0);
-    expect($obj->getFirstName())->toBeInstanceOf(Undefined::class)
-        ->and($obj->getHeight())->toBeInstanceOf(FloatPositive::class);
-});
-
-it('invalid id throws IntegerTypeException with exact message', function (): void {
-    expect(fn() => OptionalFailTest::fromScalars(id: 0, firstName: 'Name', height: 100.0))
-        ->toThrow(IntegerTypeException::class, 'Expected positive integer, got "0"');
-});
-
-it('non-numeric height string throws FloatTypeException from assertFloatString', function (): void {
-    expect(fn() => OptionalFailTest::fromScalars(id: 1, firstName: 'Name', height: 'abc')->getHeight()->value())
-        ->toThrow(UndefinedTypeException::class);
-});
-
-it('jsonSerialize returns associative array of strings when all values are present', function (): void {
-    $vo = OptionalFailTest::fromScalars(id: 1, firstName: 'Foo', height: 170.0);
-    expect($vo->jsonSerialize())
-        ->toBe([
-            'id' => '1',
-            'firstName' => 'Foo',
-            'height' => '170.0',
+            expect($vo->getId()->toString())->toBe($expectedId)
+                ->and($vo->getFirstName()->toString())->toBe($expectedFirstName)
+                ->and($vo->getHeight()->toString())->toBe($expectedHeight);
+        })->with([
+            'standard values' => [1, 'Alice', 170.0, '1', 'Alice', '170.0'],
+            'numeric strings' => [2, 'Bob', '42.25', '2', 'Bob', '42.25'],
+            'floats with precision' => [3, 'Charlie', 170.5, '3', 'Charlie', '170.5'],
         ]);
-});
 
-it('jsonSerialize fails when firstName is Undefined (late fail)', function (): void {
-    $vo = OptionalFailTest::fromScalars(id: 1, firstName: '', height: 10.0);
-    expect(fn() => $vo->jsonSerialize())
-        ->toThrow(UndefinedTypeException::class, 'UndefinedType cannot be converted to string.');
-});
+        it('checks value() for float heights', function () {
+            $vo = OptionalFailTest::fromScalars(id: 1, firstName: 'Test', height: 99.0);
+            expect($vo->getHeight()->value())->toBe(99.0);
+        });
 
-it('jsonSerialize fails when height is Undefined (late fail)', function (): void {
-    $vo = OptionalFailTest::fromScalars(id: 1, firstName: 'Name', height: null);
-    expect(fn() => $vo->jsonSerialize())
-        ->toThrow(UndefinedTypeException::class, 'UndefinedType cannot be converted to string.');
+        it('handles optional and invalid inputs as Undefined (late-fail)', function (string|null $firstName, mixed $height, string $getterName) {
+            $vo = OptionalFailTest::fromScalars(id: 1, firstName: $firstName, height: $height);
+            expect($vo->$getterName())->toBeInstanceOf(Undefined::class);
+        })->with([
+            'empty firstName' => ['', 10.0, 'getFirstName'],
+            'null firstName' => [null, 10.0, 'getFirstName'],
+            'null height' => ['Alice', null, 'getHeight'],
+            'invalid height string' => ['Alice', 'abc', 'getHeight'],
+            'negative height' => ['Alice', -10.0, 'getHeight'],
+        ]);
+
+        it('fails early when id is invalid', function () {
+            expect(fn() => OptionalFailTest::fromScalars(id: 0, firstName: 'Name', height: 100.0))
+                ->toThrow(IntegerTypeException::class, 'Expected positive integer, got "0"');
+        });
+
+        it('fails on access when height is invalid', function (mixed $height) {
+            $vo = OptionalFailTest::fromScalars(id: 1, firstName: 'Alice', height: $height);
+            expect(fn() => $vo->getHeight()->value())->toThrow(UndefinedTypeException::class);
+        })->with([
+            'negative' => [-10.0],
+            'non-numeric' => ['abc'],
+        ]);
+
+        it('mixes valid height and null firstName', function () {
+            $obj = OptionalFailTest::fromScalars(id: 1, firstName: null, height: 180.0);
+            expect($obj->getFirstName())->toBeInstanceOf(Undefined::class)
+                ->and($obj->getHeight())->toBeInstanceOf(FloatPositive::class);
+        });
+    });
+
+    describe('Serialization', function () {
+        it('jsonSerialize returns associative array of strings when all values are present', function () {
+            $vo = OptionalFailTest::fromScalars(id: 1, firstName: 'Foo', height: 170.0);
+            expect($vo->jsonSerialize())
+                ->toBe([
+                    'id' => '1',
+                    'firstName' => 'Foo',
+                    'height' => '170.0',
+                ]);
+        });
+
+        it('jsonSerialize fails when firstName is Undefined (late fail)', function () {
+            $vo = OptionalFailTest::fromScalars(id: 1, firstName: '', height: 10.0);
+            expect(fn() => $vo->jsonSerialize())
+                ->toThrow(UndefinedTypeException::class, 'UndefinedType cannot be converted to string.');
+        });
+
+        it('jsonSerialize fails when height is Undefined (late fail)', function () {
+            $vo = OptionalFailTest::fromScalars(id: 1, firstName: 'Name', height: null);
+            expect(fn() => $vo->jsonSerialize())
+                ->toThrow(UndefinedTypeException::class, 'UndefinedType cannot be converted to string.');
+        });
+    });
 });
