@@ -12,7 +12,7 @@ use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 
-describe('StringDecimal', function () {
+describe('DecimalStandard', function () {
     it('accepts valid decimal strings and preserves value/toString', function (): void {
         $a = new DecimalStandard('0');
         $b = DecimalStandard::fromString('123');
@@ -138,13 +138,13 @@ describe('StringDecimal', function () {
         expect($v->isTypeOf('NonExistentClass', DecimalStandard::class, 'AnotherClass'))->toBeTrue();
     });
 
-    it('isEmpty is always false for StringDecimal', function (): void {
+    it('isEmpty is always false for DecimalStandard', function (): void {
         $d = new DecimalStandard('0');
         expect($d->isEmpty())->toBeFalse()
             ->and($d->isEmpty())->not()->toBeTrue();
     });
 
-    it('covers conversions for StringDecimal', function (): void {
+    it('covers conversions for DecimalStandard', function (): void {
         expect(fn() => DecimalStandard::fromBool(true))->toThrow(DecimalTypeException::class)
             ->and(fn() => DecimalStandard::fromBool(false))->toThrow(DecimalTypeException::class)
             ->and(DecimalStandard::fromInt(123)->value())->toBe('123')
@@ -159,7 +159,7 @@ describe('StringDecimal', function () {
         expect(fn() => DecimalStandard::fromString('1.2')->toFloat())->toThrow(StringTypeException::class);
     });
 
-    it('tryFromBool, tryFromFloat, tryFromInt return StringDecimal for valid inputs', function (): void {
+    it('tryFromBool, tryFromFloat, tryFromInt return DecimalStandard for valid inputs', function (): void {
         expect(DecimalStandard::tryFromFloat(1.2))->toBeInstanceOf(DecimalStandard::class)
             ->and(DecimalStandard::tryFromInt(123))->toBeInstanceOf(DecimalStandard::class);
     });
@@ -196,7 +196,7 @@ readonly class DecimalStandardTest extends DecimalStandard
 }
 
 describe('Throwing static', function () {
-    it('StringDecimal::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
+    it('DecimalStandard::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
         expect(DecimalStandardTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
             ->and(DecimalStandardTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
             ->and(DecimalStandardTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
