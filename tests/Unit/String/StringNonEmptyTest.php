@@ -7,7 +7,8 @@ use PhpTypedValues\String\StringNonEmpty;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 describe('StringNonEmpty', function () {
-    it('StringNonEmpty::tryFromString returns value for non-empty string', function (): void {
+    describe('Core behavior', function () {
+        it('StringNonEmpty::tryFromString returns value for non-empty string', function (): void {
         $v = StringNonEmpty::tryFromString('abc');
 
         expect($v)
@@ -128,6 +129,7 @@ describe('StringNonEmpty', function () {
             ->and(StringNonEmpty::tryFromInt(123))->toBeInstanceOf(StringNonEmpty::class);
     });
 });
+});
 
 /**
  * @internal
@@ -154,14 +156,16 @@ readonly class StringNonEmptyTest extends StringNonEmpty
     }
 }
 
-it('StringNonEmpty::tryFromBool returns Undefined when fromBool throws (coverage)', function (): void {
-    expect(StringNonEmptyTest::tryFromBool(true))->toBeInstanceOf(Undefined::class);
-});
+describe('StringNonEmptyTest (Throwing static)', function () {
+    it('StringNonEmpty::tryFromBool returns Undefined when fromBool throws (coverage)', function (): void {
+        expect(StringNonEmptyTest::tryFromBool(true))->toBeInstanceOf(Undefined::class);
+    });
 
-it('StringNonEmpty::tryFromFloat returns Undefined when fromFloat throws (coverage)', function (): void {
-    expect(StringNonEmptyTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class);
-});
+    it('StringNonEmpty::tryFromFloat returns Undefined when fromFloat throws (coverage)', function (): void {
+        expect(StringNonEmptyTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class);
+    });
 
-it('StringNonEmpty::tryFromInt returns Undefined when fromInt throws (coverage)', function (): void {
-    expect(StringNonEmptyTest::tryFromInt(1))->toBeInstanceOf(Undefined::class);
+    it('StringNonEmpty::tryFromInt returns Undefined when fromInt throws (coverage)', function (): void {
+        expect(StringNonEmptyTest::tryFromInt(1))->toBeInstanceOf(Undefined::class);
+    });
 });
