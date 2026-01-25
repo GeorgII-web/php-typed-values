@@ -91,6 +91,14 @@ describe('ArrayNonEmpty', function () {
             expect($vo->isEmpty())->toBeTrue();
         });
 
+        it('isUndefined returns false if empty (unreachable via constructor)', function () {
+            $vo = (new ReflectionClass(ArrayNonEmpty::class))->newInstanceWithoutConstructor();
+            $reflectionProperty = new ReflectionProperty(ArrayNonEmpty::class, 'value');
+            $reflectionProperty->setValue($vo, []);
+
+            expect($vo->isUndefined())->toBeFalse();
+        });
+
         it('isUndefined() returns true only if all items are Undefined', function (array $items, bool $expected) {
             $vo = new ArrayNonEmpty($items);
             expect($vo->isUndefined())->toBe($expected);
@@ -141,22 +149,38 @@ describe('ArrayNonEmpty', function () {
             ],
             'JsonSerializable' => [
                 [new class implements JsonSerializable {
-                    public function jsonSerialize(): string { return 'serialized'; }
+                    public function jsonSerialize(): string
+                    {
+                        return 'serialized';
+                    }
                 }],
                 ['serialized'],
             ],
             'Stringable' => [
                 [new class implements Stringable {
-                    public function __toString(): string { return 'stringable'; }
+                    public function __toString(): string
+                    {
+                        return 'stringable';
+                    }
                 }],
                 ['stringable'],
             ],
             'Mixed supported items' => [
                 [
-                    new class implements JsonSerializable { public function jsonSerialize(): string { return 'json'; } },
+                    new class implements JsonSerializable {
+                        public function jsonSerialize(): string
+                        {
+                            return 'json';
+                        }
+                    },
                     'scalar',
-                    new class implements Stringable { public function __toString(): string { return 'stringable'; } },
-                    null
+                    new class implements Stringable {
+                        public function __toString(): string
+                        {
+                            return 'stringable';
+                        }
+                    },
+                    null,
                 ],
                 ['json', 'scalar', 'stringable', null],
             ],
@@ -170,7 +194,10 @@ describe('ArrayNonEmpty', function () {
 
         it('toArray continues loop after JsonSerializable or scalar', function () {
             $js = new class implements JsonSerializable {
-                public function jsonSerialize(): string { return 'json'; }
+                public function jsonSerialize(): string
+                {
+                    return 'json';
+                }
             };
             $vo = new ArrayNonEmpty([$js, 'scalar', 'another']);
             expect($vo->toArray())->toBe(['json', 'scalar', 'another']);
