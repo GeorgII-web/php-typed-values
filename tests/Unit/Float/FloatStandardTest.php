@@ -8,338 +8,338 @@ use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Float\FloatStandard;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
-it('FloatStandard::tryFromString returns value on valid float string', function (): void {
-    $v = FloatStandard::tryFromString('1.5');
+describe('FloatStandard', function () {
+    describe('Creation', function () {
+        describe('tryFromString', function () {
+            it('returns instance or default value', function (string $input, mixed $expected) {
+                $result = FloatStandard::tryFromString($input);
+                if ($expected instanceof FloatStandard) {
+                    expect($result)->toBeInstanceOf(FloatStandard::class)
+                        ->and($result->value())->toBe($expected->value())
+                        ->and($result->toString())->toBe($expected->toString());
+                } else {
+                    expect($result)->toBeInstanceOf(Undefined::class);
+                }
+            })->with([
+                'valid float string' => ['1.5', FloatStandard::fromFloat(1.5)],
+                'invalid float string' => ['abc', Undefined::create()],
+            ]);
 
-    expect($v)
-        ->toBeInstanceOf(FloatStandard::class)
-        ->and($v->value())
-        ->toBe(1.5)
-        ->and($v->toString())
-        ->toBe('1.5');
-});
+            it('returns custom default on failure', function () {
+                expect(FloatStandard::tryFromString('abc', Undefined::create()))->toBeInstanceOf(Undefined::class);
+            });
+        });
 
-it('FloatStandard::tryFromString returns Undefined on invalid float string', function (): void {
-    $v = FloatStandard::tryFromString('abc');
+        describe('fromString', function () {
+            it('creates instance from valid string', function (string $input, float $expected) {
+                expect(FloatStandard::fromString($input)->value())->toBe($expected);
+            })->with([
+                'standard float' => ['1.5', 1.5],
+            ]);
 
-    expect($v)->toBeInstanceOf(Undefined::class)
-        ->and(FloatStandard::tryFromString('abc', Undefined::create()))->toBeInstanceOf(Undefined::class);
-});
+            it('throws exception on invalid string', function (string $input, string $exception, string $message) {
+                expect(fn() => FloatStandard::fromString($input))->toThrow($exception, $message);
+            })->with([
+                'non-numeric' => ['NaN', StringTypeException::class, 'String "NaN" has no valid float value'],
+                'loose precision' => ['0.1', StringTypeException::class, 'String "0.1" has no valid strict float value'],
+                'long tail' => [
+                    '12.444144424443444044454446444744484449444',
+                    StringTypeException::class,
+                    'String "12.444144424443444044454446444744484449444" has no valid strict float value',
+                ],
+            ]);
+        });
 
-it('FloatStandard::tryFromFloat returns value for any int', function (): void {
-    $v = FloatStandard::tryFromFloat(2);
+        describe('tryFromFloat', function () {
+            it('returns instance or default value', function (float $input, mixed $expected) {
+                $result = FloatStandard::tryFromFloat($input);
+                if ($expected instanceof FloatStandard) {
+                    expect($result)->toBeInstanceOf(FloatStandard::class)
+                        ->and($result->value())->toBe($expected->value());
+                } else {
+                    expect($result)->toBeInstanceOf(Undefined::class);
+                }
+            })->with([
+                'valid float' => [2.0, FloatStandard::fromFloat(2.0)],
+                'INF' => [\INF, Undefined::create()],
+                'NAN' => [\NAN, Undefined::create()],
+            ]);
 
-    expect($v)
-        ->toBeInstanceOf(FloatStandard::class)
-        ->and($v->value())
-        ->toBe(2.0);
-});
+            it('returns custom default on failure', function () {
+                expect(FloatStandard::tryFromFloat(\INF, Undefined::create()))->toBeInstanceOf(Undefined::class);
+            });
+        });
 
-it('FloatStandard::tryFromFloat returns Undefined for invalid values', function (): void {
-    $inf = FloatStandard::tryFromFloat(\INF);
-    $nan = FloatStandard::tryFromFloat(\NAN);
-    $customDefault = FloatStandard::tryFromFloat(\INF, Undefined::create());
+        describe('fromFloat', function () {
+            it('creates instance from valid float', function (float $input) {
+                expect(FloatStandard::fromFloat($input)->value())->toBe($input);
+            })->with([
+                'standard float' => [3.14],
+            ]);
 
-    expect($inf)->toBeInstanceOf(Undefined::class)
-        ->and($nan)->toBeInstanceOf(Undefined::class)
-        ->and($customDefault)->toBeInstanceOf(Undefined::class);
-});
+            it('throws exception on invalid float', function (float $input) {
+                expect(fn() => FloatStandard::fromFloat($input))->toThrow(FloatTypeException::class);
+            })->with([
+                'INF' => [\INF],
+                'NAN' => [\NAN],
+            ]);
+        });
 
-it('FloatStandard::fromString throws on non-numeric strings', function (): void {
-    expect(fn() => FloatStandard::fromString('NaN'))
-        ->toThrow(StringTypeException::class, 'String "NaN" has no valid float value');
-});
+        describe('tryFromInt', function () {
+            it('returns instance or default value', function (int $input, mixed $expected) {
+                $result = FloatStandard::tryFromInt($input);
+                if ($expected instanceof FloatStandard) {
+                    expect($result)->toBeInstanceOf(FloatStandard::class)
+                        ->and($result->value())->toBe($expected->value());
+                } else {
+                    expect($result)->toBeInstanceOf(Undefined::class);
+                }
+            })->with([
+                'standard int' => [5, FloatStandard::fromFloat(5.0)],
+                'PHP_INT_MAX' => [\PHP_INT_MAX, Undefined::create()],
+            ]);
+        });
 
-it('fails on loose precious', function (): void {
-    expect(fn() => FloatStandard::fromString('0.1'))
-        ->toThrow(StringTypeException::class);
-});
+        describe('fromInt', function () {
+            it('creates instance from valid int', function (int $input) {
+                expect(FloatStandard::fromInt($input)->value())->toBe((float) $input);
+            })->with([
+                'standard int' => [5],
+            ]);
 
-it('FloatStandard::fromString throws exception for a long tail', function (): void {
-    expect(fn() => FloatStandard::fromString('12.444144424443444044454446444744484449444'))
-        ->toThrow(StringTypeException::class, 'String "12.444144424443444044454446444744484449444" has no valid strict float value');
-});
+            it('throws exception on invalid int', function (int $input) {
+                expect(fn() => FloatStandard::fromInt($input))->toThrow(IntegerTypeException::class);
+            })->with([
+                'PHP_INT_MAX' => [\PHP_INT_MAX],
+            ]);
+        });
 
-it('jsonSerialize returns float', function (): void {
-    expect(FloatStandard::tryFromString('1.10000000000000009')->jsonSerialize())->toBeFloat();
-});
+        describe('tryFromBool', function () {
+            it('returns instance from boolean', function (bool $input, float $expected) {
+                expect(FloatStandard::tryFromBool($input)->value())->toBe($expected);
+            })->with([
+                'true' => [true, 1.0],
+                'false' => [false, 0.0],
+            ]);
+        });
 
-it('__toString mirrors toString and value', function (): void {
-    $v = FloatStandard::fromFloat(3.14);
+        describe('tryFromMixed', function () {
+            it('returns instance for valid mixed inputs', function (mixed $input, float $expected) {
+                $result = FloatStandard::tryFromMixed($input);
+                expect($result)->toBeInstanceOf(FloatStandard::class)
+                    ->and($result->value())->toBe($expected);
+            })->with([
+                'float 1.5' => [1.5, 1.5],
+                'float 0.0' => [0.0, 0.0],
+                'float -3.14' => [-3.14, -3.14],
+                'PHP_FLOAT_MAX' => [\PHP_FLOAT_MAX, \PHP_FLOAT_MAX],
+                'long float' => [1.234567890123456789, 1.234567890123456789],
+                '2/3' => [2 / 3, 2 / 3],
+                'FloatStandard instance' => [FloatStandard::fromFloat(1.234567890123456789), 1.234567890123456789],
+                'int 1' => [1, 1.0],
+                'int 0' => [0, 0.0],
+                'int -42' => [-42, -42.0],
+                'int 111' => [111, 111.0],
+                'bool true' => [true, 1.0],
+                'bool false' => [false, 0.0],
+                'string 1.5' => ['1.5', 1.5],
+                'string 0.0' => ['0.0', 0.0],
+                'string -10.5' => ['-10.5', -10.5],
+                'stringable object' => [
+                    new class {
+                        public function __toString(): string
+                        {
+                            return '2.5';
+                        }
+                    },
+                    2.5,
+                ],
+                'stringable object 1.23' => [
+                    new class {
+                        public function __toString(): string
+                        {
+                            return '1.22999999999999998';
+                        }
+                    },
+                    1.23,
+                ],
+            ]);
 
-    expect((string) $v)
-        ->toBe('3.14000000000000012')
-        ->and($v->toString())
-        ->toBe('3.14000000000000012')
-        ->and($v->value())
-        ->toBe(3.14);
-});
+            it('returns Undefined for invalid mixed inputs', function (mixed $input) {
+                $result = FloatStandard::tryFromMixed($input);
+                expect($result)->toBeInstanceOf(Undefined::class)
+                    ->and($result->isUndefined())->toBeTrue();
+            })->with([
+                'null' => [null],
+                'array' => [[]],
+                'object' => [new stdClass()],
+                'non-numeric string' => ['not-a-float'],
+                'invalid format string' => ['1.2.3'],
+                'octal-like string' => ['007'],
+                'Callable array' => [['FloatStandard', 'fromInt']],
+                'Resource' => [fopen('php://memory', 'r')],
+                'Array of objects' => [[new stdClass()]],
+                'INF' => [\INF],
+                'NAN' => [\NAN],
+                'Null byte string' => ["\0"],
+            ]);
 
-it('tryFromMixed covers numeric, non-numeric, and stringable inputs', function (): void {
-    // Numeric inputs
-    $fromNumericString = FloatStandard::tryFromMixed('1.0');
-    $fromInt = FloatStandard::tryFromMixed(3);
-    $fromFloat = FloatStandard::tryFromMixed(2.5);
+            it('returns custom default on failure', function () {
+                expect(FloatStandard::tryFromMixed([], Undefined::create()))->toBeInstanceOf(Undefined::class);
+            });
+        });
+    });
 
-    // Non-numeric inputs
-    $fromArray = FloatStandard::tryFromMixed([1]);
-    $fromNull = FloatStandard::tryFromMixed(null);
+    describe('Instance Methods', function () {
+        it('value() returns the internal float value', function () {
+            expect(FloatStandard::fromFloat(1.5)->value())->toBe(1.5);
+        });
 
-    // Self instance input
-    $selfInstance = FloatStandard::fromFloat(4.5);
-    $fromSelf = FloatStandard::tryFromMixed($selfInstance);
+        describe('toString and __toString', function () {
+            it('returns string representation', function (float $value, string $expected) {
+                $f = FloatStandard::fromFloat($value);
+                expect($f->toString())->toBe($expected)
+                    ->and((string) $f)->toBe($expected);
+            })->with([
+                '0' => [0, '0.0'],
+                '0.0' => [0.0, '0.0'],
+                '-0.0' => [-0.0, '0.0'],
+                '+0.0' => [+0.0, '0.0'],
+                '1.0' => [1.0, '1.0'],
+                '-1.0' => [-1.0, '-1.0'],
+                '0.1' => [0.1, '0.10000000000000001'],
+                '0.10000000000000001' => [0.10000000000000001, '0.10000000000000001'],
+                '0.10000000000000002' => [0.10000000000000002, '0.10000000000000002'],
+                '0.10000000000000012' => [0.10000000000000012, '0.10000000000000012'],
+                '-0.1' => [-0.1, '-0.10000000000000001'],
+                '0.2' => [0.2, '0.20000000000000001'],
+                '0.3' => [0.3, '0.29999999999999999'],
+                '0.1+0.2' => [0.1 + 0.2, '0.30000000000000004'],
+                '1/3' => [1.0 / 3.0, '0.33333333333333331'],
+                '2/3' => [2.0 / 3.0, '0.66666666666666663'],
+                '10/3' => [10.0 / 3.0, '3.33333333333333348'],
+                '1e10' => [1e10, '10000000000.0'],
+                '-1e10' => [-1e10, '-10000000000.0'],
+                '1e16' => [1e16, '10000000000000000.0'],
+                '1e308' => [1e308, '100000000000000001097906362944045541740492309677311846336810682903157585404911491537163328978494688899061249669721172515611590283743140088328307009198146046031271664502933027185697489699588559043338384466165001178426897626212945177628091195786707458122783970171784415105291802893207873272974885715430223118336.0'],
+                '-1e308' => [-1e308, '-100000000000000001097906362944045541740492309677311846336810682903157585404911491537163328978494688899061249669721172515611590283743140088328307009198146046031271664502933027185697489699588559043338384466165001178426897626212945177628091195786707458122783970171784415105291802893207873272974885715430223118336.0'],
+                '1e-10' => [1e-10, '0.0000000001'],
+                '-1e-10' => [-1e-10, '-0.0000000001'],
+                '1.99999999999999' => [1.99999999999999, '1.99999999999999001'],
+                '2.00000000000001' => [2.00000000000001, '2.00000000000001021'],
+                '0.7' => [0.7, '0.69999999999999996'],
+                '0.17' => [0.17, '0.17000000000000001'],
+                '0.57' => [0.57, '0.56999999999999995'],
+                '0.99' => [0.99, '0.98999999999999999'],
+                '001.5' => [001.5, '1.5'],
+                '0.3333333333333333' => [0.3333333333333333, '0.33333333333333331'],
+                '0.6666666666666666' => [0.6666666666666666, '0.66666666666666663'],
+                '2^53-1' => [9007199254740991.0, '9007199254740991.0'],
+                '2^53' => [9007199254740992.0, '9007199254740992.0'],
+                '-2^53' => [-9007199254740992.0, '-9007199254740992.0'],
+                'PHP_INT_MAX as float' => [(float) \PHP_INT_MAX, '9223372036854775808.0'],
+                'Float_closure' => [fn() => 1.5, '1.5'],
+            ]);
 
-    // Stringable object
-    $stringable = new class {
-        public function __toString(): string
-        {
-            return '1.22999999999999998';
-        }
-    };
-    $fromStringable = FloatStandard::tryFromMixed($stringable);
+            it('throws exception for very small floats', function (float $value) {
+                $f = FloatStandard::fromFloat($value);
+                expect(fn() => $f->toString())->toThrow(FloatTypeException::class);
+            })->with([
+                '1e-308' => [1e-308],
+                '-1e-308' => [-1e-308],
+                '5e-324' => [5e-324],
+                '-5e-324' => [-5e-324],
+            ]);
+        });
 
-    expect($fromNumericString)->toBeInstanceOf(FloatStandard::class)
-        ->and($fromNumericString->value())->toBe(1.0)
-        ->and($fromInt)->toBeInstanceOf(FloatStandard::class)
-        ->and($fromInt->value())->toBe(3.0)
-        ->and($fromFloat)->toBeInstanceOf(FloatStandard::class)
-        ->and($fromFloat->value())->toBe(2.5)
-        ->and($fromSelf)->toBeInstanceOf(FloatStandard::class)
-        ->and($fromSelf->value())->toBe(4.5)
-        ->and($fromArray)->toBeInstanceOf(Undefined::class)
-        ->and($fromNull)->toBeInstanceOf(Undefined::class)
-        ->and($fromStringable)->toBeInstanceOf(FloatStandard::class)
-        ->and($fromStringable->value())->toBe(1.23)
-        ->and(FloatStandard::tryFromMixed([1], Undefined::create()))->toBeInstanceOf(Undefined::class);
-});
+        it('jsonSerialize() returns float', function () {
+            expect(FloatStandard::tryFromString('1.10000000000000009')->jsonSerialize())->toBeFloat();
+        });
 
-it('isEmpty returns false for FloatStandard', function (): void {
-    $a = new FloatStandard(-1.0);
-    $b = FloatStandard::fromFloat(0.0);
+        it('isEmpty() returns false', function () {
+            expect(FloatStandard::fromFloat(-1.0)->isEmpty())->toBeFalse()
+                ->and(FloatStandard::fromFloat(0.0)->isEmpty())->toBeFalse();
+        });
 
-    expect($a->isEmpty())->toBeFalse()
-        ->and($b->isEmpty())->toBeFalse();
-});
+        it('isUndefined() returns false', function () {
+            expect(FloatStandard::fromFloat(-1.0)->isUndefined())->toBeFalse()
+                ->and(FloatStandard::fromFloat(0.0)->isUndefined())->toBeFalse();
+        });
 
-it('isUndefined returns false for instances and true for Undefined results', function (): void {
-    // Instances should be defined
-    $v1 = new FloatStandard(-1.0);
-    $v2 = FloatStandard::fromFloat(0.0);
+        describe('isTypeOf', function () {
+            it('returns true when class matches', function () {
+                $v = FloatStandard::fromFloat(1.5);
+                expect($v->isTypeOf(FloatStandard::class))->toBeTrue();
+            });
 
-    // Undefined results via tryFrom*
-    $u1 = FloatStandard::tryFromString('not-a-number');
-    $u2 = FloatStandard::tryFromMixed([1]);
+            it('returns false when class does not match', function () {
+                $v = FloatStandard::fromFloat(1.5);
+                expect($v->isTypeOf('NonExistentClass'))->toBeFalse();
+            });
 
-    expect($v1->isUndefined())->toBeFalse()
-        ->and($v2->isUndefined())->toBeFalse()
-        ->and($u1->isUndefined())->toBeTrue()
-        ->and($u2->isUndefined())->toBeTrue();
-});
+            it('returns true for multiple classNames when one matches', function () {
+                $v = FloatStandard::fromFloat(1.5);
+                expect($v->isTypeOf('NonExistentClass', FloatStandard::class, 'AnotherClass'))->toBeTrue();
+            });
+        });
 
-it('checks compare algorithm', function (): void {
-    $f1 = FloatStandard::fromFloat(0.1);
-    $f2 = FloatStandard::fromFloat(0.7);
-    $f3 = FloatStandard::fromFloat(0.8);
+        describe('Conversions', function () {
+            it('converts to bool', function (float $value, bool $expected) {
+                expect(FloatStandard::fromFloat($value)->toBool())->toBe($expected);
+            })->with([
+                '1.0 to true' => [1.0, true],
+                '0.0 to false' => [0.0, false],
+            ]);
 
-    expect($f1->toString())->toBe('0.10000000000000001')
-        ->and($f2->toString())->toBe('0.69999999999999996')
-        ->and($f3->toString())->toBe('0.80000000000000004')
-        ->and($f1->value())->toBe(0.1)
-        ->and($f2->value())->toBe(0.7)
-        ->and($f3->value())->toBe(0.8)
-        ->and(FloatStandard::fromFloat($f1->value() + $f2->value())->toString())->toBe('0.79999999999999993');
-});
+            it('throws when converting non-integer-like float to bool', function () {
+                expect(fn() => FloatStandard::fromFloat(0.5)->toBool())->toThrow(FloatTypeException::class);
+            });
 
-it('checks diff between string formatting and native float', function (): void {
-    $a = new FloatStandard((float) (string) (2 / 3));
-    $b = new FloatStandard(2 / 3);
+            it('converts to int', function (float $value, int $expected) {
+                expect(FloatStandard::fromFloat($value)->toInt())->toBe($expected);
+            })->with([
+                '1.0 to 1' => [1.0, 1],
+                '0.0 to 0' => [0.0, 0],
+            ]);
 
-    expect($a->value())->toBe(0.66666666666667)
-        ->and($b->value())->toBe(0.6666666666666666);
-});
+            it('throws when converting non-integer-like float to int', function () {
+                expect(fn() => FloatStandard::fromFloat(0.5)->toInt())->toThrow(FloatTypeException::class);
+            });
 
-it('converts mixed values to correct float state', function (mixed $input, float $expected): void {
-    $result = FloatStandard::tryFromMixed($input);
+            it('converts to float', function () {
+                expect(FloatStandard::fromFloat(1.0)->toFloat())->toBe(1.0);
+            });
+        });
+    });
 
-    expect($result)->toBeInstanceOf(FloatStandard::class)
-        ->and($result->value())->toBe($expected);
-})->with([
-    // Floats
-    ['input' => 1.5, 'expected' => 1.5],
-    ['input' => 0.0, 'expected' => 0.0],
-    ['input' => -3.14, 'expected' => -3.14],
-    ['input' => \PHP_FLOAT_MAX, 'expected' => \PHP_FLOAT_MAX],
-    ['input' => 1.234567890123456789, 'expected' => 1.234567890123456789],
-    ['input' => 2 / 3, 'expected' => 2 / 3],
-    //    ['input' => (string) (2 / 3), 'expected' => (float) (string) (2 / 3)],
-    // Type class
-    [
-        'input' => FloatStandard::fromFloat(1.234567890123456789),
-        'expected' => 1.234567890123456789,
-    ],
-    // Integers
-    ['input' => 1, 'expected' => 1.0],
-    ['input' => 0, 'expected' => 0.0],
-    ['input' => -42, 'expected' => -42.0],
-    ['input' => 111, 'expected' => 111.0],
-    // Booleans
-    ['input' => true, 'expected' => 1.0],
-    ['input' => false, 'expected' => 0.0],
-    // Strings
-    ['input' => '1.5', 'expected' => 1.5],
-    ['input' => '0.0', 'expected' => 0.0],
-    ['input' => '-10.5', 'expected' => -10.5],
-    //    ['input' => '0.66666666666666663', 'expected' => 0.6666666666666666],
-    //    ['input' => '1.20000000000000002', 'expected' => 1.20000000000000002],
-    // Stringable Object
-    ['input' => new class {
-        public function __toString(): string
-        {
-            return '2.5';
-        }
-    }, 'expected' => 2.5],
-]);
+    describe('Precision and Edge Cases', function () {
+        it('checks compare algorithm', function () {
+            $f1 = FloatStandard::fromFloat(0.1);
+            $f2 = FloatStandard::fromFloat(0.7);
+            $f3 = FloatStandard::fromFloat(0.8);
 
-it('FloatStandard::toString matches expected values', function (float $value, string $expected): void {
-    if (is_nan($value) || is_infinite($value)) {
-        expect(fn() => FloatStandard::fromFloat($value))->toThrow(FloatTypeException::class);
+            expect($f1->toString())->toBe('0.10000000000000001')
+                ->and($f2->toString())->toBe('0.69999999999999996')
+                ->and($f3->toString())->toBe('0.80000000000000004')
+                ->and($f1->value())->toBe(0.1)
+                ->and($f2->value())->toBe(0.7)
+                ->and($f3->value())->toBe(0.8)
+                ->and(FloatStandard::fromFloat($f1->value() + $f2->value())->toString())->toBe('0.79999999999999993');
+        });
 
-        return;
-    }
+        it('checks diff between string formatting and native float', function () {
+            $a = new FloatStandard((float) (string) (2 / 3));
+            $b = new FloatStandard(2 / 3);
 
-    $f = FloatStandard::fromFloat($value);
+            expect($a->value())->toBe(0.66666666666667)
+                ->and($b->value())->toBe(0.6666666666666666);
+        });
 
-    // If the expected value is '0.0' but the input is not zero,
-    // it means it's a subnormal or very small number that will fail the strict string value check.
-    if ($expected === '0.0' && $value !== 0.0) {
-        expect(fn() => $f->toString())->toThrow(FloatTypeException::class);
-
-        return;
-    }
-
-    expect($f->toString())->toBe($expected);
-})->with([
-    '0' => [0, '0.0'],
-    '0.0' => [0.0, '0.0'],
-    '-0.0' => [-0.0, '0.0'],
-    '+0.0' => [+0.0, '0.0'],
-    '1.0' => [1.0, '1.0'],
-    '-1.0' => [-1.0, '-1.0'],
-    '0.1' => [0.1, '0.10000000000000001'],
-    '0.10000000000000001' => [0.10000000000000001, '0.10000000000000001'],
-    '0.10000000000000002' => [0.10000000000000002, '0.10000000000000002'],
-    '0.10000000000000012' => [0.10000000000000012, '0.10000000000000012'],
-    '-0.1' => [-0.1, '-0.10000000000000001'],
-    '0.2' => [0.2, '0.20000000000000001'],
-    '0.3' => [0.3, '0.29999999999999999'],
-    '0.1+0.2' => [0.1 + 0.2, '0.30000000000000004'],
-    '1/3' => [1.0 / 3.0, '0.33333333333333331'],
-    '2/3' => [2.0 / 3.0, '0.66666666666666663'],
-    '10/3' => [10.0 / 3.0, '3.33333333333333348'],
-    '1e10' => [1e10, '10000000000.0'],
-    '-1e10' => [-1e10, '-10000000000.0'],
-    '1e16' => [1e16, '10000000000000000.0'],
-    '1e308' => [1e308, '100000000000000001097906362944045541740492309677311846336810682903157585404911491537163328978494688899061249669721172515611590283743140088328307009198146046031271664502933027185697489699588559043338384466165001178426897626212945177628091195786707458122783970171784415105291802893207873272974885715430223118336.0'],
-    '-1e308' => [-1e308, '-100000000000000001097906362944045541740492309677311846336810682903157585404911491537163328978494688899061249669721172515611590283743140088328307009198146046031271664502933027185697489699588559043338384466165001178426897626212945177628091195786707458122783970171784415105291802893207873272974885715430223118336.0'],
-    '1e-10' => [1e-10, '0.0000000001'],
-    '-1e-10' => [-1e-10, '-0.0000000001'],
-    '1e-308' => [1e-308, '0.0'], // Exception expected in test function logic or toBe logic
-    '-1e-308' => [-1e-308, '0.0'], // Exception expected
-    '5e-324' => [5e-324, '0.0'], // Exception expected
-    '-5e-324' => [-5e-324, '0.0'], // Exception expected
-    '1.99999999999999' => [1.99999999999999, '1.99999999999999001'],
-    '2.00000000000001' => [2.00000000000001, '2.00000000000001021'],
-    '0.7' => [0.7, '0.69999999999999996'],
-    '0.17' => [0.17, '0.17000000000000001'],
-    '0.57' => [0.57, '0.56999999999999995'],
-    '0.99' => [0.99, '0.98999999999999999'],
-    '001.5' => [001.5, '1.5'],
-    '0.3333333333333333' => [0.3333333333333333, '0.33333333333333331'],
-    '0.6666666666666666' => [0.6666666666666666, '0.66666666666666663'],
-    '2^53-1' => [9007199254740991.0, '9007199254740991.0'],
-    '2^53' => [9007199254740992.0, '9007199254740992.0'],
-    '-2^53' => [-9007199254740992.0, '-9007199254740992.0'],
-    'INF' => [\INF, 'INF'],
-    '-INF' => [-\INF, '-INF'],
-    'NAN' => [\NAN, 'NAN'],
-    'PHP_INT_MAX' => [(float) \PHP_INT_MAX, '9223372036854775808.0'], // todo real 9223372036854775807.0 - fail on round-trip checks
-]);
-
-it('returns Undefined for invalid mixed inputs', function (mixed $input): void {
-    $result = FloatStandard::tryFromMixed($input);
-
-    expect($result)->toBeInstanceOf(Undefined::class)
-        ->and($result->isUndefined())->toBeTrue();
-})->with([
-    ['input' => null],
-    ['input' => []],
-    ['input' => new stdClass()],
-    ['input' => 'not-a-float'],
-    ['input' => '1.2.3'],
-    ['input' => '007'],
-    ['input' => fn() => 1.5],                  // Closure
-    ['input' => ['FloatStandard', 'fromInt']], // Callable array
-    ['input' => fopen('php://memory', 'r')],   // Resource
-    ['input' => [new stdClass()]],             // Array of objects
-    ['input' => \INF],                          // Infinite value
-    ['input' => \NAN],                          // Not a Number
-    ['input' => "\0"],                         // Null byte string
-]);
-
-it('isTypeOf returns true when class matches', function (): void {
-    $v = FloatStandard::fromFloat(1.5);
-    expect($v->isTypeOf(FloatStandard::class))->toBeTrue();
-});
-
-it('isTypeOf returns false when class does not match', function (): void {
-    $v = FloatStandard::fromFloat(1.5);
-    expect($v->isTypeOf('NonExistentClass'))->toBeFalse();
-});
-
-it('isTypeOf returns true for multiple classNames when one matches', function (): void {
-    $v = FloatStandard::fromFloat(1.5);
-    expect($v->isTypeOf('NonExistentClass', FloatStandard::class, 'AnotherClass'))->toBeTrue();
-});
-
-it('covers conversions for FloatStandard', function (): void {
-    $f = FloatStandard::fromFloat(1.0);
-    expect($f->toBool())->toBeTrue()
-        ->and($f->toInt())->toBe(1)
-        ->and($f->toFloat())->toBe(1.0)
-        ->and($f->toString())->toBe('1.0');
-
-    $f0 = FloatStandard::fromFloat(0.0);
-    expect($f0->toBool())->toBeFalse()
-        ->and($f0->toInt())->toBe(0)
-        ->and($f0->toString())->toBe('0.0');
-
-    expect(fn() => FloatStandard::fromFloat(0.5)->toBool())->toThrow(FloatTypeException::class)
-        ->and(fn() => FloatStandard::fromFloat(0.5)->toInt())->toThrow(FloatTypeException::class);
-
-    expect(FloatStandard::tryFromBool(true))->toBeInstanceOf(FloatStandard::class)
-        ->and(FloatStandard::tryFromBool(false))->toBeInstanceOf(FloatStandard::class)
-        ->and(FloatStandard::tryFromInt(5))->toBeInstanceOf(FloatStandard::class);
-});
-
-it('FloatStandard::tryFromInt returns Undefined for big integers (line 198)', function (): void {
-    expect(FloatStandard::tryFromInt(\PHP_INT_MAX))
-        ->toBeInstanceOf(Undefined::class);
-});
-
-it('FloatStandard::fromInt throws IntegerTypeException for big integers (line 213)', function (): void {
-    expect(fn() => FloatStandard::fromInt(\PHP_INT_MAX))
-        ->toThrow(IntegerTypeException::class, 'Integer "' . \PHP_INT_MAX . '" has no valid strict float value');
-});
-
-it('covers intToString protective check (line 230)', function (): void {
-    // It's hard to trigger line 230 with a real int in PHP,
-    // but we can test it with standard values to at least execute the line.
-    $v = PhpTypedValues\String\StringStandard::fromInt(123);
-    expect($v->value())->toBe('123');
-});
-
-it('FloatStandard::toString throws FloatTypeException for very small floats', function (): void {
-    $f = FloatStandard::fromFloat(1e-308);
-    expect(fn() => $f->toString())
-        ->toThrow(FloatTypeException::class, 'Float "1.0E-308" has no valid strict string value');
+        it('covers intToString protective check', function () {
+            // It's hard to trigger line 230 with a real int in PHP,
+            // but we can test it with standard values to at least execute the line.
+            $v = PhpTypedValues\String\StringStandard::fromInt(123);
+            expect($v->value())->toBe('123');
+        });
+    });
 });
