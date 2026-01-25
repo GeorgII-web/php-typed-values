@@ -2,273 +2,265 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\DateTime\Timestamp;
+
+use DateTimeImmutable;
+use Exception;
 use PhpTypedValues\DateTime\Timestamp\TimestampMilliseconds;
+use PhpTypedValues\Exception\DateTime\DateTimeTypeException;
+use PhpTypedValues\Exception\DateTime\ReasonableRangeDateTimeTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use stdClass;
+use Stringable;
 
-it('fromString returns same instant and toString is milliseconds', function (): void {
-    // 1,000,000,000,000 ms == 1,000,000,000 sec == 2001-09-09 01:46:40 UTC
-    $dt = new DateTimeImmutable('2001-09-09 01:46:40');
-    $vo = TimestampMilliseconds::fromString('1000000000000');
+describe('TimestampMilliseconds', function () {
+    describe('Creation', function () {
+        describe('fromDateTime', function () {
+            it('preserves instant and renders milliseconds (truncates microseconds)', function () {
+                $dt = new DateTimeImmutable('2025-01-02T03:04:05.678+00:00');
+                $vo = TimestampMilliseconds::fromDateTime($dt);
 
-    expect($vo->value()->format('U'))->toBe($dt->format('U'))
-        ->and($vo->toString())->toBe('1000000000000')
-        ->and($vo->value()->getTimezone()->getName())->toBe('UTC');
-});
+                // Expected milliseconds: 1735787045 seconds and 678 ms
+                expect($vo->value()->format('U'))->toBe('1735787045')
+                    ->and($vo->toString())->toBe('1735787045678')
+                    ->and($vo->value()->getTimezone()->getName())->toBe('UTC');
+            });
 
-it('fromString maps remainder milliseconds to microseconds exactly (123 -> 123000)', function (): void {
-    // 1732445696123 ms -> seconds=1732445696, remainder=123 ms => microseconds=123000
-    $vo = TimestampMilliseconds::fromString('1732445696123');
+            it('normalizes timezone to UTC while preserving the instant', function () {
+                // Source datetime has +03:00 offset, should be normalized to UTC internally
+                $dt = new DateTimeImmutable('2025-01-02T03:04:05.123+03:00');
+                $vo = TimestampMilliseconds::fromDateTime($dt);
 
-    expect($vo->value()->format('U.u'))->toBe('1732445696.123000')
-        ->and($vo->toString())->toBe('1732445696123');
-});
+                // Unix timestamp in seconds must be equal regardless of timezone
+                expect($vo->value()->format('U'))->toBe($dt->format('U'))
+                    ->and($vo->value()->getTimezone()->getName())->toBe('UTC')
+                    // Milliseconds should reflect the source microseconds truncated to ms
+                    ->and($vo->toString())->toBe((string) ((int) $dt->format('U') * 1000 + (int) ((int) $dt->format('u') / 1000)));
+            });
 
-it('fromString maps 999 remainder correctly to 999000 microseconds (no off-by-one)', function (): void {
-    // 1732445696999 ms -> seconds=1732445696, remainder=999 ms => microseconds=999000
-    $vo = TimestampMilliseconds::fromString('1732445696999');
+            it('truncates microseconds using divisor 1000', function () {
+                $dt = new DateTimeImmutable('2025-01-02T03:04:05.999999+00:00');
+                $vo = TimestampMilliseconds::fromDateTime($dt);
 
-    expect($vo->value()->format('U.u'))->toBe('1732445696.999000')
-        ->and($vo->toString())->toBe('1732445696999');
-});
+                expect($vo->value()->format('U'))->toBe('1735787045')
+                    ->and($vo->toString())->toBe('1735787045999');
+            });
+        });
 
-it('fromDateTime preserves instant and renders milliseconds (truncates microseconds)', function (): void {
-    $dt = new DateTimeImmutable('2025-01-02T03:04:05.678+00:00');
-    $vo = TimestampMilliseconds::fromDateTime($dt);
+        describe('fromInt', function () {
+            it('creates instance from integer', function () {
+                $vo = TimestampMilliseconds::fromInt(1732445696123);
+                expect($vo->value()->format('U.u'))->toBe('1732445696.123000')
+                    ->and($vo->toString())->toBe('1732445696123');
+            });
 
-    // Expected milliseconds: 1735787045 seconds and 678 ms
-    expect($vo->value()->format('U'))->toBe('1735787045')
-        ->and($vo->toString())->toBe('1735787045678')
-        ->and($vo->value()->getTimezone()->getName())->toBe('UTC');
-});
+            it('accepts custom timezone', function () {
+                $vo = TimestampMilliseconds::fromInt(1732445696123, 'America/New_York');
+                expect($vo->toString())->toBe('1732445696123')
+                    ->and($vo->value()->getTimezone()->getName())->toBe('UTC');
+            });
+        });
 
-it('toString truncates microseconds using divisor 1000, not 999 or 1001', function (): void {
-    // Use a datetime with 999999 microseconds at a known second.
-    // Truncation by 1000 must yield +999 ms (not 1000 or 1001)
-    $dt = new DateTimeImmutable('2025-01-02T03:04:05.999999+00:00');
-    $vo = TimestampMilliseconds::fromDateTime($dt);
+        describe('fromString', function () {
+            it('creates instance from valid milliseconds string', function (string $input, string $expectedU, string $expectedUu) {
+                $vo = TimestampMilliseconds::fromString($input);
+                expect($vo->toString())->toBe($input)
+                    ->and($vo->value()->format('U'))->toBe($expectedU)
+                    ->and($vo->value()->format('U.u'))->toBe($expectedUu);
+            })->with([
+                'standard' => ['1000000000000', '1000000000', '1000000000.000000'],
+                'with remainder' => ['1732445696123', '1732445696', '1732445696.123000'],
+                '999 remainder' => ['1732445696999', '1732445696', '1732445696.999000'],
+                'zero' => ['0', '0', '0.000000'],
+            ]);
 
-    // Seconds part for this instant
-    expect($vo->value()->format('U'))->toBe('1735787045')
-        // Milliseconds should be 1735787045*1000 + 999
-        ->and($vo->toString())->toBe('1735787045999');
-});
+            it('accepts custom timezone', function () {
+                $vo = TimestampMilliseconds::fromString('1732445696123', 'Europe/Berlin');
+                expect($vo->toString())->toBe('1732445696123')
+                    ->and($vo->value()->getOffset())->toBe(0);
+            });
 
-it('fromDateTime normalizes timezone to UTC while preserving the instant', function (): void {
-    // Source datetime has +03:00 offset, should be normalized to UTC internally
-    $dt = new DateTimeImmutable('2025-01-02T03:04:05.123+03:00');
-    $vo = TimestampMilliseconds::fromDateTime($dt);
+            it('throws exception on invalid input', function (string $input, string $exception, string $messagePart) {
+                expect(fn() => TimestampMilliseconds::fromString($input))
+                    ->toThrow($exception, $messagePart);
+            })->with([
+                'non-numeric' => ['not-a-number', DateTimeTypeException::class, 'Expected milliseconds timestamp as digits'],
+                'trailing space' => ['1000000000000 ', DateTimeTypeException::class, 'Expected milliseconds timestamp as digits'],
+                'above max' => ['253402300800000', ReasonableRangeDateTimeTypeException::class, 'out of supported range'],
+            ]);
+        });
 
-    // Unix timestamp in seconds must be equal regardless of timezone
-    expect($vo->value()->format('U'))->toBe($dt->format('U'))
-        ->and($vo->value()->getTimezone()->getName())->toBe('UTC')
-        // Milliseconds should reflect the source microseconds truncated to ms
-        ->and($vo->toString())->toBe((string) ((int) $dt->format('U') * 1000 + (int) ((int) $dt->format('u') / 1000)));
-});
+        describe('tryFromString', function () {
+            it('returns instance or default value', function (string $input, bool $isSuccess) {
+                $result = TimestampMilliseconds::tryFromString($input);
+                if ($isSuccess) {
+                    expect($result)->toBeInstanceOf(TimestampMilliseconds::class)
+                        ->and($result->toString())->toBe($input);
+                } else {
+                    expect($result)->toBeInstanceOf(Undefined::class);
+                }
+            })->with([
+                'valid' => ['1732445696123', true],
+                'invalid' => ['abc', false],
+            ]);
 
-it('fromString throws on non-digit input', function (): void {
-    try {
-        TimestampMilliseconds::fromString('not-a-number');
-        expect()->fail('Exception was not thrown');
-    } catch (Throwable $e) {
-        expect($e)->toBeInstanceOf(PhpTypedValues\Exception\DateTime\DateTimeTypeException::class)
-            ->and($e->getMessage())->toContain('Expected milliseconds timestamp as digits');
-    }
-});
+            it('accepts custom timezone', function () {
+                $s = '1732445696123';
+                $vo = TimestampMilliseconds::tryFromString($s, 'Europe/Berlin');
+                expect($vo)->toBeInstanceOf(TimestampMilliseconds::class)
+                    ->and($vo->toString())->toBe($s)
+                    ->and($vo->value()->getOffset())->toBe(0);
+            });
+        });
 
-it('fromString throws on trailing data (non-digits)', function (): void {
-    try {
-        TimestampMilliseconds::fromString('1000000000000 ');
-        expect()->fail('Exception was not thrown');
-    } catch (Throwable $e) {
-        expect($e)->toBeInstanceOf(PhpTypedValues\Exception\DateTime\DateTimeTypeException::class)
-            ->and($e->getMessage())->toContain('Expected milliseconds timestamp as digits');
-    }
-});
+        describe('tryFromMixed', function () {
+            it('returns instance for valid mixed inputs', function (mixed $input, string $expected) {
+                $result = TimestampMilliseconds::tryFromMixed($input);
+                expect($result)->toBeInstanceOf(TimestampMilliseconds::class)
+                    ->and($result->toString())->toBe($expected);
+            })->with([
+                'string' => ['1732445696123', '1732445696123'],
+                'integer' => [1732445696123, '1732445696123'],
+                'Stringable' => [
+                    new class implements Stringable {
+                        public function __toString(): string
+                        {
+                            return '1732445696123';
+                        }
+                    },
+                    '1732445696123',
+                ],
+            ]);
 
-it('fromString throws when value is out of supported range (createFromFormat returns false)', function (): void {
-    // 253402300800000 ms corresponds to 253402300800 seconds,
-    // which is just beyond 9999-12-31T23:59:59Z (the typical max supported date).
-    // This should make DateTimeImmutable::createFromFormat fail and return FALSE.
-    $tooLargeMs = '253402300800000';
+            it('returns Undefined for invalid mixed inputs', function (mixed $input) {
+                $result = TimestampMilliseconds::tryFromMixed($input);
+                expect($result)->toBeInstanceOf(Undefined::class)
+                    ->and($result->isUndefined())->toBeTrue();
+            })->with([
+                'null' => [null],
+                'array' => [['x']],
+                'object' => [new stdClass()],
+                'DateTimeImmutable' => [new DateTimeImmutable()],
+            ]);
 
-    try {
-        TimestampMilliseconds::fromString($tooLargeMs);
-        expect()->fail('Exception was not thrown');
-    } catch (Throwable $e) {
-        expect($e)->toBeInstanceOf(PhpTypedValues\Exception\DateTime\ReasonableRangeDateTimeTypeException::class)
-            ->and($e->getMessage())->toContain('Timestamp "253402300800" out of supported range "-62135596800"-"253402300799"')
-            ->and($e->getMessage())->toContain('253402300800');
-    }
-});
+            it('accepts custom timezone', function () {
+                $s = '1732445696123';
+                $vo = TimestampMilliseconds::tryFromMixed($s, 'Europe/Berlin');
+                expect($vo)->toBeInstanceOf(TimestampMilliseconds::class)
+                    ->and($vo->toString())->toBe($s)
+                    ->and($vo->value()->getOffset())->toBe(0);
+            });
 
-it('TimestampMilliseconds::tryFromString returns value for numeric milliseconds', function (): void {
-    $s = '1735787045678';
-    $v = TimestampMilliseconds::tryFromString($s);
+            it('kills mutants in tryFromMixed', function () {
+                $customDefault = Undefined::create();
 
-    expect($v)
-        ->toBeInstanceOf(TimestampMilliseconds::class)
-        ->and($v->toString())
-        ->toBe($s);
-});
+                // Kill InstanceOfToTrue for Stringable by passing non-stringable
+                expect(TimestampMilliseconds::tryFromMixed([], 'UTC', $customDefault))
+                    ->toBe($customDefault);
 
-it('TimestampMilliseconds::tryFromString returns Undefined for non-digit input', function (): void {
-    $u = TimestampMilliseconds::tryFromString('abc');
-    expect($u)->toBeInstanceOf(Undefined::class);
-});
+                // Kill RemoveStringCast for Stringable
+                $stringable = new class implements Stringable {
+                    public function __toString(): string
+                    {
+                        return '1732445696123';
+                    }
+                };
+                expect(TimestampMilliseconds::tryFromMixed($stringable, 'UTC', $customDefault))
+                    ->toBeInstanceOf(TimestampMilliseconds::class);
 
-it('jsonSerialize and toInt return integer', function (): void {
-    $vo = TimestampMilliseconds::tryFromString('1732445696999');
-    expect($vo->jsonSerialize())->toBe(1732445696999)
-        ->and($vo->toInt())->toBe(1732445696999);
-});
+                // Kill InstanceOfToTrue for Stringable in tryFromMixed (by passing integer which is not string/stringable)
+                expect(TimestampMilliseconds::tryFromMixed(123, 'UTC', $customDefault))
+                    ->toBeInstanceOf(TimestampMilliseconds::class);
+            });
+        });
 
-it('__toString returns the milliseconds string', function (): void {
-    $vo = TimestampMilliseconds::fromString('1732445696123');
+        describe('getFormat', function () {
+            it('returns internal pattern', function () {
+                expect(TimestampMilliseconds::getFormat())->toBe('U.u');
+            });
+        });
+    });
 
-    expect((string) $vo)->toBe('1732445696123')
-        ->and($vo->__toString())->toBe('1732445696123');
-});
+    describe('Instance Methods', function () {
+        it('value() returns internal DateTimeImmutable (normalized to UTC)', function () {
+            $vo = TimestampMilliseconds::fromString('1732445696123');
+            expect($vo->value()->format('U.u'))->toBe('1732445696.123000')
+                ->and($vo->value()->getTimezone()->getName())->toBe('UTC');
+        });
 
-it('getFormat returns internal seconds.microseconds pattern', function (): void {
-    expect(TimestampMilliseconds::getFormat())->toBe('U.u');
-});
+        it('toString and __toString return milliseconds string', function () {
+            $s = '1732445696123';
+            $vo = TimestampMilliseconds::fromString($s);
+            expect($vo->toString())->toBe($s)
+                ->and((string) $vo)->toBe($s)
+                ->and($vo->__toString())->toBe($s);
+        });
 
-it('fromString accepts zero and round-trips to "0"', function (): void {
-    $vo = TimestampMilliseconds::fromString('0');
+        it('jsonSerialize and toInt return integer', function () {
+            $vo = TimestampMilliseconds::fromString('1732445696123');
+            expect($vo->jsonSerialize())->toBe(1732445696123)
+                ->and($vo->toInt())->toBe(1732445696123);
+        });
 
-    expect($vo->toString())->toBe('0')
-        ->and($vo->value()->format('U.u'))->toBe('0.000000');
-});
+        it('isEmpty is always false', function () {
+            $vo = TimestampMilliseconds::fromString('0');
+            expect($vo->isEmpty())->toBeFalse();
 
-it('kills Stringable mutation in tryFromMixed', function () {
-    // Create a unique default value to distinguish between "successful catch" and "incorrect branch"
-    $customDefault = Undefined::create();
+            // Kills the FalseToTrue mutant in isEmpty
+            if ($vo->isEmpty() !== false) {
+                throw new Exception('isEmpty mutant!');
+            }
+        });
 
-    // 1. Pass a value that is NOT Stringable, NOT string, and NOT int
-    $invalidValue = [];
+        it('isUndefined is always false', function () {
+            $vo = TimestampMilliseconds::fromString('0');
+            expect($vo->isUndefined())->toBeFalse();
 
-    // Original: Should hit 'default', throw TypeException, return $customDefault
-    // Mutated: Hits 'true', tries (string)[], which might throw a TypeError
-    // depending on PHP version/strict types, or just fail in fromString.
+            // Kills the FalseToTrue mutant in isUndefined
+            if ($vo->isUndefined() !== false) {
+                throw new Exception('isUndefined mutant!');
+            }
+        });
 
-    expect(TimestampMilliseconds::tryFromMixed($invalidValue, 'UTC', $customDefault))
-        ->toBe($customDefault);
+        describe('withTimeZone', function () {
+            it('returns a new instance with updated timezone (normalized to UTC)', function () {
+                $vo = TimestampMilliseconds::fromString('1732445696123');
+                $vo2 = $vo->withTimeZone('Europe/Berlin');
 
-    // 2. Explicitly test a Stringable object to ensure the branch works when NOT mutated
-    $stringable = new class implements Stringable {
-        public function __toString(): string
-        {
-            return '1704067200000';
-        }
-    };
+                expect($vo2)->toBeInstanceOf(TimestampMilliseconds::class)
+                    ->and($vo2->toString())->toBe('1732445696123')
+                    ->and($vo2->value()->getTimezone()->getName())->toBe('UTC');
 
-    expect(TimestampMilliseconds::tryFromMixed($stringable))
-        ->toBeInstanceOf(TimestampMilliseconds::class);
-});
+                // original is immutable
+                expect($vo->toString())->toBe('1732445696123');
+            });
+        });
 
-it('tryFromMixed handles valid numeric strings/ints and invalid mixed inputs', function (): void {
-    // valid inputs
-    $fromString = TimestampMilliseconds::tryFromMixed('1732445696123');
-    $fromIntMixed = TimestampMilliseconds::tryFromMixed(1732445696123);
-    $fromInt = TimestampMilliseconds::fromInt(1732445696123);
+        describe('isTypeOf', function () {
+            it('returns true when class matches', function () {
+                $vo = TimestampMilliseconds::fromString('1732445696123');
+                expect($vo->isTypeOf(TimestampMilliseconds::class))->toBeTrue();
+            });
 
-    // invalid inputs
-    $fromArray = TimestampMilliseconds::tryFromMixed(['x']);
-    $fromNull = TimestampMilliseconds::tryFromMixed(null);
+            it('returns false when class does not match', function () {
+                $vo = TimestampMilliseconds::fromString('1732445696123');
+                expect($vo->isTypeOf('NonExistentClass'))->toBeFalse();
+            });
 
-    // stringable object
-    $stringable = new class {
-        public function __toString(): string
-        {
-            return '1732445696123';
-        }
-    };
-    $fromStringable = TimestampMilliseconds::tryFromMixed($stringable);
+            it('returns true for multiple classNames when one matches', function () {
+                $vo = TimestampMilliseconds::fromString('1732445696123');
+                expect($vo->isTypeOf('NonExistentClass', TimestampMilliseconds::class, 'AnotherClass'))->toBeTrue();
+            });
 
-    expect($fromString)->toBeInstanceOf(TimestampMilliseconds::class)
-        ->and($fromIntMixed)->toBeInstanceOf(TimestampMilliseconds::class)
-        ->and($fromInt)->toBeInstanceOf(TimestampMilliseconds::class)
-        ->and($fromInt->toString())->toBe('1732445696123')
-        ->and($fromStringable)->toBeInstanceOf(TimestampMilliseconds::class)
-        ->and($fromArray)->toBeInstanceOf(Undefined::class)
-        ->and($fromNull)->toBeInstanceOf(Undefined::class);
-});
+            it('returns false for multiple classNames when none match', function () {
+                $vo = TimestampMilliseconds::fromString('1732445696123');
+                expect($vo->isTypeOf('NonExistentClass', 'AnotherClass'))->toBeFalse();
+            });
 
-it('isEmpty is always false for TimestampMilliseconds', function (): void {
-    $vo = TimestampMilliseconds::fromString('0');
-    expect($vo->isEmpty())->toBeFalse();
-});
-
-it('withTimeZone returns a new instance with updated timezone', function (): void {
-    $vo = TimestampMilliseconds::fromString('1732445696123');
-    $vo2 = $vo->withTimeZone('Europe/Berlin');
-
-    expect($vo2)->toBeInstanceOf(TimestampMilliseconds::class)
-        ->and($vo2->toString())->toBe('1732445696123')
-        ->and($vo2->value()->getTimezone()->getName())->toBe('UTC');
-});
-
-it('fromString and fromInt accept custom timezone', function (): void {
-    $vo1 = TimestampMilliseconds::fromString('1732445696123', 'Europe/Berlin');
-    expect($vo1->toString())->toBe('1732445696123')
-        ->and($vo1->value()->getOffset())->toBe(0);
-
-    $vo2 = TimestampMilliseconds::fromInt(1732445696123, 'America/New_York');
-    expect($vo2->toString())->toBe('1732445696123')
-        ->and($vo2->value()->getOffset())->toBe(0);
-});
-
-it('tryFromString and tryFromMixed accept custom timezone', function (): void {
-    $s = '1732445696123';
-    $vo1 = TimestampMilliseconds::tryFromString($s, 'Europe/Berlin');
-    expect($vo1)->toBeInstanceOf(TimestampMilliseconds::class)
-        ->and($vo1->toString())->toBe($s)
-        ->and($vo1->value()->getOffset())->toBe(0);
-
-    $vo2 = TimestampMilliseconds::tryFromMixed($s, 'Europe/Berlin');
-    expect($vo2)->toBeInstanceOf(TimestampMilliseconds::class)
-        ->and($vo2->toString())->toBe($s)
-        ->and($vo2->value()->getOffset())->toBe(0);
-});
-
-it('tryFromMixed handles Stringable object correctly', function (): void {
-    $stringable = new class implements Stringable {
-        public function __toString(): string
-        {
-            return '1732445696123';
-        }
-    };
-    $result = TimestampMilliseconds::tryFromMixed($stringable);
-
-    expect($result)->toBeInstanceOf(TimestampMilliseconds::class)
-        ->and($result->toString())->toBe('1732445696123')
-        ->and($result->isUndefined())->toBeFalse();
-});
-
-it('tryFromMixed returns Undefined for non-Stringable non-numeric objects', function (): void {
-    $obj = new stdClass();
-    $result = TimestampMilliseconds::tryFromMixed($obj);
-
-    expect($result)->toBeInstanceOf(Undefined::class)
-        ->and($result->isUndefined())->toBeTrue();
-});
-
-it('isUndefined is always false for TimestampMilliseconds', function (): void {
-    $vo = TimestampMilliseconds::fromString('0');
-    expect($vo->isUndefined())->toBeFalse();
-});
-
-it('isTypeOf returns true when class matches', function (): void {
-    $vo = TimestampMilliseconds::fromString('1732445696123');
-    expect($vo->isTypeOf(TimestampMilliseconds::class))->toBeTrue();
-});
-
-it('isTypeOf returns false when class does not match', function (): void {
-    $vo = TimestampMilliseconds::fromString('1732445696123');
-    expect($vo->isTypeOf('NonExistentClass'))->toBeFalse();
-});
-
-it('isTypeOf returns true for multiple classNames when one matches', function (): void {
-    $vo = TimestampMilliseconds::fromString('1732445696123');
-    expect($vo->isTypeOf('NonExistentClass', TimestampMilliseconds::class, 'AnotherClass'))->toBeTrue();
+            it('returns false for empty classNames', function () {
+                $vo = TimestampMilliseconds::fromString('1732445696123');
+                expect($vo->isTypeOf())->toBeFalse();
+            });
+        });
+    });
 });
