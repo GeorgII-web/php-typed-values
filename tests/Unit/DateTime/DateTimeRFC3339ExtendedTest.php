@@ -3,250 +3,238 @@
 declare(strict_types=1);
 
 use PhpTypedValues\DateTime\DateTimeRFC3339Extended;
+use PhpTypedValues\Exception\DateTime\DateTimeTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
-it('fromDateTime returns same instant and toString is ISO 8601', function (): void {
-    $dt = new DateTimeImmutable('2025-01-02T03:04:05+00:00');
-    $vo = DateTimeRFC3339Extended::fromDateTime($dt);
+describe('DateTimeRFC3339Extended', function () {
+    describe('Creation', function () {
+        describe('fromDateTime', function () {
+            it('returns same instant and toString is RFC3339 Extended', function () {
+                $dt = new DateTimeImmutable('2025-01-02T03:04:05.123+00:00');
+                $vo = DateTimeRFC3339Extended::fromDateTime($dt);
 
-    expect($vo->value()->format(\DATE_RFC3339_EXTENDED))->toBe('2025-01-02T03:04:05.000+00:00')
-        ->and($vo->toString())->toBe('2025-01-02T03:04:05.000+00:00');
-});
+                expect($vo->value()->format(\DATE_RFC3339_EXTENDED))->toBe('2025-01-02T03:04:05.123+00:00')
+                    ->and($vo->toString())->toBe('2025-01-02T03:04:05.123+00:00');
+            });
+        });
 
-it('fromString parses valid RFC3339 and preserves timezone offset', function (): void {
-    $vo = DateTimeRFC3339Extended::fromString('2030-12-31T23:59:59.000+03:00');
+        describe('fromString', function () {
+            it('parses valid RFC3339 Extended and preserves timezone offset (normalized to UTC)', function () {
+                $vo = DateTimeRFC3339Extended::fromString('2030-12-31T23:59:59.000+03:00');
 
-    expect($vo->toString())->toBe('2030-12-31T20:59:59.000+00:00')
-        ->and($vo->value()->format(\DATE_RFC3339_EXTENDED))->toBe('2030-12-31T20:59:59.000+00:00');
-});
+                expect($vo->toString())->toBe('2030-12-31T20:59:59.000+00:00')
+                    ->and($vo->value()->format(\DATE_RFC3339_EXTENDED))->toBe('2030-12-31T20:59:59.000+00:00');
+            });
 
-it('fromString throws on invalid date parts (errors path)', function (): void {
-    // invalid month 13 produces errors
-    $call = fn() => DateTimeRFC3339Extended::fromString('2025-13-02T03:04:05.000+00:00');
-    expect($call)->toThrow(PhpTypedValues\Exception\DateTime\DateTimeTypeException::class);
-});
+            it('accepts custom timezone', function () {
+                $vo = DateTimeRFC3339Extended::fromString('2025-01-02T04:04:05.123+01:00', 'Europe/Berlin');
+                expect($vo->toString())->toBe('2025-01-02T03:04:05.123+00:00')
+                    ->and($vo->value()->getOffset())->toBe(0);
+            });
 
-it('fromString throws on trailing data (warnings path)', function (): void {
-    // trailing space should trigger a warning from DateTime::getLastErrors()
-    try {
-        DateTimeRFC3339Extended::fromString('2025-01-02T03:04:05.000+00:00 ');
-        expect()->fail('Exception was not thrown');
-    } catch (Throwable $e) {
-        expect($e)->toBeInstanceOf(PhpTypedValues\Exception\DateTime\DateTimeTypeException::class)
-            ->and($e->getMessage())->toContain('Invalid date time value');
-    }
-});
+            it('throws exception on invalid input', function (string $input, string $containedMessage) {
+                expect(fn() => DateTimeRFC3339Extended::fromString($input))
+                    ->toThrow(DateTimeTypeException::class, $containedMessage);
+            })->with([
+                'invalid month' => ['2025-13-02T03:04:05.000+00:00', 'Warning at 29: The parsed date was invalid'],
+                'trailing space' => ['2025-01-02T03:04:05.000+00:00 ', 'Error at 29: Trailing data'],
+                'multiple errors/warnings' => [
+                    '2025-13-02T03:04:05.000+00:00 ',
+                    "Invalid date time value \"2025-13-02T03:04:05.000+00:00 \", use format \"Y-m-d\\TH:i:s.vP\"\nError at 29: Trailing data\nWarning at 29: The parsed date was invalid",
+                ],
+                'double error' => [
+                    '2025-12-02T03:04:05.000+ 00:00',
+                    "Error at 23: The timezone could not be found in the database\nError at 24: Trailing data",
+                ],
+            ]);
 
-it('getFormat returns RFC3339 format', function (): void {
-    expect(DateTimeRFC3339Extended::getFormat())->toBe(\DATE_RFC3339_EXTENDED);
-});
+            it('aggregates multiple parse warnings with proper concatenation', function () {
+                $input = '2025-13-40T25:61:61.000+00:00';
+                try {
+                    DateTimeRFC3339Extended::fromString($input);
+                    expect()->fail('Exception was not thrown');
+                } catch (DateTimeTypeException $e) {
+                    $msg = $e->getMessage();
+                    expect($msg)->toContain('Invalid date time value "2025-13-40T25:61:61.000+00:00", use format "Y-m-d\TH:i:s.vP"')
+                        ->and($msg)->toContain('Warning at 29: The parsed date was invalid')
+                        ->and($msg)->not->toContain('PEST Mutator was here!');
+                }
+            });
 
-it('fromString with both parse error and warning includes both details in the exception message', function (): void {
-    // invalid month (error) + trailing space (warning)
-    $input = '2025-13-02T03:04:05.000+00:00 ';
-    try {
-        DateTimeRFC3339Extended::fromString($input);
-        expect()->fail('Exception was not thrown');
-    } catch (Throwable $e) {
-        expect($e)->toBeInstanceOf(PhpTypedValues\Exception\DateTime\DateTimeTypeException::class)
-            ->and($e->getMessage())->toContain('Invalid date time value')
-            ->and($e->getMessage())->toContain('Error at')
-            ->and($e->getMessage())->toContain('Warning at');
-    }
-});
+            it('errors-only path keeps newline after header and after error line', function () {
+                $input = '2025-01-02T03:04:05.000+00:00 ';
+                try {
+                    DateTimeRFC3339Extended::fromString($input);
+                    expect()->fail('Exception was not thrown');
+                } catch (DateTimeTypeException $e) {
+                    $msg = $e->getMessage();
+                    expect($msg)->toContain("Invalid date time value \"2025-01-02T03:04:05.000+00:00 \", use format \"Y-m-d\\TH:i:s.vP\"\nError at 29: Trailing data\n");
+                    expect(substr_count($msg, \PHP_EOL))->toBeGreaterThanOrEqual(2);
+                }
+            });
+        });
 
-it('fromString aggregates multiple parse warnings with proper concatenation and line breaks', function (): void {
-    // Multiple invalid components to force several distinct parse errors
-    $input = '2025-13-40T25:61:61.000+00:00';
-    try {
-        DateTimeRFC3339Extended::fromString($input);
-        expect()->fail('Exception was not thrown');
-    } catch (Throwable $e) {
-        $msg = $e->getMessage();
-        // Header should be present and terminated with a newline
-        $expectedHeader = \sprintf(
-            'Invalid date time value "%s", use format "%s"',
-            $input,
-            \DATE_RFC3339_EXTENDED
-        ) . \PHP_EOL;
+        describe('tryFromString', function () {
+            it('returns instance or default value', function (string $input, string $tz, bool $isSuccess) {
+                $result = DateTimeRFC3339Extended::tryFromString($input, $tz);
+                if ($isSuccess) {
+                    expect($result)->toBeInstanceOf(DateTimeRFC3339Extended::class)
+                        ->and($result->toString())->toBe('2025-01-02T03:04:05.123+00:00');
+                } else {
+                    expect($result)->toBeInstanceOf(Undefined::class);
+                }
+            })->with([
+                'valid UTC' => ['2025-01-02T03:04:05.123+00:00', 'UTC', true],
+                'valid with TZ' => ['2025-01-02T04:04:05.123+01:00', 'Europe/Berlin', true],
+                'invalid format' => ['2025-01-02 03:04:05.123Z', 'UTC', false],
+            ]);
+        });
 
-        expect($e)->toBeInstanceOf(PhpTypedValues\Exception\DateTime\DateTimeTypeException::class)
-            ->and($msg)->toContain($expectedHeader)
-            ->and($msg)->toContain('Invalid date time value "2025-13-40T25:61:61.000+00:00", use format "Y-m-d\TH:i:s.vP"
-Warning at 29: The parsed date was invalid
-')
-            // No injected garbage from the mutation should appear
-            ->and($msg)->not->toContain('PEST Mutator was here!');
-    }
-});
+        describe('tryFromMixed', function () {
+            it('returns instance for valid mixed inputs', function (mixed $input, string $tz, string $expected) {
+                $result = DateTimeRFC3339Extended::tryFromMixed($input, $tz);
+                expect($result)->toBeInstanceOf(DateTimeRFC3339Extended::class)
+                    ->and($result->toString())->toBe($expected);
+            })->with([
+                'valid string' => ['2025-01-02T03:04:05.123+00:00', 'UTC', '2025-01-02T03:04:05.123+00:00'],
+                'valid string with TZ' => ['2025-01-02T04:04:05.123+01:00', 'Europe/Berlin', '2025-01-02T03:04:05.123+00:00'],
+                'DateTimeImmutable instance' => [new DateTimeImmutable('2025-01-02T03:04:05.123+00:00'), 'UTC', '2025-01-02T03:04:05.123+00:00'],
+                'Stringable object' => [
+                    new class implements Stringable {
+                        public function __toString(): string
+                        {
+                            return '2025-01-02T03:04:05.123+00:00';
+                        }
+                    },
+                    'UTC',
+                    '2025-01-02T03:04:05.123+00:00',
+                ],
+            ]);
 
-it('errors-only path keeps newline after header and after error line', function (): void {
-    $input = '2025-01-02T03:04:05.000+00:00 ';
-    try {
-        DateTimeRFC3339Extended::fromString($input);
-        expect()->fail('Exception was not thrown');
-    } catch (Throwable $e) {
-        $msg = $e->getMessage();
-        // must contain the header + newline and at least one warning line ending with newline
-        expect($e)->toBeInstanceOf(PhpTypedValues\Exception\DateTime\DateTimeTypeException::class)
-            ->and($msg)->toContain('Invalid date time value "2025-01-02T03:04:05.000+00:00 ", use format "Y-m-d\TH:i:s.vP"
-Error at 29: Trailing data
-');
+            it('kills the DateTimeImmutable instance mutant in tryFromMixed', function () {
+                $dt = new DateTimeImmutable('2025-01-02T03:04:05.123+00:00');
+                $vo = DateTimeRFC3339Extended::tryFromMixed($dt);
+                expect($vo)->toBeInstanceOf(DateTimeRFC3339Extended::class)
+                    ->and($vo->value()->format(\DATE_RFC3339_EXTENDED))->toBe($dt->format(\DATE_RFC3339_EXTENDED));
+            });
 
-        // Count total newlines: one after header + one after the warning line => at least 2
-        expect(substr_count($msg, \PHP_EOL))->toBeGreaterThanOrEqual(2);
-    }
-});
+            it('kills the Stringable instance mutant in tryFromMixed', function () {
+                $s = '2025-01-02T03:04:05.123+00:00';
+                $stringable = new class($s) implements Stringable {
+                    public function __construct(private string $s)
+                    {
+                    }
 
-it('double error message', function (): void {
-    $input = '2025-12-02T03:04:05.000+ 00:00';
-    try {
-        DateTimeRFC3339Extended::fromString($input);
-        expect()->fail('Exception was not thrown');
-    } catch (Throwable $e) {
-        $msg = $e->getMessage();
-        // must contain the header + newline and at least one warning line ending with newline
-        expect($e)->toBeInstanceOf(PhpTypedValues\Exception\DateTime\DateTimeTypeException::class)
-            ->and($msg)->toContain('Invalid date time value "2025-12-02T03:04:05.000+ 00:00", use format "Y-m-d\TH:i:s.vP"
-Error at 23: The timezone could not be found in the database
-Error at 24: Trailing data
-');
-    }
-});
+                    public function __toString(): string
+                    {
+                        return $this->s;
+                    }
+                };
+                $vo = DateTimeRFC3339Extended::tryFromMixed($stringable);
+                expect($vo)->toBeInstanceOf(DateTimeRFC3339Extended::class)
+                    ->and($vo->toString())->toBe($s);
+            });
 
-it('DateTimeRFC3339Extended::tryFromString returns value for valid RFC3339_EXTENDED string', function (): void {
-    // DATE_RFC3339_EXTENDED uses milliseconds precision (3 digits)
-    $s = '2025-01-02T03:04:05.123+00:00';
-    $v = DateTimeRFC3339Extended::tryFromString($s);
+            it('returns Undefined for invalid mixed inputs', function (mixed $input) {
+                $result = DateTimeRFC3339Extended::tryFromMixed($input);
+                expect($result)->toBeInstanceOf(Undefined::class)
+                    ->and($result->isUndefined())->toBeTrue();
+            })->with([
+                'null' => [null],
+                'array' => [['x']],
+                'stdClass' => [new stdClass()],
+                'anonymous non-stringable' => [new class {}],
+            ]);
+        });
 
-    expect($v)
-        ->toBeInstanceOf(DateTimeRFC3339Extended::class)
-        ->and($v->toString())
-        ->toBe($s);
-});
+        describe('getFormat', function () {
+            it('returns RFC3339 Extended format', function () {
+                expect(DateTimeRFC3339Extended::getFormat())->toBe(\DATE_RFC3339_EXTENDED);
+            });
+        });
+    });
 
-it('DateTimeRFC3339Extended::tryFromString returns Undefined for invalid string', function (): void {
-    $u = DateTimeRFC3339Extended::tryFromString('2025-01-02T03:04:05+00:00');
+    describe('Instance Methods', function () {
+        it('value() returns internal DateTimeImmutable (normalized to UTC)', function () {
+            $dt = new DateTimeImmutable('2025-01-02T03:04:05.123+00:00');
+            $vo = DateTimeRFC3339Extended::fromDateTime($dt);
+            expect($vo->value()->format(\DATE_RFC3339_EXTENDED))->toBe($dt->format(\DATE_RFC3339_EXTENDED))
+                ->and($vo->value()->getTimezone()->getName())->toBe('UTC');
+        });
 
-    expect($u)->toBeInstanceOf(Undefined::class);
-});
+        it('toString and __toString return RFC3339 Extended formatted string', function () {
+            $s = '2025-01-02T03:04:05.123+00:00';
+            $vo = DateTimeRFC3339Extended::fromString($s);
 
-it('jsonSerialize returns string', function (): void {
-    expect(DateTimeRFC3339Extended::tryFromString('2025-01-02T03:04:05.000+00:00')->jsonSerialize())->toBeString();
-});
+            expect($vo->toString())->toBe($s)
+                ->and((string) $vo)->toBe($s)
+                ->and($vo->__toString())->toBe($s);
+        });
 
-it('__toString returns RFC3339_EXTENDED formatted string', function (): void {
-    $vo = DateTimeRFC3339Extended::fromString('2025-01-02T03:04:05.123+00:00');
+        it('jsonSerialize returns string', function () {
+            $s = '2025-01-02T03:04:05.123+00:00';
+            expect(DateTimeRFC3339Extended::fromString($s)->jsonSerialize())->toBe($s);
+        });
 
-    expect((string) $vo)->toBe('2025-01-02T03:04:05.123+00:00')
-        ->and($vo->__toString())->toBe('2025-01-02T03:04:05.123+00:00');
-});
+        it('isEmpty is always false', function () {
+            $vo = DateTimeRFC3339Extended::fromString('2025-01-02T03:04:05.000+00:00');
+            expect($vo->isEmpty())->toBeFalse();
 
-it('tryFromMixed handles valid RFC3339_EXTENDED strings and invalid mixed inputs', function (): void {
-    // valid string
-    $ok = DateTimeRFC3339Extended::tryFromMixed('2025-01-02T03:04:05.000+00:00');
+            // Kills the FalseToTrue mutant in isEmpty
+            if ($vo->isEmpty() !== false) {
+                throw new Exception('isEmpty mutant!');
+            }
+        });
 
-    // invalid types
-    $badArr = DateTimeRFC3339Extended::tryFromMixed(['x']);
-    $badNull = DateTimeRFC3339Extended::tryFromMixed(null);
+        it('isUndefined is always false', function () {
+            $vo = DateTimeRFC3339Extended::fromString('2025-01-02T03:04:05.000+00:00');
+            expect($vo->isUndefined())->toBeFalse();
 
-    // stringable object
-    $stringable = new class {
-        public function __toString(): string
-        {
-            return '2025-01-02T03:04:05.000+00:00';
-        }
-    };
-    $okStr = DateTimeRFC3339Extended::tryFromMixed($stringable);
+            // Kills the FalseToTrue mutant in isUndefined
+            if ($vo->isUndefined() !== false) {
+                throw new Exception('isUndefined mutant!');
+            }
+        });
 
-    expect($ok)->toBeInstanceOf(DateTimeRFC3339Extended::class)
-        ->and($ok->toString())->toBe('2025-01-02T03:04:05.000+00:00')
-        ->and($okStr)->toBeInstanceOf(DateTimeRFC3339Extended::class)
-        ->and($badArr)->toBeInstanceOf(Undefined::class)
-        ->and($badNull)->toBeInstanceOf(Undefined::class);
-});
+        describe('withTimeZone', function () {
+            it('returns a new instance with updated timezone (normalized to UTC)', function () {
+                $vo = DateTimeRFC3339Extended::fromString('2025-01-02T03:04:05.123+00:00');
+                $vo2 = $vo->withTimeZone('Europe/Berlin');
 
-it('isEmpty is always false for DateTimeRFC3339Extended', function (): void {
-    $vo = DateTimeRFC3339Extended::fromString('2025-01-02T03:04:05.000+00:00');
-    expect($vo->isEmpty())->toBeFalse();
-});
+                expect($vo2)->toBeInstanceOf(DateTimeRFC3339Extended::class)
+                    ->and($vo2->toString())->toBe('2025-01-02T03:04:05.123+00:00')
+                    ->and($vo2->value()->getTimezone()->getName())->toBe('UTC');
 
-it('withTimeZone returns a new instance with updated timezone', function (): void {
-    $vo = DateTimeRFC3339Extended::fromString('2025-01-02T03:04:05.123+00:00');
-    $vo2 = $vo->withTimeZone('Europe/Berlin');
+                // original is immutable
+                expect($vo->toString())->toBe('2025-01-02T03:04:05.123+00:00');
+            });
+        });
 
-    expect($vo2)->toBeInstanceOf(DateTimeRFC3339Extended::class)
-        ->and($vo2->toString())->toBe('2025-01-02T03:04:05.123+00:00')
-        ->and($vo2->value()->getTimezone()->getName())->toBe('UTC');
+        describe('isTypeOf', function () {
+            it('returns true when class matches', function () {
+                $vo = DateTimeRFC3339Extended::fromString('2025-01-02T03:04:05.000+00:00');
+                expect($vo->isTypeOf(DateTimeRFC3339Extended::class))->toBeTrue();
+            });
 
-    // original is immutable
-    expect($vo->toString())->toBe('2025-01-02T03:04:05.123+00:00');
-});
+            it('returns false when class does not match', function () {
+                $vo = DateTimeRFC3339Extended::fromString('2025-01-02T03:04:05.000+00:00');
+                expect($vo->isTypeOf('NonExistentClass'))->toBeFalse();
+            });
 
-it('fromString accepts custom timezone', function (): void {
-    $vo = DateTimeRFC3339Extended::fromString('2025-01-02T04:04:05.123+01:00', 'Europe/Berlin');
-    expect($vo->toString())->toBe('2025-01-02T03:04:05.123+00:00')
-        ->and($vo->value()->getOffset())->toBe(0);
-});
+            it('returns true for multiple classNames when one matches', function () {
+                $vo = DateTimeRFC3339Extended::fromString('2025-01-02T03:04:05.000+00:00');
+                expect($vo->isTypeOf('NonExistentClass', DateTimeRFC3339Extended::class, 'AnotherClass'))->toBeTrue();
+            });
 
-it('tryFromString and tryFromMixed accept custom timezone', function (): void {
-    $s = '2025-01-02T04:04:05.123+01:00';
-    $vo1 = DateTimeRFC3339Extended::tryFromString($s, 'Europe/Berlin');
-    expect($vo1)->toBeInstanceOf(DateTimeRFC3339Extended::class)
-        ->and($vo1->toString())->toBe('2025-01-02T03:04:05.123+00:00')
-        ->and($vo1->value()->getOffset())->toBe(0);
+            it('returns false for multiple classNames when none match', function () {
+                $vo = DateTimeRFC3339Extended::fromString('2025-01-02T03:04:05.000+00:00');
+                expect($vo->isTypeOf('NonExistentClass', 'AnotherClass'))->toBeFalse();
+            });
 
-    $vo2 = DateTimeRFC3339Extended::tryFromMixed($s, 'Europe/Berlin');
-    expect($vo2)->toBeInstanceOf(DateTimeRFC3339Extended::class)
-        ->and($vo2->toString())->toBe('2025-01-02T03:04:05.123+00:00')
-        ->and($vo2->value()->getOffset())->toBe(0);
-});
-
-it('isUndefined is always false for DateTimeRFC3339Extended', function (): void {
-    $vo = DateTimeRFC3339Extended::fromString('2025-01-02T03:04:05.000+00:00');
-    expect($vo->isUndefined())->toBeFalse();
-});
-
-it('tryFromMixed handles DateTimeImmutable instance', function (): void {
-    $dt = new DateTimeImmutable('2025-01-02T03:04:05.123456+00:00');
-    $result = DateTimeRFC3339Extended::tryFromMixed($dt);
-
-    expect($result)->toBeInstanceOf(DateTimeRFC3339Extended::class)
-        ->and($result->isUndefined())->toBeFalse();
-});
-
-it('tryFromMixed handles Stringable object', function (): void {
-    $stringable = new class implements Stringable {
-        public function __toString(): string
-        {
-            return '2025-01-02T03:04:05.123+00:00';
-        }
-    };
-    $result = DateTimeRFC3339Extended::tryFromMixed($stringable);
-
-    expect($result)->toBeInstanceOf(DateTimeRFC3339Extended::class)
-        ->and($result->isUndefined())->toBeFalse();
-});
-
-it('tryFromMixed returns Undefined for non-Stringable objects', function (): void {
-    $obj = new stdClass();
-    $result = DateTimeRFC3339Extended::tryFromMixed($obj);
-
-    expect($result)->toBeInstanceOf(Undefined::class)
-        ->and($result->isUndefined())->toBeTrue();
-});
-
-it('isTypeOf returns true when class matches', function (): void {
-    $vo = DateTimeRFC3339Extended::fromString('2025-01-02T03:04:05.000+00:00');
-    expect($vo->isTypeOf(DateTimeRFC3339Extended::class))->toBeTrue();
-});
-
-it('isTypeOf returns false when class does not match', function (): void {
-    $vo = DateTimeRFC3339Extended::fromString('2025-01-02T03:04:05.000+00:00');
-    expect($vo->isTypeOf('NonExistentClass'))->toBeFalse();
-});
-
-it('isTypeOf returns true for multiple classNames when one matches', function (): void {
-    $vo = DateTimeRFC3339Extended::fromString('2025-01-02T03:04:05.000+00:00');
-    expect($vo->isTypeOf('NonExistentClass', DateTimeRFC3339Extended::class, 'AnotherClass'))->toBeTrue();
+            it('returns false for empty classNames', function () {
+                $vo = DateTimeRFC3339Extended::fromString('2025-01-02T03:04:05.000+00:00');
+                expect($vo->isTypeOf())->toBeFalse();
+            });
+        });
+    });
 });
