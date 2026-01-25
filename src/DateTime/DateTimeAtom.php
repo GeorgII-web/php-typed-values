@@ -33,10 +33,16 @@ use function is_string;
  *
  * @psalm-immutable
  */
-readonly class DateTimeAtom extends DateTimeTypeAbstract
+class DateTimeAtom extends DateTimeTypeAbstract
 {
-    public const string FORMAT = DATE_ATOM;
+    /**
+     * @var string
+     */
+    public const FORMAT = DATE_ATOM;
 
+    /**
+     * @readonly
+     */
     protected DateTimeImmutable $value;
 
     /**
@@ -52,8 +58,9 @@ readonly class DateTimeAtom extends DateTimeTypeAbstract
      * @throws ZoneDateTimeTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromDateTime(DateTimeImmutable $value): static
+    public static function fromDateTime(DateTimeImmutable $value)
     {
         return new static($value);
     }
@@ -64,8 +71,9 @@ readonly class DateTimeAtom extends DateTimeTypeAbstract
      * @throws DateTimeTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE): static
+    public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE)
     {
         return new static(
             static::stringToDateTime(
@@ -121,21 +129,26 @@ readonly class DateTimeAtom extends DateTimeTypeAbstract
      * @return static|T
      *
      * @psalm-pure
+     * @param mixed $value
      */
     public static function tryFromMixed(
-        mixed $value,
+        $value,
         string $timezone = self::DEFAULT_ZONE,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
-            /** @var static $result */
-            return match (true) {
-                is_string($value) => static::fromString($value, $timezone),
-                ($value instanceof DateTimeImmutable) => static::fromDateTime($value),
-                $value instanceof Stringable => static::fromString((string) $value, $timezone),
-                default => throw new TypeException('Value cannot be cast to date time'),
-            };
-        } catch (Exception) {
+            switch (true) {
+                case is_string($value):
+                    return static::fromString($value, $timezone);
+                case $value instanceof DateTimeImmutable:
+                    return static::fromDateTime($value);
+                case is_object($value) && method_exists($value, '__toString'):
+                    return static::fromString((string) $value, $timezone);
+                default:
+                    throw new TypeException('Value cannot be cast to date time');
+            }
+        } catch (Exception $exception) {
             /* @var PrimitiveTypeAbstract */
             return $default;
         }
@@ -154,12 +167,13 @@ readonly class DateTimeAtom extends DateTimeTypeAbstract
     public static function tryFromString(
         string $value,
         string $timezone = self::DEFAULT_ZONE,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static $result */
             return static::fromString($value, $timezone);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /* @var PrimitiveTypeAbstract */
             return $default;
         }
@@ -174,8 +188,9 @@ readonly class DateTimeAtom extends DateTimeTypeAbstract
      * @psalm-pure
      *
      * @throws ZoneDateTimeTypeException
+     * @return static
      */
-    public function withTimeZone(string $timezone): static
+    public function withTimeZone(string $timezone)
     {
         /** @psalm-suppress ImpureVariable */
         return new static(
