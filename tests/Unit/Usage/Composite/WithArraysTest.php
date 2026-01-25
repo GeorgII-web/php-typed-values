@@ -14,7 +14,7 @@ use PhpTypedValues\String\StringNonEmpty;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
- * Example of optional/late‑fail semantics.
+ * Composite of optional/late‑fail semantics.
  *
  * - `id` must be valid at construction time (early fail).
  * - `firstName` uses `tryFromMixed` and may be `Undefined` (late fail on access).
