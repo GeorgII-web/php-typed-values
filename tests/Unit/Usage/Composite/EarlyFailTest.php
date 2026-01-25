@@ -11,7 +11,7 @@ use PhpTypedValues\Integer\IntegerPositive;
 use PhpTypedValues\String\StringNonEmpty;
 
 /**
- * Example of strict early‑fail semantics for constructing a composite value.
+ * Composite of strict early‑fail semantics for constructing a composite value.
  *
  * All fields must be valid on creation time. Any invalid input immediately
  * raises a domain exception from the underlying typed values.

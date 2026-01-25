@@ -3,20 +3,28 @@
 declare(strict_types=1);
 
 use PhpTypedValues\Base\Primitive\DateTime\DateTimeTypeAbstract;
-use PhpTypedValues\DateTime\DateTimeAtom;
+use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\DateTime\DateTimeTypeException;
-use PhpTypedValues\Float\Alias\Positive;
+use PhpTypedValues\Exception\DateTime\ReasonableRangeDateTimeTypeException;
+use PhpTypedValues\Exception\DateTime\ZoneDateTimeTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
+
+covers(DateTimeTypeAbstract::class);
 
 /**
  * @internal
  *
- * @covers \PhpTypedValues\Base\Primitive\DateTime\DateTimeTypeAbstract
+ * @coversNothing
  */
 readonly class DateTimeTypeAbstractTest extends DateTimeTypeAbstract
 {
-    public function __construct(private DateTimeImmutable $dt)
+    public const string FORMAT = 'Y-m-d H:i:s';
+
+    private DateTimeImmutable $dt;
+
+    public function __construct(DateTimeImmutable $dt)
     {
+        $this->dt = $dt->setTimezone(new DateTimeZone('UTC'));
     }
 
     public static function fromDateTime(DateTimeImmutable $value): static
@@ -26,27 +34,18 @@ readonly class DateTimeTypeAbstractTest extends DateTimeTypeAbstract
 
     public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE): static
     {
-        return new self(new DateTimeImmutable($value, static::stringToDateTimeZone($timezone)));
-    }
-
-    public static function getBaseFormat(): string
-    {
-        return self::FORMAT;
-    }
-
-    public static function getBaseMaxTimestamp(): int
-    {
-        return self::MAX_TIMESTAMP_SECONDS;
-    }
-
-    public static function getBaseMinTimestamp(): int
-    {
-        return self::MIN_TIMESTAMP_SECONDS;
+        return new self(
+            static::stringToDateTime(
+                $value,
+                static::FORMAT,
+                static::stringToDateTimeZone($timezone)
+            )
+        );
     }
 
     public static function getFormat(): string
     {
-        return '';
+        return static::FORMAT;
     }
 
     public function isEmpty(): bool
@@ -56,7 +55,13 @@ readonly class DateTimeTypeAbstractTest extends DateTimeTypeAbstract
 
     public function isTypeOf(string ...$classNames): bool
     {
-        return true;
+        foreach ($classNames as $className) {
+            if ($this instanceof $className) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function isUndefined(): bool
@@ -69,21 +74,55 @@ readonly class DateTimeTypeAbstractTest extends DateTimeTypeAbstract
         return $this->toString();
     }
 
+    /**
+     * Public wrapper for protected stringToDateTime to test it.
+     */
+    public static function testStringToDateTime(string $value, string $format, ?DateTimeZone $timezone = null): DateTimeImmutable
+    {
+        return static::stringToDateTime($value, $format, $timezone);
+    }
+
+    /**
+     * Public wrapper for protected stringToDateTimeZone to test it.
+     */
+    public static function testStringToDateTimeZone(string $timezone): DateTimeZone
+    {
+        return static::stringToDateTimeZone($timezone);
+    }
+
     public function toString(): string
     {
-        return $this->dt->format('Y-m-d');
+        return $this->dt->format(static::FORMAT);
     }
 
-    public static function tryFromMixed(mixed $value, string $timezone = self::DEFAULT_ZONE,
-        PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract $default = new Undefined(), ): static|PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract
-    {
-        return static::fromDateTime(new DateTimeImmutable());
+    public static function tryFromMixed(
+        mixed $value,
+        string $timezone = self::DEFAULT_ZONE,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
+        try {
+            return match (true) {
+                \is_string($value) => static::fromString($value, $timezone),
+                $value instanceof DateTimeImmutable => static::fromDateTime($value),
+                $value instanceof DateTimeTypeAbstract => static::fromDateTime($value->value()),
+                $value instanceof Stringable => static::fromString((string) $value, $timezone),
+                default => throw new Exception(),
+            };
+        } catch (Throwable) {
+            return $default;
+        }
     }
 
-    public static function tryFromString(string $value, string $timezone = self::DEFAULT_ZONE,
-        PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract $default = new Undefined(), ): static|PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract
-    {
-        return static::fromDateTime(new DateTimeImmutable());
+    public static function tryFromString(
+        string $value,
+        string $timezone = self::DEFAULT_ZONE,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
+        try {
+            return static::fromString($value, $timezone);
+        } catch (Throwable) {
+            return $default;
+        }
     }
 
     public function value(): DateTimeImmutable
@@ -93,517 +132,158 @@ readonly class DateTimeTypeAbstractTest extends DateTimeTypeAbstract
 
     public function withTimeZone(string $timezone): static
     {
-        return new self(new DateTimeImmutable());
+        return new self($this->dt->setTimezone(static::stringToDateTimeZone($timezone)));
     }
 }
 
-it('exercises abstract __toString through stub', function (): void {
-    $dt = new DateTimeImmutable('2025-01-01');
-    $stub = new DateTimeTypeAbstractTest($dt);
-
-    // This directly calls DateTimeType::__toString because the stub doesn't override it
-    expect((string) $stub)->toBe($stub->toString())
-        ->and((string) $stub)->toBe('2025-01-01');
-});
-
-// Test 1: Kills "InstanceOfToFalse - self check" mutation
-it('kills self instanceof mutation by verifying self instance returns DateTimeAtom not Undefined', function () {
-    // Create a DateTimeAtom instance
-    $dateTimeAtom = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
-
-    // This should use the "self" branch and return DateTimeAtom
-    $result = DateTimeAtom::tryFromMixed($dateTimeAtom);
-
-    // If mutation changes to false, this would throw/return Undefined
-    expect($result)
-        ->toBeInstanceOf(DateTimeAtom::class)
-        ->and($result->isUndefined())->toBeFalse()
-        ->and($result->toString())->toBe('2025-01-02T03:04:05+00:00');
-});
-
-// Test 2: Kills "IdenticalToNotIdentical - null check" mutation
-it('kills null identical mutation by verifying null returns Undefined but non-null does not', function () {
-    // Test null - should return Undefined
-    $nullResult = DateTimeAtom::tryFromMixed(null);
-    expect($nullResult)
-        ->toBeInstanceOf(Undefined::class)
-        ->and($nullResult->isUndefined())->toBeTrue();
-
-    // Test non-null string - should return DateTimeAtom
-    $notNullResult = DateTimeAtom::tryFromMixed('2025-01-02T03:04:05+00:00');
-    expect($notNullResult)
-        ->toBeInstanceOf(DateTimeAtom::class)
-        ->and($notNullResult->isUndefined())->toBeFalse();
-
-    // Test that they're different types
-    expect($nullResult)->not->toBeInstanceOf(DateTimeAtom::class);
-    expect($notNullResult)->not->toBeInstanceOf(Undefined::class);
-});
-
-// Test 3: Kills "EmptyStringToNotEmpty - null branch" mutation
-it('kills empty string mutation by verifying fromString with empty string throws but null returns Undefined', function () {
-    // Test null - should return Undefined (not throw)
-    $nullResult = DateTimeAtom::tryFromMixed(null);
-    expect($nullResult)->toBeInstanceOf(Undefined::class);
-
-    // Test empty string directly with fromString - should throw
-    // This verifies that '' in the null branch would throw if used
-    expect(fn() => DateTimeAtom::fromString(''))
-        ->toThrow(Exception::class);
-
-    // Test the mutation string - should also throw/return Undefined
-    $mutationResult = DateTimeAtom::tryFromMixed('PEST Mutator was here!');
-    // This should be Undefined because the string doesn't parse as a valid date
-    expect($mutationResult)->toBeInstanceOf(Undefined::class);
-
-    // Verify null result and mutation string result are both Undefined
-    expect($nullResult)->toBeInstanceOf(Undefined::class);
-    expect($mutationResult)->toBeInstanceOf(Undefined::class);
-});
-
-it('from other instance', function (): void {
-    $vo = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
-    $test = DateTimeAtom::tryFromMixed($vo);
-
-    expect($test->isUndefined())->toBeFalse()
-        ->and($test->toString())->toBe('2025-01-02T03:04:05+00:00');
-});
-
-it('from null', function (): void {
-    $test = DateTimeAtom::tryFromMixed(null);
-
-    expect($test->isUndefined())->toBeTrue();
-});
-
-it('tryFromString returns value on valid string', function (): void {
-    $result = DateTimeAtom::tryFromString('2025-01-02T03:04:05+00:00');
-
-    expect($result)->toBeInstanceOf(DateTimeAtom::class)
-        ->and($result->toString())->toBe('2025-01-02T03:04:05+00:00');
-});
-
-it('tryFromString returns Undefined on invalid string', function (): void {
-    $result = DateTimeAtom::tryFromString('invalid-date');
-
-    expect($result)->toBeInstanceOf(Undefined::class)
-        ->and($result->isUndefined())->toBeTrue();
-});
-
-it('tryFromString uses custom default on failure', function (): void {
-    $customDefault = Undefined::create();
-    $result = DateTimeAtom::tryFromString('invalid-date', DateTimeAtom::DEFAULT_ZONE, $customDefault);
-
-    expect($result)->toBeInstanceOf(Undefined::class)
-        ->and($result)->toBe($customDefault);
-});
-
-it('tryFromMixed uses custom default on failure', function (): void {
-    $customDefault = Undefined::create();
-    $result = DateTimeAtom::tryFromMixed(['invalid'], DateTimeAtom::DEFAULT_ZONE, $customDefault);
-
-    expect($result)->toBeInstanceOf(Undefined::class)
-        ->and($result)->toBe($customDefault);
-});
-
-it('fromDateTime returns same instant and toString is ISO 8601', function (): void {
-    $dt = new DateTimeImmutable('2025-01-02T03:04:05+00:00');
-    $vo = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
-
-    expect($dt->format(\DATE_ATOM))->toBe('2025-01-02T03:04:05+00:00')
-        ->and($vo->toString())->toBe('2025-01-02T03:04:05+00:00');
-});
-
-it('DateTimeImmutable has false and throws an exception', function (): void {
-    expect(
-        fn() => DateTimeAtom::fromString('')
-    )->toThrow(DateTimeTypeException::class);
-});
-
-it('throws DateTimeTypeException on unexpected conversion when input uses Z instead of +00:00', function (): void {
-    $call = fn() => DateTimeAtom::fromString('2025-01-02T03:04:05Z');
-    expect($call)->toThrow(DateTimeTypeException::class);
-});
-
-it('__toString proxies to toString for DateTimeType', function (): void {
-    $typed = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
-
-    expect((string) $typed)
-        ->toBe($typed->toString())
-        ->and((string) $typed)
-        ->toBe('2025-01-02T03:04:05+00:00');
-});
-
-it('handles null value by creating empty string DateTime', function () {
-    $result = DateTimeAtom::tryFromMixed(null);
-
-    expect($result)->toBeInstanceOf(Undefined::class)
-        ->and($result->isUndefined())->toBeTrue()
-        ->and($result->isEmpty())->toBeTrue();
-});
-
-it('returns Undefined for invalid mixed datetime inputs', function (mixed $input): void {
-    $result = DateTimeAtom::tryFromMixed($input);
-
-    expect($result)->toBeInstanceOf(Undefined::class)
-        ->and($result->isUndefined())->toBeTrue();
-})->with([
-    // Arrays
-    ['input' => []],
-    ['input' => ['invalid']],
-    ['input' => ['year' => 2024, 'month' => 1]],
-
-    // Objects without __toString
-    ['input' => new stdClass()],
-    ['input' => (object) ['date' => '2024-01-01']],
-
-    // primitiveType
-    ['input' => Positive::fromFloat(1.0)],
-
-    // Invalid date strings
-    ['input' => 'not-a-date'],
-    ['input' => '2024-13-01'], // Invalid month
-    ['input' => '2024-01-32'], // Invalid day
-    ['input' => '2024-02-30'], // Invalid day for February
-    ['input' => '25:61:61'], // Invalid time
-    ['input' => '2024-01-01 25:00:00'], // Invalid hour
-
-    // Resources
-    ['input' => fopen('php://memory', 'r')],
-
-    // Callables/Closures
-    ['input' => fn() => '2024-01-01'],
-    ['input' => 'DateTimeImmutable'],
-
-    // Invalid numeric strings
-    ['input' => '1e100'], // Scientific notation
-    ['input' => '999999999999999999999999999999'], // Too large
-
-    // Special values
-    ['input' => \INF],
-    ['input' => \NAN],
-
-    // Binary data
-    ['input' => "\x00\x01\x02"],
-]);
-
-describe('DateTimeType mutation killing tests', function () {
-    // Mutation 1: EmptyStringToNotEmpty - Line 67 (trim check)
-    describe('Empty string validation mutation', function () {
-        it('kills EmptyStringToNotEmpty mutation for trim check', function () {
-            // Test with whitespace-only strings
-            $whitespaceCases = [
-                'empty string' => '',
-                'spaces' => '   ',
-                'tabs' => "\t\t",
-                'newlines' => "\n\n",
-                'mixed whitespace' => " \t\n\r ",
-            ];
-
-            foreach ($whitespaceCases as $description => $value) {
-                // These should all throw DateTimeTypeException
-                expect(fn() => DateTimeAtom::fromString($value))
-                    ->toThrow(DateTimeTypeException::class, 'blank');
-            }
-
-            // Verify non-whitespace strings work
-            expect(DateTimeAtom::fromString('2025-01-02T03:04:05+00:00'))
-                ->toBeInstanceOf(DateTimeAtom::class);
+describe('DateTimeTypeAbstract', function () {
+    describe('Creation', function () {
+        it('creates instance from DateTimeImmutable', function () {
+            $dt = new DateTimeImmutable('2025-01-01 12:00:00');
+            $v = DateTimeTypeAbstractTest::fromDateTime($dt);
+            expect($v->value()->getTimestamp())->toBe($dt->getTimestamp());
         });
 
-        it('kills UnwrapTrim mutation (trim vs direct comparison)', function () {
-            // Test with strings that have whitespace but aren't empty
-            $cases = [
-                'leading space' => ' 2025-01-02T03:04:05+00:00',
-                'trailing space' => '2025-01-02T03:04:05+00:00 ',
-                'both sides' => ' 2025-01-02T03:04:05+00:00 ',
-                'tab' => "\t2025-01-02T03:04:05+00:00",
-            ];
+        it('creates instance from string with format', function () {
+            $v = DateTimeTypeAbstractTest::fromString('2025-01-01 12:00:00');
+            expect($v->toString())->toBe('2025-01-01 12:00:00');
+        });
 
-            foreach ($cases as $description => $value) {
-                // These should NOT throw - they should parse successfully
-                expect(DateTimeAtom::tryFromString($value))
-                    ->toBeInstanceOf(Undefined::class);
-            }
+        it('throws exception on invalid string format', function () {
+            expect(fn() => DateTimeTypeAbstractTest::fromString('2025/01/01'))
+                ->toThrow(DateTimeTypeException::class);
+        });
 
-            // Empty string should still throw
-            expect(fn() => DateTimeAtom::fromString(''))
+        it('throws exception on blank string', function () {
+            expect(fn() => DateTimeTypeAbstractTest::fromString('   '))
                 ->toThrow(DateTimeTypeException::class, 'blank');
         });
-    });
 
-    // Mutation 2: InstanceOfToFalse - DateTimeImmutable check
-    describe('DateTimeImmutable instanceof mutation', function () {
-        it('kills InstanceOfToFalse mutation for DateTimeImmutable', function () {
-            $dateTime = new DateTimeImmutable('2024-01-01');
-
-            // This should work with DateTimeImmutable
-            $result = DateTimeAtom::tryFromMixed($dateTime);
-
-            expect($result)->toBeInstanceOf(DateTimeAtom::class)
-                ->and($result->isUndefined())->toBeFalse()
-                ->and($result->toString())->toBe('2024-01-01T00:00:00+00:00');
-
-            // Verify non-DateTimeImmutable doesn't take this branch
-            $stringResult = DateTimeAtom::tryFromMixed('2024-01-01T00:00:00+00:00');
-            expect($stringResult)->toBeInstanceOf(DateTimeAtom::class);
-
-            // They should both produce valid dates, but through different branches
-            // The string version might have different string representation
-            expect($result->toString())->not->toBe('')
-                ->and($stringResult->toString())->not->toBe('');
+        it('throws exception on null bytes', function () {
+            expect(fn() => DateTimeTypeAbstractTest::fromString("2025-01-01\0"))
+                ->toThrow(DateTimeTypeException::class, 'null bytes');
         });
 
-        it('verifies DateTimeImmutable creates different result than string', function () {
-            $dateTime = new DateTimeImmutable('2024-01-01T00:00:00+00:00');
-            $dateString = '2024-01-01T00:00:00+00:00';
+        it('throws exception on out of range timestamp', function (string $date) {
+            expect(fn() => DateTimeTypeAbstractTest::testStringToDateTime($date, 'Y-m-d H:i:s'))
+                ->toThrow(ReasonableRangeDateTimeTypeException::class);
+        })->with([
+            'before min' => ['0000-12-31 23:59:59'],
+            'after max' => ['10000-01-01 00:00:00'],
+        ]);
 
-            $fromObject = DateTimeAtom::tryFromMixed($dateTime);
-            $fromString = DateTimeAtom::tryFromMixed($dateString);
+        it('throws exception on round-trip mismatch', function () {
+            // PHP createFromFormat might be lenient, but we want strictness.
+            // For example, '2025-01-01 12:00:00' with format 'Y-m-d' might parse but won't match.
+            expect(fn() => DateTimeTypeAbstractTest::testStringToDateTime('2025-01-01 12:00:00', 'Y-m-d'))
+                ->toThrow(DateTimeTypeException::class, 'Invalid date time value');
+        });
 
-            // Both should be valid
-            expect($fromObject)->toBeInstanceOf(DateTimeAtom::class)
-                ->and($fromString)->toBeInstanceOf(DateTimeAtom::class);
-
-            // They should represent the same date/time
-            // (might have different string formats though)
-            $objectDate = $fromObject->value()->format('Y-m-d H:i:s');
-            $stringDate = $fromString->value()->format('Y-m-d H:i:s');
-
-            expect($objectDate)->toBe($stringDate);
+        it('handles warnings and errors from createFromFormat', function () {
+            // '2025-02-30 00:00:00' is invalid but PHP might "fix" it to '2025-03-02'.
+            // This triggers warnings/errors in getLastErrors.
+            expect(fn() => DateTimeTypeAbstractTest::fromString('2025-02-30 00:00:00'))
+                ->toThrow(DateTimeTypeException::class, 'Invalid date time value');
         });
     });
 
-    // Mutation 3: InstanceOfToFalse - self check
-    describe('self instanceof mutation', function () {
-        it('kills InstanceOfToFalse mutation for self check', function () {
-            $dateTime = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
-
-            // This should use the "self" branch
-            $result = DateTimeAtom::tryFromMixed($dateTime);
-
-            expect($result)->toBeInstanceOf(DateTimeAtom::class)
-                ->and($result->isUndefined())->toBeFalse()
-                ->and($result->toString())->toBe('2025-01-02T03:04:05+00:00');
-
-            // Verify it's not using the string branch
-            // Create a new instance to ensure it's not just returning itself
-            $differentDate = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
-            $result2 = DateTimeAtom::tryFromMixed($differentDate);
-
-            expect($result2->toString())->toBe('2025-01-02T03:04:05+00:00');
+    describe('Timezone Handling', function () {
+        it('converts timezone string to DateTimeZone', function () {
+            expect(DateTimeTypeAbstractTest::testStringToDateTimeZone('UTC'))
+                ->toBeInstanceOf(DateTimeZone::class)
+                ->and(DateTimeTypeAbstractTest::testStringToDateTimeZone('UTC')->getName())->toBe('UTC');
         });
 
-        it('verifies self instance creates different result than raw DateTimeImmutable', function () {
-            $dateTime = new DateTimeImmutable('2024-05-10');
-            $selfInstance = DateTimeAtom::fromDateTime($dateTime);
+        it('throws ZoneDateTimeTypeException on invalid timezone', function () {
+            expect(fn() => DateTimeTypeAbstractTest::testStringToDateTimeZone('Invalid/Zone'))
+                ->toThrow(ZoneDateTimeTypeException::class);
+        });
 
-            $fromSelf = DateTimeAtom::tryFromMixed($selfInstance);
-            $fromRaw = DateTimeAtom::tryFromMixed($dateTime);
-
-            // Both should work but go through different branches
-            expect($fromSelf)->toBeInstanceOf(DateTimeAtom::class)
-                ->and($fromRaw)->toBeInstanceOf(DateTimeAtom::class);
-
-            // They should represent the same date
-            $selfDate = $fromSelf->value()->format('Y-m-d');
-            $rawDate = $fromRaw->value()->format('Y-m-d');
-
-            expect($selfDate)->toBe($rawDate);
+        it('normalizes internal value to UTC', function () {
+            $v = DateTimeTypeAbstractTest::fromString('2025-01-01 12:00:00', 'Europe/Berlin');
+            // 12:00 in Berlin is 11:00 UTC (in winter)
+            expect($v->value()->getTimezone()->getName())->toBe('UTC')
+                ->and($v->value()->format('H:i:s'))->toBe('11:00:00');
         });
     });
 
-    // Mutation 4: IdenticalToNotIdentical - null check
-    describe('null identical comparison mutation', function () {
-        it('kills IdenticalToNotIdentical mutation for null check', function () {
-            // Test with null
-            $nullResult = DateTimeAtom::tryFromMixed(null);
-
-            // null should go through the null branch
-            expect($nullResult)->toBeInstanceOf(Undefined::class)
-                ->and($nullResult->isEmpty())->toBeTrue();
-
-            // Test with not null to ensure it doesn't take the null branch
-            $notNullResult = DateTimeAtom::tryFromMixed('2025-01-02T03:04:05+00:00');
-            expect($notNullResult)->toBeInstanceOf(DateTimeAtom::class)
-                ->and($notNullResult->isEmpty())->toBeFalse();
-
-            // Test with other falsy values that aren't null
-            $emptyStringResult = DateTimeAtom::tryFromMixed('');
-            $zeroResult = DateTimeAtom::tryFromMixed(0);
-            $falseResult = DateTimeAtom::tryFromMixed(false);
-
-            // These should NOT be empty (or should throw depending on implementation)
-            // They should not take the null branch
-            if ($emptyStringResult instanceof DateTimeAtom) {
-                expect($emptyStringResult->isEmpty())->not->toBe($nullResult->isEmpty());
-            }
-        });
-
-        it('verifies null creates empty date while other values do not', function () {
-            $nullResult = DateTimeAtom::tryFromMixed(null);
-            $emptyStringResult = DateTimeAtom::tryFromMixed('');
-
-            // null should create empty date
-            expect($nullResult->isEmpty())->toBeTrue();
-
-            // Empty string might create empty date or throw
-            // Either way, the behavior should be different from null
-            if ($emptyStringResult instanceof DateTimeAtom) {
-                // If empty string creates a date, verify it's not marked empty
-                // (or if it is, that's a different code path)
-                expect($emptyStringResult->toString())->not->toBe($nullResult->toString());
+    describe('tryFrom Methods', function () {
+        it('tryFromString returns instance or default', function (string $input, bool $success) {
+            $result = DateTimeTypeAbstractTest::tryFromString($input);
+            if ($success) {
+                expect($result)->toBeInstanceOf(DateTimeTypeAbstractTest::class);
             } else {
-                // If empty string throws/returns Undefined, that's different from null
-                expect($emptyStringResult)->toBeInstanceOf(Undefined::class);
+                expect($result)->toBeInstanceOf(Undefined::class);
             }
-        });
-    });
+        })->with([
+            'valid' => ['2025-01-01 12:00:00', true],
+            'invalid' => ['invalid', false],
+        ]);
 
-    // Mutation 5: EmptyStringToNotEmpty - null branch string
-    describe('EmptyStringToNotEmpty mutation in null branch', function () {
-        it('kills EmptyStringToNotEmpty mutation for null branch', function () {
-            $nullResult = DateTimeAtom::tryFromMixed(null);
-            $emptyStringResult = DateTimeAtom::tryFromMixed('');
-
-            // null should create an empty date (fromString(''))
-            expect($nullResult->isEmpty())->toBeTrue();
-
-            // The mutation would change '' to 'PEST Mutator was here!'
-            // Let's see what that would produce
-            $mutationStringResult = DateTimeAtom::tryFromMixed('PEST Mutator was here!');
-
-            // null result and mutation string result should be DIFFERENT
-            // because '' and 'PEST Mutator was here!' parse differently
-
-            if ($mutationStringResult instanceof DateTimeAtom) {
-                // If the mutation string parses as a date (unlikely),
-                // it should be different from the empty date
-                expect($nullResult->toString())->not->toBe($mutationStringResult->toString());
+        it('tryFromMixed returns instance for various inputs', function (mixed $input, bool $success) {
+            $result = DateTimeTypeAbstractTest::tryFromMixed($input);
+            if ($success) {
+                expect($result)->toBeInstanceOf(DateTimeTypeAbstractTest::class);
             } else {
-                // If mutation string doesn't parse, it returns Undefined
-                expect($mutationStringResult)->toBeInstanceOf(Undefined::class);
+                expect($result)->toBeInstanceOf(Undefined::class);
             }
-
-            // Verify empty string produces specific result
-            if ($emptyStringResult instanceof DateTimeAtom) {
-                // null and empty string should produce SAME result
-                // (both call fromString(''))
-                expect($nullResult->toString())->toBe($emptyStringResult->toString());
-            }
-        });
-
-        it('verifies fromString with empty string throws exception', function () {
-            // Direct test of fromString with empty string
-            // This should throw DateTimeTypeException based on your validation
-            expect(fn() => DateTimeAtom::fromString(''))
-                ->toThrow(DateTimeTypeException::class, 'blank');
-        });
-    });
-
-    // Comprehensive test covering all branches
-    describe('Comprehensive branch coverage', function () {
-        $testCases = [
-            // Branch: is_string($value)
-            'string date' => [
-                'input' => '2025-01-02T03:04:05+00:00',
-                'shouldSucceed' => true,
-                'branch' => 'string',
-            ],
-
-            // Branch: $value instanceof DateTimeImmutable
-            'DateTimeImmutable' => [
-                'input' => new DateTimeImmutable('2024-02-01'),
-                'shouldSucceed' => true,
-                'branch' => 'DateTimeImmutable',
-            ],
-
-            // Branch: $value instanceof self
-            'self instance' => [
-                'input' => DateTimeAtom::fromString('2025-01-02T03:04:05+00:00'),
-                'shouldSucceed' => true,
-                'branch' => 'self',
-            ],
-
-            // Branch: $value instanceof Stringable, is_scalar($value)
-            'Stringable object' => [
-                'input' => new class {
+        })->with([
+            'string' => ['2025-01-01 12:00:00', true],
+            'DateTimeImmutable' => [new DateTimeImmutable(), true],
+            'instance' => [new DateTimeTypeAbstractTest(new DateTimeImmutable()), true],
+            'Stringable' => [
+                new class implements Stringable {
                     public function __toString(): string
                     {
-                        return '2025-01-02T03:04:05+00:00';
+                        return '2025-01-01 12:00:00';
                     }
                 },
-                'shouldSucceed' => true,
-                'branch' => 'Stringable',
+                true,
             ],
-
-            // Branch: $value instanceof Stringable, is_scalar($value)
-            'scalar integer' => [
-                'input' => 1704067200, // 2023-12-31
-                'shouldSucceed' => false,
-                'branch' => 'scalar',
-            ],
-
-            // Branch: $value instanceof Stringable, is_scalar($value)
-            'scalar boolean true' => [
-                'input' => true,
-                'shouldSucceed' => false,
-                'branch' => 'scalar',
-            ],
-
-            // Branch: $value instanceof Stringable, is_scalar($value)
-            'scalar boolean false' => [
-                'input' => false,
-                'shouldSucceed' => false,
-                'branch' => 'scalar',
-            ],
-
-            // Branch: null === $value
-            'null' => [
-                'input' => null,
-                'shouldSucceed' => false,
-                'branch' => 'null',
-            ],
-
-            // Branch: default (throw)
-            'invalid array' => [
-                'input' => [],
-                'shouldSucceed' => false,
-                'branch' => 'default',
-            ],
-
-            // Additional test for whitespace string
-            'whitespace string' => [
-                'input' => '   ',
-                'shouldSucceed' => false, // Should throw in fromString
-                'branch' => 'string->throws',
-            ],
-        ];
-
-        foreach ($testCases as $description => $case) {
-            it("covers {$case['branch']} branch with {$description}", function () use ($case) {
-                $result = DateTimeAtom::tryFromMixed($case['input']);
-
-                if ($case['shouldSucceed']) {
-                    expect($result)->toBeInstanceOf(DateTimeAtom::class);
-
-                    // Verify specific branch behaviors
-                    if ($case['branch'] === 'null') {
-                        expect($result->isEmpty())->toBeTrue();
-                    } else {
-                        expect($result->isEmpty())->toBeFalse();
-                    }
-                } else {
-                    expect($result)->toBeInstanceOf(Undefined::class);
-                }
-            });
-        }
+            'null' => [null, false],
+            'array' => [[], false],
+        ]);
     });
-});
 
-it('exercises abstract constants through dummy subclass', function (): void {
-    // This is to get coverage for the constant declarations in the abstract class and interface
-    expect(DateTimeTypeAbstractTest::getBaseFormat())->toBe('')
-        ->and(DateTimeTypeAbstractTest::getBaseMaxTimestamp())->toBe(253402300799)
-        ->and(DateTimeTypeAbstractTest::getBaseMinTimestamp())->toBe(-62135596800)
-        ->and(DateTimeTypeAbstractTest::DEFAULT_ZONE)->toBe('UTC');
+    describe('Instance Methods', function () {
+        it('exposes value and formats', function () {
+            $dt = new DateTimeImmutable('2025-01-01 12:00:00');
+            $v = new DateTimeTypeAbstractTest($dt);
+            expect($v->value()->getTimestamp())->toBe($dt->getTimestamp())
+                ->and($v->toString())->toBe('2025-01-01 12:00:00')
+                ->and((string) $v)->toBe('2025-01-01 12:00:00')
+                ->and($v->jsonSerialize())->toBe('2025-01-01 12:00:00');
+        });
+
+        it('isTypeOf works as expected', function () {
+            $v = new DateTimeTypeAbstractTest(new DateTimeImmutable());
+            expect($v->isTypeOf(DateTimeTypeAbstractTest::class))->toBeTrue()
+                ->and($v->isTypeOf(DateTimeTypeAbstract::class))->toBeTrue()
+                ->and($v->isTypeOf('NonExistent'))->toBeFalse()
+                ->and($v->isTypeOf('NonExistent', DateTimeTypeAbstract::class))->toBeTrue();
+        });
+
+        it('isUndefined and isEmpty return false', function () {
+            $v = new DateTimeTypeAbstractTest(new DateTimeImmutable());
+            expect($v->isUndefined())->toBeFalse()
+                ->and($v->isEmpty())->toBeFalse();
+        });
+
+        it('withTimeZone returns new instance and normalizes to UTC', function () {
+            $v = DateTimeTypeAbstractTest::fromString('2025-01-01 12:00:00', 'UTC');
+            $v2 = $v->withTimeZone('Europe/Berlin');
+            // The value is normalized to UTC in stringToDateTime and constructor (if implemented so)
+            // In my stub, stringToDateTime normalize to UTC.
+            expect($v2->value()->getTimezone()->getName())->toBe('UTC')
+                ->and($v2->value()->getTimestamp())->toBe($v->value()->getTimestamp());
+        });
+    });
+
+    describe('Constants and Interfaces', function () {
+        it('has correct default constants', function () {
+            expect(DateTimeTypeAbstract::DEFAULT_ZONE)->toBe('UTC')
+                ->and(DateTimeTypeAbstract::MAX_TIMESTAMP_SECONDS)->toBe(253402300799)
+                ->and(DateTimeTypeAbstract::MIN_TIMESTAMP_SECONDS)->toBe(-62135596800);
+        });
+    });
 });
