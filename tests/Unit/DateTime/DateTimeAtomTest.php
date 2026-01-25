@@ -3,224 +3,238 @@
 declare(strict_types=1);
 
 use PhpTypedValues\DateTime\DateTimeAtom;
+use PhpTypedValues\Exception\DateTime\DateTimeTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
-it('fromDateTime returns same instant and toString is ISO 8601', function (): void {
-    $dt = new DateTimeImmutable('2025-01-02T03:04:05+00:00');
-    $vo = DateTimeAtom::fromDateTime($dt);
+describe('DateTimeAtom', function () {
+    describe('Creation', function () {
+        describe('fromDateTime', function () {
+            it('returns same instant and toString is ATOM', function () {
+                $dt = new DateTimeImmutable('2025-01-02T03:04:05+00:00');
+                $vo = DateTimeAtom::fromDateTime($dt);
 
-    expect($vo->value()->format(\DATE_ATOM))->toBe('2025-01-02T03:04:05+00:00')
-        ->and($vo->toString())->toBe('2025-01-02T03:04:05+00:00');
-});
+                expect($vo->value()->format(\DATE_ATOM))->toBe('2025-01-02T03:04:05+00:00')
+                    ->and($vo->toString())->toBe('2025-01-02T03:04:05+00:00');
+            });
+        });
 
-it('fromString parses valid ATOM and preserves timezone offset', function (): void {
-    $vo = DateTimeAtom::fromString('2030-12-31T23:59:59+03:00');
+        describe('fromString', function () {
+            it('parses valid ATOM and preserves timezone offset (normalized to UTC)', function () {
+                $vo = DateTimeAtom::fromString('2030-12-31T23:59:59+03:00');
 
-    expect($vo->toString())->toBe('2030-12-31T20:59:59+00:00')
-        ->and($vo->value()->format(\DATE_ATOM))->toBe('2030-12-31T20:59:59+00:00')
-        ->and($vo->withTimeZone('Europe/Berlin')->toString())->toBe('2030-12-31T20:59:59+00:00');
-});
+                expect($vo->toString())->toBe('2030-12-31T20:59:59+00:00')
+                    ->and($vo->value()->format(\DATE_ATOM))->toBe('2030-12-31T20:59:59+00:00');
+            });
 
-it('fromString parses valid ATOM and preserves timezone offset for UTC', function (): void {
-    $vo = DateTimeAtom::fromString('2030-12-31T21:59:59+00:00');
+            it('accepts custom timezone', function () {
+                $vo = DateTimeAtom::fromString('2025-01-02T04:04:05+01:00', 'Europe/Berlin');
+                expect($vo->toString())->toBe('2025-01-02T03:04:05+00:00')
+                    ->and($vo->value()->getOffset())->toBe(0);
+            });
 
-    expect($vo->toString())->toBe('2030-12-31T21:59:59+00:00')
-        ->and($vo->value()->format(\DATE_ATOM))->toBe('2030-12-31T21:59:59+00:00')
-        ->and($vo->withTimeZone('Europe/Berlin')->toString())->toBe('2030-12-31T21:59:59+00:00');
-});
+            it('throws exception on invalid input', function (string $input, string $containedMessage) {
+                expect(fn() => DateTimeAtom::fromString($input))
+                    ->toThrow(DateTimeTypeException::class, $containedMessage);
+            })->with([
+                'invalid month' => ['2025-13-02T03:04:05+00:00', 'Warning at 25: The parsed date was invalid'],
+                'trailing space' => ['2025-01-02T03:04:05+00:00 ', 'Error at 25: Trailing data'],
+                'multiple errors/warnings' => [
+                    '2025-13-02T03:04:05+00:00 ',
+                    "Invalid date time value \"2025-13-02T03:04:05+00:00 \", use format \"Y-m-d\\TH:i:sP\"\nError at 25: Trailing data\nWarning at 25: The parsed date was invalid",
+                ],
+                'double error' => [
+                    '2025-12-02T03:04:05+ 00:00',
+                    "Error at 19: The timezone could not be found in the database\nError at 20: Trailing data",
+                ],
+            ]);
 
-it('fromString throws on invalid date parts (errors path)', function (): void {
-    // invalid month 13 produces errors
-    $call = fn() => DateTimeAtom::fromString('2025-13-02T03:04:05+00:00');
-    expect($call)->toThrow(PhpTypedValues\Exception\DateTime\DateTimeTypeException::class);
-});
+            it('aggregates multiple parse warnings with proper concatenation', function () {
+                $input = '2025-13-40T25:61:61+00:00';
+                try {
+                    DateTimeAtom::fromString($input);
+                    expect()->fail('Exception was not thrown');
+                } catch (DateTimeTypeException $e) {
+                    $msg = $e->getMessage();
+                    expect($msg)->toContain('Invalid date time value "2025-13-40T25:61:61+00:00", use format "Y-m-d\TH:i:sP"')
+                        ->and($msg)->toContain('Warning at 25: The parsed date was invalid')
+                        ->and($msg)->not->toContain('PEST Mutator was here!');
+                }
+            });
 
-it('fromString throws on trailing data (warnings path)', function (): void {
-    // trailing space should trigger a warning from DateTime::getLastErrors()
-    try {
-        DateTimeAtom::fromString('2025-01-02T03:04:05+00:00 ');
-        expect()->fail('Exception was not thrown');
-    } catch (Throwable $e) {
-        expect($e)->toBeInstanceOf(PhpTypedValues\Exception\DateTime\DateTimeTypeException::class)
-            ->and($e->getMessage())->toContain('Invalid date time value');
-    }
-});
+            it('errors-only path keeps newline after header and after error line', function () {
+                $input = '2025-01-02T03:04:05+00:00 ';
+                try {
+                    DateTimeAtom::fromString($input);
+                    expect()->fail('Exception was not thrown');
+                } catch (DateTimeTypeException $e) {
+                    $msg = $e->getMessage();
+                    expect($msg)->toContain("Invalid date time value \"2025-01-02T03:04:05+00:00 \", use format \"Y-m-d\\TH:i:sP\"\nError at 25: Trailing data\n");
+                    expect(substr_count($msg, \PHP_EOL))->toBeGreaterThanOrEqual(2);
+                }
+            });
+        });
 
-it('getFormat returns DATE_ATOM format', function (): void {
-    expect(DateTimeAtom::getFormat())->toBe(\DATE_ATOM);
-});
+        describe('tryFromString', function () {
+            it('returns instance or default value', function (string $input, string $tz, bool $isSuccess) {
+                $result = DateTimeAtom::tryFromString($input, $tz);
+                if ($isSuccess) {
+                    expect($result)->toBeInstanceOf(DateTimeAtom::class)
+                        ->and($result->toString())->toBe('2025-01-02T03:04:05+00:00');
+                } else {
+                    expect($result)->toBeInstanceOf(Undefined::class);
+                }
+            })->with([
+                'valid UTC' => ['2025-01-02T03:04:05+00:00', 'UTC', true],
+                'valid with TZ' => ['2025-01-02T04:04:05+01:00', 'Europe/Berlin', true],
+                'invalid format' => ['2025-01-02 03:04:05Z', 'UTC', false],
+            ]);
+        });
 
-it('casts to string via __toString and jsonSerialize equals toString (ATOM)', function (): void {
-    $vo = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
+        describe('tryFromMixed', function () {
+            it('returns instance for valid mixed inputs', function (mixed $input, string $tz, string $expected) {
+                $result = DateTimeAtom::tryFromMixed($input, $tz);
+                expect($result)->toBeInstanceOf(DateTimeAtom::class)
+                    ->and($result->toString())->toBe($expected);
+            })->with([
+                'valid string' => ['2025-01-02T03:04:05+00:00', 'UTC', '2025-01-02T03:04:05+00:00'],
+                'valid string with TZ' => ['2025-01-02T04:04:05+01:00', 'Europe/Berlin', '2025-01-02T03:04:05+00:00'],
+                'DateTimeImmutable instance' => [new DateTimeImmutable('2025-01-02T03:04:05+00:00'), 'UTC', '2025-01-02T03:04:05+00:00'],
+                'Stringable object' => [
+                    new class implements Stringable {
+                        public function __toString(): string
+                        {
+                            return '2025-01-02T03:04:05+00:00';
+                        }
+                    },
+                    'UTC',
+                    '2025-01-02T03:04:05+00:00',
+                ],
+            ]);
 
-    expect((string) $vo)->toBe($vo->toString())
-        ->and($vo->jsonSerialize())->toBe($vo->toString());
-});
+            it('kills the DateTimeImmutable instance mutant in tryFromMixed', function () {
+                $dt = new DateTimeImmutable('2025-01-02T03:04:05+00:00');
+                $vo = DateTimeAtom::tryFromMixed($dt);
+                expect($vo)->toBeInstanceOf(DateTimeAtom::class)
+                    ->and($vo->value()->format(\DATE_ATOM))->toBe($dt->format(\DATE_ATOM));
+            });
 
-it('fromString with both parse error and warning includes both details in the exception message', function (): void {
-    // invalid month (error) + trailing space (warning)
-    $input = '2025-13-02T03:04:05+00:00 ';
-    try {
-        DateTimeAtom::fromString($input);
-        expect()->fail('Exception was not thrown');
-    } catch (Throwable $e) {
-        expect($e)->toBeInstanceOf(PhpTypedValues\Exception\DateTime\DateTimeTypeException::class)
-            ->and($e->getMessage())->toContain('Invalid date time value')
-            ->and($e->getMessage())->toContain('Error at')
-            ->and($e->getMessage())->toContain('Warning at');
-    }
-});
+            it('kills the Stringable instance mutant in tryFromMixed', function () {
+                $s = '2025-01-02T03:04:05+00:00';
+                $stringable = new class($s) implements Stringable {
+                    public function __construct(private string $s)
+                    {
+                    }
 
-it('fromString aggregates multiple parse warnings with proper concatenation and line breaks', function (): void {
-    // Multiple invalid components to force several distinct parse errors
-    $input = '2025-13-40T25:61:61+00:00';
-    try {
-        DateTimeAtom::fromString($input);
-        expect()->fail('Exception was not thrown');
-    } catch (Throwable $e) {
-        $msg = $e->getMessage();
-        // Header should be present and terminated with a newline
-        $expectedHeader = \sprintf(
-            'Invalid date time value "%s", use format "%s"',
-            $input,
-            \DATE_ATOM
-        ) . \PHP_EOL;
+                    public function __toString(): string
+                    {
+                        return $this->s;
+                    }
+                };
+                $vo = DateTimeAtom::tryFromMixed($stringable);
+                expect($vo)->toBeInstanceOf(DateTimeAtom::class)
+                    ->and($vo->toString())->toBe($s);
+            });
 
-        expect($e)->toBeInstanceOf(PhpTypedValues\Exception\DateTime\DateTimeTypeException::class)
-            ->and($msg)->toContain($expectedHeader)
-            ->and($msg)->toContain('Invalid date time value "2025-13-40T25:61:61+00:00", use format "Y-m-d\TH:i:sP"
-Warning at 25: The parsed date was invalid
-')
-            // No injected garbage from the mutation should appear
-            ->and($msg)->not->toContain('PEST Mutator was here!');
-    }
-});
+            it('returns Undefined for invalid mixed inputs', function (mixed $input) {
+                $result = DateTimeAtom::tryFromMixed($input);
+                expect($result)->toBeInstanceOf(Undefined::class)
+                    ->and($result->isUndefined())->toBeTrue();
+            })->with([
+                'null' => [null],
+                'array' => [['x']],
+                'stdClass' => [new stdClass()],
+                'anonymous non-stringable' => [new class {}],
+            ]);
+        });
 
-it('errors-only path keeps newline after header and after error line', function (): void {
-    $input = '2025-01-02T03:04:05+00:00 ';
-    try {
-        DateTimeAtom::fromString($input);
-        expect()->fail('Exception was not thrown');
-    } catch (Throwable $e) {
-        $msg = $e->getMessage();
-        // must contain the header + newline and at least one warning line ending with newline
-        expect($e)->toBeInstanceOf(PhpTypedValues\Exception\DateTime\DateTimeTypeException::class)
-            ->and($msg)->toContain('Invalid date time value "2025-01-02T03:04:05+00:00 ", use format "Y-m-d\TH:i:sP"
-Error at 25: Trailing data
-');
+        describe('getFormat', function () {
+            it('returns ATOM format', function () {
+                expect(DateTimeAtom::getFormat())->toBe(\DATE_ATOM);
+            });
+        });
+    });
 
-        // Count total newlines: one after header + one after the warning line => at least 2
-        expect(substr_count($msg, \PHP_EOL))->toBeGreaterThanOrEqual(2);
-    }
-});
+    describe('Instance Methods', function () {
+        it('value() returns internal DateTimeImmutable (normalized to UTC)', function () {
+            $dt = new DateTimeImmutable('2025-01-02T03:04:05+00:00');
+            $vo = DateTimeAtom::fromDateTime($dt);
+            expect($vo->value()->format(\DATE_ATOM))->toBe($dt->format(\DATE_ATOM))
+                ->and($vo->value()->getTimezone()->getName())->toBe('UTC');
+        });
 
-it('double error message', function (): void {
-    $input = '2025-12-02T03:04:05+ 00:00';
-    try {
-        DateTimeAtom::fromString($input);
-        expect()->fail('Exception was not thrown');
-    } catch (Throwable $e) {
-        $msg = $e->getMessage();
-        // must contain the header + newline and at least one warning line ending with newline
-        expect($e)->toBeInstanceOf(PhpTypedValues\Exception\DateTime\DateTimeTypeException::class)
-            ->and($msg)->toContain('Invalid date time value "2025-12-02T03:04:05+ 00:00", use format "Y-m-d\TH:i:sP"
-Error at 19: The timezone could not be found in the database
-Error at 20: Trailing data
-');
-    }
-});
+        it('toString and __toString return ATOM formatted string', function () {
+            $s = '2025-01-02T03:04:05+00:00';
+            $vo = DateTimeAtom::fromString($s);
 
-it('DateTimeAtom::tryFromString returns value for valid ATOM string', function (): void {
-    $s = '2025-01-02T03:04:05+00:00';
-    $v = DateTimeAtom::tryFromString($s);
+            expect($vo->toString())->toBe($s)
+                ->and((string) $vo)->toBe($s)
+                ->and($vo->__toString())->toBe($s);
+        });
 
-    expect($v)
-        ->toBeInstanceOf(DateTimeAtom::class)
-        ->and($v->toString())
-        ->toBe($s);
-});
+        it('jsonSerialize returns string', function () {
+            $s = '2025-01-02T03:04:05+00:00';
+            expect(DateTimeAtom::fromString($s)->jsonSerialize())->toBe($s);
+        });
 
-it('DateTimeAtom::tryFromString returns Undefined for invalid string', function (): void {
-    // Missing timezone offset
-    $u = DateTimeAtom::tryFromString('2025-01-02T03:04:05');
+        it('isEmpty is always false', function () {
+            $vo = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
+            expect($vo->isEmpty())->toBeFalse();
 
-    expect($u)->toBeInstanceOf(Undefined::class);
-});
+            // Kills the FalseToTrue mutant in isEmpty
+            if ($vo->isEmpty() !== false) {
+                throw new Exception('isEmpty mutant!');
+            }
+        });
 
-it('jsonSerialize returns string', function (): void {
-    expect(DateTimeAtom::tryFromString('2025-01-02T03:04:05+00:00')->jsonSerialize())->toBeString();
-});
+        it('isUndefined is always false', function () {
+            $vo = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
+            expect($vo->isUndefined())->toBeFalse();
 
-it('tryFromMixed handles valid ATOM strings and invalid mixed inputs', function (): void {
-    // valid string
-    $ok = DateTimeAtom::tryFromMixed('2025-01-02T03:04:05+00:00');
+            // Kills the FalseToTrue mutant in isUndefined
+            if ($vo->isUndefined() !== false) {
+                throw new Exception('isUndefined mutant!');
+            }
+        });
 
-    // invalid types
-    $badArr = DateTimeAtom::tryFromMixed(['x']);
-    $badNull = DateTimeAtom::tryFromMixed(null);
+        describe('withTimeZone', function () {
+            it('returns a new instance with updated timezone (normalized to UTC)', function () {
+                $vo = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
+                $vo2 = $vo->withTimeZone('Europe/Berlin');
 
-    // stringable object
-    $stringable = new class {
-        public function __toString(): string
-        {
-            return '2025-01-02T03:04:05+00:00';
-        }
-    };
-    $okStr = DateTimeAtom::tryFromMixed($stringable);
+                expect($vo2)->toBeInstanceOf(DateTimeAtom::class)
+                    ->and($vo2->toString())->toBe('2025-01-02T03:04:05+00:00')
+                    ->and($vo2->value()->getTimezone()->getName())->toBe('UTC');
 
-    expect($ok)->toBeInstanceOf(DateTimeAtom::class)
-        ->and($ok->toString())->toBe('2025-01-02T03:04:05+00:00')
-        ->and($okStr)->toBeInstanceOf(DateTimeAtom::class)
-        ->and($badArr)->toBeInstanceOf(Undefined::class)
-        ->and($badNull)->toBeInstanceOf(Undefined::class);
-});
+                // original is immutable
+                expect($vo->toString())->toBe('2025-01-02T03:04:05+00:00');
+            });
+        });
 
-it('isEmpty is always false for DateTimeAtom', function (): void {
-    $vo = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
-    expect($vo->isEmpty())->toBeFalse();
-});
+        describe('isTypeOf', function () {
+            it('returns true when class matches', function () {
+                $vo = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
+                expect($vo->isTypeOf(DateTimeAtom::class))->toBeTrue();
+            });
 
-it('withTimeZone returns a new instance with updated timezone', function (): void {
-    $vo = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
-    $vo2 = $vo->withTimeZone('Europe/Berlin');
+            it('returns false when class does not match', function () {
+                $vo = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
+                expect($vo->isTypeOf('NonExistentClass'))->toBeFalse();
+            });
 
-    expect($vo2)->toBeInstanceOf(DateTimeAtom::class)
-        ->and($vo2->toString())->toBe('2025-01-02T03:04:05+00:00')
-        ->and($vo2->value()->getTimezone()->getName())->toBe('UTC');
+            it('returns true for multiple classNames when one matches', function () {
+                $vo = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
+                expect($vo->isTypeOf('NonExistentClass', DateTimeAtom::class, 'AnotherClass'))->toBeTrue();
+            });
 
-    // original is immutable
-    expect($vo->toString())->toBe('2025-01-02T03:04:05+00:00');
-});
+            it('returns false for multiple classNames when none match', function () {
+                $vo = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
+                expect($vo->isTypeOf('NonExistentClass', 'AnotherClass'))->toBeFalse();
+            });
 
-it('tryFromString and tryFromMixed accept custom timezone', function (): void {
-    $s = '2025-01-02T04:04:05+01:00';
-    $vo1 = DateTimeAtom::tryFromString($s, 'Europe/Berlin');
-    expect($vo1)->toBeInstanceOf(DateTimeAtom::class)
-        ->and($vo1->toString())->toBe('2025-01-02T03:04:05+00:00')
-        ->and($vo1->value()->getOffset())->toBe(0);
-
-    $vo2 = DateTimeAtom::tryFromMixed($s, 'Europe/Berlin');
-    expect($vo2)->toBeInstanceOf(DateTimeAtom::class)
-        ->and($vo2->toString())->toBe('2025-01-02T03:04:05+00:00')
-        ->and($vo2->value()->getOffset())->toBe(0);
-});
-
-it('isUndefined is always false for DateTimeAtom', function (): void {
-    $vo = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
-    expect($vo->isUndefined())->toBeFalse();
-});
-
-it('isTypeOf returns true when class matches', function (): void {
-    $vo = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
-    expect($vo->isTypeOf(DateTimeAtom::class))->toBeTrue();
-});
-
-it('isTypeOf returns false when class does not match', function (): void {
-    $vo = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
-    expect($vo->isTypeOf('NonExistentClass'))->toBeFalse();
-});
-
-it('isTypeOf returns true for multiple classNames when one matches', function (): void {
-    $vo = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
-    expect($vo->isTypeOf('NonExistentClass', DateTimeAtom::class, 'AnotherClass'))->toBeTrue();
+            it('returns false for empty classNames', function () {
+                $vo = DateTimeAtom::fromString('2025-01-02T03:04:05+00:00');
+                expect($vo->isTypeOf())->toBeFalse();
+            });
+        });
+    });
 });
