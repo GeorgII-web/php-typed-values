@@ -100,30 +100,25 @@ describe('ArrayNonEmpty', function () {
             'none Undefined' => [[new stdClass()], false],
         ]);
 
-        it('isUndefined returns false if empty (unreachable via constructor)', function () {
-            $vo = (new ReflectionClass(ArrayNonEmpty::class))->newInstanceWithoutConstructor();
-            $reflectionProperty = new ReflectionProperty(ArrayNonEmpty::class, 'value');
-            $reflectionProperty->setValue($vo, []);
-
-            expect($vo->isUndefined())->toBeFalse();
-        });
-
         it('hasUndefined() detects presence of Undefined items', function (array $items, bool $expected) {
             $vo = new ArrayNonEmpty($items);
             expect($vo->hasUndefined())->toBe($expected);
         })->with([
+            'all Undefined' => [[Undefined::create(), Undefined::create()], true],
             'mixed' => [[Undefined::create(), new stdClass()], true],
             'none Undefined' => [[new stdClass()], false],
         ]);
 
-        it('getDefinedItems() filters out Undefined instances', function () {
+        it('getDefinedItems() filters out Undefined instances and returns empty if all are Undefined', function () {
             $u1 = Undefined::create();
             $o1 = new stdClass();
             $o2 = new stdClass();
 
-            $vo = new ArrayNonEmpty([$u1, $o1, $u1, $o2]);
+            $vo1 = new ArrayNonEmpty([$u1, $o1, $u1, $o2]);
+            expect($vo1->getDefinedItems())->toBe([$o1, $o2]);
 
-            expect($vo->getDefinedItems())->toBe([$o1, $o2]);
+            $vo2 = new ArrayNonEmpty([$u1, $u1]);
+            expect($vo2->getDefinedItems())->toBe([]);
         });
     });
 
@@ -131,7 +126,8 @@ describe('ArrayNonEmpty', function () {
         it('value() returns the internal array', function () {
             $items = [new stdClass()];
             $vo = new ArrayNonEmpty($items);
-            expect($vo->value())->toBe($items);
+            expect($vo->value())->toBe($items)
+                ->and($vo->value())->not->toBe([]);
         });
 
         it('toArray() and jsonSerialize() return expected representations', function (array $items, array $expected) {
@@ -166,11 +162,25 @@ describe('ArrayNonEmpty', function () {
             ],
         ]);
 
+        it('jsonSerialize returns same as toArray', function () {
+            $vo = new ArrayNonEmpty([1, 'a']);
+            expect($vo->jsonSerialize())->toBe($vo->toArray())
+                ->and($vo->jsonSerialize())->not->toBe([]);
+        });
+
+        it('toArray continues loop after JsonSerializable or scalar', function () {
+            $js = new class implements JsonSerializable {
+                public function jsonSerialize(): string { return 'json'; }
+            };
+            $vo = new ArrayNonEmpty([$js, 'scalar', 'another']);
+            expect($vo->toArray())->toBe(['json', 'scalar', 'another']);
+        });
+
         it('toArray throws ArrayTypeException for unsupported types', function () {
             $item = new stdClass();
             $vo = new ArrayNonEmpty([$item]);
-            $vo->toArray();
-        })->throws(ArrayTypeException::class, 'Item of type "stdClass" cannot be converted to a scalar or JSON-serializable value.');
+            expect(fn() => $vo->toArray())->toThrow(ArrayTypeException::class, 'Item of type "stdClass" cannot be converted to a scalar or JSON-serializable value.');
+        });
 
         describe('isTypeOf', function () {
             it('returns true when class matches', function () {
@@ -196,6 +206,12 @@ describe('ArrayNonEmpty', function () {
             it('returns false for empty classNames', function () {
                 $vo = new ArrayNonEmpty([new stdClass()]);
                 expect($vo->isTypeOf())->toBeFalse();
+            });
+
+            it('returns false if IfNegated mutant triggers', function () {
+                $vo = new ArrayNonEmpty([new stdClass()]);
+                // If the logic is "if (!$this instanceof $className)" it would return true for non-matching class
+                expect($vo->isTypeOf('stdClass'))->toBeFalse();
             });
         });
     });

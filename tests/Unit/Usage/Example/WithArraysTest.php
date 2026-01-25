@@ -117,61 +117,96 @@ final readonly class WithArraysTest implements JsonSerializable
     }
 }
 
-it('builds from valid scalars and serializes to expected array', function (): void {
-    $obj = WithArraysTest::fromScalars(
-        id: 1,
-        firstName: 'Alice',
-        height: 170.0,
-        nickNames: ['User1', 'Admin5'],
-    );
+describe('WithArraysTest', function () {
+    describe('Creation', function () {
+        it('builds from valid scalars', function (int $id, ?string $firstName, float $height, array $nickNames, array $expectedNickNames) {
+            $obj = WithArraysTest::fromScalars(
+                id: $id,
+                firstName: $firstName,
+                height: $height,
+                nickNames: $nickNames,
+            );
 
-    expect($obj->getId()->toString())->toBe('1')
-        ->and($obj->getFirstName()->toString())->toBe('Alice')
-        ->and($obj->getHeight()->toString())->toBe('170.0');
+            expect($obj->getId()->value())->toBe($id)
+                ->and($obj->getFirstName()->value())->toBe($firstName)
+                ->and($obj->getHeight()->value())->toBe($height)
+                ->and($obj->getNickNames()->toArray())->toBe($expectedNickNames);
+        })->with([
+            'standard values' => [1, 'Alice', 170.0, ['User1', 'Admin5'], ['User1', 'Admin5']],
+            'another values' => [2, 'Bob', 10.0, ['n1', 'n2'], ['n1', 'n2']],
+        ]);
 
-    $nick = $obj->getNickNames();
-    expect($nick)->toBeInstanceOf(ArrayOfObjects::class)
-        ->and($nick->toArray())->toBe(['User1', 'Admin5']);
+        it('handles Undefined for empty firstName and null height (late fail on access)', function () {
+            $obj = WithArraysTest::fromScalars(id: 1, firstName: '', height: null);
 
-    expect($obj->jsonSerialize())->toBe([
-        'id' => '1',
-        'firstName' => 'Alice',
-        'height' => '170.0',
-        'nickNames' => ['User1', 'Admin5'],
-    ]);
-});
+            expect($obj->getFirstName())->toBeInstanceOf(Undefined::class)
+                ->and($obj->getHeight())->toBeInstanceOf(Undefined::class);
 
-it('handles Undefined for empty firstName and null height (late fail on access)', function (): void {
-    $obj = WithArraysTest::fromScalars(id: 1, firstName: '', height: null);
+            expect(fn() => $obj->getFirstName()->toString())->toThrow(UndefinedTypeException::class)
+                ->and(fn() => $obj->getHeight()->toString())->toThrow(UndefinedTypeException::class);
+        });
 
-    expect(fn() => $obj->getFirstName()->toString())
-        ->toThrow(UndefinedTypeException::class);
+        it('throws on invalid id (non-positive) early', function () {
+            expect(fn() => WithArraysTest::fromScalars(id: 0, firstName: 'X', height: 10.0))
+                ->toThrow(IntegerTypeException::class);
+        });
 
-    expect(fn() => $obj->getHeight()->toString())
-        ->toThrow(UndefinedTypeException::class);
+        it('handles invalid height when provided (becomes Undefined, late fail)', function () {
+            $obj = WithArraysTest::fromScalars(id: 1, firstName: 'X', height: -1.0);
+            expect($obj->getHeight())->toBeInstanceOf(Undefined::class);
+            expect(fn() => $obj->getHeight()->value())->toThrow(UndefinedTypeException::class);
+        });
 
-    // jsonSerialize also fails due to Undefineds
-    expect(fn() => $obj->jsonSerialize())
-        ->toThrow(UndefinedTypeException::class);
-});
+        it('throws on invalid nickName', function () {
+            expect(fn() => WithArraysTest::fromScalars(id: 1, firstName: 'Bob', height: 10.0, nickNames: ['']))
+                ->toThrow(StringTypeException::class);
+        });
+    });
 
-it('throws on invalid id (non-positive)', function (): void {
-    expect(fn() => WithArraysTest::fromScalars(id: 0, firstName: 'X', height: 10.0))
-        ->toThrow(IntegerTypeException::class);
-});
+    describe('Getters and State', function () {
+        it('exposes typed values through getters', function () {
+            $obj = WithArraysTest::fromScalars(id: 1, firstName: 'Alice', height: 170.5, nickNames: ['n1']);
 
-it('throws on invalid height when provided (non-positive)', function (): void {
-    expect(fn() => WithArraysTest::fromScalars(id: 1, firstName: 'X', height: -1.0)->getHeight()->value())
-        ->toThrow(UndefinedTypeException::class);
-});
+            expect($obj->getId())->toBeInstanceOf(IntegerPositive::class)
+                ->and($obj->getFirstName())->toBeInstanceOf(StringNonEmpty::class)
+                ->and($obj->getHeight())->toBeInstanceOf(FloatPositive::class)
+                ->and($obj->getNickNames())->toBeInstanceOf(ArrayOfObjects::class);
+        });
 
-it('transforms nickNames to ArrayOfObjects of non-empty strings', function (): void {
-    $obj = WithArraysTest::fromScalars(id: 1, firstName: 'Bob', height: 10.0, nickNames: ['n1', 'n2']);
-    $nn = $obj->getNickNames();
+        it('nickNames collection state', function () {
+            $obj = WithArraysTest::fromScalars(id: 1, firstName: 'Bob', height: 10.0, nickNames: ['n1', 'n2']);
+            $nn = $obj->getNickNames();
 
-    expect($nn)->toBeInstanceOf(ArrayOfObjects::class)
-        ->and($nn->toArray())->toBe(['n1', 'n2'])
-        ->and($nn->isEmpty())->toBeFalse()
-        ->and($nn->hasUndefined())->toBeFalse()
-        ->and($nn->isUndefined())->toBeFalse();
+            expect($nn->isEmpty())->toBeFalse()
+                ->and($nn->hasUndefined())->toBeFalse()
+                ->and($nn->isUndefined())->toBeFalse();
+        });
+    });
+
+    describe('Serialization', function () {
+        it('serializes to expected array when all fields are valid', function () {
+            $obj = WithArraysTest::fromScalars(
+                id: 1,
+                firstName: 'Alice',
+                height: 170.0,
+                nickNames: ['User1', 'Admin5'],
+            );
+
+            $expected = [
+                'id' => '1',
+                'firstName' => 'Alice',
+                'height' => '170.0',
+                'nickNames' => ['User1', 'Admin5'],
+            ];
+
+            expect($obj->jsonSerialize())->toBe($expected);
+        });
+
+        it('jsonSerialize fails if any field is Undefined', function () {
+            $obj = WithArraysTest::fromScalars(id: 1, firstName: '', height: null);
+
+            expect(fn() => $obj->jsonSerialize())
+                ->toThrow(UndefinedTypeException::class);
+        });
+    });
 });

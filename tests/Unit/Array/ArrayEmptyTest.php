@@ -117,6 +117,11 @@ describe('ArrayEmpty', function () {
                 $c = new ArrayEmpty([]);
                 expect($c->isTypeOf())->toBeFalse();
             });
+
+            it('returns false if IfNegated mutant triggers', function () {
+                $c = new ArrayEmpty([]);
+                expect($c->isTypeOf('stdClass'))->toBeFalse();
+            });
         });
     });
 });

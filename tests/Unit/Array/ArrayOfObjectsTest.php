@@ -76,6 +76,12 @@ describe('ArrayOfObjects', function () {
                 expect(fn() => new ArrayOfObjects(['string', 123, new stdClass()]))
                     ->toThrow(ArrayTypeException::class, 'Object instances');
             });
+
+            it('throws for empty array via ForeachEmptyIterable mutation', function () {
+                // If mutated to foreach ([] as $item), it would not throw
+                expect(fn() => new ArrayOfObjects(['not-an-object']))
+                    ->toThrow(ArrayTypeException::class);
+            });
         });
     });
 
@@ -158,7 +164,8 @@ describe('ArrayOfObjects', function () {
             $original = [new stdClass(), new Undefined(), Positive::fromFloat(2.0)];
             $array = new ArrayOfObjects($original);
 
-            expect($array->value())->toBe($original);
+            expect($array->value())->toBe($original)
+                ->and($array->value())->not->toBe([]);
         });
 
         it('toArray() and jsonSerialize() return array of scalars', function () {
@@ -178,7 +185,7 @@ describe('ArrayOfObjects', function () {
                 ->toThrow(ArrayTypeException::class, 'Conversion to array of Scalars failed, should implement JsonSerializable interface');
         });
 
-        it('jsonSerialize() calls toArray()', function () {
+        it('jsonSerialize() calls toArray() and does not return empty array if not empty', function () {
             $item = new class implements JsonSerializable {
                 public function jsonSerialize(): mixed
                 {
@@ -188,7 +195,8 @@ describe('ArrayOfObjects', function () {
             $array = new ArrayOfObjects([$item]);
 
             expect($array->jsonSerialize())->toBe($array->toArray())
-                ->and($array->jsonSerialize())->toBe(['serialized']);
+                ->and($array->jsonSerialize())->toBe(['serialized'])
+                ->and($array->jsonSerialize())->not->toBe([]);
         });
 
         it('isTypeOf() returns true when class matches', function () {
@@ -214,6 +222,11 @@ describe('ArrayOfObjects', function () {
         it('isTypeOf() returns false when none match', function () {
             $array = new ArrayOfObjects([new stdClass()]);
             expect($array->isTypeOf('NonExistentClass', 'AnotherClass'))->toBeFalse();
+        });
+
+        it('isTypeOf() returns false if IfNegated mutant triggers', function () {
+            $array = new ArrayOfObjects([new stdClass()]);
+            expect($array->isTypeOf('stdClass'))->toBeFalse();
         });
     });
 
