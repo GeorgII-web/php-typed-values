@@ -9,7 +9,7 @@
         findUnusedCode="false"
         ensureOverrideAttribute="false"
         errorBaseline="psalm-baseline.xml"
-        phpVersion="8.2"
+        phpVersion="8.4"
 >
     <projectFiles>
         <directory name="src" />

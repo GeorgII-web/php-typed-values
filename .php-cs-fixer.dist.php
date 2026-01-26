@@ -23,6 +23,7 @@ return $config->setUsingCache(true)
         '@Symfony' => true,
         '@Symfony:risky' => true,
         '@DoctrineAnnotation' => true,
+        'static_lambda' => false,
         'function_declaration' => ['closure_fn_spacing' => 'none'],
         'list_syntax' => ['syntax' => 'short'],
         'single_line_empty_body' => false,
