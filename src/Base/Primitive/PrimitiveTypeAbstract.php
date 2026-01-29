@@ -261,7 +261,14 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
             throw new DecimalTypeException(sprintf('String "%s" has no valid decimal value', $value));
         }
 
-        if (preg_match('/^-?\d+(?:\.\d+)?$/', $value) !== 1) {
+        $isDecimal = preg_match('/^-?(?:0|[1-9]\d*)\.\d+$/', $value) === 1;
+        $isInteger = preg_match('/^-?[1-9]\d+$/', $value) === 1;
+
+        if (!$isDecimal && !$isInteger) {
+            throw new DecimalTypeException(sprintf('String "%s" has no valid strict decimal value', $value));
+        }
+
+        if ($isDecimal && preg_match('/^-?(?:0|[1-9]\d*)\.(?:0|.*[1-9])$/', $value) !== 1) {
             throw new DecimalTypeException(sprintf('String "%s" has no valid strict decimal value', $value));
         }
 

@@ -9,20 +9,23 @@ use PhpTypedValues\Decimal\DecimalStandard;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
+use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 
+use function sprintf;
+
 describe('DecimalStandard', function () {
     it('accepts valid decimal strings and preserves value/toString', function (): void {
-        $a = new DecimalStandard('0');
-        $b = DecimalStandard::fromString('123');
-        $c = DecimalStandard::fromString('-5');
+        $a = new DecimalStandard('0.0');
+        $b = DecimalStandard::fromString('123.0');
+        $c = DecimalStandard::fromString('-5.0');
         $d = DecimalStandard::fromString('3.14');
 
-        expect($a->value())->toBe('0')
-            ->and($a->toString())->toBe('0')
-            ->and($b->value())->toBe('123')
-            ->and($c->value())->toBe('-5')
+        expect($a->value())->toBe('0.0')
+            ->and($a->toString())->toBe('0.0')
+            ->and($b->value())->toBe('123.0')
+            ->and($c->value())->toBe('-5.0')
             ->and($d->toString())->toBe('3.14');
     });
 
@@ -59,11 +62,11 @@ describe('DecimalStandard', function () {
             ->and(DecimalStandard::fromString('1.5')->toFloat())->toBe(1.5);
 
         expect(fn() => DecimalStandard::fromString('1.50')->toFloat())
-            ->toThrow(StringTypeException::class, 'String "1.50" has no valid strict float value')
+            ->toThrow(DecimalTypeException::class, 'String "1.50" has no valid strict decimal value')
             ->and(fn() => DecimalStandard::fromString('0')->toFloat())
-            ->toThrow(StringTypeException::class, 'String "0" has no valid strict float value')
+            ->toThrow(DecimalTypeException::class, 'String "0" has no valid strict decimal value')
             ->and(fn() => DecimalStandard::fromString('2.000')->toFloat())
-            ->toThrow(StringTypeException::class, 'String "2.000" has no valid strict float value');
+            ->toThrow(DecimalTypeException::class, 'String "2.000" has no valid strict decimal value');
     });
 
     it('jsonSerialize returns string', function (): void {
@@ -139,7 +142,7 @@ describe('DecimalStandard', function () {
     });
 
     it('isEmpty is always false for DecimalStandard', function (): void {
-        $d = new DecimalStandard('0');
+        $d = new DecimalStandard('0.0');
         expect($d->isEmpty())->toBeFalse()
             ->and($d->isEmpty())->not()->toBeTrue();
     });
@@ -162,6 +165,97 @@ describe('DecimalStandard', function () {
     it('tryFromBool, tryFromFloat, tryFromInt return DecimalStandard for valid inputs', function (): void {
         expect(DecimalStandard::tryFromFloat(1.2))->toBeInstanceOf(DecimalStandard::class)
             ->and(DecimalStandard::tryFromInt(123))->toBeInstanceOf(DecimalStandard::class);
+    });
+
+    it('can be used with bcmath functions', function (): void {
+        $a = DecimalStandard::fromString('1.23');
+        $b = DecimalStandard::fromString('2.34');
+
+        $sum = bcadd($a->value(), $b->value(), 2);
+        $diff = bcsub($b->value(), $a->value(), 2);
+        $mul = bcmul($a->value(), $b->value(), 4);
+        $div = bcdiv($b->value(), $a->value(), 10);
+
+        expect($sum)->toBe('3.57')
+            ->and($diff)->toBe('1.11')
+            ->and($mul)->toBe('2.8782')
+            ->and($div)->toBe('1.9024390243');
+    });
+
+    it('get round-trips decimal strings without changes', function (string $label, string $value): void {
+        $decimal = DecimalStandard::fromString($value);
+
+        expect($decimal->toString())
+            ->toBe($value, sprintf('Case "%s" failed for value "%s"', $label, $value));
+    })->with([
+        ['zero', '0.0'],
+        ['simple_decimal', '123.0'],
+        ['negative_int', '-123.0'],
+        ['int_with_dot_zero', '1.0'],
+        ['negative_int_with_dot_zero', '-1.0'],
+        ['simple_fraction', '1.5'],
+        ['negative_fraction', '-1.5'],
+        ['pi_like', '3.14'],
+        ['negative_pi_like', '-3.14'],
+        ['leading_zero_fraction', '10.01'],
+        ['negative_leading_zero_fraction', '-10.01'],
+        ['big_int', '999999999999999999'],
+        ['negative_big_int', '-999999999999999999'],
+        ['big_decimal', '12345678901234567890.123456789'],
+        ['negative_big_decimal', '-12345678901234567890.123456789'],
+    ]);
+
+    it('rejects invalid decimal strings', function (string $label, string $value): void {
+        try {
+            DecimalStandard::fromString($value);
+            $this->fail(sprintf('Case "%s" did not throw for value "%s"', $label, $value));
+        } catch (TypeException) {
+            expect(true)->toBeTrue();
+        }
+    })->with([
+        ['empty_string', ''],
+        ['space', ' '],
+        ['tab', "\t"],
+        ['dot_only', '.'],
+        ['zero', '0'],
+        ['leading_dot', '.5'],
+        ['integer', '1'],
+        ['minus_integer', '-1'],
+        ['trailing_dot', '1.'],
+        ['plus_sign', '+1'],
+        ['leading_zero_with_fraction', '01.230'],
+        ['double_zero', '00'],
+        ['leading_zeros', '0001'],
+        ['trailing_zeros_fractional', '1.2300'],
+        ['double_dot', '1..0'],
+        ['multiple_dots', '1.2.3'],
+        ['scientific_notation_lower', '1e2'],
+        ['scientific_notation_upper', '1E2'],
+        ['comma_decimal', '1,23'],
+        ['numeric_separators', '1_000'],
+        ['invalid_sign_placement', '1-1'],
+        ['non_numeric', 'abc'],
+        ['hex', '0x10'],
+    ]);
+
+    it('validates very large numbers compatible with bcmath', function (): void {
+        $large = '123456789012345678901234567890.123456789';
+        $decimal = DecimalStandard::fromString($large);
+
+        expect($decimal->value())->toBe($large);
+
+        $added = bcadd($decimal->value(), '1', 10);
+        expect($added)->toBe('123456789012345678901234567891.1234567890');
+    });
+
+    it('validates using bcmath internally', function (): void {
+        // Even if it passes regex, bcmath might have its own ideas (though our regex is stricter)
+        $v = DecimalStandard::fromString('123.456');
+        expect($v->value())->toBe('123.456');
+
+        // Test with a value that might pass regex but be problematic (if any exist)
+        // Currently our regex is very strict, so it's hard to find one.
+        // But if we ever relax the regex, bcmath check will be a safety net.
     });
 });
 
