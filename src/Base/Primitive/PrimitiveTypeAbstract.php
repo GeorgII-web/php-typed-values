@@ -36,7 +36,7 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
+abstract class PrimitiveTypeAbstract implements PrimitiveTypeInterface
 {
     /**
      * Returns true if the Object value is empty.
@@ -59,8 +59,9 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
      * Marked as mutation-free so Psalm treats calls as pure in immutable contexts.
      *
      * @psalm-pure
+     * @return mixed
      */
-    abstract public function jsonSerialize(): mixed;
+    abstract public function jsonSerialize();
 
     /**
      * @psalm-pure
@@ -171,7 +172,7 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
 
         // Trim trailing zeros but keep at least one decimal
         $strValue = rtrim($strValue, '0');
-        if (str_ends_with($strValue, '.')) {
+        if (substr_compare($strValue, '.', -strlen('.')) === 0) {
             $strValue .= '0';
         }
 
