@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Decimal;
 
+use const PHP_INT_MAX;
+
 use Exception;
 use PhpTypedValues\Decimal\DecimalStandard;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
@@ -108,7 +110,7 @@ describe('DecimalStandard', function () {
             ->and($fromArray)->toBeInstanceOf(Undefined::class)
             ->and($fromNull)->toBeInstanceOf(Undefined::class)
             ->and($fromInt)->toBeInstanceOf(DecimalStandard::class)
-            ->and($fromInt->value())->toBe('123')
+            ->and($fromInt->value())->toBe('123.0')
             ->and($fromObject)->toBeInstanceOf(Undefined::class);
     });
 
@@ -148,15 +150,17 @@ describe('DecimalStandard', function () {
     });
 
     it('covers conversions for DecimalStandard', function (): void {
-        expect(fn() => DecimalStandard::fromBool(true))->toThrow(DecimalTypeException::class)
+        expect(DecimalStandard::fromBool(true)->value())->toBe('1.0')
             ->and(fn() => DecimalStandard::fromBool(false))->toThrow(DecimalTypeException::class)
             ->and(DecimalStandard::fromInt(123)->value())->toBe('123')
-            ->and(DecimalStandard::fromFloat(1.2)->value())->toBe('1.19999999999999996');
+            ->and(DecimalStandard::fromFloat(1.2)->value())->toBe('1.19999999999999996')
+            ->and(DecimalStandard::fromDecimal('1.23')->value())->toBe('1.23');
 
         expect(fn() => DecimalStandard::fromString('true'))->toThrow(DecimalTypeException::class);
 
         $vInt = DecimalStandard::fromString('123');
         expect($vInt->toInt())->toBe(123)
+            ->and($vInt->toDecimal())->toBe('123')
             ->and(fn() => $vInt->toBool())->toThrow(IntegerTypeException::class);
 
         expect(fn() => DecimalStandard::fromString('1.2')->toFloat())->toThrow(StringTypeException::class);
@@ -165,6 +169,31 @@ describe('DecimalStandard', function () {
     it('tryFromBool, tryFromFloat, tryFromInt return DecimalStandard for valid inputs', function (): void {
         expect(DecimalStandard::tryFromFloat(1.2))->toBeInstanceOf(DecimalStandard::class)
             ->and(DecimalStandard::tryFromInt(123))->toBeInstanceOf(DecimalStandard::class);
+    });
+
+    it('cast float > decimal', function (): void {
+        expect(DecimalStandard::fromFloat(1.5)->toString())->toBe('1.5')
+            ->and(DecimalStandard::fromFloat(0.1)->toString())->toBe('0.10000000000000001')
+            ->and(DecimalStandard::fromFloat(1)->toString())->toBe('1.0')
+            ->and(DecimalStandard::fromFloat(-1)->toString())->toBe('-1.0');
+    });
+
+    it('cast decimal > decimal', function (): void {
+        expect(DecimalStandard::fromDecimal('1.0')->toString())->toBe('1.0')
+            ->and(DecimalStandard::fromDecimal('-1.0')->toString())->toBe('-1.0');
+    });
+
+    it('cast bool > decimal', function (): void {
+        expect(DecimalStandard::fromBool(true)->toString())->toBe('1.0')
+            ->and(DecimalStandard::fromBool(false)->toString())->toBe('0.0');
+    });
+
+    it('cast int > decimal', function (): void {
+        expect(DecimalStandard::fromInt(0)->toString())->toBe('0.0')
+            ->and(DecimalStandard::fromInt(99999999999999999)->toString())->toBe('99999999999999999.0')
+            ->and(DecimalStandard::fromInt(-1)->toString())->toBe('-1.0')
+            ->and(DecimalStandard::fromInt(PHP_INT_MAX)->toString())->toBe(PHP_INT_MAX . '.0')
+            ->and(DecimalStandard::fromInt(1)->toString())->toBe('1.0');
     });
 
     it('can be used with bcmath functions', function (): void {

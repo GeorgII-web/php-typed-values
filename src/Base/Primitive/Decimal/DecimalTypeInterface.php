@@ -23,6 +23,8 @@ interface DecimalTypeInterface
 {
     public static function fromBool(bool $value): static;
 
+    public static function fromDecimal(string $value): static;
+
     public static function fromFloat(float $value): static;
 
     public static function fromInt(int $value): static;
@@ -32,6 +34,8 @@ interface DecimalTypeInterface
     public function isTypeOf(string ...$classNames): bool;
 
     public function toBool(): bool;
+
+    public function toDecimal(): string;
 
     public function toFloat(): float;
 

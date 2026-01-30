@@ -61,7 +61,17 @@ readonly class DecimalStandard extends DecimalTypeAbstract
      */
     public static function fromBool(bool $value): static
     {
-        return new static(static::boolToString($value));
+        return new static(static::boolToDecimal($value));
+    }
+
+    /**
+     * @throws DecimalTypeException
+     *
+     * @psalm-pure
+     */
+    public static function fromDecimal(string $value): static
+    {
+        return new static($value);
     }
 
     /**
@@ -83,7 +93,7 @@ readonly class DecimalStandard extends DecimalTypeAbstract
      */
     public static function fromInt(int $value): static
     {
-        return new static(static::intToString($value));
+        return new static(static::intToDecimal($value));
     }
 
     /**
@@ -131,6 +141,14 @@ readonly class DecimalStandard extends DecimalTypeAbstract
     public function toBool(): bool
     {
         return static::stringToBool($this->value());
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    public function toDecimal(): string
+    {
+        return $this->value();
     }
 
     /**
