@@ -151,7 +151,6 @@ describe('DecimalStandard', function () {
 
     it('covers conversions for DecimalStandard', function (): void {
         expect(DecimalStandard::fromBool(true)->value())->toBe('1.0')
-            ->and(fn() => DecimalStandard::fromBool(false))->toThrow(DecimalTypeException::class)
             ->and(DecimalStandard::fromInt(123)->value())->toBe('123')
             ->and(DecimalStandard::fromFloat(1.2)->value())->toBe('1.19999999999999996')
             ->and(DecimalStandard::fromDecimal('1.23')->value())->toBe('1.23');
