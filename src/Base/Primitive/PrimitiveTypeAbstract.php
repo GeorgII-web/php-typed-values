@@ -226,7 +226,7 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
      */
     protected static function intToDecimal(int $value): string
     {
-        return ((string) $value) . '.0';
+        return $value . '.0';
     }
 
     /**
