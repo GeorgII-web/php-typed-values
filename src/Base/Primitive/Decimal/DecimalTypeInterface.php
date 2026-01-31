@@ -103,5 +103,17 @@ interface DecimalTypeInterface
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract;
 
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromDecimal(
+        string $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract;
+
     public function value(): string;
 }

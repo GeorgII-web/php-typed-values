@@ -108,6 +108,18 @@ abstract readonly class DecimalTypeAbstract extends PrimitiveTypeAbstract implem
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract;
 
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    abstract public static function tryFromDecimal(
+        string $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract;
+
     abstract public function value(): string;
 
     public function __toString(): string
