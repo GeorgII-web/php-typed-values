@@ -2,6 +2,7 @@
 
 **Every prompt setting**
 *   DO NOT RUN ANY TERMINAL COMMANDS!!! 
+*   DO NOT ASK ANY QUESTIONS, DO WHAT THE PROMPT SAYS.
 *   Try to fix existing test-files in the first place, in exceptional cases, fix src classes.
 *   Create classes names in test files with proper names (like `IntegerStandardTest`), bc CSFIXER changes it. 
 
