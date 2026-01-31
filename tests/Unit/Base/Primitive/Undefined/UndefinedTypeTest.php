@@ -27,6 +27,11 @@ readonly class UndefinedTypeAbstractMock extends UndefinedTypeAbstract
         return new static();
     }
 
+    public static function fromDecimal(string $value): static
+    {
+        return new static();
+    }
+
     public static function fromFloat(float $value): static
     {
         return new static();
@@ -72,6 +77,11 @@ readonly class UndefinedTypeAbstractMock extends UndefinedTypeAbstract
         throw new UndefinedTypeException('Mock');
     }
 
+    public function toDecimal(): string
+    {
+        throw new UndefinedTypeException('Mock');
+    }
+
     public function toFloat(): never
     {
         throw new UndefinedTypeException('Mock');
@@ -93,6 +103,11 @@ readonly class UndefinedTypeAbstractMock extends UndefinedTypeAbstract
     }
 
     public static function tryFromBool(bool $value, PrimitiveTypeAbstract $default = new Undefined()): static
+    {
+        return new static();
+    }
+
+    public static function tryFromDecimal(string $value, PrimitiveTypeAbstract $default = new Undefined()): static
     {
         return new static();
     }
@@ -143,6 +158,11 @@ readonly class UndefinedTypeSuccessMock extends UndefinedTypeAbstract
         return new static();
     }
 
+    public static function fromDecimal(string $value): static
+    {
+        return new static();
+    }
+
     public static function fromFloat(float $value): static
     {
         return new static();
@@ -188,6 +208,11 @@ readonly class UndefinedTypeSuccessMock extends UndefinedTypeAbstract
         throw new UndefinedTypeException('Mock');
     }
 
+    public function toDecimal(): string
+    {
+        throw new UndefinedTypeException('Mock');
+    }
+
     public function toFloat(): never
     {
         throw new UndefinedTypeException('Mock');
@@ -209,6 +234,11 @@ readonly class UndefinedTypeSuccessMock extends UndefinedTypeAbstract
     }
 
     public static function tryFromBool(bool $value, PrimitiveTypeAbstract $default = new Undefined()): static
+    {
+        return new static();
+    }
+
+    public static function tryFromDecimal(string $value, PrimitiveTypeAbstract $default = new Undefined()): static
     {
         return new static();
     }
