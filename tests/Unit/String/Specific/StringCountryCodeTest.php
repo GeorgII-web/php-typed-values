@@ -163,18 +163,21 @@ describe('StringCountryCode', function () {
         // These will throw because "true", "1.2", "123" are not valid country codes
         expect(fn() => StringCountryCode::fromBool(true))->toThrow(CountryCodeStringTypeException::class)
             ->and(fn() => StringCountryCode::fromFloat(1.2))->toThrow(CountryCodeStringTypeException::class)
-            ->and(fn() => StringCountryCode::fromInt(123))->toThrow(CountryCodeStringTypeException::class);
+            ->and(fn() => StringCountryCode::fromInt(123))->toThrow(CountryCodeStringTypeException::class)
+            ->and(fn() => StringCountryCode::fromDecimal('1.0'))->toThrow(CountryCodeStringTypeException::class);
 
         $v = StringCountryCode::fromString('US');
         expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
             ->and(fn() => $v->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-            ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class);
+            ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
+            ->and($v->toDecimal())->toBe('US');
     });
 
-    it('tryFromBool, tryFromFloat, tryFromInt return Undefined for StringCountryCode', function (): void {
+    it('tryFromBool, tryFromFloat, tryFromInt, tryFromDecimal return Undefined for StringCountryCode', function (): void {
         expect(StringCountryCode::tryFromBool(true))->toBeInstanceOf(Undefined::class)
             ->and(StringCountryCode::tryFromFloat(1.2))->toBeInstanceOf(Undefined::class)
-            ->and(StringCountryCode::tryFromInt(123))->toBeInstanceOf(Undefined::class);
+            ->and(StringCountryCode::tryFromInt(123))->toBeInstanceOf(Undefined::class)
+            ->and(StringCountryCode::tryFromDecimal('1.0'))->toBeInstanceOf(Undefined::class);
     });
 });
 
@@ -188,6 +191,11 @@ describe('StringCountryCode', function () {
 readonly class StringCountryCodeTest extends StringCountryCode
 {
     public static function fromBool(bool $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromDecimal(string $value): static
     {
         throw new Exception('test');
     }
@@ -212,6 +220,7 @@ describe('Throwing static', function () {
         expect(StringCountryCodeTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
             ->and(StringCountryCodeTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
             ->and(StringCountryCodeTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+            ->and(StringCountryCodeTest::tryFromDecimal('1.0'))->toBeInstanceOf(Undefined::class)
             ->and(StringCountryCodeTest::tryFromMixed('US'))->toBeInstanceOf(Undefined::class)
             ->and(StringCountryCodeTest::tryFromString('US'))->toBeInstanceOf(Undefined::class);
     });

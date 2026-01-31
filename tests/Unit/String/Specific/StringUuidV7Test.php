@@ -140,18 +140,21 @@ describe('StringUuidV7', function () {
             // Usually throw because 'true', '1.2', '123' are not valid UUIDs
             expect(fn() => StringUuidV7::fromBool(true))->toThrow(UuidStringTypeException::class)
                 ->and(fn() => StringUuidV7::fromFloat(1.2))->toThrow(UuidStringTypeException::class)
-                ->and(fn() => StringUuidV7::fromInt(123))->toThrow(UuidStringTypeException::class);
+                ->and(fn() => StringUuidV7::fromInt(123))->toThrow(UuidStringTypeException::class)
+                ->and(fn() => StringUuidV7::fromDecimal('1.0'))->toThrow(UuidStringTypeException::class);
 
             $v = StringUuidV7::fromString('01890f2a-5bcd-7def-8abc-1234567890ab');
             expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
                 ->and(fn() => $v->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-                ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class);
+                ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
+                ->and($v->toDecimal())->toBe('01890f2a-5bcd-7def-8abc-1234567890ab');
         });
 
-        it('tryFromBool, tryFromFloat, tryFromInt return Undefined for StringUuidV7', function (): void {
+        it('tryFromBool, tryFromFloat, tryFromInt, tryFromDecimal return Undefined for StringUuidV7', function (): void {
             expect(StringUuidV7::tryFromBool(true))->toBeInstanceOf(Undefined::class)
                 ->and(StringUuidV7::tryFromFloat(1.2))->toBeInstanceOf(Undefined::class)
-                ->and(StringUuidV7::tryFromInt(123))->toBeInstanceOf(Undefined::class);
+                ->and(StringUuidV7::tryFromInt(123))->toBeInstanceOf(Undefined::class)
+                ->and(StringUuidV7::tryFromDecimal('1.0'))->toBeInstanceOf(Undefined::class);
         });
     });
 });
@@ -165,7 +168,27 @@ describe('StringUuidV7', function () {
  */
 readonly class StringUuidV7Test extends StringUuidV7
 {
-    public function __construct(string $value)
+    public static function fromBool(bool $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromDecimal(string $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromFloat(float $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromInt(int $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromString(string $value): static
     {
         throw new Exception('test');
     }
@@ -176,6 +199,7 @@ describe('StringUuidV7Test (Throwing static)', function () {
         expect(StringUuidV7Test::tryFromBool(true))->toBeInstanceOf(Undefined::class)
             ->and(StringUuidV7Test::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
             ->and(StringUuidV7Test::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+            ->and(StringUuidV7Test::tryFromDecimal('1.0'))->toBeInstanceOf(Undefined::class)
             ->and(StringUuidV7Test::tryFromMixed('01890f2a-5bcd-7def-8abc-1234567890ab'))->toBeInstanceOf(Undefined::class)
             ->and(StringUuidV7Test::tryFromString('01890f2a-5bcd-7def-8abc-1234567890ab'))->toBeInstanceOf(Undefined::class);
     });

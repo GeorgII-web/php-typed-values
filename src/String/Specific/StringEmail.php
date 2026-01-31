@@ -9,8 +9,8 @@ use const FILTER_VALIDATE_EMAIL;
 use Exception;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
+use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
-use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\EmailStringTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
@@ -67,6 +67,14 @@ readonly class StringEmail extends StringTypeAbstract
     public static function fromBool(bool $value): static
     {
         return new static(static::boolToString($value));
+    }
+
+    /**
+     * @throws EmailStringTypeException
+     */
+    public static function fromDecimal(string $value): static
+    {
+        return new static(static::decimalToString($value));
     }
 
     /**
@@ -128,11 +136,19 @@ readonly class StringEmail extends StringTypeAbstract
     }
 
     /**
-     * @throws IntegerTypeException
+     * @throws StringTypeException
      */
     public function toBool(): bool
     {
         return static::stringToBool($this->value());
+    }
+
+    /**
+     * @throws DecimalTypeException
+     */
+    public function toDecimal(): string
+    {
+        return static::stringToDecimal($this->value());
     }
 
     /**

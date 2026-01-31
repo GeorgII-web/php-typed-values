@@ -10,8 +10,8 @@ use Exception;
 use JsonException;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
+use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
-use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\JsonStringTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
@@ -88,6 +88,14 @@ readonly class StringJson extends StringTypeAbstract
     }
 
     /**
+     * @throws JsonStringTypeException
+     */
+    public static function fromDecimal(string $value): static
+    {
+        return new static(static::decimalToString($value));
+    }
+
+    /**
      * @throws FloatTypeException
      * @throws JsonStringTypeException
      * @throws StringTypeException
@@ -157,11 +165,19 @@ readonly class StringJson extends StringTypeAbstract
     }
 
     /**
-     * @throws IntegerTypeException
+     * @throws StringTypeException
      */
     public function toBool(): bool
     {
         return static::stringToBool($this->value());
+    }
+
+    /**
+     * @throws DecimalTypeException
+     */
+    public function toDecimal(): string
+    {
+        return static::stringToDecimal($this->value());
     }
 
     /**

@@ -146,7 +146,8 @@ describe('StringVarChar255', function () {
         expect(StringVarChar255::fromBool(true)->value())->toBe('true')
             ->and(StringVarChar255::fromBool(false)->value())->toBe('false')
             ->and(StringVarChar255::fromInt(123)->value())->toBe('123')
-            ->and(StringVarChar255::fromFloat(1.2)->value())->toBe('1.19999999999999996');
+            ->and(StringVarChar255::fromFloat(1.2)->value())->toBe('1.19999999999999996')
+            ->and(StringVarChar255::fromDecimal('1.23')->value())->toBe('1.23');
 
         $vTrue = StringVarChar255::fromString('true');
         expect($vTrue->toBool())->toBeTrue();
@@ -155,13 +156,15 @@ describe('StringVarChar255', function () {
         expect($vInt->toInt())->toBe(123);
 
         $vFloat = StringVarChar255::fromString('1.19999999999999996');
-        expect($vFloat->toFloat())->toBe(1.2);
+        expect($vFloat->toFloat())->toBe(1.2)
+            ->and($vFloat->toDecimal())->toBe('1.19999999999999996');
     });
 
-    it('tryFromBool, tryFromFloat, tryFromInt return StringVarChar255 for valid inputs', function (): void {
+    it('tryFromBool, tryFromFloat, tryFromInt, tryFromDecimal return StringVarChar255 for valid inputs', function (): void {
         expect(StringVarChar255::tryFromBool(true))->toBeInstanceOf(StringVarChar255::class)
             ->and(StringVarChar255::tryFromFloat(1.19999999999999996))->toBeInstanceOf(StringVarChar255::class)
-            ->and(StringVarChar255::tryFromInt(123))->toBeInstanceOf(StringVarChar255::class);
+            ->and(StringVarChar255::tryFromInt(123))->toBeInstanceOf(StringVarChar255::class)
+            ->and(StringVarChar255::tryFromDecimal('1.23'))->toBeInstanceOf(StringVarChar255::class);
     });
 });
 
@@ -175,6 +178,11 @@ describe('StringVarChar255', function () {
 readonly class StringVarChar255Test extends StringVarChar255
 {
     public static function fromBool(bool $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromDecimal(string $value): static
     {
         throw new Exception('test');
     }
@@ -200,6 +208,7 @@ describe('Throwing static', function () {
         expect(StringVarChar255Test::tryFromBool(true))->toBeInstanceOf(Undefined::class)
             ->and(StringVarChar255Test::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
             ->and(StringVarChar255Test::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+            ->and(StringVarChar255Test::tryFromDecimal('1.0'))->toBeInstanceOf(Undefined::class)
             ->and(StringVarChar255Test::tryFromMixed('test'))->toBeInstanceOf(Undefined::class)
             ->and(StringVarChar255Test::tryFromString('test'))->toBeInstanceOf(Undefined::class);
     });

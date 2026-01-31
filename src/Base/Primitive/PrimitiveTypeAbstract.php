@@ -157,6 +157,14 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
 
     /**
      * @psalm-pure
+     */
+    protected static function decimalToString(string $value): string
+    {
+        return $value;
+    }
+
+    /**
+     * @psalm-pure
      *
      * @throws FloatTypeException
      */

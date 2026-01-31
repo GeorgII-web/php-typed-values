@@ -104,7 +104,8 @@ describe('StringNonBlank', function () {
         expect(StringNonBlank::fromBool(true)->value())->toBe('true')
             ->and(StringNonBlank::fromBool(false)->value())->toBe('false')
             ->and(StringNonBlank::fromInt(123)->value())->toBe('123')
-            ->and(StringNonBlank::fromFloat(1.2)->value())->toBe('1.19999999999999996');
+            ->and(StringNonBlank::fromFloat(1.2)->value())->toBe('1.19999999999999996')
+            ->and(StringNonBlank::fromDecimal('1.23')->value())->toBe('1.23');
 
         $vTrue = StringNonBlank::fromString('true');
         expect($vTrue->toBool())->toBeTrue();
@@ -113,13 +114,15 @@ describe('StringNonBlank', function () {
         expect($vInt->toInt())->toBe(123);
 
         $vFloat = StringNonBlank::fromString('1.19999999999999996');
-        expect($vFloat->toFloat())->toBe(1.2);
+        expect($vFloat->toFloat())->toBe(1.2)
+            ->and($vFloat->toDecimal())->toBe('1.19999999999999996');
     });
 
-    it('tryFromBool, tryFromFloat, tryFromInt return StringNonBlank for valid inputs', function (): void {
+    it('tryFromBool, tryFromFloat, tryFromInt, tryFromDecimal return StringNonBlank for valid inputs', function (): void {
         expect(StringNonBlank::tryFromBool(true))->toBeInstanceOf(StringNonBlank::class)
             ->and(StringNonBlank::tryFromFloat(1.19999999999999996))->toBeInstanceOf(StringNonBlank::class)
-            ->and(StringNonBlank::tryFromInt(123))->toBeInstanceOf(StringNonBlank::class);
+            ->and(StringNonBlank::tryFromInt(123))->toBeInstanceOf(StringNonBlank::class)
+            ->and(StringNonBlank::tryFromDecimal('1.23'))->toBeInstanceOf(StringNonBlank::class);
     });
 });
 
@@ -133,6 +136,11 @@ describe('StringNonBlank', function () {
 readonly class StringNonBlankTest extends StringNonBlank
 {
     public static function fromBool(bool $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromDecimal(string $value): static
     {
         throw new Exception('test');
     }
@@ -159,5 +167,17 @@ describe('Throwing static', function () {
 
     it('StringNonBlank::tryFromInt returns Undefined when fromInt throws (coverage)', function (): void {
         expect(StringNonBlankTest::tryFromInt(1))->toBeInstanceOf(Undefined::class);
+    });
+
+    it('StringNonBlank::tryFromDecimal returns Undefined when fromDecimal throws (coverage)', function (): void {
+        expect(StringNonBlankTest::tryFromDecimal('1.0'))->toBeInstanceOf(Undefined::class);
+    });
+
+    it('StringNonBlank::tryFromMixed returns Undefined when static method throws (coverage)', function (): void {
+        expect(StringNonBlankTest::tryFromMixed('test'))->toBeInstanceOf(Undefined::class);
+    });
+
+    it('StringNonBlank::tryFromString returns Undefined when fromString throws (coverage)', function (): void {
+        expect(StringNonBlankTest::tryFromString('test'))->toBeInstanceOf(Undefined::class);
     });
 });

@@ -109,18 +109,21 @@ describe('StringUrl', function () {
         // These usually throw because 'true', '1.0' are not valid URLs
         expect(fn() => StringUrl::fromBool(true))->toThrow(UrlStringTypeException::class)
             ->and(fn() => StringUrl::fromFloat(1.2))->toThrow(UrlStringTypeException::class)
-            ->and(fn() => StringUrl::fromInt(123))->toThrow(UrlStringTypeException::class);
+            ->and(fn() => StringUrl::fromInt(123))->toThrow(UrlStringTypeException::class)
+            ->and(fn() => StringUrl::fromDecimal('1.0'))->toThrow(UrlStringTypeException::class);
 
         $v = StringUrl::fromString('https://example.com');
         expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
             ->and(fn() => $v->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-            ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class);
+            ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
+            ->and($v->toDecimal())->toBe('https://example.com');
     });
 
-    it('tryFromBool, tryFromFloat, tryFromInt return Undefined for StringUrl', function (): void {
+    it('tryFromBool, tryFromFloat, tryFromInt, tryFromDecimal return Undefined for StringUrl', function (): void {
         expect(StringUrl::tryFromBool(true))->toBeInstanceOf(Undefined::class)
             ->and(StringUrl::tryFromFloat(1.2))->toBeInstanceOf(Undefined::class)
-            ->and(StringUrl::tryFromInt(123))->toBeInstanceOf(Undefined::class);
+            ->and(StringUrl::tryFromInt(123))->toBeInstanceOf(Undefined::class)
+            ->and(StringUrl::tryFromDecimal('1.0'))->toBeInstanceOf(Undefined::class);
     });
 });
 
@@ -133,7 +136,27 @@ describe('StringUrl', function () {
  */
 readonly class StringUrlTest extends StringUrl
 {
-    public function __construct(string $value)
+    public static function fromBool(bool $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromDecimal(string $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromFloat(float $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromInt(int $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromString(string $value): static
     {
         throw new Exception('test');
     }
@@ -144,6 +167,7 @@ describe('Throwing static', function () {
         expect(StringUrlTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
             ->and(StringUrlTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
             ->and(StringUrlTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+            ->and(StringUrlTest::tryFromDecimal('1.0'))->toBeInstanceOf(Undefined::class)
             ->and(StringUrlTest::tryFromMixed('https://example.com'))->toBeInstanceOf(Undefined::class)
             ->and(StringUrlTest::tryFromString('https://example.com'))->toBeInstanceOf(Undefined::class);
     });

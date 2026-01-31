@@ -9,8 +9,8 @@ use const FILTER_VALIDATE_URL;
 use Exception;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
+use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
-use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\String\UrlStringTypeException;
 use PhpTypedValues\Exception\TypeException;
@@ -64,6 +64,14 @@ readonly class StringUrl extends StringTypeAbstract
     public static function fromBool(bool $value): static
     {
         return new static(static::boolToString($value));
+    }
+
+    /**
+     * @throws UrlStringTypeException
+     */
+    public static function fromDecimal(string $value): static
+    {
+        return new static(static::decimalToString($value));
     }
 
     /**
@@ -125,11 +133,19 @@ readonly class StringUrl extends StringTypeAbstract
     }
 
     /**
-     * @throws IntegerTypeException
+     * @throws StringTypeException
      */
     public function toBool(): bool
     {
         return static::stringToBool($this->value());
+    }
+
+    /**
+     * @throws DecimalTypeException
+     */
+    public function toDecimal(): string
+    {
+        return static::stringToDecimal($this->value());
     }
 
     /**

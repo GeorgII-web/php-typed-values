@@ -34,6 +34,7 @@ composer require georgii-web/php-typed-values:^1
 - Immutable and self‑documenting values
 - Safer constructors for your DTOs/VOs/Entities
 - Great fit for static analysis
+- Safe type conversion, no silent errors
 
 ### Quick start
 

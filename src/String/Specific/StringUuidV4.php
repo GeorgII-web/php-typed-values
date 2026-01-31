@@ -7,8 +7,8 @@ namespace PhpTypedValues\String\Specific;
 use Exception;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
+use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
-use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\String\UuidStringTypeException;
 use PhpTypedValues\Exception\TypeException;
@@ -76,6 +76,14 @@ readonly class StringUuidV4 extends StringTypeAbstract
     }
 
     /**
+     * @throws UuidStringTypeException
+     */
+    public static function fromDecimal(string $value): static
+    {
+        return new static(static::decimalToString($value));
+    }
+
+    /**
      * @throws FloatTypeException
      * @throws UuidStringTypeException
      * @throws StringTypeException
@@ -134,11 +142,19 @@ readonly class StringUuidV4 extends StringTypeAbstract
     }
 
     /**
-     * @throws IntegerTypeException
+     * @throws StringTypeException
      */
     public function toBool(): bool
     {
         return static::stringToBool($this->value());
+    }
+
+    /**
+     * @throws DecimalTypeException
+     */
+    public function toDecimal(): string
+    {
+        return static::stringToDecimal($this->value());
     }
 
     /**

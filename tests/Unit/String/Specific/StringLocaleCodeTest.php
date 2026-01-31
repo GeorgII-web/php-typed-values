@@ -81,7 +81,8 @@ describe('StringLocaleCode', function () {
 
         expect(fn() => StringLocaleCode::fromBool(true))->toThrow(LocaleStringTypeException::class)
             ->and(fn() => StringLocaleCode::fromFloat(1.0))->toThrow(LocaleStringTypeException::class)
-            ->and(fn() => StringLocaleCode::fromInt(123))->toThrow(LocaleStringTypeException::class);
+            ->and(fn() => StringLocaleCode::fromInt(123))->toThrow(LocaleStringTypeException::class)
+            ->and(fn() => StringLocaleCode::fromDecimal('1.0'))->toThrow(LocaleStringTypeException::class);
     });
 
     it('conversions to other types', function (): void {
@@ -89,13 +90,15 @@ describe('StringLocaleCode', function () {
         // 'en_US' is not a valid bool, float, or int string.
         expect(fn() => $l->toBool())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
             ->and(fn() => $l->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-            ->and(fn() => $l->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class);
+            ->and(fn() => $l->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
+            ->and($l->toDecimal())->toBe('en_US');
     });
 
-    it('tryFromBool, tryFromFloat, tryFromInt return Undefined', function (): void {
+    it('tryFromBool, tryFromFloat, tryFromInt, tryFromDecimal return Undefined', function (): void {
         expect(StringLocaleCode::tryFromBool(true))->toBeInstanceOf(Undefined::class)
             ->and(StringLocaleCode::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
-            ->and(StringLocaleCode::tryFromInt(1))->toBeInstanceOf(Undefined::class);
+            ->and(StringLocaleCode::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+            ->and(StringLocaleCode::tryFromDecimal('1.0'))->toBeInstanceOf(Undefined::class);
     });
 
     it('tryFromMixed handles various inputs', function (): void {
@@ -130,7 +133,27 @@ describe('StringLocaleCode', function () {
  */
 readonly class StringLocaleCodeTest extends StringLocaleCode
 {
-    public function __construct(string $value)
+    public static function fromBool(bool $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromDecimal(string $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromFloat(float $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromInt(int $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromString(string $value): static
     {
         throw new Exception('test');
     }
@@ -144,6 +167,7 @@ describe('Throwing static', function () {
         expect(StringLocaleCodeTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
             ->and(StringLocaleCodeTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
             ->and(StringLocaleCodeTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+            ->and(StringLocaleCodeTest::tryFromDecimal('1.0'))->toBeInstanceOf(Undefined::class)
             ->and(StringLocaleCodeTest::tryFromMixed('en_US'))->toBeInstanceOf(Undefined::class)
             ->and(StringLocaleCodeTest::tryFromString('en_US'))->toBeInstanceOf(Undefined::class);
     });
