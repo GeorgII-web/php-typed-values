@@ -17,15 +17,23 @@ describe('UndefinedStandard', function () {
             expect($u)->toBeInstanceOf(UndefinedStandard::class);
         });
 
+        it('creates instance via fromDecimal factory', function (): void {
+            $u = UndefinedStandard::fromDecimal('1.23');
+            expect($u)->toBeInstanceOf(UndefinedStandard::class);
+        });
+
         it('tryFromMixed always returns itself', function (): void {
             $fromString = UndefinedStandard::tryFromMixed('hello');
             $fromInt = UndefinedStandard::tryFromMixed(123);
+            $fromDecimal = UndefinedStandard::tryFromDecimal('1.23');
             $fromArray = UndefinedStandard::tryFromMixed([]);
             $fromNull = UndefinedStandard::tryFromMixed(null);
 
             expect($fromString)
                 ->toBeInstanceOf(UndefinedStandard::class)
                 ->and($fromInt)
+                ->toBeInstanceOf(UndefinedStandard::class)
+                ->and($fromDecimal)
                 ->toBeInstanceOf(UndefinedStandard::class)
                 ->and($fromArray)
                 ->toBeInstanceOf(UndefinedStandard::class)
@@ -44,6 +52,7 @@ describe('UndefinedStandard', function () {
         })->with([
             'tryFromString' => ['tryFromString', 'hello'],
             'tryFromInt' => ['tryFromInt', 123],
+            'tryFromDecimal' => ['tryFromDecimal', '1.23'],
             'tryFromArray' => ['tryFromArray', []],
             'tryFromFloat' => ['tryFromFloat', 1.1],
             'tryFromBool' => ['tryFromBool', true],
@@ -63,6 +72,7 @@ describe('UndefinedStandard', function () {
 
             $message = match ($method) {
                 'toString', '__toString' => 'UndefinedType cannot be converted to string.',
+                'toDecimal' => 'UndefinedType cannot be converted to string.',
                 'toInt' => 'UndefinedType cannot be converted to integer.',
                 'toFloat' => 'UndefinedType cannot be converted to float.',
                 'toArray' => 'UndefinedType cannot be converted to array.',
@@ -74,6 +84,7 @@ describe('UndefinedStandard', function () {
             $expect->toThrow(UndefinedTypeException::class, $message);
         })->with([
             'toString',
+            'toDecimal',
             'toInt',
             'toFloat',
             'toArray',
