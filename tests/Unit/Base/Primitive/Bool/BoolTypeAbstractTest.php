@@ -27,6 +27,11 @@ readonly class BoolTypeAbstractTest extends BoolTypeAbstract
         return new static($value);
     }
 
+    public static function fromDecimal(string $value): static
+    {
+        return new static(static::decimalToBool($value));
+    }
+
     public static function fromFloat(float $value): static
     {
         return new static(static::floatToBool($value));
@@ -71,6 +76,11 @@ readonly class BoolTypeAbstractTest extends BoolTypeAbstract
     public function toBool(): bool
     {
         return $this->val;
+    }
+
+    public function toDecimal(): string
+    {
+        return static::boolToDecimal($this->val);
     }
 
     public function toFloat(): float

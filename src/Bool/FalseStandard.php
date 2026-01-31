@@ -8,6 +8,7 @@ use Exception;
 use PhpTypedValues\Base\Primitive\Bool\BoolTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\Bool\BoolTypeException;
+use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\TypeException;
@@ -59,6 +60,17 @@ readonly class FalseStandard extends BoolTypeAbstract
     public static function fromBool(bool $value): static
     {
         return new static($value);
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @throws DecimalTypeException
+     * @throws BoolTypeException
+     */
+    public static function fromDecimal(string $value): static
+    {
+        return new static(static::decimalToBool($value));
     }
 
     /**
@@ -123,6 +135,14 @@ readonly class FalseStandard extends BoolTypeAbstract
     public function toBool(): bool
     {
         return $this->value();
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    public function toDecimal(): string
+    {
+        return static::boolToDecimal($this->value());
     }
 
     public function toFloat(): float

@@ -140,6 +140,24 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
     /**
      * @psalm-pure
      *
+     * @throws DecimalTypeException
+     */
+    protected static function decimalToBool(string $value): bool
+    {
+        if ($value === '1.0') {
+            return true;
+        }
+
+        if ($value === '0.0') {
+            return false;
+        }
+
+        throw new DecimalTypeException(sprintf('Decimal "%s" has no valid strict bool value', $value));
+    }
+
+    /**
+     * @psalm-pure
+     *
      * @throws FloatTypeException
      */
     protected static function floatToBool(float $value): bool
@@ -259,7 +277,7 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
     /**
      * @psalm-pure
      *
-     * @throws IntegerTypeException
+     * @throws StringTypeException
      */
     protected static function stringToBool(string $value): bool
     {
@@ -271,7 +289,7 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
             return false;
         }
 
-        throw new IntegerTypeException(sprintf('Integer "%s" has no valid strict bool value', $value));
+        throw new StringTypeException(sprintf('String "%s" has no valid strict bool value', $value));
     }
 
     /**

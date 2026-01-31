@@ -28,6 +28,8 @@ abstract readonly class BoolTypeAbstract extends PrimitiveTypeAbstract implement
 {
     abstract public static function fromBool(bool $value): static;
 
+    abstract public static function fromDecimal(string $value): static;
+
     abstract public static function fromFloat(float $value): static;
 
     abstract public static function fromInt(int $value): static;
@@ -37,6 +39,8 @@ abstract readonly class BoolTypeAbstract extends PrimitiveTypeAbstract implement
     abstract public function isTypeOf(string ...$classNames): bool;
 
     abstract public function toBool(): bool;
+
+    abstract public function toDecimal(): string;
 
     abstract public function toFloat(): float;
 
