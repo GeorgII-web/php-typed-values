@@ -67,6 +67,18 @@ abstract readonly class StringTypeAbstract extends PrimitiveTypeAbstract impleme
      *
      * @return static|T
      */
+    abstract public static function tryFromDecimal(
+        string $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract;
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
     abstract public static function tryFromFloat(
         float $value,
         PrimitiveTypeAbstract $default = new Undefined(),

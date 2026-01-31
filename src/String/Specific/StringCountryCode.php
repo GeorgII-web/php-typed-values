@@ -72,6 +72,8 @@ readonly class StringCountryCode extends StringTypeAbstract
 
     /**
      * @throws CountryCodeStringTypeException
+     *
+     * @psalm-pure
      */
     public static function fromDecimal(string $value): static
     {
@@ -193,6 +195,28 @@ readonly class StringCountryCode extends StringTypeAbstract
         try {
             /** @var static */
             return static::fromBool($value);
+        } catch (Exception) {
+            /** @var T */
+            return $default;
+        }
+    }
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     *
+     * @psalm-pure
+     */
+    public static function tryFromDecimal(
+        string $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
+        try {
+            /** @var static */
+            return static::fromDecimal($value);
         } catch (Exception) {
             /** @var T */
             return $default;

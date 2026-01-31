@@ -154,6 +154,11 @@ readonly class StringNonBlankTest extends StringNonBlank
     {
         throw new Exception('test');
     }
+
+    public static function fromString(string $value): static
+    {
+        throw new Exception('test');
+    }
 }
 
 describe('Throwing static', function () {

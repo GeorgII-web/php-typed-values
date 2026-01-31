@@ -234,6 +234,11 @@ describe('StringStandard', function () {
  */
 readonly class StringStandardTest extends StringStandard
 {
+    public static function fromDecimal(string $value): static
+    {
+        throw new Exception('Simulated error');
+    }
+
     /** @psalm-suppress LessSpecificReturnType */
     public static function fromString(string $value): static
     {
@@ -244,6 +249,11 @@ readonly class StringStandardTest extends StringStandard
 describe('StringStandardTest (Throwing static)', function () {
     it('StringStandard::tryFromString returns Undefined when fromString throws', function (): void {
         $result = StringStandardTest::tryFromString('fail');
+        expect($result)->toBeInstanceOf(Undefined::class);
+    });
+
+    it('StringStandard::tryFromDecimal returns Undefined when fromDecimal throws (StringStandardTest)', function (): void {
+        $result = StringStandardTest::tryFromDecimal('fail');
         expect($result)->toBeInstanceOf(Undefined::class);
     });
 });
