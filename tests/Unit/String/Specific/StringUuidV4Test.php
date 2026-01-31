@@ -147,7 +147,7 @@ describe('StringUuidV4', function () {
             expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
                 ->and(fn() => $v->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
                 ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-                ->and($v->toDecimal())->toBe('550e8400-e29b-41d4-a716-446655440000');
+                ->and(fn() => $v->toDecimal())->toThrow(PhpTypedValues\Exception\Decimal\DecimalTypeException::class);
         });
 
         it('tryFromBool, tryFromFloat, tryFromInt, tryFromDecimal return Undefined for StringUuidV4', function (): void {

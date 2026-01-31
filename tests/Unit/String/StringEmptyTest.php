@@ -124,7 +124,7 @@ describe('StringEmpty', function () {
         expect(fn() => $v->toBool())->toThrow(StringTypeException::class)
             ->and(fn() => $v->toFloat())->toThrow(StringTypeException::class)
             ->and(fn() => $v->toInt())->toThrow(StringTypeException::class)
-            ->and($v->toDecimal())->toBe('');
+            ->and(fn() => $v->toDecimal())->toThrow(PhpTypedValues\Exception\Decimal\DecimalTypeException::class);
     });
 });
 

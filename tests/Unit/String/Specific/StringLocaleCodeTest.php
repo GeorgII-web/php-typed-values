@@ -91,7 +91,7 @@ describe('StringLocaleCode', function () {
         expect(fn() => $l->toBool())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
             ->and(fn() => $l->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
             ->and(fn() => $l->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-            ->and($l->toDecimal())->toBe('en_US');
+            ->and(fn() => $l->toDecimal())->toThrow(PhpTypedValues\Exception\Decimal\DecimalTypeException::class);
     });
 
     it('tryFromBool, tryFromFloat, tryFromInt, tryFromDecimal return Undefined', function (): void {
