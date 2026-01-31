@@ -76,6 +76,14 @@ describe('BoolStandard - Instantiation and Core Methods', function (): void {
         [true, 1.0],
         [false, 0.0],
     ]);
+
+    it('toDecimal returns decimal representation', function (bool $value, string $expectedDecimal): void {
+        $bool = new BoolStandard($value);
+        expect($bool->toDecimal())->toBe($expectedDecimal);
+    })->with([
+        [true, '1.0'],
+        [false, '0.0'],
+    ]);
 });
 
 describe('BoolStandard - from* Factory Methods', function (): void {
@@ -90,6 +98,14 @@ describe('BoolStandard - from* Factory Methods', function (): void {
     })->with([
         [1, true],
         [0, false],
+    ]);
+
+    it('fromDecimal creates instance from valid decimals', function (string $input, bool $expected): void {
+        $bool = BoolStandard::fromDecimal($input);
+        expect($bool->value())->toBe($expected);
+    })->with([
+        ['1.0', true],
+        ['0.0', false],
     ]);
 
     it('fromInt throws IntegerTypeException for invalid integers', function (int $invalidValue): void {

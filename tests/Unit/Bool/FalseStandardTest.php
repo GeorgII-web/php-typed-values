@@ -56,6 +56,13 @@ describe('FalseStandard', function () {
             ->toThrow(BoolTypeException::class, 'Expected "false" literal, got "true"');
     });
 
+    it('fromDecimal accepts only "0.0"', function (): void {
+        expect(FalseStandard::fromDecimal('0.0')->value())->toBeFalse();
+
+        expect(fn() => FalseStandard::fromDecimal('1.0'))
+            ->toThrow(BoolTypeException::class, 'Expected "false" literal, got "true"');
+    });
+
     it('tryFromString/tryFromInt return Undefined for non-false inputs', function (): void {
         // Only 'false' string is accepted, not 'n'
         $ok = FalseStandard::tryFromString('false');
@@ -190,6 +197,10 @@ describe('FalseStandard', function () {
 
     it('toInt returns 0', function (): void {
         expect(FalseStandard::fromBool(false)->toInt())->toBe(0);
+    });
+
+    it('toDecimal returns "0.0"', function (): void {
+        expect(FalseStandard::fromBool(false)->toDecimal())->toBe('0.0');
     });
 
     it('toFloat returns 0.0', function (): void {

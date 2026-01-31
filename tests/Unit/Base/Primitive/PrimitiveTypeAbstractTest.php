@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\DateTime\ZoneDateTimeTypeException;
+use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
+use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -23,6 +25,16 @@ readonly class PrimitiveTypeAbstractTest extends PrimitiveTypeAbstract
     {
     }
 
+    public static function callDecimalToBool(string $value): bool
+    {
+        return self::decimalToBool($value);
+    }
+
+    public static function callFloatToBool(float $value): bool
+    {
+        return self::floatToBool($value);
+    }
+
     public static function callFloatToString(float $value, ?bool $roundTripConversion = null): string
     {
         if ($roundTripConversion === true) {
@@ -34,6 +46,11 @@ readonly class PrimitiveTypeAbstractTest extends PrimitiveTypeAbstract
         }
 
         return self::floatToString($value);
+    }
+
+    public static function callIntToBool(int $value): bool
+    {
+        return self::intToBool($value);
     }
 
     public static function callIntToFloat(int $value): float
@@ -328,6 +345,45 @@ describe('Concrete PrimitiveType implementation', function () {
         expect((string) $primitive)->toBe('magic string')
             ->and($primitive->__toString())->toBe('magic string');
     });
+
+    it('decimalToBool works correctly', function (string $value, bool|string $expected) {
+        if (\is_string($expected)) {
+            expect(fn() => PrimitiveTypeAbstractTest::callDecimalToBool($value))
+                ->toThrow(DecimalTypeException::class, $expected);
+        } else {
+            expect(PrimitiveTypeAbstractTest::callDecimalToBool($value))->toBe($expected);
+        }
+    })->with([
+        ['1.0', true],
+        ['0.0', false],
+        ['2.0', 'Decimal "2.0" has no valid strict bool value'],
+    ]);
+
+    it('floatToBool works correctly', function (float $value, bool|string $expected) {
+        if (\is_string($expected)) {
+            expect(fn() => PrimitiveTypeAbstractTest::callFloatToBool($value))
+                ->toThrow(FloatTypeException::class, $expected);
+        } else {
+            expect(PrimitiveTypeAbstractTest::callFloatToBool($value))->toBe($expected);
+        }
+    })->with([
+        [1.0, true],
+        [0.0, false],
+        [0.5, 'Float "0.5" has no valid strict bool value'],
+    ]);
+
+    it('intToBool works correctly', function (int $value, bool|string $expected) {
+        if (\is_string($expected)) {
+            expect(fn() => PrimitiveTypeAbstractTest::callIntToBool($value))
+                ->toThrow(IntegerTypeException::class, $expected);
+        } else {
+            expect(PrimitiveTypeAbstractTest::callIntToBool($value))->toBe($expected);
+        }
+    })->with([
+        [1, true],
+        [0, false],
+        [2, 'Integer "2" has no valid strict bool value'],
+    ]);
 
     it('jsonSerialize returns value for JSON encoding', function () {
         $data = ['key' => 'value'];

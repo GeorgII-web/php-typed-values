@@ -5,6 +5,15 @@
 *   Try to fix existing test-files in the first place, in exceptional cases, fix src classes.
 *   Create classes names in test files with proper names (like `IntegerStandardTest`), bc CSFIXER changes it. 
 
+**"Fix test" or "Cover with tests" prompt**
+* DO NOT RUN ANY TERMINAL COMMANDS!!!
+* FIX ONLY TEST FILES, DO NOT CREATE NEW TEST FILES.
+* **Tests style** Use PEST syntax, wrap all tests in describe(), use it() and with() for datasets.
+* Try to find a proper describe() group for a new test.
+* If a class is created in a test – choose a name "ClassName" + Test, bc CSFixer will rename it.
+* Choose short but meaningful names for test\describe methods, must be unique in a file.
+* Avoid duplicate test cases or same data in a single test.
+
 **Tech-Stack & Style**
 *   **Core:** PHP 8.4 with `declare(strict_types=1);`.
 *   **Standards:** Follow PSR-12. Use clean, meaningful naming conventions.

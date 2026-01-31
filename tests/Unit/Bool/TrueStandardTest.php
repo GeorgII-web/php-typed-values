@@ -56,6 +56,13 @@ describe('TrueStandard', function () {
             ->toThrow(BoolTypeException::class, 'Expected "true" literal, got "false"');
     });
 
+    it('fromDecimal accepts only "1.0"', function (): void {
+        expect(TrueStandard::fromDecimal('1.0')->value())->toBeTrue();
+
+        expect(fn() => TrueStandard::fromDecimal('0.0'))
+            ->toThrow(BoolTypeException::class, 'Expected "true" literal, got "false"');
+    });
+
     it('tryFromString/tryFromInt return Undefined for non-true inputs', function (): void {
         // Only 'true' string is accepted, not 'y'
         $ok = TrueStandard::tryFromString('true');
@@ -190,6 +197,10 @@ describe('TrueStandard', function () {
 
     it('toInt returns 1', function (): void {
         expect(TrueStandard::fromBool(true)->toInt())->toBe(1);
+    });
+
+    it('toDecimal returns "1.0"', function (): void {
+        expect(TrueStandard::fromBool(true)->toDecimal())->toBe('1.0');
     });
 
     it('toFloat returns 1.0', function (): void {
