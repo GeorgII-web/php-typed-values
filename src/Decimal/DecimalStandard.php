@@ -207,6 +207,28 @@ readonly class DecimalStandard extends DecimalTypeAbstract
      *
      * @psalm-pure
      */
+    public static function tryFromDecimal(
+        string $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
+        try {
+            /** @var static */
+            return static::fromString($value);
+        } catch (Exception) {
+            /** @var T */
+            return $default;
+        }
+    }
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     *
+     * @psalm-pure
+     */
     public static function tryFromFloat(
         float $value,
         PrimitiveTypeAbstract $default = new Undefined(),
@@ -300,27 +322,5 @@ readonly class DecimalStandard extends DecimalTypeAbstract
     public function value(): string
     {
         return $this->value;
-    }
-
-    /**
-     * @template T of PrimitiveTypeAbstract
-     *
-     * @param T $default
-     *
-     * @return static|T
-     *
-     * @psalm-pure
-     */
-    public static function tryFromDecimal(
-        string $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
-        try {
-            /** @var static */
-            return static::fromString($value);
-        } catch (Exception) {
-            /** @var T */
-            return $default;
-        }
     }
 }
