@@ -157,6 +157,21 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
 
     /**
      * @psalm-pure
+     *
+     * @throws DecimalTypeException
+     */
+    protected static function decimalToInt(string $value): int
+    {
+        $intValue = (int) $value;
+        if ($value !== (string) $intValue) {
+            throw new DecimalTypeException(sprintf('Decimal "%s" has no valid strict int value', $value));
+        }
+
+        return $intValue;
+    }
+
+    /**
+     * @psalm-pure
      */
     protected static function decimalToString(string $value): string
     {

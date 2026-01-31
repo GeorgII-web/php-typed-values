@@ -7,6 +7,7 @@ namespace PhpTypedValues\Integer;
 use Exception;
 use PhpTypedValues\Base\Primitive\Integer\IntegerTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
+use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
@@ -52,13 +53,13 @@ readonly class IntegerStandard extends IntegerTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws DecimalTypeException
      *
      * @psalm-pure
      */
     public static function fromDecimal(string $value): static
     {
-        return new static(static::stringToInt($value));
+        return new static(static::decimalToInt($value));
     }
 
     /**
