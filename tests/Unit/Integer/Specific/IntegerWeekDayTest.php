@@ -101,6 +101,27 @@ describe('IntegerWeekDay', function (): void {
         });
     });
 
+    describe('fromDecimal factory', function (): void {
+        it('creates instance from valid decimal strings 1-7', function (string $value, int $expected): void {
+            $weekday = IntegerWeekDay::fromDecimal($value);
+            expect($weekday->value())->toBe($expected);
+        })->with([
+            ['1.0', 1],
+            ['7.0', 7],
+            ['3.0', 3],
+        ]);
+
+        it('throws for decimal values outside 1-7', function (string $invalidValue): void {
+            expect(fn() => IntegerWeekDay::fromDecimal($invalidValue))
+                ->toThrow(IntegerTypeException::class, 'Expected value between 1-7');
+        })->with(['0.0', '8.0', '-1.0', '1.1', '7.1']);
+
+        it('throws for invalid decimal strings', function (string $invalidValue): void {
+            expect(fn() => IntegerWeekDay::fromDecimal($invalidValue))
+                ->toThrow(StringTypeException::class);
+        })->with(['5', 'abc', '']);
+    });
+
     describe('fromLabel factory', function (): void {
         it('creates instance from valid weekday labels', function (string $label, int $expectedValue): void {
             $weekday = IntegerWeekDay::fromLabel($label);
@@ -205,6 +226,23 @@ describe('IntegerWeekDay', function (): void {
         })->with([0.0, 8.0, 3.14, -1.0]);
     });
 
+    describe('tryFromDecimal method', function (): void {
+        it('returns IntegerWeekDay from decimal string with exact integer value 1-7', function (string $value, int $expected): void {
+            $result = IntegerWeekDay::tryFromDecimal($value);
+            expect($result)->toBeInstanceOf(IntegerWeekDay::class)
+                ->and($result->value())->toBe($expected);
+        })->with([
+            ['1.0', 1],
+            ['7.0', 7],
+            ['3.0', 3],
+        ]);
+
+        it('returns Undefined for invalid decimal strings', function (string $invalidValue): void {
+            $result = IntegerWeekDay::tryFromDecimal($invalidValue);
+            expect($result)->toBeInstanceOf(Undefined::class);
+        })->with(['0.0', '8.0', '-1.0', '1.1', '7.1', '5', 'abc']);
+    });
+
     describe('tryFromMixed method', function (): void {
         it('returns IntegerWeekDay for valid integer inputs 1-7', function (mixed $value, int $expected): void {
             $result = IntegerWeekDay::tryFromMixed($value);
@@ -272,6 +310,15 @@ describe('IntegerWeekDay', function (): void {
             $weekday = new IntegerWeekDay($value);
             expect($weekday->toBool())->toBeTrue();
         })->with([1, 2, 3, 4, 5, 6, 7]);
+
+        it('toDecimal returns decimal string representation', function (int $value, string $expected): void {
+            $weekday = new IntegerWeekDay($value);
+            expect($weekday->toDecimal())->toBe($expected);
+        })->with([
+            [1, '1.0'],
+            [7, '7.0'],
+            [3, '3.0'],
+        ]);
 
         it('toLabel returns correct weekday name', function (int $value, string $expectedLabel): void {
             $weekday = new IntegerWeekDay($value);
