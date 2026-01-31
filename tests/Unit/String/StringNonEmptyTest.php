@@ -162,6 +162,11 @@ readonly class StringNonEmptyTest extends StringNonEmpty
     {
         throw new Exception('test');
     }
+
+    public static function fromString(string $value): static
+    {
+        throw new Exception('test');
+    }
 }
 
 describe('StringNonEmptyTest (Throwing static)', function () {
