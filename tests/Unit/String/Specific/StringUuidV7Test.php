@@ -143,7 +143,7 @@ describe('StringUuidV7', function () {
                 ->and(fn() => StringUuidV7::fromInt(123))->toThrow(UuidStringTypeException::class);
 
             $v = StringUuidV7::fromString('01890f2a-5bcd-7def-8abc-1234567890ab');
-            expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\Integer\IntegerTypeException::class)
+            expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
                 ->and(fn() => $v->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
                 ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class);
         });

@@ -6,6 +6,7 @@ use PhpTypedValues\Base\Primitive\Bool\BoolTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -217,7 +218,7 @@ describe('BoolTypeAbstract', function () {
 
             it('throws on invalid string', function (string $input) {
                 expect(fn() => BoolTypeAbstractTest::fromString($input))
-                    ->toThrow(IntegerTypeException::class);
+                    ->toThrow(StringTypeException::class);
             })->with([
                 '1' => ['1'],
                 'yes' => ['yes'],

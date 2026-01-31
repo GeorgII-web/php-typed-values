@@ -9,7 +9,6 @@ use const PHP_INT_MAX;
 use Exception;
 use PhpTypedValues\Decimal\DecimalStandard;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
-use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -160,7 +159,7 @@ describe('DecimalStandard', function () {
         $vInt = DecimalStandard::fromString('123');
         expect($vInt->toInt())->toBe(123)
             ->and($vInt->toDecimal())->toBe('123')
-            ->and(fn() => $vInt->toBool())->toThrow(IntegerTypeException::class);
+            ->and(fn() => $vInt->toBool())->toThrow(StringTypeException::class);
 
         expect(fn() => DecimalStandard::fromString('1.2')->toFloat())->toThrow(StringTypeException::class);
     });

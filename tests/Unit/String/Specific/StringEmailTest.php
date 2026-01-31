@@ -114,7 +114,7 @@ describe('StringEmail', function () {
             ->and(fn() => StringEmail::fromInt(123))->toThrow(EmailStringTypeException::class);
 
         $v = StringEmail::fromString('user@example.com');
-        expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\Integer\IntegerTypeException::class)
+        expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
             ->and(fn() => $v->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
             ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class);
     });

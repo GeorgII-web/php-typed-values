@@ -160,7 +160,7 @@ describe('StringMd5', function () {
             ->and(fn() => StringMd5::fromInt(123))->toThrow(Md5StringTypeException::class);
 
         $v = StringMd5::fromString('5d41402abc4b2a76b9719d911017c592');
-        expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\Integer\IntegerTypeException::class)
+        expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
             ->and(fn() => $v->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
             ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class);
     });

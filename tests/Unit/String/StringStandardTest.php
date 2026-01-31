@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\String\StringStandard;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -200,13 +201,13 @@ describe('StringStandard', function () {
 
         it('toBool, toFloat, toInt throw for invalid strings in StringStandard', function (): void {
             $v = StringStandard::fromString('not-a-bool');
-            expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\Integer\IntegerTypeException::class);
+            expect(fn() => $v->toBool())->toThrow(StringTypeException::class);
 
             $v2 = StringStandard::fromString('not-a-float');
-            expect(fn() => $v2->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class);
+            expect(fn() => $v2->toFloat())->toThrow(StringTypeException::class);
 
             $v3 = StringStandard::fromString('not-an-int');
-            expect(fn() => $v3->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class);
+            expect(fn() => $v3->toInt())->toThrow(StringTypeException::class);
         });
     });
 });

@@ -166,7 +166,7 @@ describe('StringCountryCode', function () {
             ->and(fn() => StringCountryCode::fromInt(123))->toThrow(CountryCodeStringTypeException::class);
 
         $v = StringCountryCode::fromString('US');
-        expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\Integer\IntegerTypeException::class)
+        expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
             ->and(fn() => $v->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
             ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class);
     });

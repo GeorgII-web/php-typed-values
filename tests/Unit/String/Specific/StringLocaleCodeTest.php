@@ -87,7 +87,7 @@ describe('StringLocaleCode', function () {
     it('conversions to other types', function (): void {
         $l = new StringLocaleCode('en_US');
         // 'en_US' is not a valid bool, float, or int string.
-        expect(fn() => $l->toBool())->toThrow(PhpTypedValues\Exception\Integer\IntegerTypeException::class)
+        expect(fn() => $l->toBool())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
             ->and(fn() => $l->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
             ->and(fn() => $l->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class);
     });

@@ -112,7 +112,7 @@ describe('StringUrl', function () {
             ->and(fn() => StringUrl::fromInt(123))->toThrow(UrlStringTypeException::class);
 
         $v = StringUrl::fromString('https://example.com');
-        expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\Integer\IntegerTypeException::class)
+        expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
             ->and(fn() => $v->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
             ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class);
     });

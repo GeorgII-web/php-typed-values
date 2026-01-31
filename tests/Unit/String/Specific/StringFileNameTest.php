@@ -119,7 +119,7 @@ describe('StringFileName', function () {
             ->and(StringFileName::fromInt(123)->value())->toBe('123');
 
         $v = StringFileName::fromString('image.jpg');
-        expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\Integer\IntegerTypeException::class)
+        expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
             ->and(fn() => $v->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
             ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class);
     });

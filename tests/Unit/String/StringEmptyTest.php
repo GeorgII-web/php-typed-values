@@ -119,7 +119,7 @@ describe('StringEmpty', function () {
 
     it('toBool, toFloat, toInt throw for StringEmpty', function (): void {
         $v = new StringEmpty('');
-        expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\Integer\IntegerTypeException::class)
+        expect(fn() => $v->toBool())->toThrow(StringTypeException::class)
             ->and(fn() => $v->toFloat())->toThrow(StringTypeException::class)
             ->and(fn() => $v->toInt())->toThrow(StringTypeException::class);
     });

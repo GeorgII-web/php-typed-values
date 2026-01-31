@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use PhpTypedValues\Bool\TrueStandard;
 use PhpTypedValues\Exception\Bool\BoolTypeException;
-use PhpTypedValues\Exception\Integer\IntegerTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
@@ -46,7 +46,7 @@ describe('TrueStandard', function () {
         expect(fn() => TrueStandard::fromString('false'))
             ->toThrow(BoolTypeException::class, 'Expected "true" literal, got "false"');
         expect(fn() => TrueStandard::fromString(' YES '))
-            ->toThrow(IntegerTypeException::class, 'Integer " YES " has no valid strict bool value');
+            ->toThrow(StringTypeException::class, 'String " YES " has no valid strict bool value');
     });
 
     it('fromInt accepts only 1', function (): void {

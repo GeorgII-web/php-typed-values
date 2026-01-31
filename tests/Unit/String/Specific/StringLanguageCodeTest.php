@@ -206,7 +206,7 @@ describe('StringLanguageCode', function () {
             ->and(fn() => StringLanguageCode::fromInt(123))->toThrow(LanguageCodeStringTypeException::class);
 
         $v = StringLanguageCode::fromString('en');
-        expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\Integer\IntegerTypeException::class)
+        expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
             ->and(fn() => $v->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
             ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class);
     });
