@@ -8,8 +8,6 @@ use PhpTypedValues\Base\ArrayType\ArrayTypeAbstract;
 use PhpTypedValues\Exception\ArrayType\ArrayTypeException;
 use Traversable;
 
-use function count;
-
 /**
  * Immutable empty collection.
  *
@@ -24,7 +22,7 @@ readonly class ArrayEmpty extends ArrayTypeAbstract
      */
     public function __construct(array $value)
     {
-        if (count($value) > 0) {
+        if ($value !== []) {
             throw new ArrayTypeException('Expected empty array');
         }
     }

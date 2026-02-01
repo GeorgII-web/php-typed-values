@@ -116,18 +116,21 @@ describe('StringFileName', function () {
     it('covers conversions for StringFileName', function (): void {
         expect(StringFileName::fromBool(true)->value())->toBe('true')
             ->and(StringFileName::fromFloat(1.2)->value())->toBe('1.19999999999999996')
-            ->and(StringFileName::fromInt(123)->value())->toBe('123');
+            ->and(StringFileName::fromInt(123)->value())->toBe('123')
+            ->and(StringFileName::fromDecimal('1.23')->value())->toBe('1.23');
 
         $v = StringFileName::fromString('image.jpg');
         expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
             ->and(fn() => $v->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-            ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class);
+            ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
+            ->and(fn() => $v->toDecimal())->toThrow(PhpTypedValues\Exception\Decimal\DecimalTypeException::class);
     });
 
-    it('tryFromBool, tryFromFloat, tryFromInt return StringFileName for valid inputs', function (): void {
+    it('tryFromBool, tryFromFloat, tryFromInt, tryFromDecimal return StringFileName for valid inputs', function (): void {
         expect(StringFileName::tryFromBool(true))->toBeInstanceOf(StringFileName::class)
             ->and(StringFileName::tryFromFloat(1.2))->toBeInstanceOf(StringFileName::class)
-            ->and(StringFileName::tryFromInt(123))->toBeInstanceOf(StringFileName::class);
+            ->and(StringFileName::tryFromInt(123))->toBeInstanceOf(StringFileName::class)
+            ->and(StringFileName::tryFromDecimal('1.23'))->toBeInstanceOf(StringFileName::class);
     });
 });
 
@@ -141,6 +144,11 @@ describe('StringFileName', function () {
 readonly class StringFileNameTest extends StringFileName
 {
     public static function fromBool(bool $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromDecimal(string $value): static
     {
         throw new Exception('test');
     }
@@ -166,6 +174,7 @@ describe('Throwing static', function () {
         expect(StringFileNameTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
             ->and(StringFileNameTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
             ->and(StringFileNameTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+            ->and(StringFileNameTest::tryFromDecimal('1.0'))->toBeInstanceOf(Undefined::class)
             ->and(StringFileNameTest::tryFromMixed('image.jpg'))->toBeInstanceOf(Undefined::class)
             ->and(StringFileNameTest::tryFromString('image.jpg'))->toBeInstanceOf(Undefined::class);
     });

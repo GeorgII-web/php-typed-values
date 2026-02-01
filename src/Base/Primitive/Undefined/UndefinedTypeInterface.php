@@ -29,6 +29,8 @@ interface UndefinedTypeInterface
 
     public static function fromBool(bool $value): static;
 
+    public static function fromDecimal(string $value): static;
+
     public static function fromFloat(float $value): static;
 
     public static function fromInt(int $value): static;
@@ -46,6 +48,11 @@ interface UndefinedTypeInterface
      * @throws UndefinedTypeException
      */
     public function toBool(): never;
+
+    /**
+     * @throws UndefinedTypeException
+     */
+    public function toDecimal(): string;
 
     /**
      * @throws UndefinedTypeException
@@ -69,6 +76,11 @@ interface UndefinedTypeInterface
 
     public static function tryFromBool(
         bool $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static;
+
+    public static function tryFromDecimal(
+        string $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static;
 

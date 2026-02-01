@@ -33,6 +33,8 @@ abstract readonly class UndefinedTypeAbstract extends PrimitiveTypeAbstract impl
 
     abstract public static function fromBool(bool $value): static;
 
+    abstract public static function fromDecimal(string $value): static;
+
     abstract public static function fromFloat(float $value): static;
 
     abstract public static function fromInt(int $value): static;
@@ -48,6 +50,11 @@ abstract readonly class UndefinedTypeAbstract extends PrimitiveTypeAbstract impl
      * @throws UndefinedTypeException
      */
     abstract public function toBool(): never;
+
+    /**
+     * @throws UndefinedTypeException
+     */
+    abstract public function toDecimal(): string;
 
     /**
      * @throws UndefinedTypeException
@@ -71,6 +78,11 @@ abstract readonly class UndefinedTypeAbstract extends PrimitiveTypeAbstract impl
 
     abstract public static function tryFromBool(
         bool $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static;
+
+    abstract public static function tryFromDecimal(
+        string $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static;
 

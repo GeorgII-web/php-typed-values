@@ -111,18 +111,21 @@ describe('StringEmail', function () {
         // These throw because "true", "1.2", "123" are not valid emails
         expect(fn() => StringEmail::fromBool(true))->toThrow(EmailStringTypeException::class)
             ->and(fn() => StringEmail::fromFloat(1.2))->toThrow(EmailStringTypeException::class)
-            ->and(fn() => StringEmail::fromInt(123))->toThrow(EmailStringTypeException::class);
+            ->and(fn() => StringEmail::fromInt(123))->toThrow(EmailStringTypeException::class)
+            ->and(fn() => StringEmail::fromDecimal('1.0'))->toThrow(EmailStringTypeException::class);
 
         $v = StringEmail::fromString('user@example.com');
         expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
             ->and(fn() => $v->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-            ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class);
+            ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
+            ->and(fn() => $v->toDecimal())->toThrow(PhpTypedValues\Exception\Decimal\DecimalTypeException::class);
     });
 
-    it('tryFromBool, tryFromFloat, tryFromInt return Undefined for StringEmail', function (): void {
+    it('tryFromBool, tryFromFloat, tryFromInt, tryFromDecimal return Undefined for StringEmail', function (): void {
         expect(StringEmail::tryFromBool(true))->toBeInstanceOf(Undefined::class)
             ->and(StringEmail::tryFromFloat(1.2))->toBeInstanceOf(Undefined::class)
-            ->and(StringEmail::tryFromInt(123))->toBeInstanceOf(Undefined::class);
+            ->and(StringEmail::tryFromInt(123))->toBeInstanceOf(Undefined::class)
+            ->and(StringEmail::tryFromDecimal('1.0'))->toBeInstanceOf(Undefined::class);
     });
 });
 
@@ -136,6 +139,11 @@ describe('StringEmail', function () {
 readonly class StringEmailTest extends StringEmail
 {
     public static function fromBool(bool $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromDecimal(string $value): static
     {
         throw new Exception('test');
     }
@@ -161,6 +169,7 @@ describe('Throwing static', function () {
         expect(StringEmailTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
             ->and(StringEmailTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
             ->and(StringEmailTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+            ->and(StringEmailTest::tryFromDecimal('1.0'))->toBeInstanceOf(Undefined::class)
             ->and(StringEmailTest::tryFromMixed('test@example.com'))->toBeInstanceOf(Undefined::class)
             ->and(StringEmailTest::tryFromString('test@example.com'))->toBeInstanceOf(Undefined::class);
     });

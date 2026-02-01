@@ -216,7 +216,8 @@ describe('StringJson', function () {
         expect(StringJson::fromBool(true)->value())->toBe('true')
             ->and(StringJson::fromBool(false)->value())->toBe('false')
             ->and(StringJson::fromInt(123)->value())->toBe('123')
-            ->and(StringJson::fromFloat(1.2)->value())->toBe('1.19999999999999996');
+            ->and(StringJson::fromFloat(1.2)->value())->toBe('1.19999999999999996')
+            ->and(StringJson::fromDecimal('1.23')->value())->toBe('1.23');
 
         $vTrue = StringJson::fromString('true');
         expect($vTrue->toBool())->toBeTrue();
@@ -225,13 +226,15 @@ describe('StringJson', function () {
         expect($vInt->toInt())->toBe(123);
 
         $vFloat = StringJson::fromString('1.19999999999999996');
-        expect($vFloat->toFloat())->toBe(1.2);
+        expect($vFloat->toFloat())->toBe(1.2)
+            ->and($vFloat->toDecimal())->toBe('1.19999999999999996');
     });
 
-    it('tryFromBool, tryFromFloat, tryFromInt return StringJson for valid inputs', function (): void {
+    it('tryFromBool, tryFromFloat, tryFromInt, tryFromDecimal return StringJson for valid inputs', function (): void {
         expect(StringJson::tryFromBool(true))->toBeInstanceOf(StringJson::class)
             ->and(StringJson::tryFromFloat(1.19999999999999996))->toBeInstanceOf(StringJson::class)
-            ->and(StringJson::tryFromInt(123))->toBeInstanceOf(StringJson::class);
+            ->and(StringJson::tryFromInt(123))->toBeInstanceOf(StringJson::class)
+            ->and(StringJson::tryFromDecimal('1.23'))->toBeInstanceOf(StringJson::class);
     });
 });
 
@@ -245,6 +248,11 @@ describe('StringJson', function () {
 readonly class StringJsonTest extends StringJson
 {
     public static function fromBool(bool $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromDecimal(string $value): static
     {
         throw new Exception('test');
     }
@@ -270,6 +278,7 @@ describe('Throwing static', function () {
         expect(StringJsonTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
             ->and(StringJsonTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
             ->and(StringJsonTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+            ->and(StringJsonTest::tryFromDecimal('1.0'))->toBeInstanceOf(Undefined::class)
             ->and(StringJsonTest::tryFromMixed('{"a":1}'))->toBeInstanceOf(Undefined::class)
             ->and(StringJsonTest::tryFromString('{"a":1}'))->toBeInstanceOf(Undefined::class);
     });

@@ -140,7 +140,8 @@ describe('StringText', function () {
         expect(StringText::fromBool(true)->value())->toBe('true')
             ->and(StringText::fromBool(false)->value())->toBe('false')
             ->and(StringText::fromInt(123)->value())->toBe('123')
-            ->and(StringText::fromFloat(1.2)->value())->toBe('1.19999999999999996');
+            ->and(StringText::fromFloat(1.2)->value())->toBe('1.19999999999999996')
+            ->and(StringText::fromDecimal('1.23')->value())->toBe('1.23');
 
         $vTrue = StringText::fromString('true');
         expect($vTrue->toBool())->toBeTrue();
@@ -149,13 +150,15 @@ describe('StringText', function () {
         expect($vInt->toInt())->toBe(123);
 
         $vFloat = StringText::fromString('1.0');
-        expect($vFloat->toFloat())->toBe(1.0);
+        expect($vFloat->toFloat())->toBe(1.0)
+            ->and($vFloat->toDecimal())->toBe('1.0');
     });
 
-    it('tryFromBool, tryFromFloat, tryFromInt return StringText for valid inputs', function (): void {
+    it('tryFromBool, tryFromFloat, tryFromInt, tryFromDecimal return StringText for valid inputs', function (): void {
         expect(StringText::tryFromBool(true))->toBeInstanceOf(StringText::class)
             ->and(StringText::tryFromFloat(1.19999999999999996))->toBeInstanceOf(StringText::class)
-            ->and(StringText::tryFromInt(123))->toBeInstanceOf(StringText::class);
+            ->and(StringText::tryFromInt(123))->toBeInstanceOf(StringText::class)
+            ->and(StringText::tryFromDecimal('1.23'))->toBeInstanceOf(StringText::class);
     });
 });
 
@@ -169,6 +172,11 @@ describe('StringText', function () {
 readonly class StringTextTest extends StringText
 {
     public static function fromBool(bool $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromDecimal(string $value): static
     {
         throw new Exception('test');
     }
@@ -194,6 +202,7 @@ describe('Throwing static', function () {
         expect(StringTextTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
             ->and(StringTextTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
             ->and(StringTextTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+            ->and(StringTextTest::tryFromDecimal('1.0'))->toBeInstanceOf(Undefined::class)
             ->and(StringTextTest::tryFromMixed('test'))->toBeInstanceOf(Undefined::class)
             ->and(StringTextTest::tryFromString('test'))->toBeInstanceOf(Undefined::class);
     });

@@ -116,18 +116,21 @@ describe('StringPath', function () {
     it('covers conversions for StringPath', function (): void {
         expect(StringPath::fromBool(true)->value())->toBe('true')
             ->and(StringPath::fromFloat(1.2)->value())->toBe('1.19999999999999996')
-            ->and(StringPath::fromInt(123)->value())->toBe('123');
+            ->and(StringPath::fromInt(123)->value())->toBe('123')
+            ->and(StringPath::fromDecimal('1.23')->value())->toBe('1.23');
 
         $v = StringPath::fromString('/home/user');
         expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
             ->and(fn() => $v->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-            ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class);
+            ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
+            ->and(fn() => $v->toDecimal())->toThrow(PhpTypedValues\Exception\Decimal\DecimalTypeException::class);
     });
 
-    it('tryFromBool, tryFromFloat, tryFromInt return StringPath for valid inputs', function (): void {
+    it('tryFromBool, tryFromFloat, tryFromInt, tryFromDecimal return StringPath for valid inputs', function (): void {
         expect(StringPath::tryFromBool(true))->toBeInstanceOf(StringPath::class)
             ->and(StringPath::tryFromFloat(1.2))->toBeInstanceOf(StringPath::class)
-            ->and(StringPath::tryFromInt(123))->toBeInstanceOf(StringPath::class);
+            ->and(StringPath::tryFromInt(123))->toBeInstanceOf(StringPath::class)
+            ->and(StringPath::tryFromDecimal('1.23'))->toBeInstanceOf(StringPath::class);
     });
 });
 
@@ -140,7 +143,27 @@ describe('StringPath', function () {
  */
 readonly class StringPathTest extends StringPath
 {
-    public function __construct(string $value)
+    public static function fromBool(bool $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromDecimal(string $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromFloat(float $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromInt(int $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromString(string $value): static
     {
         throw new Exception('test');
     }
@@ -151,6 +174,7 @@ describe('Throwing static', function () {
         expect(StringPathTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
             ->and(StringPathTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
             ->and(StringPathTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+            ->and(StringPathTest::tryFromDecimal('1.0'))->toBeInstanceOf(Undefined::class)
             ->and(StringPathTest::tryFromMixed('/home/user'))->toBeInstanceOf(Undefined::class)
             ->and(StringPathTest::tryFromString('/home/user'))->toBeInstanceOf(Undefined::class);
     });

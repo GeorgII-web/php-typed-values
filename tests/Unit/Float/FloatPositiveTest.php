@@ -2,13 +2,52 @@
 
 declare(strict_types=1);
 
+use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
+use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Float\FloatPositive;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 describe('FloatPositive', function () {
     describe('Creation', function () {
+        describe('fromDecimal', function () {
+            it('creates instance from valid decimal string', function (string $input, float $expected) {
+                expect(FloatPositive::fromDecimal($input)->value())->toBe($expected);
+            })->with([
+                'positive decimal' => ['1.5', 1.5],
+            ]);
+
+            it('throws exception on invalid decimal string', function (string $input, string $exception) {
+                expect(fn() => FloatPositive::fromDecimal($input))->toThrow($exception);
+            })->with([
+                'non-numeric' => ['abc', DecimalTypeException::class],
+                'integer format' => ['123', StringTypeException::class],
+                'zero decimal' => ['0.0', TypeException::class],
+                'negative decimal' => ['-1.5', TypeException::class],
+            ]);
+        });
+
+        describe('tryFromDecimal', function () {
+            it('returns instance or default value', function (string $input, mixed $expected) {
+                $result = FloatPositive::tryFromDecimal($input);
+                if ($expected instanceof FloatPositive) {
+                    expect($result)->toBeInstanceOf(FloatPositive::class)
+                        ->and($result->value())->toBe($expected->value());
+                } else {
+                    expect($result)->toBeInstanceOf(Undefined::class);
+                }
+            })->with([
+                'valid decimal' => ['1.5', FloatPositive::fromFloat(1.5)],
+                'zero decimal' => ['0.0', Undefined::create()],
+                'negative decimal' => ['-1.5', Undefined::create()],
+                'invalid decimal' => ['abc', Undefined::create()],
+            ]);
+
+            it('returns custom default on failure', function () {
+                expect(FloatPositive::tryFromDecimal('0.0', Undefined::create()))->toBeInstanceOf(Undefined::class);
+            });
+        });
         describe('tryFromString', function () {
             it('returns instance or default value', function (string $input, mixed $expected) {
                 $result = FloatPositive::tryFromString($input);
@@ -244,6 +283,18 @@ describe('FloatPositive', function () {
                 $v = FloatPositive::fromFloat(1.5);
                 expect($v->isTypeOf('NonExistentClass', FloatPositive::class, 'AnotherClass'))->toBeTrue();
             });
+        });
+    });
+
+    describe('toDecimal', function () {
+        it('converts to decimal string', function (float $value, string $expected) {
+            expect(FloatPositive::fromFloat($value)->toDecimal())->toBe($expected);
+        })->with([
+            'standard float' => [1.5, '1.5'],
+        ]);
+
+        it('throws on precision loss when converting to decimal', function () {
+            expect(fn() => FloatPositive::fromFloat(1e-308)->toDecimal())->toThrow(FloatTypeException::class);
         });
     });
 

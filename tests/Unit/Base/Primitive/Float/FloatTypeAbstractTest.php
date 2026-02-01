@@ -28,6 +28,11 @@ readonly class FloatTypeAbstractTest extends FloatTypeAbstract
         return new static(static::boolToFloat($value));
     }
 
+    public static function fromDecimal(string $value): static
+    {
+        return new static(static::decimalToFloat($value));
+    }
+
     public static function fromFloat(float $value): static
     {
         return new static($value);
@@ -74,6 +79,11 @@ readonly class FloatTypeAbstractTest extends FloatTypeAbstract
         return static::floatToBool($this->val);
     }
 
+    public function toDecimal(): string
+    {
+        return static::floatToDecimal($this->val);
+    }
+
     public function toFloat(): float
     {
         return $this->val;
@@ -95,6 +105,17 @@ readonly class FloatTypeAbstractTest extends FloatTypeAbstract
     ): static|PrimitiveTypeAbstract {
         try {
             return static::fromBool($value);
+        } catch (Throwable) {
+            return $default;
+        }
+    }
+
+    public static function tryFromDecimal(
+        string $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
+        try {
+            return static::fromDecimal($value);
         } catch (Throwable) {
             return $default;
         }
@@ -132,7 +153,7 @@ readonly class FloatTypeAbstractTest extends FloatTypeAbstract
                 \is_int($value) => static::fromInt($value),
                 $value instanceof FloatTypeAbstract => static::fromFloat($value->value()),
                 \is_bool($value) => static::fromBool($value),
-                \is_string($value) || $value instanceof Stringable => static::fromString((string) $value),
+                \is_string($value) || $value instanceof Stringable => static::tryFromDecimal((string) $value, static::fromString((string) $value)),
                 default => throw new TypeException('Value cannot be cast to float'),
             };
         } catch (Throwable) {
@@ -204,6 +225,24 @@ describe('FloatTypeAbstract', function () {
             ]);
         });
 
+        describe('fromDecimal', function () {
+            it('creates instance from decimal string', function (string $input, float $expected) {
+                expect(FloatTypeAbstractTest::fromDecimal($input)->value())->toBe($expected);
+            })->with([
+                '1.5' => ['1.5', 1.5],
+                '0.0' => ['0.0', 0.0],
+            ]);
+
+            it('throws on invalid decimal string', function (string $input) {
+                expect(fn() => FloatTypeAbstractTest::fromDecimal($input))
+                    ->toThrow(TypeException::class);
+            })->with([
+                'abc',
+                '0.1', // loose precision
+                '123', // not a decimal format (missing .0)
+            ]);
+        });
+
         describe('tryFromMethods', function () {
             it('tryFromFloat', function () {
                 expect(FloatTypeAbstractTest::tryFromFloat(1.5)->value())->toBe(1.5);
@@ -216,6 +255,11 @@ describe('FloatTypeAbstract', function () {
 
             it('tryFromBool', function () {
                 expect(FloatTypeAbstractTest::tryFromBool(true)->value())->toBe(1.0);
+            });
+
+            it('tryFromDecimal', function () {
+                expect(FloatTypeAbstractTest::tryFromDecimal('1.5')->value())->toBe(1.5);
+                expect(FloatTypeAbstractTest::tryFromDecimal('abc'))->toBeInstanceOf(Undefined::class);
             });
 
             it('tryFromString', function () {
@@ -269,6 +313,14 @@ describe('FloatTypeAbstract', function () {
             $v = new FloatTypeAbstractTest(1.5);
             expect(fn() => $v->toBool())->toThrow(FloatTypeException::class);
         });
+
+        it('toDecimal', function (float $input, string $expected) {
+            $v = new FloatTypeAbstractTest($input);
+            expect($v->toDecimal())->toBe($expected);
+        })->with([
+            '1.5' => [1.5, '1.5'],
+            '0.0' => [0.0, '0.0'],
+        ]);
 
         it('toInt', function (float $input, int $expected) {
             $v = new FloatTypeAbstractTest($input);

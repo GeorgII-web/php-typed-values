@@ -139,16 +139,25 @@ describe('StringStandard', function () {
                 ->and($v->value())->toBe('123');
         });
 
-        it('StringStandard conversions to bool, float, int', function (): void {
+        it('StringStandard::tryFromDecimal returns instance from decimal', function (): void {
+            $v = StringStandard::tryFromDecimal('1.23');
+
+            expect($v)->toBeInstanceOf(StringStandard::class)
+                ->and($v->value())->toBe('1.23');
+        });
+
+        it('StringStandard conversions to bool, float, int, decimal', function (): void {
             $vTrue = StringStandard::fromString('true');
             $vFalse = StringStandard::fromString('false');
             $vFloat = StringStandard::fromString('1.5');
             $vInt = StringStandard::fromString('123');
+            $vDecimal = StringStandard::fromString('1.23');
 
             expect($vTrue->toBool())->toBeTrue()
                 ->and($vFalse->toBool())->toBeFalse()
                 ->and($vFloat->toFloat())->toBe(1.5)
-                ->and($vInt->toInt())->toBe(123);
+                ->and($vInt->toInt())->toBe(123)
+                ->and($vDecimal->toDecimal())->toBe('1.23');
         });
 
         it('StringStandard::fromBool creates instance', function (): void {
@@ -161,6 +170,10 @@ describe('StringStandard', function () {
 
         it('StringStandard::fromFloat creates instance', function (): void {
             expect(StringStandard::fromFloat(0.5)->value())->toBe('0.5');
+        });
+
+        it('StringStandard::fromDecimal creates instance', function (): void {
+            expect(StringStandard::fromDecimal('1.23')->value())->toBe('1.23');
         });
 
         it('tryFromMixed covers all arms', function (): void {
@@ -221,6 +234,11 @@ describe('StringStandard', function () {
  */
 readonly class StringStandardTest extends StringStandard
 {
+    public static function fromDecimal(string $value): static
+    {
+        throw new Exception('Simulated error');
+    }
+
     /** @psalm-suppress LessSpecificReturnType */
     public static function fromString(string $value): static
     {
@@ -233,11 +251,21 @@ describe('StringStandardTest (Throwing static)', function () {
         $result = StringStandardTest::tryFromString('fail');
         expect($result)->toBeInstanceOf(Undefined::class);
     });
+
+    it('StringStandard::tryFromDecimal returns Undefined when fromDecimal throws (StringStandardTest)', function (): void {
+        $result = StringStandardTest::tryFromDecimal('fail');
+        expect($result)->toBeInstanceOf(Undefined::class);
+    });
 });
 
 readonly class ThrowingStringStandard extends StringStandard
 {
     public static function fromBool(bool $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromDecimal(string $value): static
     {
         throw new Exception('test');
     }
@@ -273,6 +301,10 @@ describe('ThrowingStringStandard', function () {
 
     it('StringStandard::tryFromString returns Undefined when fromString throws (using throwing class)', function (): void {
         expect(ThrowingStringStandard::tryFromString('fail'))->toBeInstanceOf(Undefined::class);
+    });
+
+    it('StringStandard::tryFromDecimal returns Undefined when fromDecimal throws', function (): void {
+        expect(ThrowingStringStandard::tryFromDecimal('fail'))->toBeInstanceOf(Undefined::class);
     });
 
     it('StringStandard::tryFromMixed returns Undefined when static method throws', function (): void {

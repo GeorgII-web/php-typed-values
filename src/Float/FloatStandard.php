@@ -7,6 +7,7 @@ namespace PhpTypedValues\Float;
 use Exception;
 use PhpTypedValues\Base\Primitive\Float\FloatTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
+use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
@@ -61,6 +62,18 @@ readonly class FloatStandard extends FloatTypeAbstract
     public static function fromBool(bool $value): static
     {
         return new static(parent::boolToFloat($value));
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @throws DecimalTypeException
+     * @throws FloatTypeException
+     * @throws StringTypeException
+     */
+    public static function fromDecimal(string $value): static
+    {
+        return new static(static::decimalToFloat($value));
     }
 
     /**
@@ -129,6 +142,16 @@ readonly class FloatStandard extends FloatTypeAbstract
         return static::floatToBool($this->value);
     }
 
+    /**
+     * @throws FloatTypeException
+     * @throws StringTypeException
+     * @throws DecimalTypeException
+     */
+    public function toDecimal(): string
+    {
+        return static::floatToDecimal($this->value());
+    }
+
     public function toFloat(): float
     {
         return $this->value;
@@ -160,16 +183,41 @@ readonly class FloatStandard extends FloatTypeAbstract
      *
      * @return static|T
      *
-     * @throws FloatTypeException
-     *
      * @psalm-pure
      */
     public static function tryFromBool(
         bool $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract {
-        /** @var static */
-        return static::fromBool($value);
+        try {
+            /** @var static */
+            return static::fromBool($value);
+        } catch (Exception) {
+            /** @var T */
+            return $default;
+        }
+    }
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     *
+     * @psalm-pure
+     */
+    public static function tryFromDecimal(
+        string $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
+        try {
+            /** @var static */
+            return static::fromDecimal($value);
+        } catch (Exception) {
+            /** @var T */
+            return $default;
+        }
     }
 
     /**
@@ -236,7 +284,7 @@ readonly class FloatStandard extends FloatTypeAbstract
                 is_int($value) => static::fromInt($value),
                 //                ($value instanceof self) => static::fromFloat($value->value()),
                 is_bool($value) => static::fromBool($value),
-                is_string($value) || $value instanceof Stringable => static::fromString((string) $value),
+                is_string($value) || $value instanceof Stringable => static::tryFromDecimal((string) $value, static::fromString((string) $value)),
                 default => throw new TypeException('Value cannot be cast to float'),
             };
         } catch (Exception) {

@@ -7,6 +7,7 @@ namespace PhpTypedValues\Float;
 use Exception;
 use PhpTypedValues\Base\Primitive\Float\FloatTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
+use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
@@ -66,6 +67,18 @@ readonly class FloatNonNegative extends FloatTypeAbstract
     public static function fromBool(bool $value): static
     {
         return new static(parent::boolToFloat($value));
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @throws DecimalTypeException
+     * @throws FloatTypeException
+     * @throws StringTypeException
+     */
+    public static function fromDecimal(string $value): static
+    {
+        return new static(static::decimalToFloat($value));
     }
 
     /**
@@ -134,6 +147,16 @@ readonly class FloatNonNegative extends FloatTypeAbstract
         return static::floatToBool($this->value);
     }
 
+    /**
+     * @throws FloatTypeException
+     * @throws StringTypeException
+     * @throws DecimalTypeException
+     */
+    public function toDecimal(): string
+    {
+        return static::floatToDecimal($this->value());
+    }
+
     public function toFloat(): float
     {
         return $this->value;
@@ -175,6 +198,28 @@ readonly class FloatNonNegative extends FloatTypeAbstract
     ): static|PrimitiveTypeAbstract {
         /** @var static */
         return static::fromBool($value);
+    }
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     *
+     * @psalm-pure
+     */
+    public static function tryFromDecimal(
+        string $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
+        try {
+            /** @var static */
+            return static::fromDecimal($value);
+        } catch (Exception) {
+            /** @var T */
+            return $default;
+        }
     }
 
     /**

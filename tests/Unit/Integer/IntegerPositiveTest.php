@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
+use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Integer\IntegerPositive;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -57,6 +59,27 @@ describe('IntegerPositive', function () {
             'one' => ['1', 1],
             'positive' => ['42', 42],
             'max' => [(string) \PHP_INT_MAX, \PHP_INT_MAX],
+        ]);
+
+        it('creates from decimal string', function (string $input, int $expected) {
+            expect(IntegerPositive::fromDecimal($input)->value())->toBe($expected);
+        })->with([
+            'one' => ['1.0', 1],
+            'positive' => ['42.0', 42],
+        ]);
+
+        it('throws when creating from invalid decimal string', function (string $input, string $exception) {
+            expect(fn() => IntegerPositive::fromDecimal($input))->toThrow($exception);
+        })->with([
+            'zero' => ['0.0', TypeException::class],
+            'negative' => ['-1.0', TypeException::class],
+            'not a decimal' => ['42', DecimalTypeException::class],
+            'leading zero' => ['042.0', DecimalTypeException::class],
+            'plus sign' => ['+42.0', DecimalTypeException::class],
+            'empty' => ['', DecimalTypeException::class],
+            'whitespace' => [' 42.0 ', DecimalTypeException::class],
+            'text' => ['abc', DecimalTypeException::class],
+            'scientific' => ['1e2.0', DecimalTypeException::class],
         ]);
 
         it('throws when creating from invalid string', function (string $input, string $exception) {
@@ -148,6 +171,20 @@ describe('IntegerPositive', function () {
             'invalid' => ['12.3', true],
         ]);
 
+        it('tryFromDecimal returns instance or default', function (string $input, bool $shouldFail) {
+            $result = IntegerPositive::tryFromDecimal($input);
+            if ($shouldFail) {
+                expect($result)->toBeInstanceOf(Undefined::class);
+            } else {
+                expect($result)->toBeInstanceOf(IntegerPositive::class)
+                    ->and($result->value())->toBe((int) (float) $input);
+            }
+        })->with([
+            'valid' => ['123.0', false],
+            'zero' => ['0.0', true],
+            'invalid' => ['123', true],
+        ]);
+
         it('tryFromMixed returns instance for valid inputs', function (mixed $input, int $expected) {
             $result = IntegerPositive::tryFromMixed($input);
             expect($result)->toBeInstanceOf(IntegerPositive::class)
@@ -216,6 +253,13 @@ describe('IntegerPositive', function () {
             expect((new IntegerPositive($input))->toString())->toBe((string) $input)
                 ->and((string) (new IntegerPositive($input)))->toBe((string) $input);
         })->with([1, 42]);
+
+        it('converts to decimal string', function (int $input, string $expected) {
+            expect((new IntegerPositive($input))->toDecimal())->toBe($expected);
+        })->with([
+            'one' => [1, '1.0'],
+            'positive' => [42, '42.0'],
+        ]);
 
         it('serializes to JSON', function (int $input) {
             expect((new IntegerPositive($input))->jsonSerialize())->toBe($input);

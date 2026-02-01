@@ -104,23 +104,72 @@ describe('StringEmpty', function () {
         expect($v->isTypeOf('NonExistentClass', StringEmpty::class, 'AnotherClass'))->toBeTrue();
     });
 
-    it('throws on fromBool, fromFloat, fromInt for StringEmpty', function (): void {
+    it('throws on fromBool, fromFloat, fromInt, fromDecimal for StringEmpty', function (): void {
         expect(fn() => StringEmpty::fromBool(true))->toThrow(StringTypeException::class)
             ->and(fn() => StringEmpty::fromBool(false))->toThrow(StringTypeException::class)
             ->and(fn() => StringEmpty::fromFloat(0.0))->toThrow(StringTypeException::class)
-            ->and(fn() => StringEmpty::fromInt(0))->toThrow(StringTypeException::class);
+            ->and(fn() => StringEmpty::fromInt(0))->toThrow(StringTypeException::class)
+            ->and(fn() => StringEmpty::fromDecimal('0.0'))->toThrow(StringTypeException::class);
     });
 
-    it('tryFromBool, tryFromFloat, tryFromInt return Undefined for StringEmpty', function (): void {
+    it('tryFromBool, tryFromFloat, tryFromInt, tryFromDecimal return Undefined for StringEmpty', function (): void {
         expect(StringEmpty::tryFromBool(true))->toBeInstanceOf(Undefined::class)
             ->and(StringEmpty::tryFromFloat(0.0))->toBeInstanceOf(Undefined::class)
-            ->and(StringEmpty::tryFromInt(0))->toBeInstanceOf(Undefined::class);
+            ->and(StringEmpty::tryFromInt(0))->toBeInstanceOf(Undefined::class)
+            ->and(StringEmpty::tryFromDecimal('0.0'))->toBeInstanceOf(Undefined::class);
     });
 
-    it('toBool, toFloat, toInt throw for StringEmpty', function (): void {
+    it('toBool, toFloat, toInt, toDecimal throw for StringEmpty', function (): void {
         $v = new StringEmpty('');
         expect(fn() => $v->toBool())->toThrow(StringTypeException::class)
             ->and(fn() => $v->toFloat())->toThrow(StringTypeException::class)
-            ->and(fn() => $v->toInt())->toThrow(StringTypeException::class);
+            ->and(fn() => $v->toInt())->toThrow(StringTypeException::class)
+            ->and(fn() => $v->toDecimal())->toThrow(PhpTypedValues\Exception\Decimal\DecimalTypeException::class);
+    });
+});
+
+/**
+ * @internal
+ *
+ * @psalm-immutable
+ *
+ * @coversNothing
+ */
+readonly class StringEmptyTest extends StringEmpty
+{
+    public static function fromBool(bool $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromDecimal(string $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromFloat(float $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromInt(int $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromString(string $value): static
+    {
+        throw new Exception('test');
+    }
+}
+
+describe('Throwing static', function () {
+    it('StringEmpty::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
+        expect(StringEmptyTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
+            ->and(StringEmptyTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
+            ->and(StringEmptyTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+            ->and(StringEmptyTest::tryFromDecimal('1.0'))->toBeInstanceOf(Undefined::class)
+            ->and(StringEmptyTest::tryFromMixed(''))->toBeInstanceOf(Undefined::class)
+            ->and(StringEmptyTest::tryFromString(''))->toBeInstanceOf(Undefined::class);
     });
 });

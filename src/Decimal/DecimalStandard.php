@@ -9,7 +9,6 @@ use PhpTypedValues\Base\Primitive\Decimal\DecimalTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
-use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -136,7 +135,7 @@ readonly class DecimalStandard extends DecimalTypeAbstract
     }
 
     /**
-     * @throws IntegerTypeException
+     * @throws StringTypeException
      */
     public function toBool(): bool
     {
@@ -192,6 +191,28 @@ readonly class DecimalStandard extends DecimalTypeAbstract
         try {
             /** @var static */
             return static::fromBool($value);
+        } catch (Exception) {
+            /** @var T */
+            return $default;
+        }
+    }
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     *
+     * @psalm-pure
+     */
+    public static function tryFromDecimal(
+        string $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
+        try {
+            /** @var static */
+            return static::fromString($value);
         } catch (Exception) {
             /** @var T */
             return $default;

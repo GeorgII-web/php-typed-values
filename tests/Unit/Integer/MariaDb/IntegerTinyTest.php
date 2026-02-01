@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
+use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Integer\MariaDb\IntegerTiny;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -104,6 +106,28 @@ describe('IntegerTiny', function (): void {
         });
     });
 
+    describe('fromDecimal factory', function (): void {
+        it('creates instance from valid decimal strings -128..127', function (string $value, int $expected): void {
+            $tiny = IntegerTiny::fromDecimal($value);
+            expect($tiny->value())->toBe($expected);
+        })->with([
+            ['-128.0', -128],
+            ['0.0', 0],
+            ['127.0', 127],
+            ['5.0', 5],
+        ]);
+
+        it('throws for decimal values outside -128..127', function (string $invalidValue): void {
+            expect(fn() => IntegerTiny::fromDecimal($invalidValue))
+                ->toThrow(TypeException::class);
+        })->with(['-128.1', '127.1', '-129.0', '128.0']);
+
+        it('throws for invalid decimal strings', function (string $invalidValue): void {
+            expect(fn() => IntegerTiny::fromDecimal($invalidValue))
+                ->toThrow(DecimalTypeException::class);
+        })->with(['42', 'abc', '']);
+    });
+
     // ============================================
     // TRY-FROM METHODS (SAFE FACTORIES)
     // ============================================
@@ -187,6 +211,24 @@ describe('IntegerTiny', function (): void {
         })->with([-129.0, 128.0, 3.14, -200.0]);
     });
 
+    describe('tryFromDecimal method', function (): void {
+        it('returns IntegerTiny from decimal string with exact integer value -128..127', function (string $value, int $expected): void {
+            $result = IntegerTiny::tryFromDecimal($value);
+            expect($result)->toBeInstanceOf(IntegerTiny::class)
+                ->and($result->value())->toBe($expected);
+        })->with([
+            ['-128.0', -128],
+            ['0.0', 0],
+            ['127.0', 127],
+            ['5.0', 5],
+        ]);
+
+        it('returns Undefined for invalid decimal strings', function (string $invalidValue): void {
+            $result = IntegerTiny::tryFromDecimal($invalidValue);
+            expect($result)->toBeInstanceOf(Undefined::class);
+        })->with(['-128.1', '127.1', '-129.0', '128.0', '42', 'abc']);
+    });
+
     describe('tryFromMixed method', function (): void {
         it('returns IntegerTiny for valid integer inputs -128..127', function (mixed $value, int $expected): void {
             $result = IntegerTiny::tryFromMixed($value);
@@ -262,6 +304,15 @@ describe('IntegerTiny', function (): void {
             [0, false],
             [1, true],
             [127, true],
+        ]);
+
+        it('toDecimal returns decimal string representation', function (int $value, string $expected): void {
+            $tiny = new IntegerTiny($value);
+            expect($tiny->toDecimal())->toBe($expected);
+        })->with([
+            [-128, '-128.0'],
+            [0, '0.0'],
+            [127, '127.0'],
         ]);
 
         it('jsonSerialize returns integer value', function (int $value): void {

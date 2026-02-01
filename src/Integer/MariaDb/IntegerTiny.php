@@ -7,6 +7,7 @@ namespace PhpTypedValues\Integer\MariaDb;
 use Exception;
 use PhpTypedValues\Base\Primitive\Integer\IntegerTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
+use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
@@ -60,6 +61,17 @@ readonly class IntegerTiny extends IntegerTypeAbstract
     public static function fromBool(bool $value): static
     {
         return new static(static::boolToInt($value));
+    }
+
+    /**
+     * @throws DecimalTypeException
+     * @throws IntegerTypeException
+     *
+     * @psalm-pure
+     */
+    public static function fromDecimal(string $value): static
+    {
+        return new static(static::decimalToInt($value));
     }
 
     /**
@@ -128,6 +140,11 @@ readonly class IntegerTiny extends IntegerTypeAbstract
         return (bool) $this->value();
     }
 
+    public function toDecimal(): string
+    {
+        return static::intToDecimal($this->value());
+    }
+
     public function toFloat(): float
     {
         return $this->value();
@@ -165,6 +182,28 @@ readonly class IntegerTiny extends IntegerTypeAbstract
         try {
             /** @var static */
             return static::fromBool($value);
+        } catch (Exception) {
+            /** @var T */
+            return $default;
+        }
+    }
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     *
+     * @psalm-pure
+     */
+    public static function tryFromDecimal(
+        string $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract {
+        try {
+            /** @var static */
+            return static::fromDecimal($value);
         } catch (Exception) {
             /** @var T */
             return $default;
@@ -234,7 +273,7 @@ readonly class IntegerTiny extends IntegerTypeAbstract
                 is_int($value) => static::fromInt($value),
                 is_float($value) => static::fromFloat($value),
                 is_bool($value) => static::fromBool($value),
-                is_string($value) || $value instanceof Stringable => static::fromString((string) $value),
+                is_string($value) || $value instanceof Stringable => static::tryFromDecimal((string) $value, static::fromString((string) $value)),
                 default => throw new TypeException('Value cannot be cast to int'),
             };
         } catch (Exception) {

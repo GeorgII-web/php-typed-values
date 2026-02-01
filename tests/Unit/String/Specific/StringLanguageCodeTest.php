@@ -203,18 +203,21 @@ describe('StringLanguageCode', function () {
         // These throw because "true", "1.2", "123" are not valid language codes
         expect(fn() => StringLanguageCode::fromBool(true))->toThrow(LanguageCodeStringTypeException::class)
             ->and(fn() => StringLanguageCode::fromFloat(1.2))->toThrow(LanguageCodeStringTypeException::class)
-            ->and(fn() => StringLanguageCode::fromInt(123))->toThrow(LanguageCodeStringTypeException::class);
+            ->and(fn() => StringLanguageCode::fromInt(123))->toThrow(LanguageCodeStringTypeException::class)
+            ->and(fn() => StringLanguageCode::fromDecimal('1.0'))->toThrow(LanguageCodeStringTypeException::class);
 
         $v = StringLanguageCode::fromString('en');
         expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
             ->and(fn() => $v->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-            ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class);
+            ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
+            ->and(fn() => $v->toDecimal())->toThrow(PhpTypedValues\Exception\Decimal\DecimalTypeException::class);
     });
 
-    it('tryFromBool, tryFromFloat, tryFromInt return Undefined for StringLanguageCode', function (): void {
+    it('tryFromBool, tryFromFloat, tryFromInt, tryFromDecimal return Undefined for StringLanguageCode', function (): void {
         expect(StringLanguageCode::tryFromBool(true))->toBeInstanceOf(Undefined::class)
             ->and(StringLanguageCode::tryFromFloat(1.2))->toBeInstanceOf(Undefined::class)
-            ->and(StringLanguageCode::tryFromInt(123))->toBeInstanceOf(Undefined::class);
+            ->and(StringLanguageCode::tryFromInt(123))->toBeInstanceOf(Undefined::class)
+            ->and(StringLanguageCode::tryFromDecimal('1.0'))->toBeInstanceOf(Undefined::class);
     });
 });
 
@@ -228,6 +231,11 @@ describe('StringLanguageCode', function () {
 readonly class StringLanguageCodeTest extends StringLanguageCode
 {
     public static function fromBool(bool $value): static
+    {
+        throw new Exception('test');
+    }
+
+    public static function fromDecimal(string $value): static
     {
         throw new Exception('test');
     }
@@ -253,6 +261,7 @@ describe('Throwing static', function () {
         expect(StringLanguageCodeTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
             ->and(StringLanguageCodeTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
             ->and(StringLanguageCodeTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+            ->and(StringLanguageCodeTest::tryFromDecimal('1.0'))->toBeInstanceOf(Undefined::class)
             ->and(StringLanguageCodeTest::tryFromMixed('en'))->toBeInstanceOf(Undefined::class)
             ->and(StringLanguageCodeTest::tryFromString('en'))->toBeInstanceOf(Undefined::class);
     });

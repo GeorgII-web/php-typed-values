@@ -301,6 +301,11 @@ readonly class DecimalStandardTest extends DecimalStandard
         throw new Exception('test');
     }
 
+    public static function fromDecimal(string $value): static
+    {
+        throw new Exception('test');
+    }
+
     public static function fromFloat(float $value): static
     {
         throw new Exception('test');
@@ -320,6 +325,7 @@ readonly class DecimalStandardTest extends DecimalStandard
 describe('Throwing static', function () {
     it('DecimalStandard::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
         expect(DecimalStandardTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
+            ->and(DecimalStandardTest::tryFromDecimal('1.0'))->toBeInstanceOf(Undefined::class)
             ->and(DecimalStandardTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
             ->and(DecimalStandardTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
             ->and(DecimalStandardTest::tryFromMixed('1.23'))->toBeInstanceOf(Undefined::class)

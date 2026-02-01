@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
@@ -51,6 +52,26 @@ describe('IntegerStandard', function () {
             'zero' => ['0', 0],
             'max' => [(string) \PHP_INT_MAX, \PHP_INT_MAX],
             'min' => [(string) \PHP_INT_MIN, \PHP_INT_MIN],
+        ]);
+
+        it('creates from decimal string', function (string $input, int $expected) {
+            expect(IntegerStandard::fromDecimal($input)->value())->toBe($expected);
+        })->with([
+            'positive' => ['42.0', 42],
+            'negative' => ['-42.0', -42],
+            'zero' => ['0.0', 0],
+        ]);
+
+        it('throws when creating from invalid decimal string', function (string $input) {
+            IntegerStandard::fromDecimal($input);
+        })->throws(DecimalTypeException::class)->with([
+            'not a decimal' => ['42'],
+            'leading zero' => ['042.0'],
+            'plus sign' => ['+42.0'],
+            'empty' => [''],
+            'whitespace' => [' 42.0 '],
+            'text' => ['abc'],
+            'scientific' => ['1e2.0'],
         ]);
 
         it('throws when creating from invalid string', function (string $input) {
@@ -128,6 +149,19 @@ describe('IntegerStandard', function () {
             'invalid' => ['12.3', true],
         ]);
 
+        it('tryFromDecimal returns instance or default', function (string $input, bool $shouldFail) {
+            $result = IntegerStandard::tryFromDecimal($input);
+            if ($shouldFail) {
+                expect($result)->toBeInstanceOf(Undefined::class);
+            } else {
+                expect($result)->toBeInstanceOf(IntegerStandard::class)
+                    ->and($result->value())->toBe((int) (float) $input);
+            }
+        })->with([
+            'valid' => ['123.0', false],
+            'invalid' => ['123', true],
+        ]);
+
         it('tryFromMixed returns instance for valid inputs', function (mixed $input, int $expected) {
             $result = IntegerStandard::tryFromMixed($input);
             expect($result)->toBeInstanceOf(IntegerStandard::class)
@@ -197,6 +231,14 @@ describe('IntegerStandard', function () {
             expect((new IntegerStandard($input))->toString())->toBe((string) $input)
                 ->and((string) (new IntegerStandard($input)))->toBe((string) $input);
         })->with([42, -42, 0]);
+
+        it('converts to decimal string', function (int $input, string $expected) {
+            expect((new IntegerStandard($input))->toDecimal())->toBe($expected);
+        })->with([
+            'positive' => [42, '42.0'],
+            'negative' => [-42, '-42.0'],
+            'zero' => [0, '0.0'],
+        ]);
 
         it('serializes to JSON', function (int $input) {
             expect((new IntegerStandard($input))->jsonSerialize())->toBe($input);

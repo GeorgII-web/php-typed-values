@@ -50,6 +50,14 @@ readonly class UndefinedStandard extends UndefinedTypeAbstract
     /**
      * @psalm-pure
      */
+    public static function fromDecimal(string $value): static
+    {
+        return new static();
+    }
+
+    /**
+     * @psalm-pure
+     */
     public static function fromFloat(float $value): static
     {
         return new static();
@@ -119,6 +127,14 @@ readonly class UndefinedStandard extends UndefinedTypeAbstract
     /**
      * @throws UndefinedTypeException
      */
+    public function toDecimal(): string
+    {
+        throw new UndefinedTypeException('UndefinedType cannot be converted to string.');
+    }
+
+    /**
+     * @throws UndefinedTypeException
+     */
     public function toFloat(): never
     {
         throw new UndefinedTypeException('UndefinedType cannot be converted to float.');
@@ -158,6 +174,16 @@ readonly class UndefinedStandard extends UndefinedTypeAbstract
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static {
         return static::fromBool($value);
+    }
+
+    /**
+     * @psalm-pure
+     */
+    public static function tryFromDecimal(
+        string $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static {
+        return static::fromString($value);
     }
 
     /**

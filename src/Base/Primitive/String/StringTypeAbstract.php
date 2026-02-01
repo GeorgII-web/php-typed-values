@@ -28,6 +28,8 @@ abstract readonly class StringTypeAbstract extends PrimitiveTypeAbstract impleme
 {
     abstract public static function fromBool(bool $value): static;
 
+    abstract public static function fromDecimal(string $value): static;
+
     abstract public static function fromFloat(float $value): static;
 
     abstract public static function fromInt(int $value): static;
@@ -37,6 +39,8 @@ abstract readonly class StringTypeAbstract extends PrimitiveTypeAbstract impleme
     abstract public function isTypeOf(string ...$classNames): bool;
 
     abstract public function toBool(): bool;
+
+    abstract public function toDecimal(): string;
 
     abstract public function toFloat(): float;
 
@@ -53,6 +57,18 @@ abstract readonly class StringTypeAbstract extends PrimitiveTypeAbstract impleme
      */
     abstract public static function tryFromBool(
         bool $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract;
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    abstract public static function tryFromDecimal(
+        string $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract;
 
