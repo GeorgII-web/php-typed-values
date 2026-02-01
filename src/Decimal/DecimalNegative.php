@@ -19,18 +19,19 @@ use function is_float;
 use function is_int;
 use function is_scalar;
 use function is_string;
+use function sprintf;
 
 /**
- * DECIMAL value encoded as a string.
+ * DECIMAL negative value encoded as a string.
  *
- * Accepts canonical decimal strings like "123.0", "-5.0", or "3.14". No leading
+ * Accepts canonical decimal strings like "-123.0", "-5.0", or "-3.14". No leading
  * plus sign and no invalid forms like ".5" or "1." are allowed. The original
  * string is preserved as provided.
  *
  * Example
- *  - $d = Decimal::fromString('3.14');
- *    $d->toString(); // '3.14'
- *  - Decimal::fromString('abc'); // throws DecimalTypeException
+ *  - $d = DecimalNegative::fromString('-3.14');
+ *    $d->toString(); // '-3.14'
+ *  - DecimalNegative::fromString('abc'); // throws DecimalTypeException
  *
  * Note: Use toFloat() only when the decimal can be represented exactly by a
  * PHP float. The method verifies an exact round‑trip cast, must
@@ -38,7 +39,7 @@ use function is_string;
  *
  * @psalm-immutable
  */
-readonly class DecimalStandard extends DecimalTypeAbstract
+readonly class DecimalNegative extends DecimalTypeAbstract
 {
     /**
      * @var non-empty-string
@@ -50,7 +51,13 @@ readonly class DecimalStandard extends DecimalTypeAbstract
      */
     public function __construct(string $value)
     {
-        $this->value = self::stringToDecimal($value);
+        $decimal = self::stringToDecimal($value);
+
+        if ($decimal[0] !== '-') {
+            throw new DecimalTypeException(sprintf('Decimal "%s" is not a negative value', $value));
+        }
+
+        $this->value = $decimal;
     }
 
     /**
