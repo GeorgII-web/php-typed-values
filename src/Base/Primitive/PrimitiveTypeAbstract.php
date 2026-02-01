@@ -163,7 +163,7 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
     protected static function decimalToInt(string $value): int
     {
         $intValue = (int) $value;
-        if ($value !== (string) $intValue) {
+        if ($value !== self::intToDecimal($intValue)) {
             throw new DecimalTypeException(sprintf('Decimal "%s" has no valid strict int value', $value));
         }
 
