@@ -158,6 +158,23 @@ describe('FloatStandard', function () {
                 'true' => [true, 1.0],
                 'false' => [false, 0.0],
             ]);
+
+            it('returns default when fromBool throws', function () {
+                /**
+                 * @internal
+                 *
+                 * @coversNothing
+                 */
+                readonly class FloatStandardTest extends FloatStandard
+                {
+                    public static function fromBool(bool $value): static
+                    {
+                        throw new Exception('forced failure');
+                    }
+                }
+
+                expect(FloatStandardTest::tryFromBool(true))->toBeInstanceOf(Undefined::class);
+            });
         });
 
         describe('tryFromMixed', function () {
