@@ -23,6 +23,8 @@ interface FloatTypeInterface
 {
     public static function fromBool(bool $value): static;
 
+    public static function fromDecimal(string $value): static;
+
     public static function fromFloat(float $value): static;
 
     public static function fromInt(int $value): static;
@@ -32,6 +34,8 @@ interface FloatTypeInterface
     public function isTypeOf(string ...$classNames): bool;
 
     public function toBool(): bool;
+
+    public function toDecimal(): string;
 
     public function toFloat(): float;
 
@@ -48,6 +52,18 @@ interface FloatTypeInterface
      */
     public static function tryFromBool(
         bool $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): static|PrimitiveTypeAbstract;
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
+    public static function tryFromDecimal(
+        string $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): static|PrimitiveTypeAbstract;
 

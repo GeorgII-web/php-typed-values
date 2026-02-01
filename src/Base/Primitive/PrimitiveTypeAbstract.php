@@ -159,6 +159,18 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
      * @psalm-pure
      *
      * @throws DecimalTypeException
+     * @throws FloatTypeException
+     * @throws StringTypeException
+     */
+    protected static function decimalToFloat(string $value): float
+    {
+        return static::stringToFloat(static::stringToDecimal($value));
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @throws DecimalTypeException
      */
     protected static function decimalToInt(string $value): int
     {
@@ -194,6 +206,18 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
         }
 
         throw new FloatTypeException(sprintf('Float "%s" has no valid strict bool value', $value));
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @throws StringTypeException
+     * @throws DecimalTypeException
+     * @throws FloatTypeException
+     */
+    protected static function floatToDecimal(float $value): string
+    {
+        return static::stringToDecimal(static::floatToString($value));
     }
 
     /**
