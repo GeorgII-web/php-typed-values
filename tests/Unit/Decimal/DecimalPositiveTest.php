@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Decimal;
+namespace PhpTypedValues\Tests\Unit\Decimal;
 
 use const PHP_INT_MAX;
 
