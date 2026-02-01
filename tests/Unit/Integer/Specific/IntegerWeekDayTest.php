@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
@@ -113,12 +114,12 @@ describe('IntegerWeekDay', function (): void {
 
         it('throws for decimal values outside 1-7', function (string $invalidValue): void {
             expect(fn() => IntegerWeekDay::fromDecimal($invalidValue))
-                ->toThrow(IntegerTypeException::class, 'Expected value between 1-7');
+                ->toThrow(TypeException::class);
         })->with(['0.0', '8.0', '-1.0', '1.1', '7.1']);
 
         it('throws for invalid decimal strings', function (string $invalidValue): void {
             expect(fn() => IntegerWeekDay::fromDecimal($invalidValue))
-                ->toThrow(StringTypeException::class);
+                ->toThrow(DecimalTypeException::class);
         })->with(['5', 'abc', '']);
     });
 

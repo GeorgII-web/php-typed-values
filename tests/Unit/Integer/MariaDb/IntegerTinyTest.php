@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
+use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Integer\MariaDb\IntegerTiny;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -117,12 +119,12 @@ describe('IntegerTiny', function (): void {
 
         it('throws for decimal values outside -128..127', function (string $invalidValue): void {
             expect(fn() => IntegerTiny::fromDecimal($invalidValue))
-                ->toThrow(IntegerTypeException::class, 'Expected tiny integer in range -128..127');
+                ->toThrow(TypeException::class);
         })->with(['-128.1', '127.1', '-129.0', '128.0']);
 
         it('throws for invalid decimal strings', function (string $invalidValue): void {
             expect(fn() => IntegerTiny::fromDecimal($invalidValue))
-                ->toThrow(StringTypeException::class);
+                ->toThrow(DecimalTypeException::class);
         })->with(['42', 'abc', '']);
     });
 

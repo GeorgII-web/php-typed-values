@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
+use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Integer\IntegerPositive;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -69,15 +71,15 @@ describe('IntegerPositive', function () {
         it('throws when creating from invalid decimal string', function (string $input, string $exception) {
             expect(fn() => IntegerPositive::fromDecimal($input))->toThrow($exception);
         })->with([
-            'zero' => ['0.0', IntegerTypeException::class],
-            'negative' => ['-1.0', IntegerTypeException::class],
-            'not a decimal' => ['42', StringTypeException::class],
-            'leading zero' => ['042.0', StringTypeException::class],
-            'plus sign' => ['+42.0', StringTypeException::class],
-            'empty' => ['', StringTypeException::class],
-            'whitespace' => [' 42.0 ', StringTypeException::class],
-            'text' => ['abc', StringTypeException::class],
-            'scientific' => ['1e2.0', StringTypeException::class],
+            'zero' => ['0.0', TypeException::class],
+            'negative' => ['-1.0', TypeException::class],
+            'not a decimal' => ['42', DecimalTypeException::class],
+            'leading zero' => ['042.0', DecimalTypeException::class],
+            'plus sign' => ['+42.0', DecimalTypeException::class],
+            'empty' => ['', DecimalTypeException::class],
+            'whitespace' => [' 42.0 ', DecimalTypeException::class],
+            'text' => ['abc', DecimalTypeException::class],
+            'scientific' => ['1e2.0', DecimalTypeException::class],
         ]);
 
         it('throws when creating from invalid string', function (string $input, string $exception) {

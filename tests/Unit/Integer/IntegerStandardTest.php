@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
@@ -63,7 +64,7 @@ describe('IntegerStandard', function () {
 
         it('throws when creating from invalid decimal string', function (string $input) {
             IntegerStandard::fromDecimal($input);
-        })->throws(StringTypeException::class)->with([
+        })->throws(DecimalTypeException::class)->with([
             'not a decimal' => ['42'],
             'leading zero' => ['042.0'],
             'plus sign' => ['+42.0'],
