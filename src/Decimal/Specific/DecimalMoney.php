@@ -57,12 +57,8 @@ readonly class DecimalMoney extends DecimalTypeAbstract
             throw new DecimalTypeException(sprintf('Money value "%s" must be non-negative with exactly 2 decimal places', $value));
         }
 
-        // Normalize for stringToDecimal: strip one trailing zero after decimal point
-        // e.g., "0.10" -> "0.1", "1.00" -> "1.0"
-        $normalized = preg_replace('/(\.\d)0$/', '$1', $value) ?? '';
-
         // Validate as strict decimal (will now pass since trailing zero is removed)
-        self::stringToDecimal($normalized);
+        self::stringToDecimal(static::moneyToDecimal($value));
 
         // Store the original money format with 2 decimal places
         $this->value = $value;

@@ -10,6 +10,7 @@ use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
+use Stringable;
 
 describe('DecimalMoney', function () {
     it('accepts valid non-negative decimal strings with 2 decimal places and preserves value/toString', function (): void {
@@ -64,10 +65,9 @@ describe('DecimalMoney', function () {
     it('toFloat returns exact float only when string equals (string)(float) cast', function (): void {
         expect(DecimalMoney::fromString('1.00')->toFloat())->toBe(1.0)
             ->and(DecimalMoney::fromString('1.50')->toFloat())->toBe(1.5)
-            ->and(DecimalMoney::fromString('0.00')->toFloat())->toBe(0.0);
-
-        expect(fn() => DecimalMoney::fromString('1.51')->toFloat())
-            ->toThrow(StringTypeException::class);
+            ->and(DecimalMoney::fromString('0.00')->toFloat())->toBe(0.0)
+            ->and(fn() => DecimalMoney::fromString('1.51')->toFloat())->toThrow(StringTypeException::class)
+            ->and(fn() => DecimalMoney::fromString(''))->toThrow(DecimalTypeException::class);
     });
 
     it('jsonSerialize returns string', function (): void {
@@ -111,6 +111,34 @@ describe('DecimalMoney', function () {
             ->and($u2->isUndefined())->toBeTrue();
     });
 
+    // Mutant killer: Line 56 - EmptyStringToNotEmpty (ID: 933dc702)
+    // Ensures empty string check is actually validated
+    it('throws DecimalTypeException for empty string input', function (): void {
+        expect(fn() => new DecimalMoney(''))->toThrow(DecimalTypeException::class);
+    });
+
+    // Mutant killer: Line 65 - RemoveMethodCall (ID: 8e482b30)
+    // Value "00.10" passes the money regex but fails stringToDecimal validation (leading zero on integer part > 0)
+    it('throws when value passes money format but fails strict decimal validation', function (): void {
+        expect(fn() => new DecimalMoney('00.10'))->toThrow(DecimalTypeException::class);
+    });
+
+    // Mutant killer: Line 315 - Stringable handling (ID: e8ce9c9200 and 6051c54b19)
+    // Tests that Stringable objects are properly converted via (string) cast
+    it('tryFromMixed handles Stringable objects correctly', function (): void {
+        $stringable = new class implements Stringable {
+            public function __toString(): string
+            {
+                return '99.99';
+            }
+        };
+
+        $result = DecimalMoney::tryFromMixed($stringable);
+
+        expect($result)->toBeInstanceOf(DecimalMoney::class)
+            ->and($result->value())->toBe('99.99');
+    });
+
     it('isTypeOf returns true when class matches and false otherwise', function (): void {
         $v = DecimalMoney::fromString('10.50');
         expect($v->isTypeOf(DecimalMoney::class))->toBeTrue()
@@ -141,17 +169,15 @@ describe('DecimalMoney', function () {
 
     it('cast float > decimal', function (): void {
         expect(DecimalMoney::fromFloat(1.5)->toString())->toBe('1.50')
-            ->and(DecimalMoney::fromFloat(0.0)->toString())->toBe('0.00');
-
-        expect(fn() => DecimalMoney::fromFloat(-1.0))->toThrow(DecimalTypeException::class)
+            ->and(DecimalMoney::fromFloat(0.0)->toString())->toBe('0.00')
+            ->and(fn() => DecimalMoney::fromFloat(-1.0))->toThrow(DecimalTypeException::class)
             ->and(fn() => DecimalMoney::fromFloat(1.234))->toThrow(DecimalTypeException::class);
     });
 
     it('cast decimal > decimal', function (): void {
         expect(DecimalMoney::fromDecimal('1.00')->toString())->toBe('1.00')
-            ->and(DecimalMoney::fromDecimal('0.00')->toString())->toBe('0.00');
-
-        expect(fn() => DecimalMoney::fromDecimal('-1.00'))->toThrow(DecimalTypeException::class);
+            ->and(DecimalMoney::fromDecimal('0.00')->toString())->toBe('0.00')
+            ->and(fn() => DecimalMoney::fromDecimal('-1.00'))->toThrow(DecimalTypeException::class);
     });
 
     it('cast bool > decimal', function (): void {
@@ -161,9 +187,8 @@ describe('DecimalMoney', function () {
 
     it('cast int > decimal', function (): void {
         expect(DecimalMoney::fromInt(123)->toString())->toBe('123.00')
-            ->and(DecimalMoney::fromInt(0)->toString())->toBe('0.00');
-
-        expect(fn() => DecimalMoney::fromInt(-1))->toThrow(DecimalTypeException::class);
+            ->and(DecimalMoney::fromInt(0)->toString())->toBe('0.00')
+            ->and(fn() => DecimalMoney::fromInt(-1))->toThrow(DecimalTypeException::class);
     });
 
     it('can be used with bcmath functions', function (): void {
