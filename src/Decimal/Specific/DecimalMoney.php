@@ -61,6 +61,7 @@ readonly class DecimalMoney extends DecimalTypeAbstract
         self::stringToDecimal(static::moneyToDecimal($value));
 
         // Store the original money format with 2 decimal places
+        /** @var non-empty-string $value */
         $this->value = $value;
     }
 
