@@ -376,18 +376,11 @@ readonly class DecimalMoney extends DecimalTypeAbstract
      * @return non-empty-string
      *
      * @psalm-pure
-     *
-     * @throws DecimalTypeException
      */
     private static function moneyToDecimal(string $value): string
     {
         // delete trailing zero
-        $normalized = preg_replace('/(\.\d)0$/', '$1', $value);
-        if (!is_string($normalized)) {
-            throw new DecimalTypeException(sprintf('Invalid decimal money format in "%s"', $value));
-        }
-
-        /** @var non-empty-string $normalized */
-        return $normalized;
+        /** @var non-empty-string */
+        return preg_replace('/(\.\d)0$/', '$1', $value) ?? $value;
     }
 }

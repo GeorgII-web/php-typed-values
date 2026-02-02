@@ -111,9 +111,10 @@ describe('DecimalMoney', function () {
             ->and($u2->isUndefined())->toBeTrue();
     });
 
-    it('isTypeOf returns true when class matches', function (): void {
+    it('isTypeOf returns true when class matches and false otherwise', function (): void {
         $v = DecimalMoney::fromString('10.50');
-        expect($v->isTypeOf(DecimalMoney::class))->toBeTrue();
+        expect($v->isTypeOf(DecimalMoney::class))->toBeTrue()
+            ->and($v->isTypeOf('NonExistentClass'))->toBeFalse();
     });
 
     it('isEmpty is always false for DecimalMoney', function (): void {
