@@ -52,13 +52,20 @@ readonly class DecimalMoney extends DecimalTypeAbstract
      */
     public function __construct(string $value)
     {
-        $decimal = self::stringToDecimal($value);
-
-        if (preg_match('/^\d+\.\d{2}$/', $decimal) !== 1) {
+        // Validate a money format: non-negative with exactly 2 decimal places
+        if ($value === '' || preg_match('/^\d+\.\d{2}$/', $value) !== 1) {
             throw new DecimalTypeException(sprintf('Money value "%s" must be non-negative with exactly 2 decimal places', $value));
         }
 
-        $this->value = $decimal;
+        // Normalize for stringToDecimal: strip one trailing zero after decimal point
+        // e.g., "0.10" -> "0.1", "1.00" -> "1.0"
+        $normalized = preg_replace('/(\.\d)0$/', '$1', $value) ?? '';
+
+        // Validate as strict decimal (will now pass since trailing zero is removed)
+        self::stringToDecimal($normalized);
+
+        // Store the original money format with 2 decimal places
+        $this->value = $value;
     }
 
     /**
@@ -68,7 +75,9 @@ readonly class DecimalMoney extends DecimalTypeAbstract
      */
     public static function fromBool(bool $value): static
     {
-        return new static(static::boolToDecimal($value));
+        return new static(static::decimalToMoney(
+            static::boolToDecimal($value))
+        );
     }
 
     /**
@@ -90,7 +99,9 @@ readonly class DecimalMoney extends DecimalTypeAbstract
      */
     public static function fromFloat(float $value): static
     {
-        return new static(static::floatToString($value));
+        return new static(static::decimalToMoney(
+            static::floatToDecimal($value)
+        ));
     }
 
     /**
@@ -100,7 +111,9 @@ readonly class DecimalMoney extends DecimalTypeAbstract
      */
     public static function fromInt(int $value): static
     {
-        return new static(static::intToDecimal($value));
+        return new static(static::decimalToMoney(
+            static::intToDecimal($value)
+        ));
     }
 
     /**
@@ -147,7 +160,9 @@ readonly class DecimalMoney extends DecimalTypeAbstract
      */
     public function toBool(): bool
     {
-        return static::stringToBool($this->value());
+        return static::stringToBool(
+            static::moneyToDecimal($this->value())
+        );
     }
 
     /**
@@ -155,24 +170,29 @@ readonly class DecimalMoney extends DecimalTypeAbstract
      */
     public function toDecimal(): string
     {
-        return $this->value();
+        return static::moneyToDecimal($this->value());
     }
 
     /**
      * @throws FloatTypeException
      * @throws StringTypeException
+     * @throws DecimalTypeException
      */
     public function toFloat(): float
     {
-        return static::stringToFloat($this->value());
+        return static::stringToFloat(
+            static::moneyToDecimal($this->value())
+        );
     }
 
     /**
-     * @throws StringTypeException
+     * @throws DecimalTypeException
      */
     public function toInt(): int
     {
-        return static::stringToInt($this->value());
+        return static::decimalToInt(
+            static::moneyToDecimal($this->value())
+        );
     }
 
     /**
@@ -329,5 +349,45 @@ readonly class DecimalMoney extends DecimalTypeAbstract
     public function value(): string
     {
         return $this->value;
+    }
+
+    /**
+     * Denormalize to money format: add trailing zero
+     * e.g., "0.1" -> "0.10", "1.0" -> "1.00".
+     *
+     * @return non-empty-string
+     *
+     * @psalm-pure
+     */
+    private static function decimalToMoney(string $value): string
+    {
+        if (preg_match('/^\d+\.\d$/', $value) === 1) {
+            $value .= '0'; // add trailing zero
+        }
+
+        /** @var non-empty-string $value */
+        return $value;
+    }
+
+    /**
+     * Normalize from money format: strip trailing zero
+     * e.g., "0.10" -> "0.1", "1.00" -> "1.0".
+     *
+     * @return non-empty-string
+     *
+     * @psalm-pure
+     *
+     * @throws DecimalTypeException
+     */
+    private static function moneyToDecimal(string $value): string
+    {
+        // delete trailing zero
+        $normalized = preg_replace('/(\.\d)0$/', '$1', $value);
+        if (!is_string($normalized)) {
+            throw new DecimalTypeException(sprintf('Invalid decimal money format in "%s"', $value));
+        }
+
+        /** @var non-empty-string $normalized */
+        return $normalized;
     }
 }

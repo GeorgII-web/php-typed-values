@@ -67,7 +67,7 @@ describe('DecimalMoney', function () {
             ->and(DecimalMoney::fromString('0.00')->toFloat())->toBe(0.0);
 
         expect(fn() => DecimalMoney::fromString('1.51')->toFloat())
-            ->toThrow(DecimalTypeException::class);
+            ->toThrow(StringTypeException::class);
     });
 
     it('jsonSerialize returns string', function (): void {
@@ -124,16 +124,16 @@ describe('DecimalMoney', function () {
     it('covers conversions for DecimalMoney', function (): void {
         expect(DecimalMoney::fromBool(true)->value())->toBe('1.00')
             ->and(DecimalMoney::fromInt(123)->value())->toBe('123.00')
-            ->and(DecimalMoney::fromDecimal('1.23')->value())->toBe('1.23');
+            ->and(DecimalMoney::fromDecimal('1.20')->value())->toBe('1.20');
 
         $vInt = DecimalMoney::fromString('123.00');
         expect($vInt->toInt())->toBe(123)
-            ->and($vInt->toDecimal())->toBe('123.00')
+            ->and($vInt->toDecimal())->toBe('123.0')
             ->and(fn() => $vInt->toBool())->toThrow(StringTypeException::class);
     });
 
     it('tryFromBool, tryFromFloat, tryFromInt return DecimalMoney for valid inputs', function (): void {
-        expect(DecimalMoney::tryFromFloat(1.20))->toBeInstanceOf(DecimalMoney::class)
+        expect(DecimalMoney::tryFromFloat(1.5))->toBeInstanceOf(DecimalMoney::class)
             ->and(DecimalMoney::tryFromInt(123))->toBeInstanceOf(DecimalMoney::class)
             ->and(DecimalMoney::tryFromBool(true))->toBeInstanceOf(DecimalMoney::class);
     });
