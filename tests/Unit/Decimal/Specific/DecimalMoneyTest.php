@@ -26,6 +26,10 @@ describe('DecimalMoney', function () {
             ->and($d->value())->toBe('0.00');
     });
 
+    it('rejects empty string with DecimalTypeException', function (): void {
+        expect(fn() => new DecimalMoney(''))->toThrow(DecimalTypeException::class);
+    });
+
     it('throws on negative or malformed decimal strings or invalid decimal places', function (): void {
         expect(fn() => new DecimalMoney(''))
             ->toThrow(DecimalTypeException::class)
@@ -67,7 +71,8 @@ describe('DecimalMoney', function () {
             ->and(DecimalMoney::fromString('1.50')->toFloat())->toBe(1.5)
             ->and(DecimalMoney::fromString('0.00')->toFloat())->toBe(0.0)
             ->and(fn() => DecimalMoney::fromString('1.51')->toFloat())->toThrow(StringTypeException::class)
-            ->and(fn() => DecimalMoney::fromString(''))->toThrow(DecimalTypeException::class);
+            ->and(fn() => DecimalMoney::fromString(''))->toThrow(DecimalTypeException::class)
+            ->and(fn() => new DecimalMoney(''))->toThrow(DecimalTypeException::class);
     });
 
     it('jsonSerialize returns string', function (): void {

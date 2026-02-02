@@ -53,7 +53,7 @@ readonly class DecimalMoney extends DecimalTypeAbstract
     public function __construct(string $value)
     {
         // Validate a money format: non-negative with exactly 2 decimal places
-        if ($value === '' || preg_match('/^\d+\.\d{2}$/', $value) !== 1) {
+        if (preg_match('/^\d+\.\d{2}$/', $value) !== 1) {
             throw new DecimalTypeException(sprintf('Money value "%s" must be non-negative with exactly 2 decimal places', $value));
         }
 
