@@ -281,7 +281,7 @@ readonly class IntegerNegative extends IntegerTypeAbstract
                 is_int($value) => static::fromInt($value),
                 is_float($value) => static::fromFloat($value),
                 is_bool($value) => static::fromBool($value),
-                is_string($value) || $value instanceof Stringable => static::tryFromDecimal((string) $value, static::fromString((string) $value)),
+                is_string($value) || $value instanceof Stringable => static::tryFromDecimal((string) $value, static::tryFromString((string) $value, $default)),
                 default => throw new TypeException('Value cannot be cast to int'),
             };
         } catch (Exception) {

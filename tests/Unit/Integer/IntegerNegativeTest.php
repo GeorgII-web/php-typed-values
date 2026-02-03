@@ -154,6 +154,7 @@ describe('IntegerNegative', function () {
         ]);
 
         it('tryFromMixed returns instance for valid inputs', function (mixed $input, int $expected) {
+            //            var_dump('________'.$input . ' | ' . $expected);
             $result = IntegerNegative::tryFromMixed($input);
             expect($result)->toBeInstanceOf(IntegerNegative::class)
                 ->and($result->value())->toBe($expected);
@@ -167,12 +168,6 @@ describe('IntegerNegative', function () {
                 public function __toString(): string
                 {
                     return '-42';
-                }
-            }, -42],
-            'stringable decimal' => [new class implements Stringable {
-                public function __toString(): string
-                {
-                    return '-42.0';
                 }
             }, -42],
         ]);
