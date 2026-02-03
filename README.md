@@ -91,6 +91,120 @@ Other usage examples [docs/USAGE.md](docs/USAGE.md)
 - Development guide: [docs/DEVELOP.md](docs/DEVELOP.md)
 - More usage examples in [tests/Unit](tests/Unit)
 
+### Types structure
+
+```MD
+Types
+├── ArrayType
+│   ├── ArrayEmpty
+│   ├── ArrayNonEmpty
+│   ├── ArrayOfObjects
+│   └── ArrayUndefined
+├── Bool
+│   ├── BoolStandard
+│   ├── FalseStandard
+│   ├── TrueStandard
+│   └── Alias
+│       ├── Binary
+│       ├── BooleanType
+│       ├── Flag
+│       ├── Logical
+│       └── Toggle
+├── DateTime
+│   ├── DateTimeAtom
+│   ├── DateTimeRFC3339
+│   ├── DateTimeRFC3339Extended
+│   ├── DateTimeW3C
+│   ├── MariaDb
+│   │   └── DateTimeSql
+│   └── Timestamp
+│       ├── TimestampMilliseconds
+│       └── TimestampSeconds
+├── Decimal
+│   ├── DecimalNegative
+│   ├── DecimalNonNegative
+│   ├── DecimalPositive
+│   ├── DecimalStandard
+│   ├── Alias
+│   │   └── Decimal
+│   └── Specific
+│       └── DecimalMoney
+├── Float
+│   ├── FloatNonNegative
+│   ├── FloatPositive
+│   ├── FloatStandard
+│   └── Alias
+│       ├── DoubleType
+│       ├── FloatType
+│       ├── NonNegative
+│       └── Positive
+├── Integer
+│   ├── IntegerNegative
+│   ├── IntegerNonNegative
+│   ├── IntegerPositive
+│   ├── IntegerStandard
+│   ├── Alias
+│   │   ├── IntegerType
+│   │   ├── NonNegative
+│   │   ├── Positive
+│   │   ├── MariaDb
+│   │   │   └── Tiny
+│   │   └── Specific
+│   │       ├── Id
+│   │       └── WeekDay
+│   ├── MariaDb
+│   │   └── IntegerTiny
+│   └── Specific
+│       └── IntegerWeekDay
+├── String
+│   ├── StringEmpty
+│   ├── StringNonBlank
+│   ├── StringNonEmpty
+│   ├── StringStandard
+│   ├── Alias
+│   │   ├── EmptyStr
+│   │   ├── NonBlank
+│   │   ├── NonEmpty
+│   │   ├── Str
+│   │   ├── StringType
+│   │   ├── MariaDb
+│   │   │   ├── Text
+│   │   │   └── VarChar255
+│   │   └── Specific
+│   │       ├── CountryCode
+│   │       ├── Email
+│   │       ├── File
+│   │       ├── Json
+│   │       ├── Path
+│   │       ├── Url
+│   │       ├── UuidV4
+│   │       └── UuidV7
+│   ├── MariaDb
+│   │   ├── StringText
+│   │   └── StringVarChar255
+│   └── Specific
+│       ├── StringCountryCode
+│       ├── StringEmail
+│       ├── StringFileName
+│       ├── StringJson
+│       ├── StringLanguageCode
+│       ├── StringLocaleCode
+│       ├── StringMd5
+│       ├── StringPath
+│       ├── StringUrl
+│       ├── StringUuidV4
+│       └── StringUuidV7
+└── Undefined
+    ├── UndefinedStandard
+    └── Alias
+        ├── NotExist
+        ├── NotFound
+        ├── NotSet
+        ├── Undefined
+        └── Unknown
+
+```
+
 ### License
 
 MIT
