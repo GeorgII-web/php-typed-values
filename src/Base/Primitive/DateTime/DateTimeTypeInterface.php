@@ -23,10 +23,22 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  */
 interface DateTimeTypeInterface
 {
-    public const string DEFAULT_ZONE = 'UTC';
-    public const string FORMAT = '';
-    public const int MAX_TIMESTAMP_SECONDS = 253402300799; // 9999-12-31 23:59:59
-    public const int MIN_TIMESTAMP_SECONDS = -62135596800; // 0001-01-01
+    /**
+     * @var string
+     */
+    public const DEFAULT_ZONE = 'UTC';
+    /**
+     * @var string
+     */
+    public const FORMAT = '';
+    /**
+     * @var int
+     */
+    public const MAX_TIMESTAMP_SECONDS = 253402300799; // 9999-12-31 23:59:59
+    /**
+     * @var int
+     */
+    public const MIN_TIMESTAMP_SECONDS = -62135596800; // 0001-01-01
 
     public static function fromDateTime(DateTimeImmutable $value): static;
 
