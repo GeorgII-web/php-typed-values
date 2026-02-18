@@ -178,6 +178,28 @@ describe('FloatNegative', function () {
         });
 
         describe('tryFromMixed', function () {
+            it('returns Undefined for invalid mixed input values', function (mixed $input) {
+                $result = FloatNegative::tryFromMixed($input);
+                expect($result)->toBeInstanceOf(Undefined::class)
+                    ->and($result->isUndefined())->toBeTrue();
+            })->with([
+                'null' => [null],
+                'array' => [[]],
+                'object' => [new stdClass()],
+                'non-numeric string' => ['not-a-float'],
+                'invalid format string' => ['1.2.3'],
+                'octal-like string' => ['007'],
+                'Callable array' => [['FloatNonNegative', 'fromInt']],
+                'Resource' => [fopen('php://memory', 'r')],
+                'Array of objects' => [[new stdClass()]],
+                'INF' => [\INF],
+                'NAN' => [\NAN],
+                'Null byte string' => ["\0"],
+                'positive float' => [3.14],
+                'positive integer' => [42],
+                'positive string' => ['10.5'],
+            ]);
+
             it('returns instance for valid mixed inputs', function (mixed $input, float $expected) {
                 $result = FloatNegative::tryFromMixed($input);
                 expect($result)->toBeInstanceOf(FloatNegative::class)
@@ -243,6 +265,7 @@ describe('FloatNegative', function () {
                 'zero' => [0.0, 'Expected negative float, got "0"'],
                 'positive' => [0.1, 'Expected negative float, got "0.1"'],
                 'INF' => [\INF, 'Expected negative float, got "INF"'],
+                '-INF' => [-\INF, 'Infinite float value'],
                 'NAN' => [\NAN, 'Not a number float value'],
             ]);
         });

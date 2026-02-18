@@ -130,6 +130,7 @@ Types
 │   └── Specific
 │       └── DecimalMoney
 ├── Float
+│   ├── FloatNegative
 │   ├── FloatNonNegative
 │   ├── FloatPositive
 │   ├── FloatStandard
