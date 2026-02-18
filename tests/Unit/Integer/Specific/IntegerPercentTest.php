@@ -108,6 +108,24 @@ describe('IntegerPercent', function () {
             'false' => [false],
         ]);
 
+        it('tryFromBool returns default when fromBool throws exception', function () {
+            /**
+             * @internal
+             *
+             * @coversNothing
+             */
+            readonly class IntegerPercentMockTest extends IntegerPercent
+            {
+                public static function fromBool(bool $value): static
+                {
+                    throw new Exception('forced failure');
+                }
+            }
+
+            $customDefault = Undefined::create();
+            expect(IntegerPercentMockTest::tryFromBool(true, $customDefault))->toBe($customDefault);
+        });
+
         it('tryFromFloat returns instance or default', function (float $input, bool $shouldFail) {
             $result = IntegerPercent::tryFromFloat($input);
             if ($shouldFail) {
@@ -249,7 +267,6 @@ describe('IntegerPercent', function () {
         })->with([
             'zero to false' => [0, false],
             'one to true' => [1, true],
-            'fifty to true' => [50, true],
         ]);
 
         it('converts to float', function (int $input) {
@@ -260,6 +277,28 @@ describe('IntegerPercent', function () {
             'fifty' => [50],
             'hundred' => [100],
         ]);
+
+        it('throws when toFloat loses precision', function () {
+            /**
+             * @internal
+             *
+             * @coversNothing
+             */
+            readonly class IntegerPercentPrecisionTest extends IntegerPercent
+            {
+                protected int $value;
+
+                public function __construct(int $value)
+                {
+                    $this->value = $value;
+                }
+            }
+
+            $val = 9007199254740993; // 2^53 + 1
+            if ($val !== (int) (float) $val) {
+                expect(fn() => (new IntegerPercentPrecisionTest($val))->toFloat())->toThrow(IntegerTypeException::class);
+            }
+        });
 
         it('converts to int', function (int $input) {
             expect((new IntegerPercent($input))->toInt())->toBe($input);

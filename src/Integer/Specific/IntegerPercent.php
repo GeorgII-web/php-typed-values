@@ -134,9 +134,12 @@ readonly class IntegerPercent extends IntegerTypeAbstract
         return $this->value();
     }
 
+    /**
+     * @throws IntegerTypeException
+     */
     public function toBool(): bool
     {
-        return (bool) $this->value();
+        return static::intToBool($this->value());
     }
 
     public function toDecimal(): string
@@ -171,7 +174,7 @@ readonly class IntegerPercent extends IntegerTypeAbstract
      */
     public function toString(): string
     {
-        return (string) $this->value();
+        return static::intToString($this->value());
     }
 
     /**
