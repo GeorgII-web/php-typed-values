@@ -20,29 +20,29 @@ use function is_string;
 use function sprintf;
 
 /**
- * Unix timestamp value in milliseconds since the Unix epoch (UTC).
+ * Unix timestamp value in microseconds since the Unix epoch (UTC).
  *
- * Accepts a strictly numeric milliseconds string and converts it to an
+ * Accepts a strictly numeric microseconds string and converts it to an
  * internal DateTimeImmutable with microsecond precision. Parsing and
  * validation leverage DateTimeType, including detailed error aggregation and
- * strict round‑trip verification. Output is rendered back to milliseconds.
+ * strict round‑trip verification. Output is rendered back to microseconds.
  *
  * Example
- *  - $v = TimestampMilliseconds::fromString('1732445696123');
- *    $v->toString(); // "1732445696123"
- *  - $v = TimestampMilliseconds::fromString('0');
+ *  - $v = TimestampMicroseconds::fromString('1771595002495166');
+ *    $v->toString(); // "1771595002495166"
+ *  - $v = TimestampMicroseconds::fromString('0');
  *    (string) $v; // "0"
  *
  * @psalm-immutable
  */
-readonly class TimestampMilliseconds extends DateTimeTypeAbstract
+readonly class TimestampMicroseconds extends DateTimeTypeAbstract
 {
     /**
      * Internal formatting pattern for seconds + microseconds.
      *
      * @see https://www.php.net/manual/en/datetime.format.php
      */
-    public const string FORMAT = 'U.v';
+    public const string FORMAT = 'U.u';
 
     protected DateTimeImmutable $value;
 
@@ -78,7 +78,7 @@ readonly class TimestampMilliseconds extends DateTimeTypeAbstract
     }
 
     /**
-     * Parse from a numeric Unix timestamp string (milliseconds).
+     * Parse from a numeric Unix timestamp string (microseconds).
      *
      * @param non-empty-string $timezone
      *
@@ -89,20 +89,20 @@ readonly class TimestampMilliseconds extends DateTimeTypeAbstract
     public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE): static
     {
         if (!ctype_digit($value)) {
-            throw new DateTimeTypeException(sprintf('Expected milliseconds timestamp as digits, got "%s"', $value));
+            throw new DateTimeTypeException(sprintf('Expected microseconds timestamp as digits, got "%s"', $value));
         }
 
-        // "1732445696123" -> 1732445696 seconds, 123 milliseconds
-        $milliseconds = (int) $value;
-        $seconds = intdiv($milliseconds, 1000);
-        $msRemainder = $milliseconds % 1000;
+        // "1732445696123456" -> 1732445696 seconds, 123456 microseconds
+        $totalMicroseconds = (int) $value;
+        $seconds = intdiv($totalMicroseconds, 1000000);
+        $microseconds = $totalMicroseconds % 1000000;
 
-        // Build "seconds.milliseconds" string for INTERNAL_FORMAT, e.g. "1732445696.123"
-        $secondsWithMilli = sprintf('%d.%03d', $seconds, $msRemainder);
+        // Build "seconds.microseconds" string for INTERNAL_FORMAT, e.g. "1732445696.123456"
+        $secondsWithMicro = sprintf('%d.%06d', $seconds, $microseconds);
 
         return new static(
             static::stringToDateTime(
-                $secondsWithMilli,
+                $secondsWithMicro,
                 static::FORMAT,
                 static::stringToDateTimeZone($timezone)
             )
@@ -146,20 +146,20 @@ readonly class TimestampMilliseconds extends DateTimeTypeAbstract
     }
 
     /**
-     * Render as milliseconds since epoch, e.g. "1732445696123".
+     * Render as microseconds since epoch, e.g. "1732445696123456".
      */
     public function toString(): string
     {
         $dt = $this->value();
 
         $seconds = $dt->format('U');
-        $millis = $dt->format('v');
+        $micros = $dt->format('u');
 
         if ($seconds === '0') {
-            return (string) (int) $millis;
+            return (string) (int) $micros;
         }
 
-        return $seconds . $millis;
+        return $seconds . $micros;
     }
 
     /**
