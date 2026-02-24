@@ -23,17 +23,32 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  */
 interface DateTimeTypeInterface
 {
-    public const string DEFAULT_ZONE = 'UTC';
-    public const string FORMAT = '';
-    public const int MAX_TIMESTAMP_SECONDS = 253402300799; // 9999-12-31 23:59:59
-    public const int MIN_TIMESTAMP_SECONDS = -62135596800; // 0001-01-01
-
-    public static function fromDateTime(DateTimeImmutable $value): static;
+    /**
+     * @var string
+     */
+    public const DEFAULT_ZONE = 'UTC';
+    /**
+     * @var string
+     */
+    public const FORMAT = '';
+    /**
+     * @var int
+     */
+    public const MAX_TIMESTAMP_SECONDS = 253402300799; // 9999-12-31 23:59:59
+    /**
+     * @var int
+     */
+    public const MIN_TIMESTAMP_SECONDS = -62135596800; // 0001-01-01
+    /**
+     * @return static
+     */
+    public static function fromDateTime(DateTimeImmutable $value);
 
     /**
      * @param non-empty-string $timezone
+     * @return static
      */
-    public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE): static;
+    public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE);
 
     public static function getFormat(): string;
 
@@ -48,12 +63,13 @@ interface DateTimeTypeInterface
      * @param non-empty-string $timezone
      *
      * @return static|T
+     * @param mixed $value
      */
     public static function tryFromMixed(
-        mixed $value,
+        $value,
         string $timezone = self::DEFAULT_ZONE,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract;
+        PrimitiveTypeAbstract $default = null
+    );
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -66,13 +82,14 @@ interface DateTimeTypeInterface
     public static function tryFromString(
         string $value,
         string $timezone = self::DEFAULT_ZONE,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract;
+        PrimitiveTypeAbstract $default = null
+    );
 
     public function value(): DateTimeImmutable;
 
     /**
      * @param non-empty-string $timezone
+     * @return static
      */
-    public function withTimeZone(string $timezone): static;
+    public function withTimeZone(string $timezone);
 }
