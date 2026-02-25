@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PhpTypedValues\Base\Primitive;
 
 use JsonSerializable;
+use PhpTypedValues\Base\Primitive\Undefined\UndefinedTypeInterface;
 use PhpTypedValues\Base\TypeInterface;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use ReturnTypeWillChange;
@@ -37,6 +38,10 @@ interface PrimitiveTypeInterface extends TypeInterface, JsonSerializable
 
     /**
      * Returns if the Object value is an Undefined type class.
+     *
+     * @psalm-assert-if-true UndefinedTypeInterface   $this
+     *
+     * @psalm-assert-if-false !UndefinedTypeInterface $this
      */
     public function isUndefined(): bool;
 

@@ -7,12 +7,12 @@ namespace PhpTypedValues\Base\Primitive;
 use DateTimeZone;
 use Exception;
 use PhpTypedValues\Base\Primitive\DateTime\DateTimeTypeInterface;
+use PhpTypedValues\Base\Primitive\Undefined\UndefinedTypeInterface;
 use PhpTypedValues\Exception\DateTime\ZoneDateTimeTypeException;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
-use PhpTypedValues\Undefined\UndefinedStandard;
 
 use function sprintf;
 
@@ -52,9 +52,9 @@ abstract readonly class PrimitiveTypeAbstract implements PrimitiveTypeInterface
     /**
      * Returns if the Object value is an Undefined type class.
      *
-     * @psalm-assert-if-true UndefinedStandard $this
+     * @psalm-assert-if-true UndefinedTypeInterface   $this
      *
-     * @psalm-assert-if-false !UndefinedStandard $this
+     * @psalm-assert-if-false !UndefinedTypeInterface $this
      */
     abstract public function isUndefined(): bool;
 
