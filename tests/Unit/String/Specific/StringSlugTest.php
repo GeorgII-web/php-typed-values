@@ -6,6 +6,7 @@ namespace PhpTypedValues\Tests\Unit\String\Specific;
 
 use const STDOUT;
 
+use Exception;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\String\StringSlugException;
 use PhpTypedValues\Exception\String\StringTypeException;
@@ -190,10 +191,34 @@ describe('StringSlug', function () {
  */
 readonly class StringSlugTest extends StringSlug
 {
+    public static function fromBool(bool $value): static
+    {
+        throw new Exception('Trigger fromBool');
+    }
+
+    public static function fromDecimal(string $value): static
+    {
+        throw new Exception('Trigger fromDecimal');
+    }
+
+    public static function fromFloat(float $value): static
+    {
+        throw new Exception('Trigger fromFloat');
+    }
+
+    public static function fromInt(int $value): static
+    {
+        throw new Exception('Trigger fromInt');
+    }
+
     public static function fromString(string $value): static
     {
         if ($value === 'null') {
             throw new Exception('Trigger fromString for null');
+        }
+
+        if ($value === 'trigger-exception') {
+            throw new Exception('Trigger fromString');
         }
 
         return new self('generic-slug');
@@ -210,5 +235,15 @@ describe('Coverage for mutants', function () {
     it('tryFromMixed specifically triggers default branch for unknown types like array', function (): void {
         $result = StringSlugTest::tryFromMixed([]);
         expect($result)->toBeInstanceOf(Undefined::class);
+    });
+
+    it('tryFrom* methods return default on exception', function (): void {
+        $default = new Undefined();
+
+        expect(StringSlugTest::tryFromBool(true, $default))->toBe($default)
+            ->and(StringSlugTest::tryFromDecimal('1.23', $default))->toBe($default)
+            ->and(StringSlugTest::tryFromFloat(1.23, $default))->toBe($default)
+            ->and(StringSlugTest::tryFromInt(123, $default))->toBe($default)
+            ->and(StringSlugTest::tryFromString('trigger-exception', $default))->toBe($default);
     });
 });
