@@ -6,7 +6,6 @@ namespace PhpTypedValues\Tests\Unit\String;
 
 use const STDOUT;
 
-use Exception;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\String\StringIpV6Exception;
 use PhpTypedValues\Exception\String\StringTypeException;
@@ -181,13 +180,15 @@ describe('StringIpV6', function () {
  * @internal
  *
  * @psalm-immutable
+ *
+ * @coversNothing
  */
 readonly class StringIpV6Test extends StringIpV6
 {
     public static function fromString(string $value): static
     {
         if ($value === 'null') {
-            return new self('2001:db8::null');
+            return new self('2001:db8::');
         }
 
         return new self('::1');
@@ -198,7 +199,7 @@ describe('Coverage for mutants', function () {
     it('tryFromMixed specifically triggers fromString("null") for null value', function (): void {
         $result = StringIpV6Test::tryFromMixed(null);
         expect($result)->toBeInstanceOf(StringIpV6::class)
-            ->and($result->value())->toBe('2001:db8::null');
+            ->and($result->value())->toBe('2001:db8::');
     });
 
     it('tryFromMixed specifically triggers default branch for unknown types like array', function (): void {
