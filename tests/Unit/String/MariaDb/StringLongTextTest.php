@@ -185,7 +185,11 @@ readonly class StringLongTextTest extends StringLongText
     {
         // Special case for testing line 46 in StringLongText.php
         foreach (debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS) as $trace) {
-            if (str_contains($trace['function'] ?? '', 'it_throws_when_string_exceeds_max_length')) {
+            $function = $trace['function'] ?? '';
+            if (
+                str_contains($function, 'it_throws_when_string_exceeds_max_length')
+                || str_contains($function, 'it_accepts_string_of_exact_max_length')
+            ) {
                 return 5;
             }
         }
@@ -219,5 +223,17 @@ describe('Coverage for mutants', function () {
     it('it throws when string exceeds max length', function (): void {
         expect(fn() => new StringLongTextTest('too-long'))
             ->toThrow(StringTypeException::class, 'String is too long, max 5 chars allowed');
+    });
+
+    it('it accepts string of exact max length', function (): void {
+        expect(new StringLongTextTest('abcde'))->toBeInstanceOf(StringLongText::class)
+            ->and(new StringLongTextTest('abcde')->value())->toBe('abcde');
+    });
+
+    it('maxLength() specifically returns 4294967295', function (): void {
+        $reflection = new ReflectionMethod(StringLongText::class, 'maxLength');
+        $reflection->setAccessible(true);
+
+        expect($reflection->invoke(null))->toBe(4294967295);
     });
 });
