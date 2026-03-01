@@ -6,6 +6,12 @@
 *   Try to fix existing test-files in the first place, in exceptional cases, fix src classes.
 *   Create classes names in test files with proper names (like `IntegerStandardTest`), bc CSFIXER changes it. 
 
+**Add new type workflow**
+*   Create a new type class in `src/{TypeName}/` or deeper to `Specific` etc. directory.
+*   Create a new type class in `src/{TypeName}/Alias/` or deeper directory.
+*   Create a new exception class in `src/Exception/{TypeName}/` or deeper directory.
+*   Create a new test class in `tests/Unit/{TypeName}/{TypeName}Test.php` file. Make 100% code/typmutation coverage, copy nearest tests file cases.
+
 **"Fix test" or "Cover with tests" prompt**
 * DO NOT RUN ANY TERMINAL COMMANDS!!!
 * FIX ONLY TEST FILES, DO NOT CREATE NEW TEST FILES.
