@@ -16,26 +16,31 @@ use ReturnTypeWillChange;
  *
  * @psalm-immutable
  */
-readonly class ArrayUndefined extends ArrayTypeAbstract implements ArrayUndefinedTypeInterface
+class ArrayUndefined extends ArrayTypeAbstract implements ArrayUndefinedTypeInterface
 {
     /**
      * @throws ArrayUndefinedTypeException
+     * @return never
      */
     #[ReturnTypeWillChange]
-    public function count(): never
+    public function count()
     {
         throw new ArrayUndefinedTypeException('Undefined array has no items to count');
     }
 
-    public static function create(): static
+    /**
+     * @return static
+     */
+    public static function create()
     {
         return new static();
     }
 
     /**
      * @psalm-pure
+     * @return static
      */
-    public static function fromArray(array $value): static
+    public static function fromArray(array $value)
     {
         return new static();
     }
@@ -50,8 +55,11 @@ readonly class ArrayUndefined extends ArrayTypeAbstract implements ArrayUndefine
         throw new ArrayUndefinedTypeException('Undefined array has no defined items');
     }
 
+    /**
+     * @return never
+     */
     #[ReturnTypeWillChange]
-    public function getIterator(): never
+    public function getIterator()
     {
         throw new ArrayUndefinedTypeException('Undefined array has no items for iterator');
     }
@@ -84,9 +92,10 @@ readonly class ArrayUndefined extends ArrayTypeAbstract implements ArrayUndefine
 
     /**
      * @throws ArrayUndefinedTypeException
+     * @return never
      */
     #[ReturnTypeWillChange]
-    public function jsonSerialize(): never
+    public function jsonSerialize()
     {
         throw new ArrayUndefinedTypeException('Undefined array cannot be converted to Json');
     }
@@ -101,16 +110,18 @@ readonly class ArrayUndefined extends ArrayTypeAbstract implements ArrayUndefine
 
     /**
      * @throws ArrayUndefinedTypeException
+     * @return never
      */
-    public function toFloat(): never
+    public function toFloat()
     {
         throw new ArrayUndefinedTypeException('Undefined array cannot be converted to float');
     }
 
     /**
      * @throws ArrayUndefinedTypeException
+     * @return never
      */
-    public function toInt(): never
+    public function toInt()
     {
         throw new ArrayUndefinedTypeException('Undefined array cannot be converted to integer');
     }
