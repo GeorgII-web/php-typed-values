@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Tests\Unit\String;
 
+use const STDOUT;
+
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\String\StringIpV4Exception;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\String\Specific\StringIpV4;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use stdClass;
 use Stringable;
 
 describe('StringIpV4', function () {
@@ -127,12 +130,30 @@ describe('StringIpV4', function () {
                 }
             };
 
+            $nonStringable = new stdClass();
+
             expect(StringIpV4::tryFromMixed('127.0.0.1'))->toBeInstanceOf(StringIpV4::class)
                 ->and(StringIpV4::tryFromMixed(123))->toBeInstanceOf(Undefined::class)
                 ->and(StringIpV4::tryFromMixed(true))->toBeInstanceOf(Undefined::class)
                 ->and(StringIpV4::tryFromMixed('invalid'))->toBeInstanceOf(Undefined::class)
                 ->and(StringIpV4::tryFromMixed($stringable))->toBeInstanceOf(StringIpV4::class)
-                ->and(StringIpV4::tryFromMixed(null))->toBeInstanceOf(Undefined::class);
+                ->and(StringIpV4::tryFromMixed(null))->toBeInstanceOf(Undefined::class)
+                ->and(StringIpV4::tryFromMixed($nonStringable))->toBeInstanceOf(Undefined::class)
+                ->and(StringIpV4::tryFromMixed([]))->toBeInstanceOf(Undefined::class)
+                ->and(StringIpV4::tryFromMixed(STDOUT))->toBeInstanceOf(Undefined::class);
+        });
+
+        it('tryFromMixed handles null and other types correctly with custom default', function (): void {
+            $default = StringIpV4::fromString('8.8.8.8');
+
+            // null should go to null === $value branch -> fromString('null') -> throw -> return $default
+            expect(StringIpV4::tryFromMixed(null, $default))->toBe($default)
+                // [] should go to default branch -> throw -> return $default
+                ->and(StringIpV4::tryFromMixed([], $default))->toBe($default)
+                // new stdClass() should go to default branch -> throw -> return $default
+                ->and(StringIpV4::tryFromMixed(new stdClass(), $default))->toBe($default)
+                // STDOUT should go to default branch -> throw -> return $default
+                ->and(StringIpV4::tryFromMixed(STDOUT, $default))->toBe($default);
         });
     });
 
@@ -157,5 +178,42 @@ describe('StringIpV4', function () {
             $v = StringIpV4::fromString('127.0.0.1');
             expect(json_encode($v))->toBe('"127.0.0.1"');
         });
+    });
+});
+
+/**
+ * @internal
+ *
+ * @psalm-immutable
+ *
+ * @coversNothing
+ */
+readonly class StringIpV4Test extends StringIpV4
+{
+    public static function fromString(string $value): static
+    {
+        if ($value === 'null') {
+            return new self('10.0.0.1');
+        }
+
+        return new self('127.0.0.1');
+    }
+}
+
+describe('Coverage for mutants', function () {
+    it('tryFromMixed specifically triggers fromString("null") for null value', function (): void {
+        // StringIpV4Test overrides fromString to return 10.0.0.1 specifically for 'null'.
+        // This allows us to verify that null === $value branch is indeed taken for null.
+        $result = StringIpV4Test::tryFromMixed(null);
+        expect($result)->toBeInstanceOf(StringIpV4::class)
+            ->and($result->value())->toBe('10.0.0.1');
+    });
+
+    it('tryFromMixed specifically triggers default branch for unknown types like array', function (): void {
+        // For an array, it should hit 'default' branch in tryFromMixed.
+        // If the mutant null !== $value was present, an array would hit that branch and return 10.0.0.1.
+        // Without mutant, it hits 'default' which throws TypeException and returns Undefined.
+        $result = StringIpV4Test::tryFromMixed([]);
+        expect($result)->toBeInstanceOf(Undefined::class);
     });
 });
