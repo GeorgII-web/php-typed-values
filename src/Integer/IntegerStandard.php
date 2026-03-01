@@ -35,8 +35,11 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class IntegerStandard extends IntegerTypeAbstract
+class IntegerStandard extends IntegerTypeAbstract
 {
+    /**
+     * @readonly
+     */
     protected int $value;
 
     public function __construct(int $value)
@@ -46,8 +49,9 @@ readonly class IntegerStandard extends IntegerTypeAbstract
 
     /**
      * @psalm-pure
+     * @return static
      */
-    public static function fromBool(bool $value): static
+    public static function fromBool(bool $value)
     {
         return new static(static::boolToInt($value));
     }
@@ -56,8 +60,9 @@ readonly class IntegerStandard extends IntegerTypeAbstract
      * @throws DecimalTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromDecimal(string $value): static
+    public static function fromDecimal(string $value)
     {
         return new static(static::decimalToInt($value));
     }
@@ -66,16 +71,18 @@ readonly class IntegerStandard extends IntegerTypeAbstract
      * @throws FloatTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromFloat(float $value): static
+    public static function fromFloat(float $value)
     {
         return new static(static::floatToInt($value));
     }
 
     /**
      * @psalm-pure
+     * @return static
      */
-    public static function fromInt(int $value): static
+    public static function fromInt(int $value)
     {
         return new static($value);
     }
@@ -84,13 +91,17 @@ readonly class IntegerStandard extends IntegerTypeAbstract
      * @throws StringTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         return new static(static::stringToInt($value));
     }
 
-    public function isEmpty(): false
+    /**
+     * @return false
+     */
+    public function isEmpty(): bool
     {
         return false;
     }
@@ -106,7 +117,10 @@ readonly class IntegerStandard extends IntegerTypeAbstract
         return false;
     }
 
-    public function isUndefined(): false
+    /**
+     * @return false
+     */
+    public function isUndefined(): bool
     {
         return false;
     }
@@ -166,12 +180,13 @@ readonly class IntegerStandard extends IntegerTypeAbstract
      */
     public static function tryFromBool(
         bool $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromBool($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -188,12 +203,13 @@ readonly class IntegerStandard extends IntegerTypeAbstract
      */
     public static function tryFromDecimal(
         string $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromDecimal($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -210,12 +226,13 @@ readonly class IntegerStandard extends IntegerTypeAbstract
      */
     public static function tryFromFloat(
         float $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromFloat($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -232,8 +249,9 @@ readonly class IntegerStandard extends IntegerTypeAbstract
      */
     public static function tryFromInt(
         int $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         /** @var static */
         return static::fromInt($value);
     }
@@ -246,21 +264,27 @@ readonly class IntegerStandard extends IntegerTypeAbstract
      * @return static|T
      *
      * @psalm-pure
+     * @param mixed $value
      */
     public static function tryFromMixed(
-        mixed $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+        $value,
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
-            /** @var static */
-            return match (true) {
-                is_int($value) => static::fromInt($value),
-                is_float($value) => static::fromFloat($value),
-                is_bool($value) => static::fromBool($value),
-                is_string($value) || $value instanceof Stringable => static::tryFromDecimal((string) $value, static::fromString((string) $value)),
-                default => throw new TypeException('Value cannot be cast to int'),
-            };
-        } catch (Exception) {
+            switch (true) {
+                case is_int($value):
+                    return static::fromInt($value);
+                case is_float($value):
+                    return static::fromFloat($value);
+                case is_bool($value):
+                    return static::fromBool($value);
+                case is_string($value) || is_object($value) && method_exists($value, '__toString'):
+                    return static::tryFromDecimal((string) $value, static::fromString((string) $value));
+                default:
+                    throw new TypeException('Value cannot be cast to int');
+            }
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -277,12 +301,13 @@ readonly class IntegerStandard extends IntegerTypeAbstract
      */
     public static function tryFromString(
         string $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromString($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
