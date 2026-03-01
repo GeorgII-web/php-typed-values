@@ -21,60 +21,67 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  *
  * @psalm-immutable
  */
-readonly class UndefinedStandard extends UndefinedTypeAbstract
+class UndefinedStandard extends UndefinedTypeAbstract
 {
     /**
      * @psalm-pure
+     * @return static
      */
-    public static function create(): static
+    public static function create()
     {
         return new static();
     }
 
     /**
      * @psalm-pure
+     * @return static
      */
-    public static function fromArray(array $value): static
+    public static function fromArray(array $value)
     {
         return new static();
     }
 
     /**
      * @psalm-pure
+     * @return static
      */
-    public static function fromBool(bool $value): static
+    public static function fromBool(bool $value)
     {
         return new static();
     }
 
     /**
      * @psalm-pure
+     * @return static
      */
-    public static function fromDecimal(string $value): static
+    public static function fromDecimal(string $value)
     {
         return new static();
     }
 
     /**
      * @psalm-pure
+     * @return static
      */
-    public static function fromFloat(float $value): static
+    public static function fromFloat(float $value)
     {
         return new static();
     }
 
     /**
      * @psalm-pure
+     * @return static
      */
-    public static function fromInt(int $value): static
+    public static function fromInt(int $value)
     {
         return new static();
     }
 
     /**
      * @psalm-pure
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         return new static();
     }
@@ -102,24 +109,27 @@ readonly class UndefinedStandard extends UndefinedTypeAbstract
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    public function jsonSerialize(): never
+    public function jsonSerialize()
     {
         throw new UndefinedTypeException('UndefinedType cannot be serialized for Json.');
     }
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    public function toArray(): never
+    public function toArray()
     {
         throw new UndefinedTypeException('UndefinedType cannot be converted to array.');
     }
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    public function toBool(): never
+    public function toBool()
     {
         throw new UndefinedTypeException('UndefinedType cannot be converted to boolean.');
     }
@@ -134,16 +144,18 @@ readonly class UndefinedStandard extends UndefinedTypeAbstract
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    public function toFloat(): never
+    public function toFloat()
     {
         throw new UndefinedTypeException('UndefinedType cannot be converted to float.');
     }
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    public function toInt(): never
+    public function toInt()
     {
         throw new UndefinedTypeException('UndefinedType cannot be converted to integer.');
     }
@@ -158,71 +170,86 @@ readonly class UndefinedStandard extends UndefinedTypeAbstract
 
     /**
      * @psalm-pure
+     * @return static
      */
     public static function tryFromArray(
         array $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         return static::fromArray($value);
     }
 
     /**
      * @psalm-pure
+     * @return static
      */
     public static function tryFromBool(
         bool $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         return static::fromBool($value);
     }
 
     /**
      * @psalm-pure
+     * @return static
      */
     public static function tryFromDecimal(
         string $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         return static::fromString($value);
     }
 
     /**
      * @psalm-pure
+     * @return static
      */
     public static function tryFromFloat(
         float $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         return static::fromFloat($value);
     }
 
     /**
      * @psalm-pure
+     * @return static
      */
     public static function tryFromInt(
         int $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         return static::fromInt($value);
     }
 
     /**
      * @psalm-pure
+     * @param mixed $value
+     * @return static
      */
     public static function tryFromMixed(
-        mixed $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static {
+        $value,
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         return new static();
     }
 
     /**
      * @psalm-pure
+     * @return static
      */
     public static function tryFromString(
         string $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         return static::fromString($value);
     }
 

@@ -23,31 +23,54 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  */
 interface UndefinedTypeInterface
 {
-    public static function create(): static;
+    /**
+     * @return static
+     */
+    public static function create();
 
-    public static function fromArray(array $value): static;
+    /**
+     * @return static
+     */
+    public static function fromArray(array $value);
 
-    public static function fromBool(bool $value): static;
+    /**
+     * @return static
+     */
+    public static function fromBool(bool $value);
 
-    public static function fromDecimal(string $value): static;
+    /**
+     * @return static
+     */
+    public static function fromDecimal(string $value);
 
-    public static function fromFloat(float $value): static;
+    /**
+     * @return static
+     */
+    public static function fromFloat(float $value);
 
-    public static function fromInt(int $value): static;
+    /**
+     * @return static
+     */
+    public static function fromInt(int $value);
 
-    public static function fromString(string $value): static;
+    /**
+     * @return static
+     */
+    public static function fromString(string $value);
 
     public function isTypeOf(string ...$classNames): bool;
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    public function toArray(): never;
+    public function toArray();
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    public function toBool(): never;
+    public function toBool();
 
     /**
      * @throws UndefinedTypeException
@@ -56,53 +79,77 @@ interface UndefinedTypeInterface
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    public function toFloat(): never;
+    public function toFloat();
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    public function toInt(): never;
+    public function toInt();
 
     /**
      * @throws UndefinedTypeException
      */
     public function toString(): string;
 
+    /**
+     * @return static
+     */
     public static function tryFromArray(
         array $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static;
+        PrimitiveTypeAbstract $default = null
+    );
 
+    /**
+     * @return static
+     */
     public static function tryFromBool(
         bool $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static;
+        PrimitiveTypeAbstract $default = null
+    );
 
+    /**
+     * @return static
+     */
     public static function tryFromDecimal(
         string $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static;
+        PrimitiveTypeAbstract $default = null
+    );
 
+    /**
+     * @return static
+     */
     public static function tryFromFloat(
         float $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static;
+        PrimitiveTypeAbstract $default = null
+    );
 
+    /**
+     * @return static
+     */
     public static function tryFromInt(
         int $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static;
+        PrimitiveTypeAbstract $default = null
+    );
 
+    /**
+     * @param mixed $value
+     * @return static
+     */
     public static function tryFromMixed(
-        mixed $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static;
+        $value,
+        PrimitiveTypeAbstract $default = null
+    );
 
+    /**
+     * @return static
+     */
     public static function tryFromString(
         string $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static;
+        PrimitiveTypeAbstract $default = null
+    );
 
     /**
      * @throws UndefinedTypeException
