@@ -11,6 +11,7 @@ use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\String\Specific\StringCurrencyCode;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
+use Stringable;
 
 describe('StringCurrencyCode', function () {
     it('accepts valid currency code and preserves toString and __toString', function (): void {
@@ -235,37 +236,57 @@ readonly class StringCurrencyCodeTest extends StringCurrencyCode
 {
     public static function fromBool(bool $value): static
     {
-        throw new Exception('test');
+        throw new Exception('Trigger fromBool');
     }
 
     public static function fromDecimal(string $value): static
     {
-        throw new Exception('test');
+        throw new Exception('Trigger fromDecimal');
     }
 
     public static function fromFloat(float $value): static
     {
-        throw new Exception('test');
+        throw new Exception('Trigger fromFloat');
     }
 
     public static function fromInt(int $value): static
     {
-        throw new Exception('test');
+        throw new Exception('Trigger fromInt');
     }
 
     public static function fromString(string $value): static
     {
-        throw new Exception('test');
+        if ($value === 'null') {
+            return new self('USD');
+        }
+
+        if ($value === 'trigger-exception') {
+            throw new Exception('Trigger fromString');
+        }
+
+        return new self('EUR');
     }
 }
 
-describe('Throwing static', function () {
-    it('StringCurrencyCode::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
-        expect(StringCurrencyCodeTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
-            ->and(StringCurrencyCodeTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
-            ->and(StringCurrencyCodeTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
-            ->and(StringCurrencyCodeTest::tryFromDecimal('1.0'))->toBeInstanceOf(Undefined::class)
-            ->and(StringCurrencyCodeTest::tryFromMixed('USD'))->toBeInstanceOf(Undefined::class)
-            ->and(StringCurrencyCodeTest::tryFromString('USD'))->toBeInstanceOf(Undefined::class);
+describe('Coverage for mutants', function () {
+    it('tryFromMixed specifically triggers fromString("null") for null value', function (): void {
+        $result = StringCurrencyCodeTest::tryFromMixed(null);
+        expect($result)->toBeInstanceOf(StringCurrencyCode::class)
+            ->and($result->value())->toBe('USD');
+    });
+
+    it('tryFromMixed specifically triggers default branch for unknown types like array', function (): void {
+        $result = StringCurrencyCodeTest::tryFromMixed([]);
+        expect($result)->toBeInstanceOf(Undefined::class);
+    });
+
+    it('tryFrom* methods return default on exception', function (): void {
+        $default = new Undefined();
+
+        expect(StringCurrencyCodeTest::tryFromBool(true, $default))->toBe($default)
+            ->and(StringCurrencyCodeTest::tryFromDecimal('1.23', $default))->toBe($default)
+            ->and(StringCurrencyCodeTest::tryFromFloat(1.23, $default))->toBe($default)
+            ->and(StringCurrencyCodeTest::tryFromInt(123, $default))->toBe($default)
+            ->and(StringCurrencyCodeTest::tryFromString('trigger-exception', $default))->toBe($default);
     });
 });
