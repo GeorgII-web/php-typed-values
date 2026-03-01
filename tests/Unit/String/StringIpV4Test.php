@@ -51,7 +51,7 @@ describe('StringIpV4', function () {
         });
 
         it('throws StringIpV4Exception from fromDecimal', function (): void {
-            expect(fn() => StringIpV4::fromDecimal('1.2.3.4'))
+            expect(fn() => StringIpV4::fromDecimal('1.23'))
                 ->toThrow(StringIpV4Exception::class);
         });
 
@@ -112,7 +112,7 @@ describe('StringIpV4', function () {
         });
 
         it('tryFromDecimal returns instance or default', function (): void {
-            expect(StringIpV4::tryFromDecimal('1.1.1.1'))->toBeInstanceOf(Undefined::class);
+            expect(StringIpV4::tryFromDecimal('1.23'))->toBeInstanceOf(Undefined::class);
         });
 
         it('tryFromFloat returns instance or default', function (): void {
