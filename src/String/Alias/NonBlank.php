@@ -18,6 +18,6 @@ use PhpTypedValues\String\StringNonBlank;
  *
  * @psalm-immutable
  */
-final readonly class NonBlank extends StringNonBlank
+final class NonBlank extends StringNonBlank
 {
 }

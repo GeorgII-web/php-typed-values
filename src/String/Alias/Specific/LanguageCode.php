@@ -18,6 +18,6 @@ use PhpTypedValues\String\Specific\StringLanguageCode;
  *
  * @psalm-immutable
  */
-final readonly class LanguageCode extends StringLanguageCode
+final class LanguageCode extends StringLanguageCode
 {
 }
