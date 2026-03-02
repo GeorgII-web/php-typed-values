@@ -18,6 +18,6 @@ use PhpTypedValues\String\Specific\StringCurrencyCode;
  *
  * @psalm-immutable
  */
-final readonly class CurrencyCode extends StringCurrencyCode
+final class CurrencyCode extends StringCurrencyCode
 {
 }
