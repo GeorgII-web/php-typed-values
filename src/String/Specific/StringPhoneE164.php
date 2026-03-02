@@ -1,0 +1,252 @@
+<?php
+
+declare(strict_types=1);
+
+namespace PhpTypedValues\String\Specific;
+
+use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
+use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
+use PhpTypedValues\Exception\Decimal\DecimalTypeException;
+use PhpTypedValues\Exception\Float\FloatTypeException;
+use PhpTypedValues\Exception\String\PhoneE164StringTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
+use PhpTypedValues\Undefined\Alias\Undefined;
+use Stringable;
+
+use function is_scalar;
+use function preg_match;
+use function sprintf;
+
+/**
+ * Phone number in E.164 format (e.g., "+14155552671").
+ *
+ * Validates that the string is a valid E.164 phone number.
+ * Format: + followed by 1 to 15 digits.
+ *
+ * @psalm-immutable
+ */
+readonly class StringPhoneE164 extends StringTypeAbstract
+{
+    /** @var non-empty-string */
+    protected string $value;
+
+    /**
+     * @throws PhoneE164StringTypeException
+     */
+    public function __construct(string $value)
+    {
+        if ($value === '') {
+            throw new PhoneE164StringTypeException('Expected non-empty phone number');
+        }
+
+        if (!preg_match('/^\+[1-9]\d{1,14}$/', $value)) {
+            throw new PhoneE164StringTypeException(sprintf('Expected valid E.164 phone number, got "%s"', $value));
+        }
+
+        $this->value = $value;
+    }
+
+    /**
+     * @throws StringTypeException
+     * @throws PhoneE164StringTypeException
+     *
+     * @psalm-pure
+     */
+    public static function fromBool(bool $value): static
+    {
+        return new static(static::boolToString($value));
+    }
+
+    /**
+     * @throws PhoneE164StringTypeException
+     *
+     * @psalm-pure
+     */
+    public static function fromDecimal(string $value): static
+    {
+        return new static(static::decimalToString($value));
+    }
+
+    /**
+     * @throws FloatTypeException
+     * @throws PhoneE164StringTypeException
+     * @throws StringTypeException
+     *
+     * @psalm-pure
+     */
+    public static function fromFloat(float $value): static
+    {
+        return new static(static::floatToString($value));
+    }
+
+    /**
+     * @throws PhoneE164StringTypeException
+     *
+     * @psalm-pure
+     */
+    public static function fromInt(int $value): static
+    {
+        return new static(static::intToString($value));
+    }
+
+    /**
+     * @throws PhoneE164StringTypeException
+     *
+     * @psalm-pure
+     */
+    public static function fromString(string $value): static
+    {
+        return new static($value);
+    }
+
+    public function isEmpty(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @psalm-assert-if-true static $this
+     */
+    public function isTypeOf(string ...$classNames): bool
+    {
+        foreach ($classNames as $className) {
+            if ($this instanceof $className) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function isUndefined(): bool
+    {
+        return false;
+    }
+
+    public function jsonSerialize(): string
+    {
+        return $this->value;
+    }
+
+    /**
+     * @throws StringTypeException
+     */
+    public function toBool(): bool
+    {
+        return static::stringToBool($this->value);
+    }
+
+    /**
+     * @throws DecimalTypeException
+     */
+    public function toDecimal(): string
+    {
+        return static::stringToDecimal($this->value);
+    }
+
+    /**
+     * @throws StringTypeException
+     * @throws FloatTypeException
+     */
+    public function toFloat(): float
+    {
+        return static::stringToFloat($this->value);
+    }
+
+    /**
+     * @throws StringTypeException
+     */
+    public function toInt(): int
+    {
+        return static::stringToInt($this->value);
+    }
+
+    public function toString(): string
+    {
+        return $this->value;
+    }
+
+    /**
+     * @psalm-pure
+     */
+    public static function tryFromBool(bool $value, PrimitiveTypeAbstract $default = new Undefined()): static|PrimitiveTypeAbstract
+    {
+        try {
+            return static::fromBool($value);
+        } catch (StringTypeException|PhoneE164StringTypeException) {
+            return $default;
+        }
+    }
+
+    /**
+     * @psalm-pure
+     */
+    public static function tryFromDecimal(string $value, PrimitiveTypeAbstract $default = new Undefined()): static|PrimitiveTypeAbstract
+    {
+        try {
+            return static::fromDecimal($value);
+        } catch (PhoneE164StringTypeException) {
+            return $default;
+        }
+    }
+
+    /**
+     * @psalm-pure
+     */
+    public static function tryFromFloat(float $value, PrimitiveTypeAbstract $default = new Undefined()): static|PrimitiveTypeAbstract
+    {
+        try {
+            return static::fromFloat($value);
+        } catch (FloatTypeException|PhoneE164StringTypeException|StringTypeException) {
+            return $default;
+        }
+    }
+
+    /**
+     * @psalm-pure
+     */
+    public static function tryFromInt(int $value, PrimitiveTypeAbstract $default = new Undefined()): static|PrimitiveTypeAbstract
+    {
+        try {
+            return static::fromInt($value);
+        } catch (PhoneE164StringTypeException) {
+            return $default;
+        }
+    }
+
+    /**
+     * @psalm-pure
+     */
+    public static function tryFromMixed(mixed $value, PrimitiveTypeAbstract $default = new Undefined()): static|PrimitiveTypeAbstract
+    {
+        if (is_scalar($value) || $value instanceof Stringable) {
+            try {
+                return static::fromString((string) $value);
+            } catch (PhoneE164StringTypeException) {
+                return $default;
+            }
+        }
+
+        return $default;
+    }
+
+    /**
+     * @psalm-pure
+     */
+    public static function tryFromString(string $value, PrimitiveTypeAbstract $default = new Undefined()): static|PrimitiveTypeAbstract
+    {
+        try {
+            return static::fromString($value);
+        } catch (PhoneE164StringTypeException) {
+            return $default;
+        }
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    public function value(): string
+    {
+        return $this->value;
+    }
+}
