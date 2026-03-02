@@ -18,6 +18,6 @@ use PhpTypedValues\String\MariaDb\StringLongText;
  *
  * @psalm-immutable
  */
-final readonly class LongText extends StringLongText
+final class LongText extends StringLongText
 {
 }

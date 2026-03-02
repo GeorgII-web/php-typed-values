@@ -18,6 +18,6 @@ use PhpTypedValues\String\Specific\StringSlug;
  *
  * @psalm-immutable
  */
-final readonly class Slug extends StringSlug
+final class Slug extends StringSlug
 {
 }
