@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
+use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\String\MimeTypeStringTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\String\Specific\StringMimeType;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -112,10 +114,10 @@ describe('StringMimeType', function () {
         expect(fn() => StringMimeType::fromInt(123))->toThrow(MimeTypeStringTypeException::class);
 
         $v = StringMimeType::fromString('application/json');
-        expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-            ->and(fn() => $v->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-            ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-            ->and(fn() => $v->toDecimal())->toThrow(PhpTypedValues\Exception\Decimal\DecimalTypeException::class);
+        expect(fn() => $v->toBool())->toThrow(StringTypeException::class)
+            ->and(fn() => $v->toFloat())->toThrow(StringTypeException::class)
+            ->and(fn() => $v->toInt())->toThrow(StringTypeException::class)
+            ->and(fn() => $v->toDecimal())->toThrow(DecimalTypeException::class);
     });
 
     it('tryFromBool, tryFromFloat, tryFromInt, tryFromDecimal return Undefined for invalid inputs', function (): void {

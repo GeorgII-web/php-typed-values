@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
+use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\String\FileNameStringTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\String\Specific\StringFileName;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -120,10 +122,10 @@ describe('StringFileName', function () {
             ->and(StringFileName::fromDecimal('1.23')->value())->toBe('1.23');
 
         $v = StringFileName::fromString('image.jpg');
-        expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-            ->and(fn() => $v->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-            ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-            ->and(fn() => $v->toDecimal())->toThrow(PhpTypedValues\Exception\Decimal\DecimalTypeException::class);
+        expect(fn() => $v->toBool())->toThrow(StringTypeException::class)
+            ->and(fn() => $v->toFloat())->toThrow(StringTypeException::class)
+            ->and(fn() => $v->toInt())->toThrow(StringTypeException::class)
+            ->and(fn() => $v->toDecimal())->toThrow(DecimalTypeException::class);
     });
 
     it('tryFromBool, tryFromFloat, tryFromInt, tryFromDecimal return StringFileName for valid inputs', function (): void {
