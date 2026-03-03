@@ -126,7 +126,33 @@ describe('StringMimeType', function () {
             ->and(StringMimeType::tryFromInt(123))->toBeInstanceOf(Undefined::class)
             ->and(StringMimeType::tryFromDecimal('1.23'))->toBeInstanceOf(Undefined::class);
     });
+
+    it('kills InstanceOfToTrue mutation in tryFromMixed', function (): void {
+        $v = MimeTypeMutationTest::tryFromMixed(null);
+
+        expect($v)->toBeInstanceOf(Undefined::class);
+    });
 });
+
+/**
+ * @internal
+ *
+ * @psalm-immutable
+ *
+ * @coversNothing
+ */
+readonly class MimeTypeMutationTest extends StringMimeType
+{
+    public function __construct(string $value = 'text/plain')
+    {
+        parent::__construct($value);
+    }
+
+    public static function fromString(string $value): static
+    {
+        return new static('text/plain');
+    }
+}
 
 /**
  * @internal
