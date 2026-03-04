@@ -127,11 +127,6 @@ readonly class StringLanguageCode extends StringTypeAbstract
         return false;
     }
 
-    /**
-     * @psalm-assert-if-true Undefined $this
-     *
-     * @psalm-assert-if-false !Undefined $this
-     */
     public function isUndefined(): bool
     {
         return false;

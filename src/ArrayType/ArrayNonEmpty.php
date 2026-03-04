@@ -118,11 +118,6 @@ readonly class ArrayNonEmpty extends ArrayTypeAbstract
         return false;
     }
 
-    /**
-     * @psalm-assert-if-true Undefined $this
-     *
-     * @psalm-assert-if-false !Undefined $this
-     */
     public function isUndefined(): bool
     {
         $items = $this->value;
