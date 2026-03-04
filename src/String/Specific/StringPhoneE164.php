@@ -25,9 +25,10 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class StringPhoneE164 extends StringTypeAbstract
+class StringPhoneE164 extends StringTypeAbstract
 {
-    /** @var non-empty-string */
+    /** @var non-empty-string
+     * @readonly */
     protected string $value;
 
     /**
@@ -51,8 +52,9 @@ readonly class StringPhoneE164 extends StringTypeAbstract
      * @throws PhoneE164StringTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromBool(bool $value): static
+    public static function fromBool(bool $value)
     {
         return new static(static::boolToString($value));
     }
@@ -61,8 +63,9 @@ readonly class StringPhoneE164 extends StringTypeAbstract
      * @throws PhoneE164StringTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromDecimal(string $value): static
+    public static function fromDecimal(string $value)
     {
         return new static(static::decimalToString($value));
     }
@@ -73,8 +76,9 @@ readonly class StringPhoneE164 extends StringTypeAbstract
      * @throws StringTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromFloat(float $value): static
+    public static function fromFloat(float $value)
     {
         return new static(static::floatToString($value));
     }
@@ -83,8 +87,9 @@ readonly class StringPhoneE164 extends StringTypeAbstract
      * @throws PhoneE164StringTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromInt(int $value): static
+    public static function fromInt(int $value)
     {
         return new static(static::intToString($value));
     }
@@ -93,8 +98,9 @@ readonly class StringPhoneE164 extends StringTypeAbstract
      * @throws PhoneE164StringTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         return new static($value);
     }
@@ -173,61 +179,72 @@ readonly class StringPhoneE164 extends StringTypeAbstract
 
     /**
      * @psalm-pure
+     * @return static|\PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract
      */
-    public static function tryFromBool(bool $value, PrimitiveTypeAbstract $default = new Undefined()): static|PrimitiveTypeAbstract
+    public static function tryFromBool(bool $value, PrimitiveTypeAbstract $default = null)
     {
+        $default ??= new Undefined();
         try {
             return static::fromBool($value);
-        } catch (StringTypeException|PhoneE164StringTypeException) {
+        } catch (StringTypeException|PhoneE164StringTypeException $exception) {
             return $default;
         }
     }
 
     /**
      * @psalm-pure
+     * @return static|\PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract
      */
-    public static function tryFromDecimal(string $value, PrimitiveTypeAbstract $default = new Undefined()): static|PrimitiveTypeAbstract
+    public static function tryFromDecimal(string $value, PrimitiveTypeAbstract $default = null)
     {
+        $default ??= new Undefined();
         try {
             return static::fromDecimal($value);
-        } catch (PhoneE164StringTypeException) {
+        } catch (PhoneE164StringTypeException $exception) {
             return $default;
         }
     }
 
     /**
      * @psalm-pure
+     * @return static|\PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract
      */
-    public static function tryFromFloat(float $value, PrimitiveTypeAbstract $default = new Undefined()): static|PrimitiveTypeAbstract
+    public static function tryFromFloat(float $value, PrimitiveTypeAbstract $default = null)
     {
+        $default ??= new Undefined();
         try {
             return static::fromFloat($value);
-        } catch (FloatTypeException|PhoneE164StringTypeException|StringTypeException) {
+        } catch (FloatTypeException|PhoneE164StringTypeException|StringTypeException $exception) {
             return $default;
         }
     }
 
     /**
      * @psalm-pure
+     * @return static|\PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract
      */
-    public static function tryFromInt(int $value, PrimitiveTypeAbstract $default = new Undefined()): static|PrimitiveTypeAbstract
+    public static function tryFromInt(int $value, PrimitiveTypeAbstract $default = null)
     {
+        $default ??= new Undefined();
         try {
             return static::fromInt($value);
-        } catch (PhoneE164StringTypeException) {
+        } catch (PhoneE164StringTypeException $exception) {
             return $default;
         }
     }
 
     /**
      * @psalm-pure
+     * @return static|\PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract
+     * @param mixed $value
      */
-    public static function tryFromMixed(mixed $value, PrimitiveTypeAbstract $default = new Undefined()): static|PrimitiveTypeAbstract
+    public static function tryFromMixed($value, PrimitiveTypeAbstract $default = null)
     {
-        if (is_scalar($value) || $value instanceof Stringable) {
+        $default ??= new Undefined();
+        if (is_scalar($value) || is_object($value) && method_exists($value, '__toString')) {
             try {
                 return static::fromString((string) $value);
-            } catch (PhoneE164StringTypeException) {
+            } catch (PhoneE164StringTypeException $exception) {
                 return $default;
             }
         }
@@ -237,12 +254,14 @@ readonly class StringPhoneE164 extends StringTypeAbstract
 
     /**
      * @psalm-pure
+     * @return static|\PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract
      */
-    public static function tryFromString(string $value, PrimitiveTypeAbstract $default = new Undefined()): static|PrimitiveTypeAbstract
+    public static function tryFromString(string $value, PrimitiveTypeAbstract $default = null)
     {
+        $default ??= new Undefined();
         try {
             return static::fromString($value);
-        } catch (PhoneE164StringTypeException) {
+        } catch (PhoneE164StringTypeException $exception) {
             return $default;
         }
     }

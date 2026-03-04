@@ -18,6 +18,6 @@ use PhpTypedValues\String\Specific\StringIpV6;
  *
  * @psalm-immutable
  */
-final readonly class IpV6 extends StringIpV6
+final class IpV6 extends StringIpV6
 {
 }
