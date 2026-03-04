@@ -121,6 +121,11 @@ readonly class IntegerNonNegative extends IntegerTypeAbstract
         return false;
     }
 
+    /**
+     * @psalm-assert-if-true Undefined $this
+     *
+     * @psalm-assert-if-false !Undefined $this
+     */
     public function isUndefined(): false
     {
         return false;

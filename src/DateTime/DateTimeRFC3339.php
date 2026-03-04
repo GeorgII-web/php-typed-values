@@ -97,6 +97,11 @@ readonly class DateTimeRFC3339 extends DateTimeTypeAbstract
         return false;
     }
 
+    /**
+     * @psalm-assert-if-true Undefined $this
+     *
+     * @psalm-assert-if-false !Undefined $this
+     */
     public function isUndefined(): bool
     {
         return false;

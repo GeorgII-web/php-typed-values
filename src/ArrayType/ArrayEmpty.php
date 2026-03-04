@@ -6,6 +6,7 @@ namespace PhpTypedValues\ArrayType;
 
 use PhpTypedValues\Base\ArrayType\ArrayTypeAbstract;
 use PhpTypedValues\Exception\ArrayType\ArrayTypeException;
+use PhpTypedValues\Undefined\Alias\Undefined;
 use Traversable;
 
 /**
@@ -82,6 +83,11 @@ readonly class ArrayEmpty extends ArrayTypeAbstract
         return false;
     }
 
+    /**
+     * @psalm-assert-if-true Undefined $this
+     *
+     * @psalm-assert-if-false !Undefined $this
+     */
     public function isUndefined(): bool
     {
         return false;

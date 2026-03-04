@@ -7,6 +7,7 @@ namespace PhpTypedValues\ArrayType;
 use PhpTypedValues\Base\ArrayType\ArrayTypeAbstract;
 use PhpTypedValues\Base\ArrayType\ArrayUndefinedTypeInterface;
 use PhpTypedValues\Exception\ArrayType\ArrayUndefinedTypeException;
+use PhpTypedValues\Undefined\Alias\Undefined;
 use ReturnTypeWillChange;
 
 /**
@@ -77,6 +78,11 @@ readonly class ArrayUndefined extends ArrayTypeAbstract implements ArrayUndefine
         return false;
     }
 
+    /**
+     * @psalm-assert-if-true Undefined $this
+     *
+     * @psalm-assert-if-false !Undefined $this
+     */
     public function isUndefined(): bool
     {
         return true;

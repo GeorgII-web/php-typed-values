@@ -128,6 +128,11 @@ readonly class DecimalNegative extends DecimalTypeAbstract
         return false;
     }
 
+    /**
+     * @psalm-assert-if-true Undefined $this
+     *
+     * @psalm-assert-if-false !Undefined $this
+     */
     public function isUndefined(): bool
     {
         return false;
