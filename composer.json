@@ -39,14 +39,17 @@
     ],
     "oncheckout": [
       "chmod -R 777 ./",
+      "rm cache/.php-cs-fixer.cache",
+      "composer clear-cache",
       "composer install",
-      "composer dump-autoload",
+      "composer dump-autoload --optimize",
       "vendor/bin/psalm --clear-cache",
       "echo '\\n\\n\\033[1;32mAfter-checkout preparations done!\\033[0m\\n'"
     ],
     "oncommit": [
       "chmod -R 777 ./",
       "composer validate --strict",
+      "composer dump-autoload --dry-run --optimize --strict-psr --strict-ambiguous",
       "@cs",
       "@sca",
       "@test",
