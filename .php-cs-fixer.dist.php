@@ -21,13 +21,14 @@ return $config->setUsingCache(true)
         '@PhpCsFixer' => true,
         '@PhpCsFixer:risky' => false,
         '@Symfony' => true,
-        '@Symfony:risky' => true,
+        '@Symfony:risky' => false,
         '@DoctrineAnnotation' => true,
         'static_lambda' => false,
         'function_declaration' => ['closure_fn_spacing' => 'none'],
         'list_syntax' => ['syntax' => 'short'],
         'single_line_empty_body' => false,
-        'strict_comparison' => false,
+        'declare_strict_types' => true,
+        'strict_comparison' => true,
         'binary_operator_spaces' => [
             'operators' => [
                 '=' => 'single_space',
