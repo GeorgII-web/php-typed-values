@@ -26,6 +26,16 @@ describe('StringBase64', function () {
             ->toBe('YQ==');
     });
 
+    it('rejects base64 strings with invalid padding despite valid characters', function (): void {
+        expect(fn() => new StringBase64('Y★Q='))
+            ->toThrow(Base64StringTypeException::class);
+    });
+
+    it('rejects malformed base64 that non-strict decoding would normalize', function (): void {
+        expect(fn() => new StringBase64('YWJj='))
+            ->toThrow(Base64StringTypeException::class);
+    });
+
     it('throws on invalid Base64 format', function (): void {
         // Invalid characters
         expect(fn() => new StringBase64('not valid!'))

@@ -22,7 +22,6 @@ use function is_float;
 use function is_int;
 use function is_scalar;
 use function is_string;
-use function preg_match;
 use function sprintf;
 
 /**
@@ -48,7 +47,7 @@ readonly class StringBase64 extends StringTypeAbstract
      */
     public function __construct(string $value)
     {
-        if ($value === '' || preg_match('/^[A-Za-z0-9+\/]*={0,2}$/', $value) !== 1) {
+        if ($value === '') {
             throw new Base64StringTypeException(sprintf('Expected Base64-encoded string, got "%s"', $value));
         }
 
