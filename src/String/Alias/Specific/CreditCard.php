@@ -18,6 +18,6 @@ use PhpTypedValues\String\Specific\StringCreditCard;
  *
  * @psalm-immutable
  */
-final readonly class CreditCard extends StringCreditCard
+final class CreditCard extends StringCreditCard
 {
 }

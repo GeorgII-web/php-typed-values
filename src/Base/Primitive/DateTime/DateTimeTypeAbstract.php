@@ -33,21 +33,24 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-abstract readonly class DateTimeTypeAbstract extends PrimitiveTypeAbstract implements DateTimeTypeInterface
+abstract class DateTimeTypeAbstract extends PrimitiveTypeAbstract implements DateTimeTypeInterface
 {
     //    protected const string FORMAT = '';
     //    protected const int MAX_TIMESTAMP_SECONDS = 253402300799; // 9999-12-31 23:59:59
     //    protected const int MIN_TIMESTAMP_SECONDS = -62135596800; // 0001-01-01
-
-    abstract public static function fromDateTime(DateTimeImmutable $value): static;
+    /**
+     * @return static
+     */
+    abstract public static function fromDateTime(DateTimeImmutable $value);
 
     /**
      * @param non-empty-string $timezone
+     * @return static
      */
     abstract public static function fromString(
         string $value,
-        string $timezone = DateTimeTypeInterface::DEFAULT_ZONE,
-    ): static;
+        string $timezone = DateTimeTypeInterface::DEFAULT_ZONE
+    );
 
     abstract public static function getFormat(): string;
 
@@ -62,12 +65,13 @@ abstract readonly class DateTimeTypeAbstract extends PrimitiveTypeAbstract imple
      * @param non-empty-string $timezone
      *
      * @return static|T
+     * @param mixed $value
      */
     abstract public static function tryFromMixed(
-        mixed $value,
+        $value,
         string $timezone = DateTimeTypeInterface::DEFAULT_ZONE,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static;
+        PrimitiveTypeAbstract $default = null
+    );
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -80,15 +84,16 @@ abstract readonly class DateTimeTypeAbstract extends PrimitiveTypeAbstract imple
     abstract public static function tryFromString(
         string $value,
         string $timezone = DateTimeTypeInterface::DEFAULT_ZONE,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static;
+        PrimitiveTypeAbstract $default = null
+    );
 
     abstract public function value(): DateTimeImmutable;
 
     /**
      * @param non-empty-string $timezone
+     * @return static
      */
-    abstract public function withTimeZone(string $timezone): static;
+    abstract public function withTimeZone(string $timezone);
 
     /**
      * @psalm-pure
@@ -99,9 +104,9 @@ abstract readonly class DateTimeTypeAbstract extends PrimitiveTypeAbstract imple
     protected static function stringToDateTime(
         string $value,
         string $format,
-        ?DateTimeZone $timezone = null,
+        ?DateTimeZone $timezone = null
     ): DateTimeImmutable {
-        if (str_contains($value, "\0")) {
+        if (strpos($value, "\0") !== false) {
             throw new DateTimeTypeException('Date time string must not contain null bytes');
         }
 
