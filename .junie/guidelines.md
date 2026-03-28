@@ -5,16 +5,17 @@
 *   AVOID TO CHANGE OTHER CLASSES in `src`!!!
 *   Try to fix existing test-files in the first place, in exceptional cases, fix src classes.
 *   Run `docker-compose exec -ti php composer sca` to check Psalm static analysis.
-*   Run `docker-compose exec -ti php composer test` to run tests.
-*   Run `docker-compose exec -ti php composer type` to run type coverage.
-*   Run `docker-compose exec -ti php composer coverage` to run code coverage.
     
 **Add a new type workflow**
 *   Create a new type class in `src/{TypeName}/` or deeper to `Specific` etc. directory.
 *   Create a new type class in `src/{TypeName}/Alias/` or deeper directory.
 *   Create a new exception class in `src/Exception/{TypeName}/` or deeper directory.
 *   Create a new test class in `tests/Unit/{TypeName}/{TypeName}Test.php` file. Make 100% code/type/mutation coverage, copy the nearest tests file cases.
-*   Run all kinds of tests from `composer oncommit` script (except `mutate`).
+*   Run `docker-compose exec -ti php cs` to fix code style.
+*   Run `docker-compose exec -ti php composer sca` to check Psalm static analysis.
+*   Run `docker-compose exec -ti php composer test -- --filter="newTypeClassName"` to run tests.
+*   Run `docker-compose exec -ti php composer type -- --filter="newTypeClassName"` to run type coverage.
+*   Run `docker-compose exec -ti php composer coverage -- --filter="newTypeClassName"` to run code coverage.
 
 **"Fix test" or "Cover with tests" or "Kill mutants" prompt**
 * FIX ONLY TEST FILES, DO NOT CREATE NEW TEST FILES, DO NOT CHANGE CLASSES FROM `src`.
@@ -23,7 +24,9 @@
 * If a class is created in a test – choose a name "ClassName" + Test, bc CSFixer will rename it.
 * Choose short but meaningful names for test\describe methods, must be unique in a file.
 * Avoid duplicate test cases or same data in a single test.
-* Run all kinds of tests from `composer oncommit` script (except `mutate`)
+* Run `docker-compose exec -ti php composer test -- --filter="failedTypeClassName"` to run tests.
+* Run `docker-compose exec -ti php composer type -- --filter="failedTypeClassName"` to run type coverage.
+* Run `docker-compose exec -ti php composer coverage -- --filter="failedTypeClassName"` to run code coverage.
 * Run `docker-compose exec -ti php composer mutate -- --id=****` with a mutation error id if provided.
 
 **Tech-Stack & Style**
