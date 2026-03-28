@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\Usage\Composite;
+
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Float\FloatPositive;
 use PhpTypedValues\Integer\IntegerPositive;
@@ -37,14 +39,14 @@ final readonly class LateFailTest
      *
      * @param int                   $id        positive integer identifier (validated immediately)
      * @param mixed                 $firstName non-empty string or will become `Undefined`
-     * @param string|float|int|null $height    positive numeric or `null` to become `Undefined`
+     * @param float|int|string|null $height    positive numeric or `null` to become `Undefined`
      *
      * @throws IntegerTypeException
      */
     public static function fromScalars(
         int $id,
         mixed $firstName,
-        string|float|int|null $height,
+        float|int|string|null $height,
     ): self {
         return new self(
             IntegerPositive::fromInt($id), // Early fail

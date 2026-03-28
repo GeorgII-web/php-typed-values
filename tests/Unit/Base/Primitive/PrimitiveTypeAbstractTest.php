@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\Base\Primitive;
+
+use const INF;
+use const M_PI;
+use const NAN;
+use const PHP_INT_MAX;
+use const PHP_INT_MIN;
+
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\DateTime\ZoneDateTimeTypeException;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
@@ -9,6 +17,9 @@ use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
+
+use function function_exists;
+use function is_string;
 
 covers(PrimitiveTypeAbstract::class);
 
@@ -209,14 +220,14 @@ describe('Concrete PrimitiveType implementation', function () {
         // FRACTIONS / IRRATIONALS
         // ─────────────
         ['src' => 2 / 3, 'expected' => '0.66666666666666663'],
-        ['src' => \M_PI, 'expected' => '3.14159265358979312'],
+        ['src' => M_PI, 'expected' => '3.14159265358979312'],
 
         // ─────────────
         // INVALID SPECIALS
         // ─────────────
-        ['src' => \INF, 'expected' => 'SPECIAL_STRING_EXCEPTION'],
-        ['src' => -\INF, 'expected' => 'SPECIAL_STRING_EXCEPTION'],
-        ['src' => \NAN, 'expected' => 'SPECIAL_STRING_EXCEPTION'],
+        ['src' => INF, 'expected' => 'SPECIAL_STRING_EXCEPTION'],
+        ['src' => -INF, 'expected' => 'SPECIAL_STRING_EXCEPTION'],
+        ['src' => NAN, 'expected' => 'SPECIAL_STRING_EXCEPTION'],
     ]);
 
     it('stringToFloat method converts string to float correctly', function (string $src, ?float $expected) {
@@ -347,7 +358,7 @@ describe('Concrete PrimitiveType implementation', function () {
     });
 
     it('decimalToBool works correctly', function (string $value, bool|string $expected) {
-        if (\is_string($expected)) {
+        if (is_string($expected)) {
             expect(fn() => PrimitiveTypeAbstractTest::callDecimalToBool($value))
                 ->toThrow(DecimalTypeException::class, $expected);
         } else {
@@ -360,7 +371,7 @@ describe('Concrete PrimitiveType implementation', function () {
     ]);
 
     it('floatToBool works correctly', function (float $value, bool|string $expected) {
-        if (\is_string($expected)) {
+        if (is_string($expected)) {
             expect(fn() => PrimitiveTypeAbstractTest::callFloatToBool($value))
                 ->toThrow(FloatTypeException::class, $expected);
         } else {
@@ -373,7 +384,7 @@ describe('Concrete PrimitiveType implementation', function () {
     ]);
 
     it('intToBool works correctly', function (int $value, bool|string $expected) {
-        if (\is_string($expected)) {
+        if (is_string($expected)) {
             expect(fn() => PrimitiveTypeAbstractTest::callIntToBool($value))
                 ->toThrow(IntegerTypeException::class, $expected);
         } else {
@@ -434,7 +445,7 @@ describe('Static utility methods coverage', function () {
 
         // Shadowing sprintf in the namespace of the class under test.
         // This MUST be done before any calls that might trigger it if it's already cached.
-        if (!\function_exists('PhpTypedValues\Base\Primitive\sprintf')) {
+        if (!function_exists('PhpTypedValues\Base\Primitive\sprintf')) {
             eval('namespace PhpTypedValues\Base\Primitive { function sprintf($f, ...$args) { 
                 if ($f === "%.17f" && ($args[0] ?? null) === 0.123456781) return ".12345678100000000"; 
                 if ($f === "%.17f" && ($args[0] ?? null) === -0.123456781) return "-.12345678100000000";
@@ -448,8 +459,8 @@ describe('Static utility methods coverage', function () {
 
     it('covers intToString protective check', function (): void {
         expect(PrimitiveTypeAbstractTest::callIntToString(0))->toBe('0')
-            ->and(PrimitiveTypeAbstractTest::callIntToString(\PHP_INT_MAX))->toBe((string) \PHP_INT_MAX)
-            ->and(PrimitiveTypeAbstractTest::callIntToString(\PHP_INT_MIN))->toBe((string) \PHP_INT_MIN);
+            ->and(PrimitiveTypeAbstractTest::callIntToString(PHP_INT_MAX))->toBe((string) PHP_INT_MAX)
+            ->and(PrimitiveTypeAbstractTest::callIntToString(PHP_INT_MIN))->toBe((string) PHP_INT_MIN);
 
         for ($i = 0; $i < 63; ++$i) {
             $val = 1 << $i;

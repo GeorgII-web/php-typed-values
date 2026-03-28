@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\Usage\Composite;
+
+use JsonSerializable;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\Undefined\UndefinedTypeException;
@@ -37,7 +40,7 @@ final readonly class OptionalFailTest implements JsonSerializable
      *
      * @param int                   $id        positive integer identifier (validated immediately)
      * @param string|null           $firstName non-empty string or empty/invalid treated as `Undefined`
-     * @param string|float|int|null $height    positive numeric value; `null` produces `Undefined`
+     * @param float|int|string|null $height    positive numeric value; `null` produces `Undefined`
      *
      * @throws IntegerTypeException
      * @throws FloatTypeException
@@ -45,7 +48,7 @@ final readonly class OptionalFailTest implements JsonSerializable
     public static function fromScalars(
         int $id,
         ?string $firstName,
-        string|float|int|null $height = null,
+        float|int|string|null $height = null,
     ): self {
         return new self(
             IntegerPositive::fromInt($id), // Early fail
