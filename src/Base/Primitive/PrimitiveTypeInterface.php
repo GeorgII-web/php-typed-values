@@ -8,7 +8,6 @@ use JsonSerializable;
 use PhpTypedValues\Base\Primitive\Undefined\UndefinedTypeInterface;
 use PhpTypedValues\Base\TypeInterface;
 use PhpTypedValues\Undefined\Alias\Undefined;
-use ReturnTypeWillChange;
 
 /**
  * Base contract for all immutable typed values in this library.
@@ -52,7 +51,6 @@ interface PrimitiveTypeInterface extends TypeInterface, JsonSerializable
      *
      * @psalm-mutation-free
      */
-    #[ReturnTypeWillChange]
     public function jsonSerialize(): mixed;
 
     /**
