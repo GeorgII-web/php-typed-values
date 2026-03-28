@@ -14,7 +14,7 @@
 *   Create a new type class in `src/{TypeName}/Alias/` or deeper directory.
 *   Create a new exception class in `src/Exception/{TypeName}/` or deeper directory.
 *   Create a new test class in `tests/Unit/{TypeName}/{TypeName}Test.php` file. Make 100% code/type/mutation coverage, copy the nearest tests file cases.
-*   Run all kinds of tests from `composer oncommit` script
+*   Run all kinds of tests from `composer oncommit` script (except `mutate`).
 
 **"Fix test" or "Cover with tests" or "Kill mutants" prompt**
 * FIX ONLY TEST FILES, DO NOT CREATE NEW TEST FILES, DO NOT CHANGE CLASSES FROM `src`.
