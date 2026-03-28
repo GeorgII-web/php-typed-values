@@ -15,7 +15,7 @@
 *   Run `docker-compose exec -ti php composer sca` to check Psalm static analysis.
 *   Run `docker-compose exec -ti php composer test -- --filter="newTypeClassName"` to run tests.
 *   Run `docker-compose exec -ti php composer type -- --filter="newTypeClassName"` to run type coverage.
-*   Run `docker-compose exec -ti php composer coverage -- --filter="newTypeClassName"` to run code coverage.
+*   Run `docker-compose exec -ti php composer coverage` to run code coverage.
 
 **"Fix psalm" prompt**
 *   Run `docker-compose exec -ti php composer sca` to check Psalm static analysis.
@@ -29,7 +29,7 @@
 * Avoid duplicate test cases or same data in a single test.
 * Run `docker-compose exec -ti php composer test -- --filter="failedTypeClassName"` to run tests.
 * Run `docker-compose exec -ti php composer type -- --filter="failedTypeClassName"` to run type coverage.
-* Run `docker-compose exec -ti php composer coverage -- --filter="failedTypeClassName"` to run code coverage.
+* Run `docker-compose exec -ti php composer coverage` to run code coverage.
 * Run `docker-compose exec -ti php composer mutate -- --id=****` with a mutation error id if provided.
 
 **Tech-Stack & Style**
