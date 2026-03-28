@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use PhpTypedValues\ArrayType\ArrayOfObjects;
 use PhpTypedValues\ArrayType\ArrayUndefined;
 use PhpTypedValues\Exception\ArrayType\ArrayUndefinedTypeException;
 
@@ -216,7 +217,7 @@ describe('ArrayUndefined in collection operations', function () {
 
     it('represents truly undefined state unlike empty array', function () {
         $undefined = new ArrayUndefined();
-        $emptyArray = new PhpTypedValues\ArrayType\ArrayOfObjects([]);
+        $emptyArray = new ArrayOfObjects([]);
 
         // Both are empty
         expect($undefined->isEmpty())->toBeTrue()

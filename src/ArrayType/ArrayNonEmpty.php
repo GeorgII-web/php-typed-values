@@ -160,18 +160,21 @@ readonly class ArrayNonEmpty extends ArrayTypeAbstract
             if ($item instanceof JsonSerializable) {
                 /** @psalm-suppress ImpureMethodCall */
                 $result[] = $item->jsonSerialize();
+
                 continue;
             }
 
             // 2. Handle native PHP scalars (string, int, float, bool) or null
             if (is_scalar($item) || $item === null) {
                 $result[] = $item;
+
                 continue;
             }
 
             // 3. Fallback for objects that don't implement JsonSerializable but might be Stringable
             if ($item instanceof Stringable) {
                 $result[] = $item->__toString();
+
                 continue;
             }
 
