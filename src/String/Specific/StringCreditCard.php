@@ -1,0 +1,357 @@
+<?php
+
+declare(strict_types=1);
+
+namespace PhpTypedValues\String\Specific;
+
+use Exception;
+use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
+use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
+use PhpTypedValues\Exception\Decimal\DecimalTypeException;
+use PhpTypedValues\Exception\Float\FloatTypeException;
+use PhpTypedValues\Exception\String\CreditCardStringTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
+use PhpTypedValues\Exception\TypeException;
+use PhpTypedValues\Undefined\Alias\Undefined;
+use Stringable;
+
+use function is_bool;
+use function is_float;
+use function is_int;
+use function is_scalar;
+use function is_string;
+use function preg_replace;
+use function sprintf;
+use function strlen;
+
+/**
+ * Credit card number string.
+ *
+ * Validates that the string is a valid credit card number using the Luhn algorithm.
+ * Accepts digits only (spaces and dashes are stripped before validation).
+ * The stored value contains only digits.
+ *
+ * Example
+ *  - $c = StringCreditCard::fromString('4111111111111111');
+ *    $c->value(); // '4111111111111111'
+ *  - StringCreditCard::fromString('1234567890123456'); // throws CreditCardStringTypeException
+ *
+ * @psalm-immutable
+ */
+readonly class StringCreditCard extends StringTypeAbstract
+{
+    /** @var non-empty-string */
+    protected string $value;
+
+    /**
+     * @throws CreditCardStringTypeException
+     */
+    public function __construct(string $value)
+    {
+        /** @var string $digits */
+        $digits = preg_replace('/[\s\-]/', '', $value);
+
+        if ($digits === '' || !preg_match('/^\d+$/', $digits) || strlen($digits) < 13 || strlen($digits) > 19 || !self::luhn($digits)) {
+            throw new CreditCardStringTypeException(sprintf('Expected valid credit card number, got "%s"', $value));
+        }
+
+        /** @var non-empty-string $digits */
+        $this->value = $digits;
+    }
+
+    /**
+     * @throws CreditCardStringTypeException
+     *
+     * @psalm-pure
+     */
+    public static function fromBool(bool $value): static
+    {
+        return new static(static::boolToString($value));
+    }
+
+    /**
+     * @throws CreditCardStringTypeException
+     *
+     * @psalm-pure
+     */
+    public static function fromDecimal(string $value): static
+    {
+        return new static(static::decimalToString($value));
+    }
+
+    /**
+     * @throws FloatTypeException
+     * @throws CreditCardStringTypeException
+     * @throws StringTypeException
+     *
+     * @psalm-pure
+     */
+    public static function fromFloat(float $value): static
+    {
+        return new static(static::floatToString($value));
+    }
+
+    /**
+     * @throws CreditCardStringTypeException
+     *
+     * @psalm-pure
+     */
+    public static function fromInt(int $value): static
+    {
+        return new static(static::intToString($value));
+    }
+
+    /**
+     * Creates a CreditCard instance from a credit card number string.
+     *
+     * @throws CreditCardStringTypeException
+     *
+     * @psalm-pure
+     */
+    public static function fromString(string $value): static
+    {
+        return new static($value);
+    }
+
+    public function isEmpty(): bool
+    {
+        return false;
+    }
+
+    public function isTypeOf(string ...$classNames): bool
+    {
+        foreach ($classNames as $className) {
+            if ($this instanceof $className) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function isUndefined(): bool
+    {
+        return false;
+    }
+
+    public function jsonSerialize(): string
+    {
+        return $this->value();
+    }
+
+    /**
+     * @throws StringTypeException
+     */
+    public function toBool(): bool
+    {
+        return static::stringToBool($this->value());
+    }
+
+    /**
+     * @throws DecimalTypeException
+     */
+    public function toDecimal(): string
+    {
+        return static::stringToDecimal($this->value());
+    }
+
+    /**
+     * @throws FloatTypeException
+     * @throws StringTypeException
+     */
+    public function toFloat(): float
+    {
+        return static::stringToFloat($this->value());
+    }
+
+    /**
+     * @throws StringTypeException
+     */
+    public function toInt(): int
+    {
+        return static::stringToInt($this->value());
+    }
+
+    /**
+     * Returns the credit card number string (digits only).
+     *
+     * @return non-empty-string
+     */
+    public function toString(): string
+    {
+        return $this->value();
+    }
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     *
+     * @psalm-pure
+     */
+    public static function tryFromBool(
+        bool $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): PrimitiveTypeAbstract|static {
+        try {
+            /** @var static */
+            return static::fromBool($value);
+        } catch (Exception) {
+            /** @var T */
+            return $default;
+        }
+    }
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     *
+     * @psalm-pure
+     */
+    public static function tryFromDecimal(
+        string $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): PrimitiveTypeAbstract|static {
+        try {
+            /** @var static */
+            return static::fromDecimal($value);
+        } catch (Exception) {
+            /** @var T */
+            return $default;
+        }
+    }
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     *
+     * @psalm-pure
+     */
+    public static function tryFromFloat(
+        float $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): PrimitiveTypeAbstract|static {
+        try {
+            /** @var static */
+            return static::fromFloat($value);
+        } catch (Exception) {
+            /** @var T */
+            return $default;
+        }
+    }
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     *
+     * @psalm-pure
+     */
+    public static function tryFromInt(
+        int $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): PrimitiveTypeAbstract|static {
+        try {
+            /** @var static */
+            return static::fromInt($value);
+        } catch (Exception) {
+            /** @var T */
+            return $default;
+        }
+    }
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     *
+     * @psalm-pure
+     */
+    public static function tryFromMixed(
+        mixed $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): PrimitiveTypeAbstract|static {
+        try {
+            /** @var static */
+            return match (true) {
+                is_string($value) => static::fromString($value),
+                is_float($value) => static::fromFloat($value),
+                is_int($value) => static::fromInt($value),
+                is_bool($value) => static::fromBool($value),
+                $value instanceof Stringable, is_scalar($value) => static::fromString((string) $value),
+                default => throw new TypeException('Value cannot be cast to string'),
+            };
+        } catch (Exception) {
+            /** @var T */
+            return $default;
+        }
+    }
+
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     *
+     * @psalm-pure
+     */
+    public static function tryFromString(
+        string $value,
+        PrimitiveTypeAbstract $default = new Undefined(),
+    ): PrimitiveTypeAbstract|static {
+        try {
+            /** @var static */
+            return static::fromString($value);
+        } catch (Exception) {
+            /** @var T */
+            return $default;
+        }
+    }
+
+    /** @return non-empty-string */
+    public function value(): string
+    {
+        return $this->value;
+    }
+
+    /**
+     * Validates a digit string using the Luhn algorithm.
+     *
+     * @psalm-pure
+     */
+    private static function luhn(string $digits): bool
+    {
+        $sum = 0;
+        $length = strlen($digits);
+        $parity = $length % 2;
+
+        for ($i = 0; $i < $length; ++$i) {
+            $digit = (int) $digits[$i];
+
+            if ($i % 2 === $parity) {
+                $digit *= 2;
+
+                if ($digit > 9) {
+                    $digit -= 9;
+                }
+            }
+
+            $sum += $digit;
+        }
+
+        return $sum % 10 === 0;
+    }
+}
