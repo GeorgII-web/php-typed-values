@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\Usage\Composite;
+
 use PhpTypedValues\Base\ValueObjectInterface;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
