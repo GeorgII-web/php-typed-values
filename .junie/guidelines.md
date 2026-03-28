@@ -16,6 +16,10 @@
 *   Run `docker-compose exec -ti php composer test -- --filter="newTypeClassName"` to run tests.
 *   Run `docker-compose exec -ti php composer type -- --filter="newTypeClassName"` to run type coverage.
 *   Run `docker-compose exec -ti php composer coverage -- --filter="newTypeClassName"` to run code coverage.
+*   Run `docker-compose exec -ti php composer mutate -- tests/Unit/?/?/"newTypeClassName"` to kill mutants.
+
+**"Fix psalm" prompt**
+*   Run `docker-compose exec -ti php composer sca` to check Psalm static analysis.
 
 **"Fix test" or "Cover with tests" or "Kill mutants" prompt**
 * FIX ONLY TEST FILES, DO NOT CREATE NEW TEST FILES, DO NOT CHANGE CLASSES FROM `src`.
