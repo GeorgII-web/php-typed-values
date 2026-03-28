@@ -2,6 +2,12 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\Base\Primitive\Bool;
+
+use const INF;
+use const NAN;
+
+use Exception;
 use PhpTypedValues\Base\Primitive\Bool\BoolTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\Float\FloatTypeException;
@@ -9,6 +15,13 @@ use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use stdClass;
+use Stringable;
+
+use function is_bool;
+use function is_float;
+use function is_int;
+use function is_string;
 
 covers(BoolTypeAbstract::class);
 
@@ -134,10 +147,10 @@ readonly class BoolTypeAbstractTest extends BoolTypeAbstract
     ): static|PrimitiveTypeAbstract {
         try {
             return match (true) {
-                \is_bool($value) => static::fromBool($value),
-                \is_float($value) => static::fromFloat($value),
-                \is_int($value) => static::fromInt($value),
-                \is_string($value) || $value instanceof Stringable => static::fromString((string) $value),
+                is_bool($value) => static::fromBool($value),
+                is_float($value) => static::fromFloat($value),
+                is_int($value) => static::fromInt($value),
+                is_string($value) || $value instanceof Stringable => static::fromString((string) $value),
                 default => throw new TypeException('Value cannot be cast to bool'),
             };
         } catch (Exception) {
@@ -186,8 +199,8 @@ describe('BoolTypeAbstract', function () {
                     ->toThrow(FloatTypeException::class);
             })->with([
                 '0.5' => [0.5],
-                'NAN' => [\NAN],
-                'INF' => [\INF],
+                'NAN' => [NAN],
+                'INF' => [INF],
             ]);
         });
 

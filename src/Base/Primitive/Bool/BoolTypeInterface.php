@@ -54,7 +54,7 @@ interface BoolTypeInterface
     public static function tryFromBool(
         bool $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract;
+    ): PrimitiveTypeAbstract|static;
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -66,7 +66,7 @@ interface BoolTypeInterface
     public static function tryFromFloat(
         float $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract;
+    ): PrimitiveTypeAbstract|static;
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -78,7 +78,7 @@ interface BoolTypeInterface
     public static function tryFromInt(
         int $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract;
+    ): PrimitiveTypeAbstract|static;
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -90,7 +90,7 @@ interface BoolTypeInterface
     public static function tryFromMixed(
         mixed $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract;
+    ): PrimitiveTypeAbstract|static;
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -102,7 +102,7 @@ interface BoolTypeInterface
     public static function tryFromString(
         string $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract;
+    ): PrimitiveTypeAbstract|static;
 
     public function value(): bool;
 }

@@ -2,11 +2,15 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\Bool;
+
 use PhpTypedValues\Bool\BoolStandard;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use stdClass;
+use Stringable;
 
 covers(BoolStandard::class);
 
@@ -172,7 +176,7 @@ describe('BoolStandard - tryFrom* Methods', function (): void {
             ->and($result->value())->toBe($value);
     })->with([true, false]);
 
-    it('tryFromInt returns appropriate result', function (int $input, string|bool $expectedResult): void {
+    it('tryFromInt returns appropriate result', function (int $input, bool|string $expectedResult): void {
         $result = BoolStandard::tryFromInt($input);
 
         if ($expectedResult === true) {
@@ -192,7 +196,7 @@ describe('BoolStandard - tryFrom* Methods', function (): void {
         [10, Undefined::class],
     ]);
 
-    it('tryFromFloat returns appropriate result', function (float $input, string|bool $expectedResult): void {
+    it('tryFromFloat returns appropriate result', function (float $input, bool|string $expectedResult): void {
         $result = BoolStandard::tryFromFloat($input);
 
         if ($expectedResult === true) {
@@ -213,7 +217,7 @@ describe('BoolStandard - tryFrom* Methods', function (): void {
         [1.1, Undefined::class],
     ]);
 
-    it('tryFromString returns appropriate result', function (string $input, string|bool $expectedResult): void {
+    it('tryFromString returns appropriate result', function (string $input, bool|string $expectedResult): void {
         $result = BoolStandard::tryFromString($input);
 
         if ($expectedResult === true) {
@@ -269,7 +273,7 @@ describe('BoolStandard - tryFromMixed Method', function (): void {
             ->and($result->value())->toBe($value);
     })->with([true, false]);
 
-    it('handles integer inputs', function (int $value, string|bool $expectedResult): void {
+    it('handles integer inputs', function (int $value, bool|string $expectedResult): void {
         $result = BoolStandard::tryFromMixed($value);
 
         if ($expectedResult === true) {
@@ -289,7 +293,7 @@ describe('BoolStandard - tryFromMixed Method', function (): void {
         [10, Undefined::class],
     ]);
 
-    it('handles float inputs', function (float $value, string|bool $expectedResult): void {
+    it('handles float inputs', function (float $value, bool|string $expectedResult): void {
         $result = BoolStandard::tryFromMixed($value);
 
         if ($expectedResult === true) {
@@ -310,7 +314,7 @@ describe('BoolStandard - tryFromMixed Method', function (): void {
         [1.1, Undefined::class],
     ]);
 
-    it('handles string inputs', function (string $value, string|bool $expectedResult): void {
+    it('handles string inputs', function (string $value, bool|string $expectedResult): void {
         $result = BoolStandard::tryFromMixed($value);
 
         if ($expectedResult === true) {
