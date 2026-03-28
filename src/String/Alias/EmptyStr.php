@@ -17,6 +17,6 @@ use PhpTypedValues\String\StringEmpty;
  *
  * @psalm-immutable
  */
-final readonly class EmptyStr extends StringEmpty
+final class EmptyStr extends StringEmpty
 {
 }

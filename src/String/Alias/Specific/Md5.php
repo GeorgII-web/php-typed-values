@@ -18,6 +18,6 @@ use PhpTypedValues\String\Specific\StringMd5;
  *
  * @psalm-immutable
  */
-final readonly class Md5 extends StringMd5
+final class Md5 extends StringMd5
 {
 }
