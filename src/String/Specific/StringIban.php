@@ -348,8 +348,6 @@ readonly class StringIban extends StringTypeAbstract
 
         $moved = substr($iban, 4) . substr($iban, 0, 4);
 
-        $numeric = '';
-        $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $subs = [
             'A' => '10', 'B' => '11', 'C' => '12', 'D' => '13', 'E' => '14', 'F' => '15',
             'G' => '16', 'H' => '17', 'I' => '18', 'J' => '19', 'K' => '20', 'L' => '21',

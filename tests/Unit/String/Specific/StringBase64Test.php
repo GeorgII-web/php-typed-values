@@ -48,6 +48,66 @@ describe('StringBase64', function () {
         // This string contains a character ($) which is sometimes ignored by non-strict decoders.
         expect(fn() => new StringBase64('SGVsbG8$'))
             ->toThrow(Base64StringTypeException::class);
+
+        // String with whitespace that non-strict decoding would ignore
+        // base64_decode('SGVs bG8=', true) returns false.
+        // base64_decode('SGVs bG8=', false) ignores space and returns 'Hello'.
+        expect(fn() => new StringBase64('SGVs bG8='))
+            ->toThrow(Base64StringTypeException::class);
+
+        // String with invalid character (\n) that non-strict decoding would ignore
+        // base64_decode("SGVsbG8\n", true) returns false.
+        // base64_decode("SGVsbG8\n", false) ignores \n and returns 'Hello'.
+        expect(fn() => new StringBase64("SGVsbG8\n"))
+            ->toThrow(Base64StringTypeException::class);
+
+        // This string contains a null byte (\0) at the end.
+        // base64_decode("SGVsbG8=\0", true) returns false (STRICT mode rejects it).
+        // base64_decode("SGVsbG8=\0", false) ignores \0 and returns 'Hello'.
+        // Then base64_encode('Hello') is 'SGVsbG8='.
+        // 'SGVsbG8=' !== 'SGVsbG8=\0' is TRUE.
+        // So the exception should be thrown in both cases?
+        // Wait, if BOTH throw, then the mutant is NOT killed.
+        // I need a case where ONE throws and the OTHER DOES NOT.
+        expect(fn() => new StringBase64("SGVsbG8=\0"))
+            ->toThrow(Base64StringTypeException::class);
+
+        // String with two padding chars in middle (invalid)
+        // base64_decode('SGV==sbG8=', true) returns false.
+        // base64_decode('SGV==sbG8=', false) ignores == and returns 'HelshO'.
+        // base64_encode('HelshO') is 'SGVsc2hP'.
+        // 'SGVsc2hP' !== 'SGV==sbG8=' is TRUE.
+        expect(fn() => new StringBase64('SGV==sbG8='))
+            ->toThrow(Base64StringTypeException::class);
+
+        // String that has spaces in it.
+        // base64_decode('SGVsbG8g V29ybGQ=', true) is FALSE.
+        // base64_decode('SGVsbG8g V29ybGQ=', false) is 'Hello World'.
+        // base64_encode('Hello World') is 'SGVsbG8gV29ybGQ='.
+        // 'SGVsbG8gV29ybGQ=' !== 'SGVsbG8g V29ybGQ=' is TRUE.
+        expect(fn() => new StringBase64('SGVsbG8g V29ybGQ='))
+            ->toThrow(Base64StringTypeException::class);
+
+        // This string contains ONLY spaces.
+        // base64_decode(' ', true) is FALSE.
+        // base64_decode(' ', false) is EMPTY STRING.
+        // base64_encode('') is EMPTY STRING.
+        // '' !== ' ' is TRUE.
+        expect(fn() => new StringBase64(' '))
+            ->toThrow(Base64StringTypeException::class);
+
+        // ID: 573315b4152840e5 (TrueToFalse in base64_decode)
+        // We need a string that:
+        // 1. base64_decode($v, true) === FALSE (strict fails)
+        // 2. base64_decode($v, false) !== FALSE (non-strict passes)
+        // 3. base64_encode(base64_decode($v, false)) === $v (identity holds)
+        // This is only possible if $v is already in canonical form but contains characters that strict mode rejects.
+        // PHP strict mode rejects ANY whitespace, but non-strict ignores it.
+        // If we have a string with whitespace, base64_encode will NOT produce the whitespace.
+        // So base64_encode(...) !== $v will always be true!
+        // IS THERE ANY OTHER CHARACTER?
+        // What about 'SGVsbG8=' and 'SGVsbG8='? (identical)
+        // No.
     });
 
     it('throws on invalid Base64 format', function (): void {

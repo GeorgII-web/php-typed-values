@@ -62,6 +62,8 @@ describe('StringIban', function () {
         'DE00123456789012345678901234567890123', // Length 37, passes ctype alpha/digit
         'AB12', // Length 4, passes length check, passes ctype checks, BUT fails checksum.
         'AB1', // Length 3, 'AB' is alpha, '1' is NOT digit (need 2 digits). wait.
+        'PEST Mutator was here!',
+        'PESTMutatorwashere!',
     ]);
 
     it('specifically fails on either invalid prefix or invalid check digits', function (string $invalid): void {
@@ -85,6 +87,9 @@ describe('StringIban', function () {
         'DE893704004405320130001', // length 23, valid but fails checksum.
         'AI6', // length 3, BUT would pass if length check removed (AI=1018, moved=10186, 10186%97=1)
         'AD66' . str_repeat('0', 31), // length 35, BUT would pass if length check removed
+        'AA9Z', // Case 0 (BooleanOrToBooleanAnd mutant b10a335d8c1ff5b4)
+        'A089', // Case 1 (Decrement substr length mutant 49e8924e1e18f0b3)
+        'AD0A48', // Case 2 (Decrement substr length mutant d9ee71f2dc73580a)
     ]);
 
     it('validates mixed case and spaces', function (string $input, string $expected): void {
@@ -154,8 +159,8 @@ describe('StringIban', function () {
 
         // Individual letters for mapping
         foreach (range('A', 'Z') as $char) {
-            for ($i = 0; $i < 1000; $i++) {
-                $dd = str_pad((string)$i, 2, '0', STR_PAD_LEFT);
+            for ($i = 0; $i < 1000; ++$i) {
+                $dd = str_pad((string) $i, 2, '0', STR_PAD_LEFT);
                 $testIban = "AD{$dd}{$char}1";
                 // Check if it's valid
                 $moved = substr($testIban, 4) . substr($testIban, 0, 4);
@@ -318,7 +323,8 @@ describe('StringIban', function () {
 
     it('isTypeOf returns false when class does not match', function (): void {
         $v = StringIban::fromString('DE89 3704 0044 0532 0130 00');
-        expect($v->isTypeOf('NonExistentClass'))->toBeFalse();
+        expect($v->isTypeOf('NonExistentClass'))->toBeFalse()
+            ->and($v->isTypeOf(StringIban::class, 'NonExistentClass'))->toBeTrue();
     });
 
     it('isEmpty is always false for StringIban', function (): void {
