@@ -60,10 +60,8 @@ describe('StringIban', function () {
         'DE' . str_repeat('0', 34), // Length 36
         'DE001', // Length 5, passes ctype_alpha(DE) and ctype_digit(00)
         'DE00123456789012345678901234567890123', // Length 37, passes ctype alpha/digit
-        'ABC', // Too short (len 3)
-        str_repeat('A', 35), // Too long
-        '1234', // Length 4, fails ctype_alpha
-        'DEAB', // Length 4, fails ctype_digit
+        'AB12', // Length 4, passes length check, passes ctype checks, BUT fails checksum.
+        'AB1', // Length 3, 'AB' is alpha, '1' is NOT digit (need 2 digits). wait.
     ]);
 
     it('specifically fails on either invalid prefix or invalid check digits', function (string $invalid): void {
@@ -73,6 +71,20 @@ describe('StringIban', function () {
         'DEAB', // Check digits invalid (letters)
         'A123', // Prefix too short (only 1 letter)
         'DE1A', // Check digits invalid (contains letter)
+        'DE89 3704 0044 0532 0130 000', // too long but otherwise valid (if stripped)
+        'DE8', // too short but otherwise valid
+        'DE89370400440532013000DE89370400440532013000DE89370400440532013000', // very long (passes ctype)
+        'DE89', // length 4, but ctype_alpha(DE) and ctype_digit(89) pass! BUT it fails checksum.
+        'ZZ00', // length 4, ZZ is alpha, 00 is digit. fails checksum.
+        'ZZ001', // length 5, ZZ is alpha, 00 is digit. fails checksum.
+        'ZZ00123456789012345678901234567890123', // length 37, ZZ is alpha, 00 is digit. fails checksum.
+        'AD' . str_repeat('0', 32), // length 34, valid length, fails checksum.
+        'AD' . str_repeat('0', 33), // length 35, invalid length.
+        'AD' . str_repeat('0', 1), // length 3, invalid length.
+        'ZZ0', // length 3, ZZ is alpha, 0 is digit.
+        'DE893704004405320130001', // length 23, valid but fails checksum.
+        'AI6', // length 3, BUT would pass if length check removed (AI=1018, moved=10186, 10186%97=1)
+        'AD66' . str_repeat('0', 31), // length 35, BUT would pass if length check removed
     ]);
 
     it('validates mixed case and spaces', function (string $input, string $expected): void {
@@ -88,6 +100,8 @@ describe('StringIban', function () {
         ['AD58O1', 'AD58O1'], // Killing 3aa70a7b690e6e34
         ['AD24R1', 'AD24R1'], // Killing 6401172022ca592d
         ['AD45S1', 'AD45S1'], // Killing b844a3e509f7f4a2
+        ['AD66T1', 'AD66T1'], // Killing 7c6d81d561ea1335
+        ['AD11V1', 'AD11V1'], // Killing 8604f4ccefc07486
     ]);
 
     it('accepts valid IBANs with letters', function (string $valid): void {
@@ -98,6 +112,8 @@ describe('StringIban', function () {
         'AD58O1', // Valid fictional IBAN with O
         'AD24R1', // Valid fictional IBAN with R
         'AD45S1', // Valid fictional IBAN with S
+        'AD66T1', // Valid fictional IBAN with T
+        'AD11V1', // Valid fictional IBAN with V
     ]);
 
     it('accepts boundary length IBANs', function (): void {
@@ -138,15 +154,16 @@ describe('StringIban', function () {
 
         // Individual letters for mapping
         foreach (range('A', 'Z') as $char) {
-            $ibanWithChar = 'AD00 ' . str_repeat($char, 12);
-            $clean = str_replace(' ', '', $ibanWithChar);
-            $moved = substr($clean, 4) . substr($clean, 0, 4);
-            $subs = ['A' => '10', 'B' => '11', 'C' => '12', 'D' => '13', 'E' => '14', 'F' => '15', 'G' => '16', 'H' => '17', 'I' => '18', 'J' => '19', 'K' => '20', 'L' => '21', 'M' => '22', 'N' => '23', 'O' => '24', 'P' => '25', 'Q' => '26', 'R' => '27', 'S' => '28', 'T' => '29', 'U' => '30', 'V' => '31', 'W' => '32', 'X' => '33', 'Y' => '34', 'Z' => '35'];
-            $numeric = strtr($moved, $subs);
-            if (ctype_digit($numeric)) {
-                try {
-                    new StringIban($ibanWithChar);
-                } catch (Exception) {
+            for ($i = 0; $i < 1000; $i++) {
+                $dd = str_pad((string)$i, 2, '0', STR_PAD_LEFT);
+                $testIban = "AD{$dd}{$char}1";
+                // Check if it's valid
+                $moved = substr($testIban, 4) . substr($testIban, 0, 4);
+                $subs = ['A' => '10', 'B' => '11', 'C' => '12', 'D' => '13', 'E' => '14', 'F' => '15', 'G' => '16', 'H' => '17', 'I' => '18', 'J' => '19', 'K' => '20', 'L' => '21', 'M' => '22', 'N' => '23', 'O' => '24', 'P' => '25', 'Q' => '26', 'R' => '27', 'S' => '28', 'T' => '29', 'U' => '30', 'V' => '31', 'W' => '32', 'X' => '33', 'Y' => '34', 'Z' => '35'];
+                $numeric = strtr($moved, $subs);
+                if (bcmod($numeric, '97') === '1') {
+                    new StringIban($testIban);
+                    break;
                 }
             }
         }
