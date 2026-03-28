@@ -11,6 +11,6 @@ use PhpTypedValues\String\Specific\StringJwt;
  *
  * @psalm-immutable
  */
-final readonly class Jwt extends StringJwt
+final class Jwt extends StringJwt
 {
 }
