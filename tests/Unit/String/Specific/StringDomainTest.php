@@ -133,7 +133,19 @@ describe('StringDomain', function () {
 
     it('tryFromBool, tryFromFloat, tryFromInt, tryFromDecimal return Undefined for invalid inputs', function (): void {
         expect(StringDomain::tryFromBool(true))->toBeInstanceOf(Undefined::class)
-            ->and(StringDomain::tryFromInt(123))->toBeInstanceOf(Undefined::class);
+            ->and(StringDomain::tryFromFloat(-1.1))->toBeInstanceOf(Undefined::class)
+            ->and(StringDomain::tryFromInt(-123))->toBeInstanceOf(Undefined::class)
+            ->and(StringDomain::tryFromDecimal('-1.1'))->toBeInstanceOf(Undefined::class);
+    });
+
+    it('fromDecimal and fromFloat throw exception for non-domain values', function (): void {
+        expect(fn() => StringDomain::fromDecimal('-1.1'))->toThrow(DomainStringTypeException::class)
+            ->and(fn() => StringDomain::fromFloat(-1.1))->toThrow(DomainStringTypeException::class);
+    });
+
+    it('fromBool and fromInt throw exception for non-domain values', function (): void {
+        expect(fn() => StringDomain::fromBool(true))->toThrow(DomainStringTypeException::class)
+            ->and(fn() => StringDomain::fromInt(-123))->toThrow(DomainStringTypeException::class);
     });
 });
 
