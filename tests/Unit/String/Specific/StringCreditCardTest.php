@@ -144,16 +144,17 @@ describe('StringCreditCard', function () {
         $instance2 = StringCreditCard::fromString('0049927398716');
         expect($instance2->value())->toBe('0049927398716');
 
-        // Kill ID: d9c9c98622973322 (SmallerToSmallerOrEqual i <= length)
+        // ID: d9c9c98622973322 (SmallerToSmallerOrEqual i <= length)
         // If i matches length, it will try to access $digits[$length] which is null/error.
         // But in PHP 8, $s[$len] might be "" or throw.
         // Actually, $digit = (int) $digits[$i]; if $i == $length, $digits[$i] is "", (int)"" is 0.
-        // If $i == $length, then $length % 2 === $parity is ALWAYS true? No.
-        // $parity = $length % 2. If $i == $length, $i % 2 === $parity is ALWAYS true.
+        // If $i == $length, then $i % 2 === $parity is ALWAYS true.
         // So it will do $digit = 0; $digit *= 2; (still 0); if (0 > 9) ...; $sum += 0;
         // The only way to detect it is if we HAVE a card that would fail if an extra 0 was added to sum.
         // But adding 0 to sum NEVER changes the sum % 10 === 0 result!
-        // Wait, if it crashes, it kills it.
+        // HOWEVER, it should emit an E_WARNING: Uninitialized string offset.
+        // Pest should catch this warning and fail the test.
+        StringCreditCard::fromString('4111111111111111');
     });
 
     it('kills specific mutants in luhn algorithm', function (): void {

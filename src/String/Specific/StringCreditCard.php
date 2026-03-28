@@ -342,9 +342,9 @@ readonly class StringCreditCard extends StringTypeAbstract
             $digit = (int) $digits[$i];
 
             if ($i % 2 === $parity) {
-                $digit *= 2;
+                $digit += $digit;
 
-                if ($digit > 9) {
+                if ($digit >= 10) {
                     $digit -= 9;
                 }
             }

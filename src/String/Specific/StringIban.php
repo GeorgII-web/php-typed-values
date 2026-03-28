@@ -56,7 +56,7 @@ readonly class StringIban extends StringTypeAbstract
         $clean = str_replace(' ', '', $value);
         $clean = strtoupper($clean);
 
-        if ($clean === '' || !$this->isValidIban($clean)) {
+        if (!$this->isValidIban($clean)) {
             throw new IbanStringTypeException(sprintf('Expected valid IBAN string, got "%s"', $value));
         }
 
