@@ -23,7 +23,7 @@
 * If a class is created in a test – choose a name "ClassName" + Test, bc CSFixer will rename it.
 * Choose short but meaningful names for test\describe methods, must be unique in a file.
 * Avoid duplicate test cases or same data in a single test.
-* Run all kinds of tests from `composer oncommit` script
+* Run all kinds of tests from `composer oncommit` script (except `mutate`)
 * Run `docker-compose exec -ti php composer mutate -- --id=****` with a mutation error id if provided.
 
 **Tech-Stack & Style**
