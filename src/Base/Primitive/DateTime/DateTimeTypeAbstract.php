@@ -44,7 +44,9 @@ abstract readonly class DateTimeTypeAbstract extends PrimitiveTypeAbstract imple
     /**
      * @param non-empty-string $timezone
      */
-    abstract public static function fromString(string $value, string $timezone = DateTimeTypeInterface::DEFAULT_ZONE,
+    abstract public static function fromString(
+        string $value,
+        string $timezone = DateTimeTypeInterface::DEFAULT_ZONE,
     ): static;
 
     abstract public static function getFormat(): string;
@@ -65,7 +67,7 @@ abstract readonly class DateTimeTypeAbstract extends PrimitiveTypeAbstract imple
         mixed $value,
         string $timezone = DateTimeTypeInterface::DEFAULT_ZONE,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract;
+    ): PrimitiveTypeAbstract|static;
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -79,7 +81,7 @@ abstract readonly class DateTimeTypeAbstract extends PrimitiveTypeAbstract imple
         string $value,
         string $timezone = DateTimeTypeInterface::DEFAULT_ZONE,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract;
+    ): PrimitiveTypeAbstract|static;
 
     abstract public function value(): DateTimeImmutable;
 
@@ -113,6 +115,7 @@ abstract readonly class DateTimeTypeAbstract extends PrimitiveTypeAbstract imple
          * @psalm-suppress ImpureMethodCall
          */
         $dt = DateTimeImmutable::createFromFormat($format, $value, $timezone);
+
         /**
          * Normalize getLastErrors result to an array with counters.
          * Some PHP versions return an array with zero counts instead of false.

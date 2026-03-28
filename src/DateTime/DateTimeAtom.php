@@ -126,7 +126,7 @@ readonly class DateTimeAtom extends DateTimeTypeAbstract
         mixed $value,
         string $timezone = self::DEFAULT_ZONE,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+    ): PrimitiveTypeAbstract|static {
         try {
             /** @var static $result */
             return match (true) {
@@ -136,7 +136,7 @@ readonly class DateTimeAtom extends DateTimeTypeAbstract
                 default => throw new TypeException('Value cannot be cast to date time'),
             };
         } catch (Exception) {
-            /* @var PrimitiveTypeAbstract */
+            // @var PrimitiveTypeAbstract
             return $default;
         }
     }
@@ -155,12 +155,12 @@ readonly class DateTimeAtom extends DateTimeTypeAbstract
         string $value,
         string $timezone = self::DEFAULT_ZONE,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+    ): PrimitiveTypeAbstract|static {
         try {
             /** @var static $result */
             return static::fromString($value, $timezone);
         } catch (Exception) {
-            /* @var PrimitiveTypeAbstract */
+            // @var PrimitiveTypeAbstract
             return $default;
         }
     }

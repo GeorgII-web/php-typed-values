@@ -50,6 +50,7 @@ describe('DateTimeRFC3339Extended', function () {
 
             it('aggregates multiple parse warnings with proper concatenation', function () {
                 $input = '2025-13-40T25:61:61.000+00:00';
+
                 try {
                     DateTimeRFC3339Extended::fromString($input);
                     expect()->fail('Exception was not thrown');
@@ -63,6 +64,7 @@ describe('DateTimeRFC3339Extended', function () {
 
             it('errors-only path keeps newline after header and after error line', function () {
                 $input = '2025-01-02T03:04:05.000+00:00 ';
+
                 try {
                     DateTimeRFC3339Extended::fromString($input);
                     expect()->fail('Exception was not thrown');

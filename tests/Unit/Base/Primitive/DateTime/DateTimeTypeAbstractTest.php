@@ -2,11 +2,20 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\Base\Primitive\DateTime;
+
+use DateTimeImmutable;
+use DateTimeZone;
+use Exception;
 use PhpTypedValues\Base\Primitive\DateTime\DateTimeTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\DateTime\DateTimeTypeException;
 use PhpTypedValues\Exception\DateTime\ZoneDateTimeTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use Stringable;
+use Throwable;
+
+use function is_string;
 
 covers(DateTimeTypeAbstract::class);
 
@@ -98,10 +107,10 @@ readonly class DateTimeTypeAbstractTest extends DateTimeTypeAbstract
         mixed $value,
         string $timezone = self::DEFAULT_ZONE,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+    ): PrimitiveTypeAbstract|static {
         try {
             return match (true) {
-                \is_string($value) => static::fromString($value, $timezone),
+                is_string($value) => static::fromString($value, $timezone),
                 $value instanceof DateTimeImmutable => static::fromDateTime($value),
                 $value instanceof DateTimeTypeAbstract => static::fromDateTime($value->value()),
                 $value instanceof Stringable => static::fromString((string) $value, $timezone),
@@ -116,7 +125,7 @@ readonly class DateTimeTypeAbstractTest extends DateTimeTypeAbstract
         string $value,
         string $timezone = self::DEFAULT_ZONE,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+    ): PrimitiveTypeAbstract|static {
         try {
             return static::fromString($value, $timezone);
         } catch (Throwable) {

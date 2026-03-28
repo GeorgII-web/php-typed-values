@@ -53,7 +53,7 @@ interface DateTimeTypeInterface
         mixed $value,
         string $timezone = self::DEFAULT_ZONE,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract;
+    ): PrimitiveTypeAbstract|static;
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -67,7 +67,7 @@ interface DateTimeTypeInterface
         string $value,
         string $timezone = self::DEFAULT_ZONE,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract;
+    ): PrimitiveTypeAbstract|static;
 
     public function value(): DateTimeImmutable;
 
