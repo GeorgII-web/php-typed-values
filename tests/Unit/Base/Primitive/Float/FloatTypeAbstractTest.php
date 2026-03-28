@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\Base\Primitive\Float;
+
+use const PHP_INT_MAX;
+
 use PhpTypedValues\Base\Primitive\Float\FloatTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\Float\FloatTypeException;
@@ -9,6 +13,14 @@ use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use stdClass;
+use Stringable;
+use Throwable;
+
+use function is_bool;
+use function is_float;
+use function is_int;
+use function is_string;
 
 covers(FloatTypeAbstract::class);
 
@@ -102,7 +114,7 @@ readonly class FloatTypeAbstractTest extends FloatTypeAbstract
     public static function tryFromBool(
         bool $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+    ): PrimitiveTypeAbstract|static {
         try {
             return static::fromBool($value);
         } catch (Throwable) {
@@ -113,7 +125,7 @@ readonly class FloatTypeAbstractTest extends FloatTypeAbstract
     public static function tryFromDecimal(
         string $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+    ): PrimitiveTypeAbstract|static {
         try {
             return static::fromDecimal($value);
         } catch (Throwable) {
@@ -124,7 +136,7 @@ readonly class FloatTypeAbstractTest extends FloatTypeAbstract
     public static function tryFromFloat(
         float $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+    ): PrimitiveTypeAbstract|static {
         try {
             return static::fromFloat($value);
         } catch (Throwable) {
@@ -135,7 +147,7 @@ readonly class FloatTypeAbstractTest extends FloatTypeAbstract
     public static function tryFromInt(
         int $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+    ): PrimitiveTypeAbstract|static {
         try {
             return static::fromInt($value);
         } catch (Throwable) {
@@ -146,14 +158,14 @@ readonly class FloatTypeAbstractTest extends FloatTypeAbstract
     public static function tryFromMixed(
         mixed $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+    ): PrimitiveTypeAbstract|static {
         try {
             return match (true) {
-                \is_float($value) => static::fromFloat($value),
-                \is_int($value) => static::fromInt($value),
+                is_float($value) => static::fromFloat($value),
+                is_int($value) => static::fromInt($value),
                 $value instanceof FloatTypeAbstract => static::fromFloat($value->value()),
-                \is_bool($value) => static::fromBool($value),
-                \is_string($value) || $value instanceof Stringable => static::tryFromDecimal((string) $value, static::fromString((string) $value)),
+                is_bool($value) => static::fromBool($value),
+                is_string($value) || $value instanceof Stringable => static::tryFromDecimal((string) $value, static::fromString((string) $value)),
                 default => throw new TypeException('Value cannot be cast to float'),
             };
         } catch (Throwable) {
@@ -164,7 +176,7 @@ readonly class FloatTypeAbstractTest extends FloatTypeAbstract
     public static function tryFromString(
         string $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+    ): PrimitiveTypeAbstract|static {
         try {
             return static::fromString($value);
         } catch (Throwable) {
@@ -194,7 +206,7 @@ describe('FloatTypeAbstract', function () {
             });
 
             it('throws on precision loss', function () {
-                expect(fn() => FloatTypeAbstractTest::fromInt(\PHP_INT_MAX))
+                expect(fn() => FloatTypeAbstractTest::fromInt(PHP_INT_MAX))
                     ->toThrow(IntegerTypeException::class);
             });
         });
@@ -250,7 +262,7 @@ describe('FloatTypeAbstract', function () {
 
             it('tryFromInt', function () {
                 expect(FloatTypeAbstractTest::tryFromInt(10)->value())->toBe(10.0);
-                expect(FloatTypeAbstractTest::tryFromInt(\PHP_INT_MAX))->toBeInstanceOf(Undefined::class);
+                expect(FloatTypeAbstractTest::tryFromInt(PHP_INT_MAX))->toBeInstanceOf(Undefined::class);
             });
 
             it('tryFromBool', function () {

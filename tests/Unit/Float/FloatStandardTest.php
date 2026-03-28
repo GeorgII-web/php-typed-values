@@ -2,12 +2,22 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\Float;
+
+use const INF;
+use const NAN;
+use const PHP_FLOAT_MAX;
+use const PHP_INT_MAX;
+
+use Exception;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Float\FloatStandard;
+use PhpTypedValues\String\StringStandard;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use stdClass;
 
 describe('FloatStandard', function () {
     describe('Creation', function () {
@@ -98,12 +108,12 @@ describe('FloatStandard', function () {
                 }
             })->with([
                 'valid float' => [2.0, FloatStandard::fromFloat(2.0)],
-                'INF' => [\INF, Undefined::create()],
-                'NAN' => [\NAN, Undefined::create()],
+                'INF' => [INF, Undefined::create()],
+                'NAN' => [NAN, Undefined::create()],
             ]);
 
             it('returns custom default on failure', function () {
-                expect(FloatStandard::tryFromFloat(\INF, Undefined::create()))->toBeInstanceOf(Undefined::class);
+                expect(FloatStandard::tryFromFloat(INF, Undefined::create()))->toBeInstanceOf(Undefined::class);
             });
         });
 
@@ -117,8 +127,8 @@ describe('FloatStandard', function () {
             it('throws exception on invalid float', function (float $input) {
                 expect(fn() => FloatStandard::fromFloat($input))->toThrow(FloatTypeException::class);
             })->with([
-                'INF' => [\INF],
-                'NAN' => [\NAN],
+                'INF' => [INF],
+                'NAN' => [NAN],
             ]);
         });
 
@@ -133,7 +143,7 @@ describe('FloatStandard', function () {
                 }
             })->with([
                 'standard int' => [5, FloatStandard::fromFloat(5.0)],
-                'PHP_INT_MAX' => [\PHP_INT_MAX, Undefined::create()],
+                'PHP_INT_MAX' => [PHP_INT_MAX, Undefined::create()],
             ]);
         });
 
@@ -147,7 +157,7 @@ describe('FloatStandard', function () {
             it('throws exception on invalid int', function (int $input) {
                 expect(fn() => FloatStandard::fromInt($input))->toThrow(IntegerTypeException::class);
             })->with([
-                'PHP_INT_MAX' => [\PHP_INT_MAX],
+                'PHP_INT_MAX' => [PHP_INT_MAX],
             ]);
         });
 
@@ -186,7 +196,7 @@ describe('FloatStandard', function () {
                 'float 1.5' => [1.5, 1.5],
                 'float 0.0' => [0.0, 0.0],
                 'float -3.14' => [-3.14, -3.14],
-                'PHP_FLOAT_MAX' => [\PHP_FLOAT_MAX, \PHP_FLOAT_MAX],
+                'PHP_FLOAT_MAX' => [PHP_FLOAT_MAX, PHP_FLOAT_MAX],
                 'long float' => [1.234567890123456789, 1.234567890123456789],
                 '2/3' => [2 / 3, 2 / 3],
                 'FloatStandard instance' => [FloatStandard::fromFloat(1.234567890123456789), 1.234567890123456789],
@@ -233,8 +243,8 @@ describe('FloatStandard', function () {
                 'Callable array' => [['FloatStandard', 'fromInt']],
                 'Resource' => [fopen('php://memory', 'r')],
                 'Array of objects' => [[new stdClass()]],
-                'INF' => [\INF],
-                'NAN' => [\NAN],
+                'INF' => [INF],
+                'NAN' => [NAN],
                 'Null byte string' => ["\0"],
             ]);
 
@@ -291,7 +301,7 @@ describe('FloatStandard', function () {
                 '2^53-1' => [9007199254740991.0, '9007199254740991.0'],
                 '2^53' => [9007199254740992.0, '9007199254740992.0'],
                 '-2^53' => [-9007199254740992.0, '-9007199254740992.0'],
-                'PHP_INT_MAX as float' => [(float) \PHP_INT_MAX, '9223372036854775808.0'],
+                'PHP_INT_MAX as float' => [(float) PHP_INT_MAX, '9223372036854775808.0'],
                 'Float_closure' => [fn() => 1.5, '1.5'],
             ]);
 
@@ -411,7 +421,7 @@ describe('FloatStandard', function () {
         it('covers intToString protective check', function () {
             // It's hard to trigger line 230 with a real int in PHP,
             // but we can test it with standard values to at least execute the line.
-            $v = PhpTypedValues\String\StringStandard::fromInt(123);
+            $v = StringStandard::fromInt(123);
             expect($v->value())->toBe('123');
         });
     });

@@ -56,7 +56,7 @@ abstract readonly class FloatTypeAbstract extends PrimitiveTypeAbstract implemen
     abstract public static function tryFromBool(
         bool $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract;
+    ): PrimitiveTypeAbstract|static;
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -68,7 +68,7 @@ abstract readonly class FloatTypeAbstract extends PrimitiveTypeAbstract implemen
     abstract public static function tryFromDecimal(
         string $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract;
+    ): PrimitiveTypeAbstract|static;
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -80,7 +80,7 @@ abstract readonly class FloatTypeAbstract extends PrimitiveTypeAbstract implemen
     abstract public static function tryFromFloat(
         float $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract;
+    ): PrimitiveTypeAbstract|static;
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -92,7 +92,7 @@ abstract readonly class FloatTypeAbstract extends PrimitiveTypeAbstract implemen
     abstract public static function tryFromInt(
         int $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract;
+    ): PrimitiveTypeAbstract|static;
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -104,7 +104,7 @@ abstract readonly class FloatTypeAbstract extends PrimitiveTypeAbstract implemen
     abstract public static function tryFromMixed(
         mixed $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract;
+    ): PrimitiveTypeAbstract|static;
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -116,7 +116,7 @@ abstract readonly class FloatTypeAbstract extends PrimitiveTypeAbstract implemen
     abstract public static function tryFromString(
         string $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract;
+    ): PrimitiveTypeAbstract|static;
 
     abstract public function value(): float;
 
