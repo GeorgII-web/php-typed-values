@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Tests\Unit\String;
+namespace PhpTypedValues\Tests\Unit\String\Specific;
 
 use const STDOUT;
 
