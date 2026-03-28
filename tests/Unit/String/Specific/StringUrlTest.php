@@ -2,9 +2,15 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\String\Specific;
+
+use Exception;
+use PhpTypedValues\Exception\Decimal\DecimalTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\String\UrlStringTypeException;
 use PhpTypedValues\String\Specific\StringUrl;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use stdClass;
 
 describe('StringUrl', function () {
     it('accepts valid URL, preserves value/toString and casts via __toString', function (): void {
@@ -113,10 +119,10 @@ describe('StringUrl', function () {
             ->and(fn() => StringUrl::fromDecimal('1.0'))->toThrow(UrlStringTypeException::class);
 
         $v = StringUrl::fromString('https://example.com');
-        expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-            ->and(fn() => $v->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-            ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-            ->and(fn() => $v->toDecimal())->toThrow(PhpTypedValues\Exception\Decimal\DecimalTypeException::class);
+        expect(fn() => $v->toBool())->toThrow(StringTypeException::class)
+            ->and(fn() => $v->toFloat())->toThrow(StringTypeException::class)
+            ->and(fn() => $v->toInt())->toThrow(StringTypeException::class)
+            ->and(fn() => $v->toDecimal())->toThrow(DecimalTypeException::class);
     });
 
     it('tryFromBool, tryFromFloat, tryFromInt, tryFromDecimal return Undefined for StringUrl', function (): void {

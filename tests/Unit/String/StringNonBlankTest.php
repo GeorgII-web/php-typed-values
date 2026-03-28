@@ -2,9 +2,13 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\String;
+
+use Exception;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\String\StringNonBlank;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use stdClass;
 
 describe('StringNonBlank', function () {
     it('StringNonBlank accepts non-blank strings and preserves value/toString', function (): void {

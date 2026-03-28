@@ -2,15 +2,22 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\Base\Primitive\Undefined;
+
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Base\Primitive\Undefined\UndefinedTypeAbstract;
+use PhpTypedValues\Base\Primitive\Undefined\UndefinedTypeInterface;
 use PhpTypedValues\Exception\Undefined\UndefinedTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 /**
  * Mock implementation of UndefinedTypeAbstract to test the abstract class.
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-readonly class UndefinedTypeAbstractMock extends UndefinedTypeAbstract
+readonly class UndefinedTypeTest extends UndefinedTypeAbstract
 {
     public static function create(): static
     {
@@ -271,12 +278,12 @@ readonly class UndefinedTypeSuccessMock extends UndefinedTypeAbstract
 
 describe('UndefinedTypeAbstract', function () {
     it('implements UndefinedTypeInterface', function (): void {
-        expect(is_subclass_of(UndefinedTypeAbstract::class, PhpTypedValues\Base\Primitive\Undefined\UndefinedTypeInterface::class))->toBeTrue();
+        expect(is_subclass_of(UndefinedTypeAbstract::class, UndefinedTypeInterface::class))->toBeTrue();
     });
 
     describe('__toString behavior', function () {
         it('calls toString and throws if toString throws', function (): void {
-            $mock = UndefinedTypeAbstractMock::create();
+            $mock = UndefinedTypeTest::create();
 
             expect(fn() => (string) $mock)
                 ->toThrow(UndefinedTypeException::class, 'Mock: toString');

@@ -2,9 +2,16 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\String;
+
+use const STDOUT;
+
+use Exception;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\String\StringStandard;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use stdClass;
+use Stringable;
 
 describe('StringStandard', function () {
     describe('Core behavior', function () {
@@ -81,7 +88,7 @@ describe('StringStandard', function () {
             // stdClass is not Stringable and not scalar
             expect(StringStandard::tryFromMixed(new stdClass()))->toBeInstanceOf(Undefined::class)
                 ->and(StringStandard::tryFromMixed([]))->toBeInstanceOf(Undefined::class)
-                ->and(StringStandard::tryFromMixed(\STDOUT))->toBeInstanceOf(Undefined::class);
+                ->and(StringStandard::tryFromMixed(STDOUT))->toBeInstanceOf(Undefined::class);
         });
 
         it('fromString creates instance with correct value', function (): void {
@@ -258,7 +265,12 @@ describe('StringStandardTest (Throwing static)', function () {
     });
 });
 
-readonly class ThrowingStringStandard extends StringStandard
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
+readonly class ThrowingStringStandardTest extends StringStandard
 {
     public static function fromBool(bool $value): static
     {
@@ -286,28 +298,28 @@ readonly class ThrowingStringStandard extends StringStandard
     }
 }
 
-describe('ThrowingStringStandard', function () {
+describe('ThrowingStringStandardTest', function () {
     it('StringStandard::tryFromBool returns Undefined when fromBool throws', function (): void {
-        expect(ThrowingStringStandard::tryFromBool(true))->toBeInstanceOf(Undefined::class);
+        expect(ThrowingStringStandardTest::tryFromBool(true))->toBeInstanceOf(Undefined::class);
     });
 
     it('StringStandard::tryFromFloat returns Undefined when fromFloat throws', function (): void {
-        expect(ThrowingStringStandard::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class);
+        expect(ThrowingStringStandardTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class);
     });
 
     it('StringStandard::tryFromInt returns Undefined when fromInt throws', function (): void {
-        expect(ThrowingStringStandard::tryFromInt(1))->toBeInstanceOf(Undefined::class);
+        expect(ThrowingStringStandardTest::tryFromInt(1))->toBeInstanceOf(Undefined::class);
     });
 
     it('StringStandard::tryFromString returns Undefined when fromString throws (using throwing class)', function (): void {
-        expect(ThrowingStringStandard::tryFromString('fail'))->toBeInstanceOf(Undefined::class);
+        expect(ThrowingStringStandardTest::tryFromString('fail'))->toBeInstanceOf(Undefined::class);
     });
 
     it('StringStandard::tryFromDecimal returns Undefined when fromDecimal throws', function (): void {
-        expect(ThrowingStringStandard::tryFromDecimal('fail'))->toBeInstanceOf(Undefined::class);
+        expect(ThrowingStringStandardTest::tryFromDecimal('fail'))->toBeInstanceOf(Undefined::class);
     });
 
     it('StringStandard::tryFromMixed returns Undefined when static method throws', function (): void {
-        expect(ThrowingStringStandard::tryFromMixed('any'))->toBeInstanceOf(Undefined::class);
+        expect(ThrowingStringStandardTest::tryFromMixed('any'))->toBeInstanceOf(Undefined::class);
     });
 });

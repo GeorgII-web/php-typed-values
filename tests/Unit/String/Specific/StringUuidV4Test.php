@@ -2,9 +2,16 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\String\Specific;
+
+use Exception;
+use PhpTypedValues\Exception\Decimal\DecimalTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\String\UuidStringTypeException;
 use PhpTypedValues\String\Specific\StringUuidV4;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use RuntimeException;
+use stdClass;
 
 describe('StringUuidV4', function () {
     describe('Core behavior', function () {
@@ -144,10 +151,10 @@ describe('StringUuidV4', function () {
                 ->and(fn() => StringUuidV4::fromDecimal('1.0'))->toThrow(UuidStringTypeException::class);
 
             $v = StringUuidV4::fromString('550e8400-e29b-41d4-a716-446655440000');
-            expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-                ->and(fn() => $v->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-                ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-                ->and(fn() => $v->toDecimal())->toThrow(PhpTypedValues\Exception\Decimal\DecimalTypeException::class);
+            expect(fn() => $v->toBool())->toThrow(StringTypeException::class)
+                ->and(fn() => $v->toFloat())->toThrow(StringTypeException::class)
+                ->and(fn() => $v->toInt())->toThrow(StringTypeException::class)
+                ->and(fn() => $v->toDecimal())->toThrow(DecimalTypeException::class);
         });
 
         it('tryFromBool, tryFromFloat, tryFromInt, tryFromDecimal return Undefined for StringUuidV4', function (): void {
@@ -180,7 +187,7 @@ readonly class StringUuidV4Test extends StringUuidV4
 
     public static function fromFloat(float $value): static
     {
-        throw new Exception('test');
+        throw new RuntimeException('test');
     }
 
     public static function fromInt(int $value): static
@@ -194,7 +201,7 @@ readonly class StringUuidV4Test extends StringUuidV4
     }
 }
 
-describe('StringUuidV4Test (Throwing static)', function () {
+describe('StringUuidV4StandardTest (Throwing static)', function () {
     it('StringUuidV4::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
         expect(StringUuidV4Test::tryFromBool(true))->toBeInstanceOf(Undefined::class)
             ->and(StringUuidV4Test::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)

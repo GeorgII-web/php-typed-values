@@ -2,9 +2,14 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\String;
+
+use Exception;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\String\StringNonEmpty;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use stdClass;
+use Stringable;
 
 describe('StringNonEmpty', function () {
     describe('Core behavior', function () {
@@ -169,7 +174,7 @@ readonly class StringNonEmptyTest extends StringNonEmpty
     }
 }
 
-describe('StringNonEmptyTest (Throwing static)', function () {
+describe('StringNonEmptyStandardTest (Throwing static)', function () {
     it('StringNonEmpty::tryFromBool returns Undefined when fromBool throws (coverage)', function (): void {
         expect(StringNonEmptyTest::tryFromBool(true))->toBeInstanceOf(Undefined::class);
     });

@@ -2,9 +2,16 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\String\Specific;
+
+use Exception;
+use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\String\LocaleStringTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\String\Specific\StringLocaleCode;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use stdClass;
+use Stringable;
 
 covers(StringLocaleCode::class);
 
@@ -88,10 +95,10 @@ describe('StringLocaleCode', function () {
     it('conversions to other types', function (): void {
         $l = new StringLocaleCode('en_US');
         // 'en_US' is not a valid bool, float, or int string.
-        expect(fn() => $l->toBool())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-            ->and(fn() => $l->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-            ->and(fn() => $l->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-            ->and(fn() => $l->toDecimal())->toThrow(PhpTypedValues\Exception\Decimal\DecimalTypeException::class);
+        expect(fn() => $l->toBool())->toThrow(StringTypeException::class)
+            ->and(fn() => $l->toFloat())->toThrow(StringTypeException::class)
+            ->and(fn() => $l->toInt())->toThrow(StringTypeException::class)
+            ->and(fn() => $l->toDecimal())->toThrow(DecimalTypeException::class);
     });
 
     it('tryFromBool, tryFromFloat, tryFromInt, tryFromDecimal return Undefined', function (): void {

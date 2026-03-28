@@ -2,10 +2,16 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\String\MariaDb;
+
+use const DEBUG_BACKTRACE_IGNORE_ARGS;
+
+use Exception;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\String\Alias\MariaDb\LongText;
 use PhpTypedValues\String\MariaDb\StringLongText;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use ReflectionMethod;
 
 describe('StringLongText', function () {
     it('accepts empty string and preserves value/toString', function (): void {
@@ -184,7 +190,7 @@ readonly class StringLongTextTest extends StringLongText
     protected static function maxLength(): int
     {
         // Special case for testing line 46 in StringLongText.php
-        foreach (debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS) as $trace) {
+        foreach (debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS) as $trace) {
             $function = $trace['function'] ?? '';
             if (
                 str_contains($function, 'it_throws_when_string_exceeds_max_length')

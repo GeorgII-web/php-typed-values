@@ -2,10 +2,14 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\String\MariaDb;
+
+use Exception;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\String\Alias\MariaDb\MediumText;
 use PhpTypedValues\String\MariaDb\StringMediumText;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use stdClass;
 
 describe('StringMediumText', function () {
     it('accepts empty string and preserves value/toString', function (): void {

@@ -2,9 +2,15 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\String\Specific;
+
+use Exception;
+use PhpTypedValues\Exception\Decimal\DecimalTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\String\UuidStringTypeException;
 use PhpTypedValues\String\Specific\StringUuidV7;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use stdClass;
 
 describe('StringUuidV7', function () {
     describe('Core behavior', function () {
@@ -144,10 +150,10 @@ describe('StringUuidV7', function () {
                 ->and(fn() => StringUuidV7::fromDecimal('1.0'))->toThrow(UuidStringTypeException::class);
 
             $v = StringUuidV7::fromString('01890f2a-5bcd-7def-8abc-1234567890ab');
-            expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-                ->and(fn() => $v->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-                ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-                ->and(fn() => $v->toDecimal())->toThrow(PhpTypedValues\Exception\Decimal\DecimalTypeException::class);
+            expect(fn() => $v->toBool())->toThrow(StringTypeException::class)
+                ->and(fn() => $v->toFloat())->toThrow(StringTypeException::class)
+                ->and(fn() => $v->toInt())->toThrow(StringTypeException::class)
+                ->and(fn() => $v->toDecimal())->toThrow(DecimalTypeException::class);
         });
 
         it('tryFromBool, tryFromFloat, tryFromInt, tryFromDecimal return Undefined for StringUuidV7', function (): void {

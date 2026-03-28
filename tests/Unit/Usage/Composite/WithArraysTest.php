@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\Usage\Composite;
+
+use JsonSerializable;
 use PhpTypedValues\ArrayType\ArrayOfObjects;
 use PhpTypedValues\Exception\ArrayType\ArrayTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
@@ -43,7 +46,7 @@ final readonly class WithArraysTest implements JsonSerializable
      *
      * @param int                   $id        positive integer identifier (validated immediately)
      * @param string|null           $firstName non-empty string or empty/invalid treated as `Undefined`
-     * @param string|float|int|null $height    positive numeric value; `null` produces `Undefined`
+     * @param float|int|string|null $height    positive numeric value; `null` produces `Undefined`
      * @param array                 $nickNames list of non-empty strings
      *
      * @throws ArrayTypeException
@@ -54,7 +57,7 @@ final readonly class WithArraysTest implements JsonSerializable
     public static function fromScalars(
         int $id,
         ?string $firstName,
-        string|float|int|null $height = null,
+        float|int|string|null $height = null,
         array $nickNames = [],
     ): self {
         // Make the array of Primitives

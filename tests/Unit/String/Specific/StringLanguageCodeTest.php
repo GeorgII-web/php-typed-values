@@ -2,9 +2,15 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\String\Specific;
+
+use Exception;
+use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\String\LanguageCodeStringTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\String\Specific\StringLanguageCode;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use stdClass;
 
 describe('StringLanguageCode', function () {
     it('accepts valid language code and preserves toString and __toString', function (): void {
@@ -207,10 +213,10 @@ describe('StringLanguageCode', function () {
             ->and(fn() => StringLanguageCode::fromDecimal('1.0'))->toThrow(LanguageCodeStringTypeException::class);
 
         $v = StringLanguageCode::fromString('en');
-        expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-            ->and(fn() => $v->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-            ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-            ->and(fn() => $v->toDecimal())->toThrow(PhpTypedValues\Exception\Decimal\DecimalTypeException::class);
+        expect(fn() => $v->toBool())->toThrow(StringTypeException::class)
+            ->and(fn() => $v->toFloat())->toThrow(StringTypeException::class)
+            ->and(fn() => $v->toInt())->toThrow(StringTypeException::class)
+            ->and(fn() => $v->toDecimal())->toThrow(DecimalTypeException::class);
     });
 
     it('tryFromBool, tryFromFloat, tryFromInt, tryFromDecimal return Undefined for StringLanguageCode', function (): void {

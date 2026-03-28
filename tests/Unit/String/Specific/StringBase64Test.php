@@ -137,6 +137,27 @@ describe('StringBase64', function () {
         expect($v->jsonSerialize())->toBe('SGVsbG8gV29ybGQ=');
     });
 
+    it('toString returns the Base64-encoded string', function (): void {
+        $v = StringBase64::fromString('SGVsbG8gV29ybGQ=');
+        expect($v->toString())->toBe('SGVsbG8gV29ybGQ=');
+    });
+
+    it('__toString returns the value', function (): void {
+        $v = StringBase64::fromString('SGVsbG8gV29ybGQ=');
+        expect((string) $v)->toBe('SGVsbG8gV29ybGQ=');
+    });
+
+    it('tryFromMixed handles bool and float inputs', function (): void {
+        $fromTrue = StringBase64::tryFromMixed(true);
+        $fromFalse = StringBase64::tryFromMixed(false);
+        $fromFloat = StringBase64::tryFromMixed(1.5);
+
+        expect($fromTrue)->toBeInstanceOf(StringBase64::class)
+            ->and($fromTrue->value())->toBe('true')
+            ->and($fromFalse)->toBeInstanceOf(Undefined::class)
+            ->and($fromFloat)->toBeInstanceOf(Undefined::class);
+    });
+
     it('covers conversions for StringBase64', function (): void {
         $fromBoolTrue = StringBase64::fromBool(true);
 

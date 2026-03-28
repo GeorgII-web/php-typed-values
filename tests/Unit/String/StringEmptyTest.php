@@ -2,9 +2,15 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\String;
+
+use Exception;
+use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\String\StringEmpty;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use stdClass;
+use Stringable;
 
 covers(StringEmpty::class);
 
@@ -124,7 +130,7 @@ describe('StringEmpty', function () {
         expect(fn() => $v->toBool())->toThrow(StringTypeException::class)
             ->and(fn() => $v->toFloat())->toThrow(StringTypeException::class)
             ->and(fn() => $v->toInt())->toThrow(StringTypeException::class)
-            ->and(fn() => $v->toDecimal())->toThrow(PhpTypedValues\Exception\Decimal\DecimalTypeException::class);
+            ->and(fn() => $v->toDecimal())->toThrow(DecimalTypeException::class);
     });
 });
 

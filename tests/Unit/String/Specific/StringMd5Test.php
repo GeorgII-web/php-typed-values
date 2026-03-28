@@ -2,9 +2,16 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\String\Specific;
+
+use Exception;
+use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\String\Md5StringTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\String\Specific\StringMd5;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use stdClass;
+use Stringable;
 
 describe('StringMd5', function () {
     it('accepts valid MD5 hash and preserves case', function (): void {
@@ -161,10 +168,10 @@ describe('StringMd5', function () {
             ->and(fn() => StringMd5::fromDecimal('1.0'))->toThrow(Md5StringTypeException::class);
 
         $v = StringMd5::fromString('5d41402abc4b2a76b9719d911017c592');
-        expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-            ->and(fn() => $v->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-            ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-            ->and(fn() => $v->toDecimal())->toThrow(PhpTypedValues\Exception\Decimal\DecimalTypeException::class);
+        expect(fn() => $v->toBool())->toThrow(StringTypeException::class)
+            ->and(fn() => $v->toFloat())->toThrow(StringTypeException::class)
+            ->and(fn() => $v->toInt())->toThrow(StringTypeException::class)
+            ->and(fn() => $v->toDecimal())->toThrow(DecimalTypeException::class);
     });
 
     it('tryFromBool, tryFromFloat, tryFromInt, tryFromDecimal return Undefined for StringMd5', function (): void {

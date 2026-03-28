@@ -2,9 +2,18 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\String\Specific;
+
+use Exception;
+use JsonException;
 use PhpTypedValues\Exception\String\JsonStringTypeException;
 use PhpTypedValues\String\Specific\StringJson;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use stdClass;
+use Throwable;
+
+use function assert;
+use function sprintf;
 
 describe('StringJson', function () {
     it('Json::tryFromString returns value for valid JSON string', function (): void {
@@ -28,7 +37,7 @@ describe('StringJson', function () {
         $j = StringJson::tryFromString($jsonText);
 
         // success branch
-        \assert($j instanceof StringJson);
+        assert($j instanceof StringJson);
         $obj = $j->toObject();
         expect($obj)->toBeObject()
             ->and($obj->a)->toBe(1)
@@ -38,7 +47,7 @@ describe('StringJson', function () {
     it('Json::toArray decodes valid JSON object as array and throws on invalid internal state', function (): void {
         $jsonText = '{"x":10,"y":20}';
         $j = StringJson::tryFromString($jsonText);
-        \assert($j instanceof StringJson);
+        assert($j instanceof StringJson);
 
         // success branch
         $arr = $j->toArray();
@@ -57,7 +66,7 @@ describe('StringJson', function () {
             expect($e)
                 ->toBeInstanceOf(JsonStringTypeException::class)
                 ->and($e->getMessage())
-                ->toBe(\sprintf('String "%s" has no valid JSON value', $invalid))
+                ->toBe(sprintf('String "%s" has no valid JSON value', $invalid))
                 ->and($e->getCode())
                 ->toBe(0)
                 ->and($e->getPrevious())

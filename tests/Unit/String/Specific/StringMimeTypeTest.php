@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\String\Specific;
+
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\String\MimeTypeStringTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
@@ -128,7 +130,7 @@ describe('StringMimeType', function () {
     });
 
     it('kills InstanceOfToTrue mutation in tryFromMixed', function (): void {
-        $v = MimeTypeMutationTest::tryFromMixed(null);
+        $v = StringMimeTypeTest::tryFromMixed(null);
 
         expect($v)->toBeInstanceOf(Undefined::class);
     });
@@ -141,7 +143,7 @@ describe('StringMimeType', function () {
  *
  * @coversNothing
  */
-readonly class MimeTypeMutationTest extends StringMimeType
+readonly class StringMimeTypeTest extends StringMimeType
 {
     public function __construct(string $value = 'text/plain')
     {
@@ -161,7 +163,7 @@ readonly class MimeTypeMutationTest extends StringMimeType
  *
  * @coversNothing
  */
-readonly class StringMimeTypeTest extends StringMimeType
+readonly class StringMimeTypeStandardTest extends StringMimeType
 {
     public static function fromBool(bool $value): static
     {
@@ -189,13 +191,13 @@ readonly class StringMimeTypeTest extends StringMimeType
     }
 }
 
-describe('Throwing static StringMimeType', function () {
+describe('Throwing static StringMimeTypeStandard', function () {
     it('StringMimeType::tryFrom* returns Undefined when exception occurs (coverage)', function (): void {
-        expect(StringMimeTypeTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
-            ->and(StringMimeTypeTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
-            ->and(StringMimeTypeTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
-            ->and(StringMimeTypeTest::tryFromDecimal('1.0'))->toBeInstanceOf(Undefined::class)
-            ->and(StringMimeTypeTest::tryFromMixed('application/json'))->toBeInstanceOf(Undefined::class)
-            ->and(StringMimeTypeTest::tryFromString('application/json'))->toBeInstanceOf(Undefined::class);
+        expect(StringMimeTypeStandardTest::tryFromBool(true))->toBeInstanceOf(Undefined::class)
+            ->and(StringMimeTypeStandardTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
+            ->and(StringMimeTypeStandardTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
+            ->and(StringMimeTypeStandardTest::tryFromDecimal('1.0'))->toBeInstanceOf(Undefined::class)
+            ->and(StringMimeTypeStandardTest::tryFromMixed('application/json'))->toBeInstanceOf(Undefined::class)
+            ->and(StringMimeTypeStandardTest::tryFromString('application/json'))->toBeInstanceOf(Undefined::class);
     });
 });

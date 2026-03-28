@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\String\Specific;
+namespace PhpTypedValues\Tests\Unit\String\Specific;
 
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\String\Sha256StringTypeException;

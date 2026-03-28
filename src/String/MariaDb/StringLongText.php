@@ -177,7 +177,7 @@ readonly class StringLongText extends StringTypeAbstract
     public static function tryFromBool(
         bool $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+    ): PrimitiveTypeAbstract|static {
         try {
             /** @var static */
             return static::fromBool($value);
@@ -199,7 +199,7 @@ readonly class StringLongText extends StringTypeAbstract
     public static function tryFromDecimal(
         string $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+    ): PrimitiveTypeAbstract|static {
         try {
             /** @var static */
             return static::fromDecimal($value);
@@ -221,7 +221,7 @@ readonly class StringLongText extends StringTypeAbstract
     public static function tryFromFloat(
         float $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+    ): PrimitiveTypeAbstract|static {
         try {
             /** @var static */
             return static::fromFloat($value);
@@ -243,7 +243,7 @@ readonly class StringLongText extends StringTypeAbstract
     public static function tryFromInt(
         int $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+    ): PrimitiveTypeAbstract|static {
         try {
             /** @var static */
             return static::fromInt($value);
@@ -265,7 +265,7 @@ readonly class StringLongText extends StringTypeAbstract
     public static function tryFromMixed(
         mixed $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+    ): PrimitiveTypeAbstract|static {
         try {
             /** @var static */
             return match (true) {
@@ -295,7 +295,7 @@ readonly class StringLongText extends StringTypeAbstract
     public static function tryFromString(
         string $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract {
+    ): PrimitiveTypeAbstract|static {
         try {
             /** @var static */
             return static::fromString($value);

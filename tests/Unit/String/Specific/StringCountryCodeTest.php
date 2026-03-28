@@ -2,11 +2,16 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\String\Specific;
+
+use Exception;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\String\CountryCodeStringTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\String\Alias\Specific\CountryCode;
 use PhpTypedValues\String\Specific\StringCountryCode;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use stdClass;
 
 describe('StringCountryCode', function () {
     it('accepts valid country code and normalizes to uppercase; preserves toString and __toString', function (): void {
@@ -168,9 +173,9 @@ describe('StringCountryCode', function () {
             ->and(fn() => StringCountryCode::fromDecimal('1.0'))->toThrow(CountryCodeStringTypeException::class);
 
         $v = StringCountryCode::fromString('US');
-        expect(fn() => $v->toBool())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-            ->and(fn() => $v->toFloat())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
-            ->and(fn() => $v->toInt())->toThrow(PhpTypedValues\Exception\String\StringTypeException::class)
+        expect(fn() => $v->toBool())->toThrow(StringTypeException::class)
+            ->and(fn() => $v->toFloat())->toThrow(StringTypeException::class)
+            ->and(fn() => $v->toInt())->toThrow(StringTypeException::class)
             ->and(fn() => $v->toDecimal())->toThrow(DecimalTypeException::class);
     });
 

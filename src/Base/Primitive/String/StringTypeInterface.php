@@ -53,7 +53,7 @@ interface StringTypeInterface
     public static function tryFromBool(
         bool $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract;
+    ): PrimitiveTypeAbstract|static;
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -65,7 +65,7 @@ interface StringTypeInterface
     public static function tryFromDecimal(
         string $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract;
+    ): PrimitiveTypeAbstract|static;
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -77,7 +77,7 @@ interface StringTypeInterface
     public static function tryFromFloat(
         float $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract;
+    ): PrimitiveTypeAbstract|static;
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -89,7 +89,7 @@ interface StringTypeInterface
     public static function tryFromInt(
         int $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract;
+    ): PrimitiveTypeAbstract|static;
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -101,7 +101,7 @@ interface StringTypeInterface
     public static function tryFromMixed(
         mixed $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract;
+    ): PrimitiveTypeAbstract|static;
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -113,7 +113,7 @@ interface StringTypeInterface
     public static function tryFromString(
         string $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static|PrimitiveTypeAbstract;
+    ): PrimitiveTypeAbstract|static;
 
     public function value(): string;
 }

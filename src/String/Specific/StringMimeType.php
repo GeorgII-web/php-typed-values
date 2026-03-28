@@ -184,11 +184,11 @@ readonly class StringMimeType extends StringTypeAbstract
     /**
      * @psalm-pure
      */
-    public static function tryFromBool(bool $value, PrimitiveTypeAbstract $default = new Undefined()): static|PrimitiveTypeAbstract
+    public static function tryFromBool(bool $value, PrimitiveTypeAbstract $default = new Undefined()): PrimitiveTypeAbstract|static
     {
         try {
             return static::fromBool($value);
-        } catch (StringTypeException|MimeTypeStringTypeException) {
+        } catch (MimeTypeStringTypeException|StringTypeException) {
             return $default;
         }
     }
@@ -196,7 +196,7 @@ readonly class StringMimeType extends StringTypeAbstract
     /**
      * @psalm-pure
      */
-    public static function tryFromDecimal(string $value, PrimitiveTypeAbstract $default = new Undefined()): static|PrimitiveTypeAbstract
+    public static function tryFromDecimal(string $value, PrimitiveTypeAbstract $default = new Undefined()): PrimitiveTypeAbstract|static
     {
         try {
             return static::fromDecimal($value);
@@ -208,7 +208,7 @@ readonly class StringMimeType extends StringTypeAbstract
     /**
      * @psalm-pure
      */
-    public static function tryFromFloat(float $value, PrimitiveTypeAbstract $default = new Undefined()): static|PrimitiveTypeAbstract
+    public static function tryFromFloat(float $value, PrimitiveTypeAbstract $default = new Undefined()): PrimitiveTypeAbstract|static
     {
         try {
             return static::fromFloat($value);
@@ -220,7 +220,7 @@ readonly class StringMimeType extends StringTypeAbstract
     /**
      * @psalm-pure
      */
-    public static function tryFromInt(int $value, PrimitiveTypeAbstract $default = new Undefined()): static|PrimitiveTypeAbstract
+    public static function tryFromInt(int $value, PrimitiveTypeAbstract $default = new Undefined()): PrimitiveTypeAbstract|static
     {
         try {
             return static::fromInt($value);
@@ -232,7 +232,7 @@ readonly class StringMimeType extends StringTypeAbstract
     /**
      * @psalm-pure
      */
-    public static function tryFromMixed(mixed $value, PrimitiveTypeAbstract $default = new Undefined()): static|PrimitiveTypeAbstract
+    public static function tryFromMixed(mixed $value, PrimitiveTypeAbstract $default = new Undefined()): PrimitiveTypeAbstract|static
     {
         if (is_scalar($value) || $value instanceof Stringable) {
             try {
@@ -248,7 +248,7 @@ readonly class StringMimeType extends StringTypeAbstract
     /**
      * @psalm-pure
      */
-    public static function tryFromString(string $value, PrimitiveTypeAbstract $default = new Undefined()): static|PrimitiveTypeAbstract
+    public static function tryFromString(string $value, PrimitiveTypeAbstract $default = new Undefined()): PrimitiveTypeAbstract|static
     {
         try {
             return static::fromString($value);

@@ -2,11 +2,15 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\String\Specific;
+
+use Exception;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\String\FileNameStringTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\String\Specific\StringFileName;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use stdClass;
 
 describe('StringFileName', function () {
     it('accepts valid filename, preserves value/toString and casts via __toString', function (): void {
