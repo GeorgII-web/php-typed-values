@@ -11,6 +11,7 @@
 *   Create a new type class in `src/{TypeName}/Alias/` or deeper directory.
 *   Create a new exception class in `src/Exception/{TypeName}/` or deeper directory.
 *   Create a new test class in `tests/Unit/{TypeName}/{TypeName}Test.php` file. Make 100% code/type/mutation coverage, copy the nearest tests file cases.
+*   Type class should not contain data formatters, validate data as it is.
 *   Run `docker-compose exec -ti php cs` to fix code style.
 *   Run `docker-compose exec -ti php composer sca` to check Psalm static analysis.
 *   Run `docker-compose exec -ti php composer test -- --filter="newTypeClassName"` to run tests.
@@ -30,7 +31,7 @@
 * Run `docker-compose exec -ti php composer test -- --filter="failedTypeClassName"` to run tests.
 * Run `docker-compose exec -ti php composer type -- --filter="failedTypeClassName"` to run type coverage.
 * Run `docker-compose exec -ti php composer coverage` to run code coverage.
-* Run `docker-compose exec -ti php composer mutate -- --id=****` with a mutation error id if provided.
+* For mutation fails: run for each `docker-compose exec -ti php composer mutate -- --id=****` with a mutation error id.
 
 **Tech-Stack & Style**
 *   **Core:** PHP 8.4 with `declare(strict_types=1);`.

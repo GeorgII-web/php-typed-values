@@ -34,6 +34,20 @@ describe('StringBase64', function () {
     it('rejects malformed base64 that non-strict decoding would normalize', function (): void {
         expect(fn() => new StringBase64('YWJj='))
             ->toThrow(Base64StringTypeException::class);
+        // "YWJj" is "abc" in base64. "YWJj=" has an extra padding which is invalid in strict mode but base64_decode($v, false) would handle it.
+        // Also "SGVsbG8gV29ybGQ" (missing =)
+        expect(fn() => new StringBase64('SGVsbG8gV29ybGQ'))
+            ->toThrow(Base64StringTypeException::class);
+
+        // This string contains a character (#) that is not in the base64 alphabet.
+        // base64_decode($v, true) returns false.
+        // base64_decode($v, false) ignores it and decodes what it can.
+        expect(fn() => new StringBase64('SGVsbG8#'))
+            ->toThrow(Base64StringTypeException::class);
+
+        // This string contains a character ($) which is sometimes ignored by non-strict decoders.
+        expect(fn() => new StringBase64('SGVsbG8$'))
+            ->toThrow(Base64StringTypeException::class);
     });
 
     it('throws on invalid Base64 format', function (): void {
@@ -125,6 +139,7 @@ describe('StringBase64', function () {
         'SGVsbG8!',   // ! is not base64
         'SGVs bG8=',  // space
         '====',       // only padding
+        'SGVsbG8gV29ybGQ#', // Invalid char that non-strict decoding might ignore
     ]);
 
     it('isTypeOf returns true when class matches', function (): void {

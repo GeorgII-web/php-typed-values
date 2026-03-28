@@ -13,16 +13,16 @@ use stdClass;
 
 describe('StringCreditCard', function () {
     it('accepts valid credit card numbers and preserves digits', function (): void {
-        $visa = new StringCreditCard('4111111111111111');
-        $mc = new StringCreditCard('5500000000000004');
-        $amex = new StringCreditCard('378282246310005');
+        $visa13 = new StringCreditCard('4111111111119'); // 13 digits, corrected Luhn
+        $mc = new StringCreditCard('5500000000000004'); // 16 digits
+        $jcb19 = new StringCreditCard('3530111333300000001'); // 19 digits, corrected Luhn
 
-        expect($visa->value())
-            ->toBe('4111111111111111')
+        expect($visa13->value())
+            ->toBe('4111111111119')
             ->and($mc->value())
             ->toBe('5500000000000004')
-            ->and($amex->value())
-            ->toBe('378282246310005');
+            ->and($jcb19->value())
+            ->toBe('3530111333300000001');
     });
 
     it('strips spaces and dashes before validation', function (): void {
@@ -45,7 +45,16 @@ describe('StringCreditCard', function () {
         expect(fn() => StringCreditCard::fromString('abc'))
             ->toThrow(CreditCardStringTypeException::class);
 
-        expect(fn() => StringCreditCard::fromString('411111111111'))
+        expect(fn() => StringCreditCard::fromString('411111111117')) // 12 digits, valid Luhn
+            ->toThrow(CreditCardStringTypeException::class);
+
+        expect(fn() => StringCreditCard::fromString('11111111111111111111')) // 20 digits, valid Luhn
+            ->toThrow(CreditCardStringTypeException::class);
+
+        expect(fn() => new StringCreditCard('424242424242444a')) // Passes Luhn but contains non-digit
+            ->toThrow(CreditCardStringTypeException::class);
+
+        expect(fn() => new StringCreditCard('42424242424244')) // Length 14, invalid digits
             ->toThrow(CreditCardStringTypeException::class);
     });
 
@@ -53,8 +62,9 @@ describe('StringCreditCard', function () {
         expect(fn() => StringCreditCard::fromString($invalid))
             ->toThrow(CreditCardStringTypeException::class);
     })->with([
-        '411111111111',          // 12 digits - too short
-        '41111111111111111111',  // 20 digits - too long
+        '41111111111',           // 11 digits - too short
+        '411111111117',          // 12 digits - too short, but valid Luhn
+        '11111111111111111111',  // 20 digits - too long, but valid Luhn
     ]);
 
     it('tryFromString returns instance for valid and Undefined for invalid', function (): void {
@@ -114,12 +124,26 @@ describe('StringCreditCard', function () {
         $instance = StringCreditCard::fromString($card);
         expect($instance->value())->toBe($card);
     })->with([
-        '4111111111111111',  // Visa
+        '4111111111119',     // 13 digits, corrected Luhn
+        '4111111111111111',  // 16 digits (Visa)
         '5500000000000004',  // Mastercard
         '378282246310005',   // Amex
         '6011111111111117',  // Discover
-        '3530111333300000',  // JCB
+        '3530111333300000',  // JCB (16)
+        '3530111333300000001', // 19 digits, corrected Luhn
     ]);
+
+    it('validates Luhn edge cases', function (): void {
+        // '5500000000000004': length 16, parity 0.
+        // i=0: 5 -> 5*2 = 10, 10 > 9 -> 10 - 9 = 1.
+        $instance = StringCreditCard::fromString('5500000000000004');
+        expect($instance->value())->toBe('5500000000000004');
+
+        // '0049927398716'. length 13. parity 1.
+        // i=3: 9 (3 % 2 == 1) -> 9*2 = 18, 18 > 9 -> 18 - 9 = 9.
+        $instance2 = StringCreditCard::fromString('0049927398716');
+        expect($instance2->value())->toBe('0049927398716');
+    });
 
     it('isTypeOf returns true when class matches', function (): void {
         $v = StringCreditCard::fromString('4111111111111111');

@@ -46,7 +46,7 @@ readonly class StringHex extends StringTypeAbstract
      */
     public function __construct(string $value)
     {
-        if ($value === '' || !ctype_xdigit($value)) {
+        if (!ctype_xdigit($value)) {
             throw new HexStringTypeException(sprintf('Expected hexadecimal string, got "%s"', $value));
         }
 

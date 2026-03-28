@@ -48,7 +48,7 @@ readonly class StringSemVer extends StringTypeAbstract
      */
     public function __construct(string $value)
     {
-        if ($value === '' || preg_match(self::SEMVER_PATTERN, $value) !== 1) {
+        if (preg_match(self::SEMVER_PATTERN, $value) !== 1) {
             throw new SemVerStringTypeException(sprintf('Expected SemVer string, got "%s"', $value));
         }
 

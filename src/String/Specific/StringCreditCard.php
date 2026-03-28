@@ -51,7 +51,7 @@ readonly class StringCreditCard extends StringTypeAbstract
         /** @var string $digits */
         $digits = preg_replace('/[\s\-]/', '', $value);
 
-        if ($digits === '' || !preg_match('/^\d+$/', $digits) || strlen($digits) < 13 || strlen($digits) > 19 || !self::luhn($digits)) {
+        if (!preg_match('/^\d+$/', $digits) || strlen($digits) < 13 || strlen($digits) > 19 || !self::luhn($digits)) {
             throw new CreditCardStringTypeException(sprintf('Expected valid credit card number, got "%s"', $value));
         }
 
