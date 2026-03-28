@@ -83,6 +83,15 @@ describe('StringIban', function () {
         ['AD66', 'AD66'],
         ['ad66', 'AD66'],
         ['A D 6 6', 'AD66'],
+        ['AD92L1', 'AD92L1'], // Killing b1973be5b926f1b4
+        ['AD16M1', 'AD16M1'], // Killing 99361c8864b7f541
+    ]);
+
+    it('accepts valid IBANs with L or M', function (string $valid): void {
+        expect(new StringIban($valid))->toBeInstanceOf(StringIban::class);
+    })->with([
+        'AD92L1', // Valid fictional IBAN with L
+        'AD16M1', // Valid fictional IBAN with M
     ]);
 
     it('accepts boundary length IBANs', function (): void {
