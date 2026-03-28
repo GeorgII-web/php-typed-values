@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\Integer\MariaDb;
+
+use Exception;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
@@ -9,6 +12,8 @@ use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Integer\MariaDb\IntegerTiny;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use stdClass;
+use Stringable;
 
 describe('IntegerTiny', function (): void {
     // ============================================
@@ -193,7 +198,9 @@ describe('IntegerTiny', function (): void {
     });
 
     describe('tryFromFloat method', function (): void {
-        it('returns IntegerTiny from float with exact integer value -128..127', function (float $value, int $expected,
+        it('returns IntegerTiny from float with exact integer value -128..127', function (
+            float $value,
+            int $expected,
         ): void {
             $result = IntegerTiny::tryFromFloat($value);
             expect($result)->toBeInstanceOf(IntegerTiny::class)

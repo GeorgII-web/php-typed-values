@@ -2,12 +2,22 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\Integer;
+
+use const INF;
+use const NAN;
+use const PHP_INT_MAX;
+use const PHP_INT_MIN;
+
+use Exception;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Integer\IntegerStandard;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use stdClass;
+use Stringable;
 
 describe('IntegerStandard', function () {
     describe('Factories', function () {
@@ -30,8 +40,8 @@ describe('IntegerStandard', function () {
             IntegerStandard::fromFloat($input);
         })->throws(FloatTypeException::class)->with([
             'with precision' => [1.5],
-            'INF' => [\INF],
-            'NAN' => [\NAN],
+            'INF' => [INF],
+            'NAN' => [NAN],
         ]);
 
         it('creates from int', function (int $input) {
@@ -40,8 +50,8 @@ describe('IntegerStandard', function () {
             'positive' => [42],
             'negative' => [-42],
             'zero' => [0],
-            'max' => [\PHP_INT_MAX],
-            'min' => [\PHP_INT_MIN],
+            'max' => [PHP_INT_MAX],
+            'min' => [PHP_INT_MIN],
         ]);
 
         it('creates from string', function (string $input, int $expected) {
@@ -50,8 +60,8 @@ describe('IntegerStandard', function () {
             'positive' => ['42', 42],
             'negative' => ['-42', -42],
             'zero' => ['0', 0],
-            'max' => [(string) \PHP_INT_MAX, \PHP_INT_MAX],
-            'min' => [(string) \PHP_INT_MIN, \PHP_INT_MIN],
+            'max' => [(string) PHP_INT_MAX, PHP_INT_MAX],
+            'min' => [(string) PHP_INT_MIN, PHP_INT_MIN],
         ]);
 
         it('creates from decimal string', function (string $input, int $expected) {
@@ -216,7 +226,7 @@ describe('IntegerStandard', function () {
                 expect(fn() => (new IntegerStandard($val))->toFloat())->toThrow(IntegerTypeException::class);
             } else {
                 // Try PHP_INT_MAX if 2^53+1 didn't work (though it should on 64bit)
-                $val = \PHP_INT_MAX;
+                $val = PHP_INT_MAX;
                 if ($val !== (int) (float) $val) {
                     expect(fn() => (new IntegerStandard($val))->toFloat())->toThrow(IntegerTypeException::class);
                 }

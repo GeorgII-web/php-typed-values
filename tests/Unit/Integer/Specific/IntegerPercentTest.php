@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\Integer\Specific;
+
+use const INF;
+use const NAN;
+use const PHP_INT_MAX;
+use const PHP_INT_MIN;
+
+use Exception;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
@@ -9,6 +17,8 @@ use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Integer\Specific\IntegerPercent;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use stdClass;
+use Stringable;
 
 describe('IntegerPercent', function () {
     describe('Factories', function () {
@@ -32,8 +42,8 @@ describe('IntegerPercent', function () {
             'negative' => [-1.0, IntegerTypeException::class, 'Expected percent integer, got "-1"'],
             'too large' => [101.0, IntegerTypeException::class, 'Expected percent integer, got "101"'],
             'with precision' => [1.5, FloatTypeException::class, 'Float "1.5" has no valid strict int value'],
-            'INF' => [\INF, FloatTypeException::class, 'Float "INF" has no valid strict int value'],
-            'NAN' => [\NAN, FloatTypeException::class, 'Float "NAN" has no valid strict int value'],
+            'INF' => [INF, FloatTypeException::class, 'Float "INF" has no valid strict int value'],
+            'NAN' => [NAN, FloatTypeException::class, 'Float "NAN" has no valid strict int value'],
         ]);
 
         it('creates from int', function (int $input) {
@@ -50,8 +60,8 @@ describe('IntegerPercent', function () {
         })->with([
             'negative' => [-1],
             'too large' => [101],
-            'min' => [\PHP_INT_MIN],
-            'max' => [\PHP_INT_MAX],
+            'min' => [PHP_INT_MIN],
+            'max' => [PHP_INT_MAX],
         ]);
 
         it('creates from string', function (string $input, int $expected) {
@@ -114,7 +124,7 @@ describe('IntegerPercent', function () {
              *
              * @coversNothing
              */
-            readonly class IntegerPercentMockTest extends IntegerPercent
+            readonly class IntegerPercentTest extends IntegerPercent
             {
                 public static function fromBool(bool $value): static
                 {
@@ -123,7 +133,7 @@ describe('IntegerPercent', function () {
             }
 
             $customDefault = Undefined::create();
-            expect(IntegerPercentMockTest::tryFromBool(true, $customDefault))->toBe($customDefault);
+            expect(IntegerPercentTest::tryFromBool(true, $customDefault))->toBe($customDefault);
         });
 
         it('tryFromFloat returns instance or default', function (float $input, bool $shouldFail) {
@@ -284,7 +294,7 @@ describe('IntegerPercent', function () {
              *
              * @coversNothing
              */
-            readonly class IntegerPercentPrecisionTest extends IntegerPercent
+            readonly class IntegerPercentToFloatTest extends IntegerPercent
             {
                 protected int $value;
 
@@ -296,21 +306,21 @@ describe('IntegerPercent', function () {
 
             $val = 9007199254740993; // 2^53 + 1
             if ($val !== (int) (float) $val) {
-                expect(fn() => (new IntegerPercentPrecisionTest($val))->toFloat())->toThrow(IntegerTypeException::class);
+                expect(fn() => (new IntegerPercentToFloatTest($val))->toFloat())->toThrow(IntegerTypeException::class);
             }
         });
 
         it('converts to int', function (int $input) {
-            expect((new IntegerPercent($input))->toInt())->toBe($input);
+            expect(new IntegerPercent($input)->toInt())->toBe($input);
         })->with([0, 50, 100]);
 
         it('converts to string', function (int $input) {
-            expect((new IntegerPercent($input))->toString())->toBe((string) $input)
+            expect(new IntegerPercent($input)->toString())->toBe((string) $input)
                 ->and((string) (new IntegerPercent($input)))->toBe((string) $input);
         })->with([0, 50, 100]);
 
         it('converts to decimal string', function (int $input, string $expected) {
-            expect((new IntegerPercent($input))->toDecimal())->toBe($expected);
+            expect(new IntegerPercent($input)->toDecimal())->toBe($expected);
         })->with([
             'zero' => [0, '0.0'],
             'fifty' => [50, '50.0'],
@@ -318,17 +328,17 @@ describe('IntegerPercent', function () {
         ]);
 
         it('serializes to JSON', function (int $input) {
-            expect((new IntegerPercent($input))->jsonSerialize())->toBe($input);
+            expect(new IntegerPercent($input)->jsonSerialize())->toBe($input);
         })->with([0, 50, 100]);
     });
 
     describe('State checks', function () {
         it('is never empty', function () {
-            expect((new IntegerPercent(0))->isEmpty())->toBeFalse();
+            expect(new IntegerPercent(0)->isEmpty())->toBeFalse();
         });
 
         it('is never undefined', function () {
-            expect((new IntegerPercent(0))->isUndefined())->toBeFalse();
+            expect(new IntegerPercent(0)->isUndefined())->toBeFalse();
         });
 
         it('checks type correctly', function () {

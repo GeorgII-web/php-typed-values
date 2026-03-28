@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\Integer;
+
+use const INF;
+use const NAN;
+use const PHP_INT_MAX;
+use const PHP_INT_MIN;
+
+use Exception;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
@@ -9,6 +17,8 @@ use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Integer\IntegerPositive;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use stdClass;
+use Stringable;
 
 describe('IntegerPositive', function () {
     describe('Factories', function () {
@@ -33,8 +43,8 @@ describe('IntegerPositive', function () {
             'zero' => [0.0, IntegerTypeException::class, 'Expected positive integer, got "0"'],
             'negative' => [-1.0, IntegerTypeException::class, 'Expected positive integer, got "-1"'],
             'with precision' => [1.5, FloatTypeException::class, 'Float "1.5" has no valid strict int value'],
-            'INF' => [\INF, FloatTypeException::class, 'Float "INF" has no valid strict int value'],
-            'NAN' => [\NAN, FloatTypeException::class, 'Float "NAN" has no valid strict int value'],
+            'INF' => [INF, FloatTypeException::class, 'Float "INF" has no valid strict int value'],
+            'NAN' => [NAN, FloatTypeException::class, 'Float "NAN" has no valid strict int value'],
         ]);
 
         it('creates from int', function (int $input) {
@@ -42,7 +52,7 @@ describe('IntegerPositive', function () {
         })->with([
             'one' => [1],
             'positive' => [42],
-            'max' => [\PHP_INT_MAX],
+            'max' => [PHP_INT_MAX],
         ]);
 
         it('throws when creating from invalid int', function (int $input) {
@@ -50,7 +60,7 @@ describe('IntegerPositive', function () {
         })->with([
             'zero' => [0],
             'negative' => [-1],
-            'min' => [\PHP_INT_MIN],
+            'min' => [PHP_INT_MIN],
         ]);
 
         it('creates from string', function (string $input, int $expected) {
@@ -58,7 +68,7 @@ describe('IntegerPositive', function () {
         })->with([
             'one' => ['1', 1],
             'positive' => ['42', 42],
-            'max' => [(string) \PHP_INT_MAX, \PHP_INT_MAX],
+            'max' => [(string) PHP_INT_MAX, PHP_INT_MAX],
         ]);
 
         it('creates from decimal string', function (string $input, int $expected) {
@@ -238,7 +248,7 @@ describe('IntegerPositive', function () {
                 expect(fn() => (new IntegerPositive($val))->toFloat())->toThrow(IntegerTypeException::class);
             } else {
                 // Try PHP_INT_MAX if 2^53+1 didn't work (though it should on 64bit)
-                $val = \PHP_INT_MAX;
+                $val = PHP_INT_MAX;
                 if ($val !== (int) (float) $val) {
                     expect(fn() => (new IntegerPositive($val))->toFloat())->toThrow(IntegerTypeException::class);
                 }

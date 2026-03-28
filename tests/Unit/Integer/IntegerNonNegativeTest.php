@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\Integer;
+
+use const INF;
+use const NAN;
+use const PHP_INT_MAX;
+use const PHP_INT_MIN;
+
+use Exception;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
@@ -9,6 +17,10 @@ use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Integer\IntegerNonNegative;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use stdClass;
+use Stringable;
+
+use function gettype;
 
 describe('IntegerNonNegative', function () {
     describe('Factories', function () {
@@ -31,8 +43,8 @@ describe('IntegerNonNegative', function () {
         })->with([
             'negative' => [-1.0, IntegerTypeException::class],
             'with precision' => [1.5, FloatTypeException::class],
-            'INF' => [\INF, FloatTypeException::class],
-            'NAN' => [\NAN, FloatTypeException::class],
+            'INF' => [INF, FloatTypeException::class],
+            'NAN' => [NAN, FloatTypeException::class],
         ]);
 
         it('creates from int', function (int $input) {
@@ -40,14 +52,14 @@ describe('IntegerNonNegative', function () {
         })->with([
             'zero' => [0],
             'positive' => [42],
-            'max' => [\PHP_INT_MAX],
+            'max' => [PHP_INT_MAX],
         ]);
 
         it('throws when creating from invalid int', function (int $input) {
             expect(fn() => IntegerNonNegative::fromInt($input))->toThrow(IntegerTypeException::class);
         })->with([
             'negative' => [-1],
-            'min' => [\PHP_INT_MIN],
+            'min' => [PHP_INT_MIN],
         ]);
 
         it('creates from string', function (string $input, int $expected) {
@@ -55,7 +67,7 @@ describe('IntegerNonNegative', function () {
         })->with([
             'zero' => ['0', 0],
             'positive' => ['42', 42],
-            'max' => [(string) \PHP_INT_MAX, \PHP_INT_MAX],
+            'max' => [(string) PHP_INT_MAX, PHP_INT_MAX],
         ]);
 
         it('creates from decimal string', function (string $input, int $expected) {
@@ -245,7 +257,7 @@ describe('IntegerNonNegative', function () {
         it('converts to bool and ensures explicit cast', function (int $input, bool $expected) {
             $v = new IntegerNonNegative($input);
             expect($v->toBool())->toBe($expected)
-                ->and(\gettype($v->toBool()))->toBe('boolean');
+                ->and(gettype($v->toBool()))->toBe('boolean');
         })->with([
             'zero' => [0, false],
             'positive' => [1, true],
@@ -255,7 +267,7 @@ describe('IntegerNonNegative', function () {
             $v = new IntegerNonNegative($input);
             $float = $v->toFloat();
             expect($float)->toBe((float) $input)
-                ->and(\gettype($float))->toBe('double');
+                ->and(gettype($float))->toBe('double');
 
             // Explicitly verify the value for mutants like RemoveDoubleCast
             // If (float) cast is removed, it might return int (though return type hint would catch it,
@@ -326,13 +338,13 @@ describe('IntegerNonNegative', function () {
             $str = $v1->toString();
             $v2 = IntegerNonNegative::fromString($str);
             expect($v2->value())->toBe($original);
-        })->with([0, 42, \PHP_INT_MAX]);
+        })->with([0, 42, PHP_INT_MAX]);
 
         it('preserves value through string → int → string conversion', function (string $original) {
             $v1 = IntegerNonNegative::fromString($original);
             $int = $v1->toInt();
             $v2 = IntegerNonNegative::fromInt($int);
             expect($v2->toString())->toBe($original);
-        })->with(['0', '42', (string) \PHP_INT_MAX]);
+        })->with(['0', '42', (string) PHP_INT_MAX]);
     });
 });
