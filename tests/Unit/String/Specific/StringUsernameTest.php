@@ -222,16 +222,16 @@ readonly class StringUsernameTest extends StringUsername
     }
 }
 
-    describe('Coverage for mutants', function () {
-        it('tryFromMixed returns instance for string value', function (): void {
-            expect(StringUsername::tryFromMixed('john_doe', StringUsername::fromString('wrong')))->not->toBe(StringUsername::fromString('wrong'));
-        });
+describe('Coverage for mutants', function () {
+    it('tryFromMixed returns instance for string value', function (): void {
+        expect(StringUsername::tryFromMixed('john_doe', StringUsername::fromString('wrong')))->not->toBe(StringUsername::fromString('wrong'));
+    });
 
-        it('tryFromMixed returns instance for int value', function (): void {
-            expect(StringUsername::tryFromMixed(123, StringUsername::fromString('wrong')))->not->toBe(StringUsername::fromString('wrong'));
-        });
+    it('tryFromMixed returns instance for int value', function (): void {
+        expect(StringUsername::tryFromMixed(123, StringUsername::fromString('wrong')))->not->toBe(StringUsername::fromString('wrong'));
+    });
 
-        it('tryFromMixed specifically triggers fromString("null") for null value', function (): void {
+    it('tryFromMixed specifically triggers fromString("null") for null value', function (): void {
         $default = StringUsername::fromString('default_user');
         $result = StringUsernameTest::tryFromMixed(null, $default);
         expect($result)->toBe($default);
