@@ -18,6 +18,6 @@ use PhpTypedValues\String\Specific\StringSemVer;
  *
  * @psalm-immutable
  */
-final readonly class SemVer extends StringSemVer
+final class SemVer extends StringSemVer
 {
 }

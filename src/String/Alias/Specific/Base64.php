@@ -18,6 +18,6 @@ use PhpTypedValues\String\Specific\StringBase64;
  *
  * @psalm-immutable
  */
-final readonly class Base64 extends StringBase64
+final class Base64 extends StringBase64
 {
 }
