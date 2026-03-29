@@ -2,10 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Tests\Unit\Base\Bool;
-
-use const INF;
-use const NAN;
+namespace Base\Primitive\Bool;
 
 use Exception;
 use PhpTypedValues\Base\Primitive\Bool\BoolTypeAbstract;
@@ -17,11 +14,12 @@ use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 use Stringable;
-
 use function is_bool;
 use function is_float;
 use function is_int;
 use function is_string;
+use const INF;
+use const NAN;
 
 covers(BoolTypeAbstract::class);
 

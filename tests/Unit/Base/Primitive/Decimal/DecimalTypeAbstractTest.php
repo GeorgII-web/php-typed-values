@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Tests\Unit\Base\Decimal;
+namespace Base\Primitive\Decimal;
 
 use PhpTypedValues\Base\Primitive\Decimal\DecimalTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
@@ -15,7 +15,6 @@ use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 use Stringable;
 use Throwable;
-
 use function is_bool;
 use function is_float;
 use function is_int;

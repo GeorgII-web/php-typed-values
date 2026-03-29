@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Tests\Unit\Base\Float;
-
-use const PHP_INT_MAX;
+namespace Base\Primitive\Float;
 
 use PhpTypedValues\Base\Primitive\Float\FloatTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
@@ -16,11 +14,11 @@ use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 use Stringable;
 use Throwable;
-
 use function is_bool;
 use function is_float;
 use function is_int;
 use function is_string;
+use const PHP_INT_MAX;
 
 covers(FloatTypeAbstract::class);
 

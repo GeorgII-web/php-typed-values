@@ -2,13 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Tests\Unit\Base;
-
-use const INF;
-use const M_PI;
-use const NAN;
-use const PHP_INT_MAX;
-use const PHP_INT_MIN;
+namespace Base\Primitive;
 
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\DateTime\ZoneDateTimeTypeException;
@@ -17,9 +11,13 @@ use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
-
 use function function_exists;
 use function is_string;
+use const INF;
+use const M_PI;
+use const NAN;
+use const PHP_INT_MAX;
+use const PHP_INT_MIN;
 
 covers(PrimitiveTypeAbstract::class);
 
@@ -30,7 +28,7 @@ covers(PrimitiveTypeAbstract::class);
  *
  * @coversNothing
  */
-readonly class TypeAbstractTest extends PrimitiveTypeAbstract
+readonly class PrimitiveTypeAbstractTest extends PrimitiveTypeAbstract
 {
     public function __construct(private mixed $value)
     {
@@ -120,18 +118,18 @@ readonly class TypeAbstractTest extends PrimitiveTypeAbstract
 
 describe('Concrete PrimitiveType implementation', function () {
     beforeEach(function () {
-        $this->primitive = new TypeAbstractTest('test value');
+        $this->primitive = new PrimitiveTypeAbstractTest('test value');
     });
 
     it('abstract and cannot be instantiated', function () {
         expect(PrimitiveTypeAbstract::class)
             ->toBeAbstract()
-            ->and(class_exists(TypeAbstractTest::class))
+            ->and(class_exists(PrimitiveTypeAbstractTest::class))
             ->toBeTrue();
     });
 
     it('isEmpty method works correctly', function ($value, $expected) {
-        $primitive = new TypeAbstractTest($value);
+        $primitive = new PrimitiveTypeAbstractTest($value);
 
         expect($primitive->isEmpty())->toBe($expected);
     })->with([
@@ -144,8 +142,8 @@ describe('Concrete PrimitiveType implementation', function () {
     ]);
 
     it('isUndefined method identifies Undefined instances', function () {
-        $undefined = new TypeAbstractTest(new Undefined());
-        $defined = new TypeAbstractTest('some value');
+        $undefined = new PrimitiveTypeAbstractTest(new Undefined());
+        $defined = new PrimitiveTypeAbstractTest('some value');
 
         expect($undefined->isUndefined())->toBeTrue()
             ->and($defined->isUndefined())->toBeFalse();
@@ -153,27 +151,27 @@ describe('Concrete PrimitiveType implementation', function () {
 
     it('floatToString method converts float to string correctly', function (float $src, ?string $expected) {
         if ($expected === null) {
-            expect(fn() => TypeAbstractTest::callFloatToString($src))
+            expect(fn() => PrimitiveTypeAbstractTest::callFloatToString($src))
                 ->toThrow(FloatTypeException::class);
 
             return;
         }
 
         if ($expected === 'SPECIAL_STRING_EXCEPTION') {
-            expect(fn() => TypeAbstractTest::callFloatToString($src))
+            expect(fn() => PrimitiveTypeAbstractTest::callFloatToString($src))
                 ->toThrow(StringTypeException::class);
 
             return;
         }
 
         if ($expected === 'SUB_EXCEPTION') {
-            expect(fn() => TypeAbstractTest::callFloatToString($src))
+            expect(fn() => PrimitiveTypeAbstractTest::callFloatToString($src))
                 ->toThrow(FloatTypeException::class);
 
             return;
         }
 
-        expect(TypeAbstractTest::callFloatToString($src))->toBe($expected);
+        expect(PrimitiveTypeAbstractTest::callFloatToString($src))->toBe($expected);
     })->with([
         // ─────────────
         // ZEROES
@@ -232,13 +230,13 @@ describe('Concrete PrimitiveType implementation', function () {
 
     it('stringToFloat method converts string to float correctly', function (string $src, ?float $expected) {
         if ($expected === null) {
-            expect(fn() => TypeAbstractTest::callStringToFloat($src))
+            expect(fn() => PrimitiveTypeAbstractTest::callStringToFloat($src))
                 ->toThrow(StringTypeException::class);
 
             return;
         }
 
-        expect(TypeAbstractTest::callStringToFloat($src))->toBe($expected);
+        expect(PrimitiveTypeAbstractTest::callStringToFloat($src))->toBe($expected);
     })->with([
         // ─────────────
         // INVALID: non-numeric
@@ -337,7 +335,7 @@ describe('Concrete PrimitiveType implementation', function () {
     ]);
 
     it('toString method returns string representation', function ($value, $expected) {
-        $primitive = new TypeAbstractTest($value);
+        $primitive = new PrimitiveTypeAbstractTest($value);
 
         expect($primitive->toString())->toBe($expected)
             ->and((string) $primitive)->toBe($expected);
@@ -351,7 +349,7 @@ describe('Concrete PrimitiveType implementation', function () {
     ]);
 
     it('__toString magic method works correctly', function () {
-        $primitive = new TypeAbstractTest('magic string');
+        $primitive = new PrimitiveTypeAbstractTest('magic string');
 
         expect((string) $primitive)->toBe('magic string')
             ->and($primitive->__toString())->toBe('magic string');
@@ -359,10 +357,10 @@ describe('Concrete PrimitiveType implementation', function () {
 
     it('decimalToBool works correctly', function (string $value, bool|string $expected) {
         if (is_string($expected)) {
-            expect(fn() => TypeAbstractTest::callDecimalToBool($value))
+            expect(fn() => PrimitiveTypeAbstractTest::callDecimalToBool($value))
                 ->toThrow(DecimalTypeException::class, $expected);
         } else {
-            expect(TypeAbstractTest::callDecimalToBool($value))->toBe($expected);
+            expect(PrimitiveTypeAbstractTest::callDecimalToBool($value))->toBe($expected);
         }
     })->with([
         ['1.0', true],
@@ -372,10 +370,10 @@ describe('Concrete PrimitiveType implementation', function () {
 
     it('floatToBool works correctly', function (float $value, bool|string $expected) {
         if (is_string($expected)) {
-            expect(fn() => TypeAbstractTest::callFloatToBool($value))
+            expect(fn() => PrimitiveTypeAbstractTest::callFloatToBool($value))
                 ->toThrow(FloatTypeException::class, $expected);
         } else {
-            expect(TypeAbstractTest::callFloatToBool($value))->toBe($expected);
+            expect(PrimitiveTypeAbstractTest::callFloatToBool($value))->toBe($expected);
         }
     })->with([
         [1.0, true],
@@ -385,10 +383,10 @@ describe('Concrete PrimitiveType implementation', function () {
 
     it('intToBool works correctly', function (int $value, bool|string $expected) {
         if (is_string($expected)) {
-            expect(fn() => TypeAbstractTest::callIntToBool($value))
+            expect(fn() => PrimitiveTypeAbstractTest::callIntToBool($value))
                 ->toThrow(IntegerTypeException::class, $expected);
         } else {
-            expect(TypeAbstractTest::callIntToBool($value))->toBe($expected);
+            expect(PrimitiveTypeAbstractTest::callIntToBool($value))->toBe($expected);
         }
     })->with([
         [1, true],
@@ -398,7 +396,7 @@ describe('Concrete PrimitiveType implementation', function () {
 
     it('jsonSerialize returns value for JSON encoding', function () {
         $data = ['key' => 'value'];
-        $primitive = new TypeAbstractTest($data);
+        $primitive = new PrimitiveTypeAbstractTest($data);
 
         expect($primitive->jsonSerialize())->toBe($data)
             ->and(json_encode($primitive))->toBe(json_encode($data));
@@ -414,15 +412,15 @@ describe('Concrete PrimitiveType implementation', function () {
 
 describe('Equality and comparison', function () {
     it('Different instances with same value should not be equal', function () {
-        $primitive1 = new TypeAbstractTest('test');
-        $primitive2 = new TypeAbstractTest('test');
+        $primitive1 = new PrimitiveTypeAbstractTest('test');
+        $primitive2 = new PrimitiveTypeAbstractTest('test');
 
         expect($primitive1)->not->toBe($primitive2)
             ->and($primitive1->toString())->toBe($primitive2->toString());
     });
 
     it('String casting works in concatenation', function () {
-        $primitive = new TypeAbstractTest('world');
+        $primitive = new PrimitiveTypeAbstractTest('world');
         $result = 'Hello ' . $primitive;
 
         expect($result)->toBe('Hello world');
@@ -432,7 +430,7 @@ describe('Equality and comparison', function () {
 describe('Static utility methods coverage', function () {
     it('covers stringToDateTimeZone exception (lines 75-76)', function (): void {
         try {
-            TypeAbstractTest::stringToDateTimeZone('Invalid/Timezone');
+            PrimitiveTypeAbstractTest::stringToDateTimeZone('Invalid/Timezone');
             $this->fail('Expected ZoneDateTimeTypeException was not thrown');
         } catch (ZoneDateTimeTypeException $e) {
             expect($e->getCode())->toBe(0);
@@ -440,8 +438,8 @@ describe('Static utility methods coverage', function () {
     });
 
     it('covers floatToString normalization (lines 178, 181)', function (): void {
-        expect(TypeAbstractTest::callFloatToString(0.5))->toBe('0.5')
-            ->and(TypeAbstractTest::callFloatToString(-0.5))->toBe('-0.5');
+        expect(PrimitiveTypeAbstractTest::callFloatToString(0.5))->toBe('0.5')
+            ->and(PrimitiveTypeAbstractTest::callFloatToString(-0.5))->toBe('-0.5');
 
         // Shadowing sprintf in the namespace of the class under test.
         // This MUST be done before any calls that might trigger it if it's already cached.
@@ -453,59 +451,59 @@ describe('Static utility methods coverage', function () {
             } }');
         }
 
-        expect(TypeAbstractTest::callFloatToString(0.123456781))->toBe('0.123456781')
-            ->and(TypeAbstractTest::callFloatToString(-0.123456781))->toBe('-0.123456781');
+        expect(PrimitiveTypeAbstractTest::callFloatToString(0.123456781))->toBe('0.123456781')
+            ->and(PrimitiveTypeAbstractTest::callFloatToString(-0.123456781))->toBe('-0.123456781');
     });
 
     it('covers intToString protective check', function (): void {
-        expect(TypeAbstractTest::callIntToString(0))->toBe('0')
-            ->and(TypeAbstractTest::callIntToString(PHP_INT_MAX))->toBe((string) PHP_INT_MAX)
-            ->and(TypeAbstractTest::callIntToString(PHP_INT_MIN))->toBe((string) PHP_INT_MIN);
+        expect(PrimitiveTypeAbstractTest::callIntToString(0))->toBe('0')
+            ->and(PrimitiveTypeAbstractTest::callIntToString(PHP_INT_MAX))->toBe((string) PHP_INT_MAX)
+            ->and(PrimitiveTypeAbstractTest::callIntToString(PHP_INT_MIN))->toBe((string) PHP_INT_MIN);
 
         for ($i = 0; $i < 63; ++$i) {
             $val = 1 << $i;
-            expect(TypeAbstractTest::callIntToString($val))->toBe((string) $val);
+            expect(PrimitiveTypeAbstractTest::callIntToString($val))->toBe((string) $val);
             $negVal = -$val;
-            expect(TypeAbstractTest::callIntToString($negVal))->toBe((string) $negVal);
+            expect(PrimitiveTypeAbstractTest::callIntToString($negVal))->toBe((string) $negVal);
         }
     });
 
     it('covers stringToFloat with success and error paths', function (): void {
-        expect(TypeAbstractTest::callStringToFloat('1.5'))->toBe(1.5);
+        expect(PrimitiveTypeAbstractTest::callStringToFloat('1.5'))->toBe(1.5);
 
         // Exercise the default value for $roundTripConversion
-        expect(TypeAbstractTest::callStringToFloat('1.5', null))->toBe(1.5);
+        expect(PrimitiveTypeAbstractTest::callStringToFloat('1.5', null))->toBe(1.5);
 
-        expect(fn() => TypeAbstractTest::callStringToFloat('0.100000000'))
+        expect(fn() => PrimitiveTypeAbstractTest::callStringToFloat('0.100000000'))
             ->toThrow(StringTypeException::class);
 
-        expect(TypeAbstractTest::callStringToFloat('0.10000000000000001'))
+        expect(PrimitiveTypeAbstractTest::callStringToFloat('0.10000000000000001'))
             ->toBe(0.1); // as it stored in memory 0.10000000000000001
 
-        expect(fn() => TypeAbstractTest::callStringToFloat('abc'))
+        expect(fn() => PrimitiveTypeAbstractTest::callStringToFloat('abc'))
             ->toThrow(StringTypeException::class);
 
         // Try to trigger line 275 (precision loss)
         $precisionLoss = '0.1234567890123456789';
-        expect(fn() => TypeAbstractTest::callStringToFloat($precisionLoss))
+        expect(fn() => PrimitiveTypeAbstractTest::callStringToFloat($precisionLoss))
             ->toThrow(StringTypeException::class);
 
         // Exercise $roundTripConversion = false
-        expect(TypeAbstractTest::callStringToFloat('0.1', false))->toBe(0.1);
+        expect(PrimitiveTypeAbstractTest::callStringToFloat('0.1', false))->toBe(0.1);
 
         // Exercise explicit $roundTripConversion = true
-        expect(fn() => TypeAbstractTest::callStringToFloat('0.1', true))
+        expect(fn() => PrimitiveTypeAbstractTest::callStringToFloat('0.1', true))
             ->toThrow(StringTypeException::class);
     });
 
     it('covers floatToString with roundTripConversion false', function (): void {
         // Exercise $roundTripConversion = false
-        expect(TypeAbstractTest::callFloatToString(0.1, false))->toBe('0.10000000000000001');
+        expect(PrimitiveTypeAbstractTest::callFloatToString(0.1, false))->toBe('0.10000000000000001');
 
         // Exercise the default value for $roundTripConversion
-        expect(TypeAbstractTest::callFloatToString(0.1, null))->toBe('0.10000000000000001');
+        expect(PrimitiveTypeAbstractTest::callFloatToString(0.1, null))->toBe('0.10000000000000001');
 
         // Exercise explicit $roundTripConversion = true
-        expect(TypeAbstractTest::callFloatToString(0.1, true))->toBe('0.10000000000000001');
+        expect(PrimitiveTypeAbstractTest::callFloatToString(0.1, true))->toBe('0.10000000000000001');
     });
 });

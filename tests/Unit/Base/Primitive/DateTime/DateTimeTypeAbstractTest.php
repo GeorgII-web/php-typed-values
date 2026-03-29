@@ -2,19 +2,20 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Tests\Unit\Base\DateTime;
+namespace Base\Primitive\DateTime;
 
 use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
 use PhpTypedValues\Base\Primitive\DateTime\DateTimeTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
+use PhpTypedValues\DateTime\DateTimeW3C;
+use PhpTypedValues\DateTime\Timestamp\TimestampSeconds;
 use PhpTypedValues\Exception\DateTime\DateTimeTypeException;
 use PhpTypedValues\Exception\DateTime\ZoneDateTimeTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
 use Throwable;
-
 use function is_string;
 
 covers(DateTimeTypeAbstract::class);
@@ -85,7 +86,8 @@ readonly class DateTimeTypeAbstractTest extends DateTimeTypeAbstract
     /**
      * Public wrapper for protected stringToDateTime to test it.
      */
-    public static function testStringToDateTime(string $value, string $format, ?DateTimeZone $timezone = null): DateTimeImmutable
+    public static function testStringToDateTime(string $value, string $format,
+        ?DateTimeZone $timezone = null): DateTimeImmutable
     {
         return static::stringToDateTime($value, $format, $timezone);
     }
@@ -295,3 +297,53 @@ describe('DateTimeTypeAbstract', function () {
         });
     });
 });
+
+describe('mutants', function () {
+    it('accepts custom timezone', function () {
+        $vo = DateTimeW3C::fromString('2025-01-02T04:04:05+01:00', 'Europe/Berlin');
+        expect($vo->toString())->toBe('2025-01-02T03:04:05+00:00')
+            ->and($vo->value()->getOffset())->toBe(0);
+    });
+
+    it('throws exception on invalid input', function (string $input, string $containedMessage) {
+        expect(fn() => DateTimeW3C::fromString($input))
+            ->toThrow(DateTimeTypeException::class, $containedMessage);
+    })->with([
+        'invalid month' => ['2025-13-02T03:04:05+00:00', 'Warning at 25: The parsed date was invalid'],
+        'trailing space' => ['2025-01-02T03:04:05+00:00 ', 'Error at 25: Trailing data'],
+        'multiple errors/warnings' => [
+            '2025-13-02T03:04:05+00:00 ',
+            "Invalid date time value \"2025-13-02T03:04:05+00:00 \", use format \"Y-m-d\\TH:i:sP\"\nError at 25: Trailing data\nWarning at 25: The parsed date was invalid",
+        ],
+        'double error' => [
+            '2025-12-02T03:04:05+ 00:00',
+            "Error at 19: The timezone could not be found in the database\nError at 20: Trailing data",
+        ],
+    ]);
+
+    it('aggregates multiple parse warnings with proper concatenation', function () {
+        $input = '2025-13-40T25:61:61+00:00';
+
+        try {
+            DateTimeW3C::fromString($input);
+            expect()->fail('Exception was not thrown');
+        } catch (DateTimeTypeException $e) {
+            $msg = $e->getMessage();
+            expect($msg)->toContain('Invalid date time value "2025-13-40T25:61:61+00:00", use format "Y-m-d\TH:i:sP"')
+                ->and($msg)->toContain('Warning at 25: The parsed date was invalid' . \PHP_EOL)
+                ->and($msg)->not->toContain('PEST Mutator was here!');
+        }
+    });
+
+    it('creates instance from valid numeric string', function (string $input, string $expected) {
+        $vo = TimestampSeconds::fromString($input);
+        expect($vo->toString())->toBe($expected)
+            ->and($vo->value()->format('U'))->toBe($expected);
+    })->with([
+        'standard' => ['1000000000', '1000000000'],
+        'zero' => ['0', '0'],
+        'max boundary' => ['253402300799', '253402300799'],
+        'min boundary' => ['-62135596800', '-62135596800'],
+    ]);
+});
+

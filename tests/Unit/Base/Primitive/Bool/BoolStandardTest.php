@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Tests\Unit\Bool;
+namespace Base\Primitive\Bool;
 
 use PhpTypedValues\Bool\BoolStandard;
 use PhpTypedValues\Exception\Float\FloatTypeException;
