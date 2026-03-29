@@ -18,6 +18,6 @@ use PhpTypedValues\String\Specific\StringHex;
  *
  * @psalm-immutable
  */
-final readonly class Hex extends StringHex
+final class Hex extends StringHex
 {
 }
