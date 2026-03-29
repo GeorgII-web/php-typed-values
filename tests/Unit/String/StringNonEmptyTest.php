@@ -11,7 +11,7 @@ use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 use Stringable;
 
-covers(StringNonEmpty ::class);
+covers(StringNonEmpty::class);
 
 describe('StringNonEmpty', function () {
     describe('Core behavior', function () {

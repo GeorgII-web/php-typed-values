@@ -13,7 +13,7 @@ use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 use Stringable;
 
-covers(StringStandard ::class);
+covers(StringStandard::class);
 
 describe('StringStandard', function () {
     describe('Core behavior', function () {

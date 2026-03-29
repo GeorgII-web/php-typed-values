@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Tests\Unit\Base\Primitive\Float;
+namespace PhpTypedValues\Tests\Unit\Base\Float;
 
 use const PHP_INT_MAX;
 

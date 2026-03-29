@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Tests\Unit\Base\Primitive\Bool;
+namespace PhpTypedValues\Tests\Unit\Base\Bool;
 
 use const INF;
 use const NAN;

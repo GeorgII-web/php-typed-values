@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Tests\Unit\Base\Primitive\DateTime;
+namespace PhpTypedValues\Tests\Unit\Base\DateTime;
 
 use DateTimeImmutable;
 use DateTimeZone;

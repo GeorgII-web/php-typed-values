@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Tests\Unit\Base\Primitive\Decimal;
+namespace PhpTypedValues\Tests\Unit\Base\String;
 
-use PhpTypedValues\Base\Primitive\Decimal\DecimalTypeAbstract;
+use Exception;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
+use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\Bool\BoolTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
@@ -21,14 +22,14 @@ use function is_float;
 use function is_int;
 use function is_string;
 
-covers(DecimalTypeAbstract::class);
+covers(StringTypeAbstract::class);
 
 /**
  * @internal
  *
  * @coversNothing
  */
-readonly class DecimalTypeAbstractTest extends DecimalTypeAbstract
+readonly class StringTypeAbstractTest extends StringTypeAbstract
 {
     public function __construct(private string $val)
     {
@@ -127,10 +128,6 @@ readonly class DecimalTypeAbstractTest extends DecimalTypeAbstract
 
     /**
      * @template T of PrimitiveTypeAbstract
-     *
-     * @param T $default
-     *
-     * @return static|T
      */
     public static function tryFromBool(
         bool $value,
@@ -140,7 +137,7 @@ readonly class DecimalTypeAbstractTest extends DecimalTypeAbstract
             /** @var static */
             return static::fromBool($value);
         } catch (Throwable) {
-            /** @var T */
+            /** @var PrimitiveTypeAbstract */
             return $default;
         }
     }
@@ -148,9 +145,7 @@ readonly class DecimalTypeAbstractTest extends DecimalTypeAbstract
     /**
      * @template T of PrimitiveTypeAbstract
      *
-     * @param T $default
-     *
-     * @return static|T
+     * @psalm-pure
      */
     public static function tryFromDecimal(
         string $value,
@@ -158,19 +153,15 @@ readonly class DecimalTypeAbstractTest extends DecimalTypeAbstract
     ): PrimitiveTypeAbstract|static {
         try {
             /** @var static */
-            return static::fromString($value);
-        } catch (Throwable) {
-            /** @var T */
+            return static::fromDecimal($value);
+        } catch (Exception) {
+            /** @var PrimitiveTypeAbstract */
             return $default;
         }
     }
 
     /**
      * @template T of PrimitiveTypeAbstract
-     *
-     * @param T $default
-     *
-     * @return static|T
      */
     public static function tryFromFloat(
         float $value,
@@ -180,17 +171,13 @@ readonly class DecimalTypeAbstractTest extends DecimalTypeAbstract
             /** @var static */
             return static::fromFloat($value);
         } catch (Throwable) {
-            /** @var T */
+            /** @var PrimitiveTypeAbstract */
             return $default;
         }
     }
 
     /**
      * @template T of PrimitiveTypeAbstract
-     *
-     * @param T $default
-     *
-     * @return static|T
      */
     public static function tryFromInt(
         int $value,
@@ -200,17 +187,13 @@ readonly class DecimalTypeAbstractTest extends DecimalTypeAbstract
             /** @var static */
             return static::fromInt($value);
         } catch (Throwable) {
-            /** @var T */
+            /** @var PrimitiveTypeAbstract */
             return $default;
         }
     }
 
     /**
      * @template T of PrimitiveTypeAbstract
-     *
-     * @param T $default
-     *
-     * @return static|T
      */
     public static function tryFromMixed(
         mixed $value,
@@ -228,17 +211,13 @@ readonly class DecimalTypeAbstractTest extends DecimalTypeAbstract
                 default => throw new TypeException('Value cannot be cast to string'),
             };
         } catch (Throwable) {
-            /** @var T */
+            /** @var PrimitiveTypeAbstract */
             return $default;
         }
     }
 
     /**
      * @template T of PrimitiveTypeAbstract
-     *
-     * @param T $default
-     *
-     * @return static|T
      */
     public static function tryFromString(
         string $value,
@@ -248,7 +227,7 @@ readonly class DecimalTypeAbstractTest extends DecimalTypeAbstract
             /** @var static */
             return static::fromString($value);
         } catch (Throwable) {
-            /** @var T */
+            /** @var PrimitiveTypeAbstract */
             return $default;
         }
     }
@@ -259,17 +238,17 @@ readonly class DecimalTypeAbstractTest extends DecimalTypeAbstract
     }
 }
 
-describe('DecimalTypeAbstract', function () {
+describe('StringTypeAbstract', function () {
     describe('Creation via Mock', function () {
         it('creates instance from string', function () {
-            $mock = DecimalTypeAbstractTest::fromString('test');
-            expect($mock)->toBeInstanceOf(DecimalTypeAbstractTest::class)
+            $mock = StringTypeAbstractTest::fromString('test');
+            expect($mock)->toBeInstanceOf(StringTypeAbstractTest::class)
                 ->and($mock->value())->toBe('test');
         });
 
         it('tryFromMixed returns instance for valid inputs', function (mixed $input, string $expected) {
-            $result = DecimalTypeAbstractTest::tryFromMixed($input);
-            expect($result)->toBeInstanceOf(DecimalTypeAbstractTest::class)
+            $result = StringTypeAbstractTest::tryFromMixed($input);
+            expect($result)->toBeInstanceOf(StringTypeAbstractTest::class)
                 ->and($result->value())->toBe($expected);
         })->with([
             'string' => ['hello', 'hello'],
@@ -277,7 +256,7 @@ describe('DecimalTypeAbstract', function () {
             'int' => [42, '42'],
             'bool true' => [true, 'true'],
             'bool false' => [false, 'false'],
-            'DecimalTypeAbstractTest instance' => [new DecimalTypeAbstractTest('instance'), 'instance'],
+            'StringTypeAbstractTest instance' => [new StringTypeAbstractTest('instance'), 'instance'],
             'Stringable' => [
                 new class implements Stringable {
                     public function __toString(): string
@@ -290,7 +269,7 @@ describe('DecimalTypeAbstract', function () {
         ]);
 
         it('tryFromMixed returns default for invalid inputs', function (mixed $input) {
-            expect(DecimalTypeAbstractTest::tryFromMixed($input))->toBeInstanceOf(Undefined::class);
+            expect(StringTypeAbstractTest::tryFromMixed($input))->toBeInstanceOf(Undefined::class);
         })->with([
             'array' => [[]],
             'object' => [new stdClass()],
@@ -298,9 +277,9 @@ describe('DecimalTypeAbstract', function () {
         ]);
 
         it('tryFromString returns instance or default', function (string $input, bool $isSuccess) {
-            $result = DecimalTypeAbstractTest::tryFromString($input);
+            $result = StringTypeAbstractTest::tryFromString($input);
             if ($isSuccess) {
-                expect($result)->toBeInstanceOf(DecimalTypeAbstractTest::class)
+                expect($result)->toBeInstanceOf(StringTypeAbstractTest::class)
                     ->and($result->value())->toBe($input);
             } else {
                 expect($result)->toBeInstanceOf(Undefined::class);
@@ -312,7 +291,7 @@ describe('DecimalTypeAbstract', function () {
 
     describe('Instance Methods', function () {
         it('exposes internal value and formats', function () {
-            $mock = new DecimalTypeAbstractTest('test');
+            $mock = new StringTypeAbstractTest('test');
             expect($mock->value())->toBe('test')
                 ->and($mock->toString())->toBe('test')
                 ->and((string) $mock)->toBe('test')
@@ -321,7 +300,7 @@ describe('DecimalTypeAbstract', function () {
         });
 
         it('isEmpty returns correct boolean', function (string $input, bool $expected) {
-            expect((new DecimalTypeAbstractTest($input))->isEmpty())->toBe($expected);
+            expect((new StringTypeAbstractTest($input))->isEmpty())->toBe($expected);
         })->with([
             'empty' => ['', true],
             'not empty' => ['not-empty', false],
@@ -330,32 +309,32 @@ describe('DecimalTypeAbstract', function () {
 
     describe('isTypeOf', function () {
         it('returns true when class matches', function () {
-            $mock = new DecimalTypeAbstractTest('test');
-            expect($mock->isTypeOf(DecimalTypeAbstractTest::class))->toBeTrue();
+            $mock = new StringTypeAbstractTest('test');
+            expect($mock->isTypeOf(StringTypeAbstractTest::class))->toBeTrue();
         });
 
         it('returns false when class does not match', function () {
-            $mock = new DecimalTypeAbstractTest('test');
+            $mock = new StringTypeAbstractTest('test');
             expect($mock->isTypeOf('NonExistentClass'))->toBeFalse();
         });
 
         it('returns true for multiple classNames when one matches', function () {
-            $mock = new DecimalTypeAbstractTest('test');
-            expect($mock->isTypeOf('NonExistentClass', DecimalTypeAbstractTest::class, 'AnotherClass'))->toBeTrue();
+            $mock = new StringTypeAbstractTest('test');
+            expect($mock->isTypeOf('NonExistentClass', StringTypeAbstractTest::class, 'AnotherClass'))->toBeTrue();
         });
 
         it('returns false for multiple classNames when none match (kills FalseToTrue)', function () {
-            $mock = new DecimalTypeAbstractTest('test');
+            $mock = new StringTypeAbstractTest('test');
             expect($mock->isTypeOf('NonExistentClass', 'AnotherClass'))->toBeFalse();
         });
 
         it('returns false for empty classNames (kills ForeachEmptyIterable)', function () {
-            $mock = new DecimalTypeAbstractTest('test');
+            $mock = new StringTypeAbstractTest('test');
             expect($mock->isTypeOf())->toBeFalse();
         });
 
         it('returns false if IfNegated mutant triggers', function () {
-            $mock = new DecimalTypeAbstractTest('test');
+            $mock = new StringTypeAbstractTest('test');
             // If mutated to "if (!$this instanceof $className)" it would return true for non-matching class
             expect($mock->isTypeOf('stdClass'))->toBeFalse();
         });

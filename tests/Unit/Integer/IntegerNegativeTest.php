@@ -9,7 +9,7 @@ use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Integer\IntegerNegative;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
-covers(IntegerNegative ::class);
+covers(IntegerNegative::class);
 
 describe('IntegerNegative', function () {
     describe('Factories', function () {

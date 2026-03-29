@@ -2,12 +2,19 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\Base\Integer;
+
+use const PHP_INT_MAX;
+use const PHP_INT_MIN;
+
 use PhpTypedValues\Base\Primitive\Integer\IntegerTypeAbstract;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Integer\IntegerStandard;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use stdClass;
+use Stringable;
 
 covers(IntegerTypeAbstract::class);
 
@@ -22,8 +29,8 @@ describe('IntegerStandard', function () {
                 'positive' => [123],
                 'negative' => [-42],
                 'zero' => [0],
-                'PHP_INT_MIN' => [\PHP_INT_MIN],
-                'PHP_INT_MAX' => [\PHP_INT_MAX],
+                'PHP_INT_MIN' => [PHP_INT_MIN],
+                'PHP_INT_MAX' => [PHP_INT_MAX],
             ]);
         });
 
@@ -59,7 +66,7 @@ describe('IntegerStandard', function () {
                 'zero' => [0.0, 0],
                 'one' => [1.0, 1],
                 'negative' => [-1.0, -1],
-                'PHP_INT_MIN as float' => [(float) \PHP_INT_MIN, \PHP_INT_MIN],
+                'PHP_INT_MIN as float' => [(float) PHP_INT_MIN, PHP_INT_MIN],
             ]);
 
             it('throws exception on non-integer float or out of range', function (float $input) {
@@ -68,9 +75,9 @@ describe('IntegerStandard', function () {
                 'with decimal' => [1.1],
                 'negative decimal' => [-0.1],
                 'too big' => [1e20],
-                'PHP_INT_MAX as float' => [(float) \PHP_INT_MAX],
-                'below MIN' => [(float) \PHP_INT_MIN - 4096.0],
-                'above MAX' => [(float) \PHP_INT_MAX + 2048.0],
+                'PHP_INT_MAX as float' => [(float) PHP_INT_MAX],
+                'below MIN' => [(float) PHP_INT_MIN - 4096.0],
+                'above MAX' => [(float) PHP_INT_MAX + 2048.0],
             ]);
         });
 
@@ -156,7 +163,7 @@ describe('IntegerStandard', function () {
 
         it('throws exception when toFloat loses precision', function () {
             // PHP_INT_MAX is usually not representable exactly as float
-            $v = IntegerStandard::fromInt(\PHP_INT_MAX);
+            $v = IntegerStandard::fromInt(PHP_INT_MAX);
             expect(fn() => $v->toFloat())->toThrow(IntegerTypeException::class);
         });
 
