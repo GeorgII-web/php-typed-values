@@ -11,57 +11,7 @@ permissions:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.4'
-        extensions: mbstring, intl
-
-    - name: Validate composer.json and composer.lock
-      run: composer validate --strict
-
-    - name: Cache Composer packages
-      id: composer-cache
-      uses: actions/cache@v3
-      with:
-        path: vendor
-        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-php-
-
-    - name: Install dependencies
-      run: composer install --no-progress
-
-    - name: Check autoload
-      run: composer dump-autoload --dry-run --optimize --strict-psr --strict-ambiguous
-
-    - name: Run style fixer
-      run: composer run-script cs
-
-    - name: Run psalm
-      run: composer run-script sca
-
-    - name: Run tests
-      run: composer run-script test
-
-    - name: Run type coverage
-      run: composer run-script type
-
-    - name: Run test coverage
-      run: composer run-script coverage
-
-  mutate:
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        folder: [Array, Base, Bool, DateTime, Decimal, Float, Integer, String, Undefined]
     steps:
       - uses: actions/checkout@v4
 
@@ -70,7 +20,9 @@ jobs:
         with:
           php-version: '8.4'
           extensions: mbstring, intl
-          coverage: pcov
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate --strict
 
       - name: Cache Composer packages
         id: composer-cache
@@ -78,9 +30,131 @@ jobs:
         with:
           path: vendor
           key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-
 
       - name: Install dependencies
         run: composer install --no-progress
 
+      - name: Check autoload
+        run: composer dump-autoload --dry-run --optimize --strict-psr --strict-ambiguous
+
+  style:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+      - name: Cache Composer packages
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+      - name: Install dependencies
+        run: composer install --no-progress
+      - name: Run style fixer
+        run: composer run-script cs
+
+  static-analysis:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+      - name: Cache Composer packages
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+      - name: Install dependencies
+        run: composer install --no-progress
+      - name: Run psalm
+        run: composer run-script sca
+
+  tests:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+      - name: Cache Composer packages
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+      - name: Install dependencies
+        run: composer install --no-progress
+      - name: Run tests
+        run: composer run-script test
+
+  type-coverage:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+      - name: Cache Composer packages
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+      - name: Install dependencies
+        run: composer install --no-progress
+      - name: Run type coverage
+        run: composer run-script type
+
+  test-coverage:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: pcov
+      - name: Cache Composer packages
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+      - name: Install dependencies
+        run: composer install --no-progress
+      - name: Run test coverage
+        run: composer run-script coverage
+
+  mutate:
+    needs: tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        folder: [Array, Base, Bool, DateTime, Decimal, Float, Integer, String, Undefined]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, intl
+          coverage: pcov
+      - name: Cache Composer packages
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+      - name: Install dependencies
+        run: composer install --no-progress
       - name: Run mutation tests for ${{ matrix.folder }}
         run: ./vendor/bin/pest tests/Unit/${{ matrix.folder }} --mutate --covered-only --parallel --min=100
