@@ -20,6 +20,10 @@ use function sprintf;
  *
  * Validates that the string follows the JWT format (three base64url encoded parts separated by dots).
  *
+ * Example
+ *  - $jwt = StringJwt::fromString('header.payload.signature'); // 'header.payload.signature'
+ *  - StringJwt::fromString('not-a-jwt'); // throws JwtStringTypeException
+ *
  * @psalm-immutable
  */
 readonly class StringJwt extends StringTypeAbstract

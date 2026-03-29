@@ -24,9 +24,7 @@ use function is_int;
 use function is_scalar;
 use function is_string;
 use function sprintf;
-use function str_replace;
 use function strlen;
-use function strtoupper;
 use function strtr;
 use function substr;
 
@@ -53,15 +51,12 @@ readonly class StringIban extends StringTypeAbstract
      */
     public function __construct(string $value)
     {
-        $clean = str_replace(' ', '', $value);
-        $clean = strtoupper($clean);
-
-        if (!$this->isValidIban($clean)) {
+        if (!$this->isValidIban($value)) {
             throw new IbanStringTypeException(sprintf('Expected valid IBAN string, got "%s"', $value));
         }
 
-        /** @var non-empty-string $clean */
-        $this->value = $clean;
+        /** @var non-empty-string $value */
+        $this->value = $value;
     }
 
     /**

@@ -23,9 +23,8 @@ describe('StringIban', function () {
         $iban = new StringIban($input);
         expect($iban->value())->toBe($expected);
     })->with([
-        ['DE89 3704 0044 0532 0130 00', 'DE89370400440532013000'],
-        ['de89370400440532013000', 'DE89370400440532013000'],
-        [' GB 29 NWBK 6016 1331 9268 19 ', 'GB29NWBK60161331926819'],
+        ['DE89370400440532013000', 'DE89370400440532013000'],
+        ['GB29NWBK60161331926819', 'GB29NWBK60161331926819'],
     ]);
 
     it('throws on invalid IBAN format', function (string $invalid): void {
@@ -34,6 +33,9 @@ describe('StringIban', function () {
     })->with([
         '',
         '   ',
+        'de89370400440532013000',
+        'DE89 3704 0044 0532 0130 00',
+        ' GB 29 NWBK 6016 1331 9268 19 ',
         'NOT AN IBAN',
         'PEST Mutator was here!',
         'PESTMutatorwashere!',
@@ -75,7 +77,6 @@ describe('StringIban', function () {
         'DEAB', // Check digits invalid (letters)
         'A123', // Prefix too short (only 1 letter)
         'DE1A', // Check digits invalid (contains letter)
-        'DE89 3704 0044 0532 0130 000', // too long but otherwise valid (if stripped)
         'DE8', // too short but otherwise valid
         'DE89370400440532013000DE89370400440532013000DE89370400440532013000', // very long (passes ctype)
         'DE89', // length 4, but ctype_alpha(DE) and ctype_digit(89) pass! BUT it fails checksum.
@@ -92,16 +93,16 @@ describe('StringIban', function () {
         'AA9Z', // Case 0 (BooleanOrToBooleanAnd mutant b10a335d8c1ff5b4)
         'A089', // Case 1 (Decrement substr length mutant 49e8924e1e18f0b3)
         'AD0A48', // Case 2 (Decrement substr length mutant d9ee71f2dc73580a)
+        'ad66',
+        ' de 89 3704 0044 0532 0130 00 ',
+        'A D 6 6',
     ]);
 
     it('validates mixed case and spaces', function (string $input, string $expected): void {
         $v = new StringIban($input);
         expect($v->value())->toBe($expected);
     })->with([
-        [' de 89 3704 0044 0532 0130 00 ', 'DE89370400440532013000'],
         ['AD66', 'AD66'],
-        ['ad66', 'AD66'],
-        ['A D 6 6', 'AD66'],
         ['AD92L1', 'AD92L1'], // Killing b1973be5b926f1b4
         ['AD16M1', 'AD16M1'], // Killing 99361c8864b7f541
         ['AD58O1', 'AD58O1'], // Killing 3aa70a7b690e6e34
@@ -221,7 +222,7 @@ describe('StringIban', function () {
     });
 
     it('tryFromString returns instance for valid IBAN and Undefined for invalid', function (): void {
-        $ok = StringIban::tryFromString('DE89 3704 0044 0532 0130 00');
+        $ok = StringIban::tryFromString('DE89370400440532013000');
         $bad = StringIban::tryFromString('invalid');
 
         expect($ok)
@@ -233,12 +234,12 @@ describe('StringIban', function () {
     });
 
     it('tryFromMixed handles valid IBAN strings and invalid mixed inputs', function (): void {
-        $ok = StringIban::tryFromMixed('DE89 3704 0044 0532 0130 00');
+        $ok = StringIban::tryFromMixed('DE89370400440532013000');
 
         $stringable = new class {
             public function __toString(): string
             {
-                return 'DE89 3704 0044 0532 0130 00';
+                return 'DE89370400440532013000';
             }
         };
         $fromStringable = StringIban::tryFromMixed($stringable);
@@ -259,7 +260,7 @@ describe('StringIban', function () {
     });
 
     it('isUndefined returns false for instances and true for Undefined results', function (): void {
-        $ok = StringIban::fromString('DE89 3704 0044 0532 0130 00');
+        $ok = StringIban::fromString('DE89370400440532013000');
         $u1 = StringIban::tryFromString('not valid!');
 
         expect($ok->isUndefined())->toBeFalse()
@@ -267,7 +268,7 @@ describe('StringIban', function () {
     });
 
     it('isUndefined returns false (explicit call)', function (): void {
-        $v = StringIban::fromString('DE89 3704 0044 0532 0130 00');
+        $v = StringIban::fromString('DE89370400440532013000');
         expect($v->isUndefined())->toBeFalse();
     });
 
@@ -319,28 +320,28 @@ describe('StringIban', function () {
     })->with(['V', 'W', 'X', 'Y', 'Z']);
 
     it('isTypeOf returns true when class matches', function (): void {
-        $v = StringIban::fromString('DE89 3704 0044 0532 0130 00');
+        $v = StringIban::fromString('DE89370400440532013000');
         expect($v->isTypeOf(StringIban::class))->toBeTrue();
     });
 
     it('isTypeOf returns false when class does not match', function (): void {
-        $v = StringIban::fromString('DE89 3704 0044 0532 0130 00');
+        $v = StringIban::fromString('DE89370400440532013000');
         expect($v->isTypeOf('NonExistentClass'))->toBeFalse()
             ->and($v->isTypeOf(StringIban::class, 'NonExistentClass'))->toBeTrue();
     });
 
     it('isEmpty is always false for StringIban', function (): void {
-        $v = StringIban::fromString('DE89 3704 0044 0532 0130 00');
+        $v = StringIban::fromString('DE89370400440532013000');
         expect($v->isEmpty())->toBeFalse();
     });
 
     it('jsonSerialize returns the value', function (): void {
-        $v = StringIban::fromString('DE89 3704 0044 0532 0130 00');
+        $v = StringIban::fromString('DE89370400440532013000');
         expect($v->jsonSerialize())->toBe('DE89370400440532013000');
     });
 
     it('toString returns the normalized IBAN string', function (): void {
-        $v = StringIban::fromString('DE89 3704 0044 0532 0130 00');
+        $v = StringIban::fromString('DE89370400440532013000');
         expect($v->toString())->toBe('DE89370400440532013000');
     });
 
@@ -350,7 +351,7 @@ describe('StringIban', function () {
             ->and(fn() => StringIban::fromInt(123))->toThrow(IbanStringTypeException::class)
             ->and(fn() => StringIban::fromDecimal('1.0'))->toThrow(IbanStringTypeException::class);
 
-        $v = StringIban::fromString('DE89 3704 0044 0532 0130 00');
+        $v = StringIban::fromString('DE89370400440532013000');
         expect(fn() => $v->toBool())->toThrow(StringTypeException::class)
             ->and(fn() => $v->toFloat())->toThrow(StringTypeException::class)
             ->and(fn() => $v->toInt())->toThrow(StringTypeException::class)
@@ -399,7 +400,7 @@ describe('Throwing static', function () {
             ->and(StringIbanTest::tryFromFloat(1.1))->toBeInstanceOf(Undefined::class)
             ->and(StringIbanTest::tryFromInt(1))->toBeInstanceOf(Undefined::class)
             ->and(StringIbanTest::tryFromDecimal('1.0'))->toBeInstanceOf(Undefined::class)
-            ->and(StringIbanTest::tryFromMixed('DE89 3704 0044 0532 0130 00'))->toBeInstanceOf(Undefined::class)
-            ->and(StringIbanTest::tryFromString('DE89 3704 0044 0532 0130 00'))->toBeInstanceOf(Undefined::class);
+            ->and(StringIbanTest::tryFromMixed('DE89370400440532013000'))->toBeInstanceOf(Undefined::class)
+            ->and(StringIbanTest::tryFromString('DE89370400440532013000'))->toBeInstanceOf(Undefined::class);
     });
 });
