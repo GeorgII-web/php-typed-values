@@ -42,6 +42,7 @@ describe('StringUsername', function () {
             'user@name', // invalid char
             'user name', // space
             '',
+            'hi☂hi',
         ]);
     });
 
