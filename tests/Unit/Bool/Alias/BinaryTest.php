@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use PhpTypedValues\Bool\Alias\Binary;
 
+covers(Binary::class);
+
 describe('Binary', function () {
     it('is an instance of Binary and behaves like BoolStandard', function (): void {
         $binary = Binary::fromBool(true);

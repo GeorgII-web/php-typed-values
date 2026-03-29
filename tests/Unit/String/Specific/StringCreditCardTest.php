@@ -11,6 +11,8 @@ use PhpTypedValues\String\Specific\StringCreditCard;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 
+covers(StringCreditCard::class);
+
 describe('StringCreditCard', function () {
     it('accepts valid credit card numbers and preserves digits', function (): void {
         $visa13 = new StringCreditCard('4111111111119'); // 13 digits, corrected Luhn

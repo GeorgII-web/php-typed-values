@@ -6,6 +6,8 @@ use PhpTypedValues\DateTime\MariaDb\DateTimeSql;
 use PhpTypedValues\Exception\DateTime\DateTimeTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
+covers(DateTimeSql::class);
+
 describe('DateTimeSql', function () {
     describe('Creation', function () {
         describe('fromDateTime', function () {

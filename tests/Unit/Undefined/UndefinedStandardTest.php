@@ -5,6 +5,8 @@ declare(strict_types=1);
 use PhpTypedValues\Exception\Undefined\UndefinedTypeException;
 use PhpTypedValues\Undefined\UndefinedStandard;
 
+covers(UndefinedStandard::class);
+
 describe('UndefinedStandard', function () {
     describe('Creation', function () {
         it('creates instance via factory', function (): void {

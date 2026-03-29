@@ -6,6 +6,8 @@ use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Integer\Alias\NonNegative;
 
+covers(NonNegative::class);
+
 describe('NonNegative', function () {
     it('NonNegativeInt alias factories return NonNegativeInt instance', function (): void {
         $a = NonNegative::fromInt(0);

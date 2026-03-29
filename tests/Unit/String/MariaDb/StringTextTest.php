@@ -11,6 +11,8 @@ use PhpTypedValues\String\MariaDb\StringText;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 
+covers(StringText::class);
+
 describe('StringText', function () {
     it('accepts empty string and preserves value/toString', function (): void {
         $s = new StringText('');

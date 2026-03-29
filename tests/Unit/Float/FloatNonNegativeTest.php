@@ -9,6 +9,8 @@ use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Float\FloatNonNegative;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
+covers(FloatNonNegative::class);
+
 describe('FloatNonNegative', function () {
     describe('Creation', function () {
         describe('fromDecimal', function () {

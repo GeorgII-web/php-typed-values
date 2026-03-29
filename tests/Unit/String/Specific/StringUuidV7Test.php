@@ -12,6 +12,8 @@ use PhpTypedValues\String\Specific\StringUuidV7;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 
+covers(StringUuidV7::class);
+
 describe('StringUuidV7', function () {
     describe('Core behavior', function () {
         it('accepts a valid lowercase UUID v7 and preserves value', function (): void {

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use PhpTypedValues\Integer\Alias\IntegerType;
 
+covers(IntegerType::class);
+
 describe('IntegerType', function () {
     it('IntType alias factories return IntType instance', function (): void {
         $a = IntegerType::fromInt(-5);

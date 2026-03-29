@@ -15,6 +15,8 @@ use Throwable;
 use function assert;
 use function sprintf;
 
+covers(StringJson::class);
+
 describe('StringJson', function () {
     it('Json::tryFromString returns value for valid JSON string', function (): void {
         $json = '{"a":1}';

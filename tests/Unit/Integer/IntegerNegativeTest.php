@@ -9,6 +9,8 @@ use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Integer\IntegerNegative;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
+covers(IntegerNegative ::class);
+
 describe('IntegerNegative', function () {
     describe('Factories', function () {
         it('creates from bool throws', function (bool $input) {

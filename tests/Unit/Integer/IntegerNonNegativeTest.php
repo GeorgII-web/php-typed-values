@@ -22,6 +22,8 @@ use Stringable;
 
 use function gettype;
 
+covers(IntegerNonNegative::class);
+
 describe('IntegerNonNegative', function () {
     describe('Factories', function () {
         it('creates from bool', function (bool $input, int $expected) {

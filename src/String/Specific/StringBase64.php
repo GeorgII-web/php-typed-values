@@ -53,7 +53,11 @@ readonly class StringBase64 extends StringTypeAbstract
 
         $decoded = base64_decode($value, true);
 
-        if (false === $decoded || base64_encode($decoded) !== $value) {
+        if (false === $decoded) {
+            throw new Base64StringTypeException(sprintf('Expected Base64-encoded string, got "%s"', $value));
+        }
+
+        if (base64_encode($decoded) !== $value) {
             throw new Base64StringTypeException(sprintf('Expected Base64-encoded string, got "%s"', $value));
         }
 

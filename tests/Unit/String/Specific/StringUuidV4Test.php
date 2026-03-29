@@ -13,6 +13,8 @@ use PhpTypedValues\Undefined\Alias\Undefined;
 use RuntimeException;
 use stdClass;
 
+covers(StringUuidV4::class);
+
 describe('StringUuidV4', function () {
     describe('Core behavior', function () {
         it('accepts a valid lowercase UUID v4 and preserves value', function (): void {

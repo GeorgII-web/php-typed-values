@@ -12,6 +12,8 @@ use PhpTypedValues\String\Specific\StringSemVer;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 
+covers(StringSemVer::class);
+
 describe('StringSemVer', function () {
     it('accepts valid SemVer strings and preserves value', function (): void {
         $simple = new StringSemVer('1.2.3');

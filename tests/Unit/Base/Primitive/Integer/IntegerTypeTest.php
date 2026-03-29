@@ -2,11 +2,14 @@
 
 declare(strict_types=1);
 
+use PhpTypedValues\Base\Primitive\Integer\IntegerTypeAbstract;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Integer\IntegerStandard;
 use PhpTypedValues\Undefined\Alias\Undefined;
+
+covers(IntegerTypeAbstract::class);
 
 describe('IntegerStandard', function () {
     describe('Creation', function () {

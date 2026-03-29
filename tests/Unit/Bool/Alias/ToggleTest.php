@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use PhpTypedValues\Bool\Alias\Toggle;
 
+covers(Toggle::class);
+
 describe('Toggle', function () {
     it('is an instance of Toggle and behaves like BoolStandard', function (): void {
         $toggle = Toggle::fromBool(true);

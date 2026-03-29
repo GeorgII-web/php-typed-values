@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use PhpTypedValues\String\Alias\MariaDb\MediumText;
 
+covers(MediumText::class);
+
 describe('MediumText', function () {
     it('MediumText::fromString returns MediumText instance (late static binding)', function (): void {
         $val = 'medium text content';

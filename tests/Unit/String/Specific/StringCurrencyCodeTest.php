@@ -13,6 +13,8 @@ use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 use Stringable;
 
+covers(StringCurrencyCode::class);
+
 describe('StringCurrencyCode', function () {
     it('accepts valid currency code and preserves toString and __toString', function (): void {
         $c = new StringCurrencyCode('USD');

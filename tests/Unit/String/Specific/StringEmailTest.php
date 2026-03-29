@@ -12,6 +12,8 @@ use PhpTypedValues\String\Specific\StringEmail;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 
+covers(StringEmail::class);
+
 describe('StringEmail', function () {
     it('accepts valid email, preserves value/toString', function (): void {
         $e = new StringEmail('User.Name+tag@Composite.COM');

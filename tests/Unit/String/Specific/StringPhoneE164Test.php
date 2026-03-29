@@ -11,6 +11,8 @@ use PhpTypedValues\String\Specific\StringPhoneE164;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 
+covers(StringPhoneE164::class);
+
 describe('StringPhoneE164', function () {
     $validPhone = '+14155552671';
 

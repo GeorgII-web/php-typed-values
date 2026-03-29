@@ -5,6 +5,8 @@ declare(strict_types=1);
 use PhpTypedValues\Exception\Undefined\UndefinedTypeException;
 use PhpTypedValues\Undefined\Alias\Unknown;
 
+covers(Unknown::class);
+
 describe('Unknown', function () {
     describe('Creation', function () {
         it('creates instance via factory', function (): void {

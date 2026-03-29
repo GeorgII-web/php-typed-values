@@ -10,6 +10,8 @@ use PhpTypedValues\Base\Primitive\Undefined\UndefinedTypeInterface;
 use PhpTypedValues\Exception\Undefined\UndefinedTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
+covers(UndefinedTypeAbstract::class);
+
 /**
  * Mock implementation of UndefinedTypeAbstract to test the abstract class.
  *

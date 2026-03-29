@@ -13,6 +13,8 @@ use PhpTypedValues\String\MariaDb\StringLongText;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use ReflectionMethod;
 
+covers(StringLongText::class);
+
 describe('StringLongText', function () {
     it('accepts empty string and preserves value/toString', function (): void {
         $s = new StringLongText('');

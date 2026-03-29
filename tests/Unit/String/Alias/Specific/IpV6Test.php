@@ -6,6 +6,8 @@ namespace PhpTypedValues\Tests\Unit\String\Alias\Specific;
 
 use PhpTypedValues\String\Alias\Specific\IpV6;
 
+covers(IpV6::class);
+
 describe('IpV6', function () {
     it('IpV6::fromString returns IpV6 instance (late static binding)', function (): void {
         $ip = '::1';

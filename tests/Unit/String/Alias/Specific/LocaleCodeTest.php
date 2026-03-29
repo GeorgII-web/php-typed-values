@@ -6,6 +6,8 @@ namespace PhpTypedValues\Tests\Unit\String\Alias\Specific;
 
 use PhpTypedValues\String\Alias\Specific\LocaleCode;
 
+covers(LocaleCode::class);
+
 describe('LocaleCode', function () {
     it('LocaleCode::fromString returns LocaleCode instance (late static binding)', function (): void {
         $code = 'en_US';

@@ -13,6 +13,8 @@ use PhpTypedValues\String\Specific\StringCountryCode;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 
+covers(StringCountryCode::class);
+
 describe('StringCountryCode', function () {
     it('accepts valid country code and normalizes to uppercase; preserves toString and __toString', function (): void {
         $c = new StringCountryCode('US');

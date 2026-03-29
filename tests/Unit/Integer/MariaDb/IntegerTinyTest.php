@@ -15,6 +15,8 @@ use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 use Stringable;
 
+covers(IntegerTiny::class);
+
 describe('IntegerTiny', function (): void {
     // ============================================
     // CONSTRUCTOR & FACTORY METHODS

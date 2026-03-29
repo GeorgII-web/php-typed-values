@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use PhpTypedValues\Integer\Alias\IntegerType;
 
+covers(IntegerType::class);
+
 describe('IntegerType', function () {
     it('IntegerType alias fromInt returns IntegerType alias instance', function (): void {
         $v = IntegerType::fromInt(42);

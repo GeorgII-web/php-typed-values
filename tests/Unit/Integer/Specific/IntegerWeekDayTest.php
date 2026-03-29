@@ -10,6 +10,8 @@ use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Integer\Specific\IntegerWeekDay;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
+covers(IntegerWeekDay::class);
+
 describe('IntegerWeekDay', function (): void {
     // ============================================
     // CONSTRUCTOR & FACTORY METHODS

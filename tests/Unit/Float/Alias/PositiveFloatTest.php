@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use PhpTypedValues\Float\Alias\Positive;
 
+covers(Positive::class);
+
 describe('PositiveFloat', function (): void {
     it('PositiveFloat::fromFloat returns PositiveFloat instance', function (): void {
         $v = Positive::fromFloat(0.1);

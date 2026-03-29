@@ -12,6 +12,8 @@ use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 use Stringable;
 
+covers(DecimalMoney::class);
+
 describe('DecimalMoney', function () {
     it('accepts valid non-negative decimal strings with 2 decimal places and preserves value/toString', function (): void {
         $a = new DecimalMoney('0.10');

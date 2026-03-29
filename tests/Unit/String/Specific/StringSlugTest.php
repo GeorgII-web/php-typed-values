@@ -15,6 +15,8 @@ use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 use Stringable;
 
+covers(StringSlug::class);
+
 describe('StringSlug', function () {
     describe('Construction and Validation', function () {
         it('creates an instance from a valid slug', function (string $slug): void {

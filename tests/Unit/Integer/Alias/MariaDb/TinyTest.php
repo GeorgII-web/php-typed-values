@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use PhpTypedValues\Integer\Alias\MariaDb\Tiny;
 
+covers(Tiny::class);
+
 describe('Tiny', function () {
     it('Tiny alias factories return Tiny instance', function (): void {
         $a = Tiny::fromInt(10);

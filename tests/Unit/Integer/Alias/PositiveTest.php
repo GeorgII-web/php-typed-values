@@ -6,6 +6,8 @@ use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Integer\Alias\Positive;
 
+covers(Positive::class);
+
 describe('Positive', function () {
     it('PositiveInt alias factories return PositiveInt instance', function (): void {
         $a = Positive::fromInt(5);

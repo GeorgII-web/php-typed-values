@@ -6,6 +6,8 @@ use PhpTypedValues\ArrayType\ArrayOfObjects;
 use PhpTypedValues\ArrayType\ArrayUndefined;
 use PhpTypedValues\Exception\ArrayType\ArrayUndefinedTypeException;
 
+covers(ArrayUndefined::class);
+
 describe('ArrayUndefined specific tests', function () {
     // Test lines 24-27: fromArray always returns new instance
     it('fromArray returns new ArrayUndefined instance regardless of input', function () {

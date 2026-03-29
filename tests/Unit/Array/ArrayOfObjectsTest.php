@@ -10,6 +10,8 @@ use PhpTypedValues\Integer\IntegerNonNegative;
 use PhpTypedValues\String\StringNonEmpty;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
+covers(ArrayOfObjects::class);
+
 describe('ArrayOfObjects', function () {
     describe('Creation', function () {
         describe('fromArray', function () {

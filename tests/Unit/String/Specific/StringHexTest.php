@@ -12,6 +12,8 @@ use PhpTypedValues\String\Specific\StringHex;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 
+covers(StringHex::class);
+
 describe('StringHex', function () {
     it('accepts valid hex strings and preserves value', function (): void {
         $lower = new StringHex('4a6f686e');

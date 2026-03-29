@@ -12,6 +12,8 @@ use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 use Stringable;
 
+covers(TimestampMicroseconds::class);
+
 describe('TimestampMicroseconds', function () {
     describe('Creation', function () {
         describe('fromDateTime', function () {

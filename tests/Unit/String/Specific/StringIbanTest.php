@@ -16,6 +16,8 @@ use stdClass;
 
 use function strlen;
 
+covers(StringIban::class);
+
 describe('StringIban', function () {
     it('accepts valid IBAN strings and preserves normalized value', function (string $input, string $expected): void {
         $iban = new StringIban($input);

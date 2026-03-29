@@ -12,6 +12,8 @@ use PhpTypedValues\String\Specific\StringFileName;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 
+covers(StringFileName::class);
+
 describe('StringFileName', function () {
     it('accepts valid filename, preserves value/toString and casts via __toString', function (): void {
         $f = new StringFileName('image.jpg');

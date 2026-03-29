@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use PhpTypedValues\String\Alias\Specific\Json;
 
+covers(Json::class);
+
 describe('JsonStr', function () {
     it('JsonStr::fromString returns JsonStr instance (late static binding)', function (): void {
         $json = '{"a":1,"b":"x"}';

@@ -6,6 +6,8 @@ use PhpTypedValues\DateTime\DateTimeRFC3339;
 use PhpTypedValues\Exception\DateTime\DateTimeTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
+covers(DateTimeRFC3339::class);
+
 describe('DateTimeRFC3339', function () {
     describe('Creation', function () {
         describe('fromDateTime', function () {

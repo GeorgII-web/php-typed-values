@@ -5,6 +5,9 @@ declare(strict_types=1);
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Integer\Alias\Positive;
+use PhpTypedValues\Integer\Alias\Specific\WeekDay;
+
+covers(WeekDay::class);
 
 describe('Positive', function () {
     it('creates PositiveInt', function (): void {

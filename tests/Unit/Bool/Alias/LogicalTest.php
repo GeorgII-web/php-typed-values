@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use PhpTypedValues\Bool\Alias\Logical;
 
+covers(Logical::class);
+
 describe('Logical', function () {
     it('is an instance of Logical and behaves like BoolStandard', function (): void {
         $logical = Logical::fromBool(true);

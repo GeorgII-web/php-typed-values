@@ -9,6 +9,8 @@ use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\String\MariaDb\StringVarChar255;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
+covers(StringVarChar255::class);
+
 describe('StringVarChar255', function () {
     it('accepts empty string and preserves value', function (): void {
         $s = new StringVarChar255('');

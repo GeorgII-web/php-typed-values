@@ -12,6 +12,8 @@ use PhpTypedValues\String\Specific\StringUrl;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 
+covers(StringUrl::class);
+
 describe('StringUrl', function () {
     it('accepts valid URL, preserves value/toString and casts via __toString', function (): void {
         $u = new StringUrl('https://example.com/path?x=1#anchor');

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use PhpTypedValues\String\Alias\MariaDb\LongText;
 
+covers(LongText::class);
+
 describe('LongText', function () {
     it('LongText::fromString returns LongText instance (late static binding)', function (): void {
         $v = LongText::fromString('test');

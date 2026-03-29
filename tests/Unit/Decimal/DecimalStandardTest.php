@@ -16,6 +16,8 @@ use stdClass;
 
 use function sprintf;
 
+covers(DecimalStandard::class);
+
 describe('DecimalStandard', function () {
     it('accepts valid decimal strings and preserves value/toString', function (): void {
         $a = new DecimalStandard('0.0');

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use PhpTypedValues\Bool\Alias\Flag;
 
+covers(Flag::class);
+
 describe('Flag', function () {
     it('is an instance of Flag and behaves like BoolStandard', function (): void {
         $flag = Flag::fromBool(true);

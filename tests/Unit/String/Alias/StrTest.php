@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use PhpTypedValues\String\Alias\Str;
 
+covers(Str::class);
+
 describe('Str', function () {
     it('Str::fromString returns Str instance (late static binding)', function (): void {
         $v = Str::fromString('hello');

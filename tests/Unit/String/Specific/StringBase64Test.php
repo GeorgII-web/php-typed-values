@@ -61,6 +61,36 @@ describe('StringBase64', function () {
         expect(fn() => new StringBase64("SGVsbG8\n"))
             ->toThrow(Base64StringTypeException::class);
 
+        // This string contains a character (e.g. dot) that is rejected in strict mode
+        // but might be handled differently in non-strict mode if it's considered whitespace/ignored.
+        // Actually, base64_decode('YWI.=', true) returns false.
+        // base64_decode('YWI.=', false) returns 'ab' (it stops at the dot or ignores it).
+        // base64_encode('ab') is 'YWI='.
+        // 'YWI=' !== 'YWI.=' which is true.
+        expect(fn() => new StringBase64('YWI.='))
+            ->toThrow(Base64StringTypeException::class);
+
+        // This string is technically valid base64 but contains a character that
+        // base64_decode(..., true) rejects, yet base64_decode(..., false) accepts
+        // AND base64_encode() would return the SAME original string.
+        // Actually, for $v to equal base64_encode(base64_decode($v, false)),
+        // $v MUST be composed only of A-Z, a-z, 0-9, +, /, and = (with correct padding).
+        // If it contains only these, base64_decode(..., true) should also accept it!
+        // EXCEPT if the padding is present but logically incorrect for the content.
+        // BUT base64_decode(..., false) also returns false for invalid padding in many cases.
+        // Let's try "YWI=" (which is "ab").
+        // "YWI=" is 4 chars, last is padding. "ab" is 16 bits.
+        // 16 bits = two 6-bit chars (12 bits) + 4 bits left.
+        // The 4 bits left need one more 6-bit char (to cover 4 bits) + ONE padding char.
+        // So "YWI=" is actually correct padding for "ab".
+        // What if we use "YWJj="?
+        // "YWJj" is "abc" (24 bits = four 6-bit chars). No padding needed.
+        // base64_decode("YWJj=", true) returns FALSE.
+        // base64_decode("YWJj=", false) returns "abc".
+        // base64_encode("abc") returns "YWJj".
+        // "YWJj" !== "YWJj=" is TRUE.
+        // So even here, the second condition (base64_encode !== value) catches it!
+
         // This string contains a null byte (\0) at the end.
         // base64_decode("SGVsbG8=\0", true) returns false (STRICT mode rejects it).
         // base64_decode("SGVsbG8=\0", false) ignores \0 and returns 'Hello'.

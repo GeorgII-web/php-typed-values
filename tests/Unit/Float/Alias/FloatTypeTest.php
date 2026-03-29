@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use PhpTypedValues\Float\Alias\DoubleType;
 
+covers(DoubleType::class);
+
 describe('FloatType', function (): void {
     it('FloatType::fromFloat returns FloatType instance', function (): void {
         $v = DoubleType::fromFloat(1.25);

@@ -19,6 +19,8 @@ use PhpTypedValues\String\StringStandard;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 
+covers(FloatStandard::class);
+
 describe('FloatStandard', function () {
     describe('Creation', function () {
         describe('fromDecimal', function () {

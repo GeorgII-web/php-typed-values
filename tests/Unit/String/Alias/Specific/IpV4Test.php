@@ -6,6 +6,8 @@ namespace PhpTypedValues\Tests\Unit\String\Alias\Specific;
 
 use PhpTypedValues\String\Alias\Specific\IpV4;
 
+covers(IpV4::class);
+
 describe('IpV4', function () {
     it('IpV4::fromString returns IpV4 instance (late static binding)', function (): void {
         $ip = '127.0.0.1';

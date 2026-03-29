@@ -6,6 +6,8 @@ use PhpTypedValues\DateTime\DateTimeAtom;
 use PhpTypedValues\Exception\DateTime\DateTimeTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
+covers(DateTimeAtom::class);
+
 describe('DateTimeAtom', function () {
     describe('Creation', function () {
         describe('fromDateTime', function () {

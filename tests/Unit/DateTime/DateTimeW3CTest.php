@@ -6,6 +6,8 @@ use PhpTypedValues\DateTime\DateTimeW3C;
 use PhpTypedValues\Exception\DateTime\DateTimeTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
+covers(DateTimeW3C::class);
+
 describe('DateTimeW3C', function () {
     describe('Creation', function () {
         describe('fromDateTime', function () {

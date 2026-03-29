@@ -13,6 +13,8 @@ use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 use Stringable;
 
+covers(StringStandard ::class);
+
 describe('StringStandard', function () {
     describe('Core behavior', function () {
         it('StringStandard::tryFromString returns instance for any string', function (): void {

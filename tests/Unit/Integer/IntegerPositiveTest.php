@@ -20,6 +20,8 @@ use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 use Stringable;
 
+covers(IntegerPositive::class);
+
 describe('IntegerPositive', function () {
     describe('Factories', function () {
         it('creates from bool', function () {

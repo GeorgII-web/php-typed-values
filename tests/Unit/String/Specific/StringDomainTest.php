@@ -11,6 +11,8 @@ use PhpTypedValues\String\Specific\StringDomain;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 
+covers(StringDomain::class);
+
 describe('StringDomain', function () {
     $validDomain = 'example.com';
 

@@ -6,6 +6,8 @@ use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Integer\Alias\Specific\Id;
 
+covers(Id::class);
+
 describe('Id', function () {
     it('creates Id', function (): void {
         expect(Id::fromInt(1)->value())->toBe(1);

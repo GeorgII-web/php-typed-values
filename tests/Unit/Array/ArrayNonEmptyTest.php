@@ -7,6 +7,8 @@ use PhpTypedValues\ArrayType\ArrayUndefined;
 use PhpTypedValues\Exception\ArrayType\ArrayTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
+covers(ArrayNonEmpty::class);
+
 describe('ArrayNonEmpty', function () {
     describe('Creation', function () {
         describe('Constructor', function () {

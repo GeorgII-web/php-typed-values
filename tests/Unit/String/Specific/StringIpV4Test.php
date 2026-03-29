@@ -14,6 +14,8 @@ use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 use Stringable;
 
+covers(StringIpV4::class);
+
 describe('StringIpV4', function () {
     describe('Construction and Validation', function () {
         it('creates an instance from a valid IPv4 address', function (string $ip): void {

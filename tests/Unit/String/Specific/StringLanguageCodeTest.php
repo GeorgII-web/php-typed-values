@@ -12,6 +12,8 @@ use PhpTypedValues\String\Specific\StringLanguageCode;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 
+covers(StringLanguageCode::class);
+
 describe('StringLanguageCode', function () {
     it('accepts valid language code and preserves toString and __toString', function (): void {
         $l = new StringLanguageCode('en');

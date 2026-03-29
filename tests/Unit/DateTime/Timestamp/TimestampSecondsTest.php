@@ -13,6 +13,8 @@ use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 use Stringable;
 
+covers(TimestampSeconds::class);
+
 describe('TimestampSeconds', function () {
     describe('Creation', function () {
         describe('fromDateTime', function () {

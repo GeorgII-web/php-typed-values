@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use PhpTypedValues\Float\Alias\NonNegative;
 
+covers(NonNegative::class);
+
 describe('NonNegativeFloat', function (): void {
     it('NonNegativeFloat::fromFloat returns NonNegativeFloat instance', function (): void {
         $v = NonNegative::fromFloat(0);

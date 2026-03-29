@@ -20,6 +20,8 @@ use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 use Stringable;
 
+covers(IntegerPercent::class);
+
 describe('IntegerPercent', function () {
     describe('Factories', function () {
         it('creates from bool', function () {

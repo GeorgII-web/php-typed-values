@@ -19,6 +19,8 @@ use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 use Stringable;
 
+covers(IntegerStandard::class);
+
 describe('IntegerStandard', function () {
     describe('Factories', function () {
         it('creates from bool', function (bool $input, int $expected) {

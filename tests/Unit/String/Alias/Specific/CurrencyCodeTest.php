@@ -6,6 +6,8 @@ namespace PhpTypedValues\Tests\Unit\String\Alias\Specific;
 
 use PhpTypedValues\String\Alias\Specific\CurrencyCode;
 
+covers(CurrencyCode::class);
+
 describe('CurrencyCode', function () {
     it('CurrencyCode::fromString returns CurrencyCode instance (late static binding)', function (): void {
         $code = 'USD';

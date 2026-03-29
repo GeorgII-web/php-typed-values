@@ -10,6 +10,8 @@ use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\String\Specific\StringMimeType;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
+covers(StringMimeType::class);
+
 describe('StringMimeType', function () {
     it('accepts valid MIME types, preserves value/toString and casts via __toString', function (string $value): void {
         $m = new StringMimeType($value);

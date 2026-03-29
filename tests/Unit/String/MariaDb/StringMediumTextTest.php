@@ -11,6 +11,8 @@ use PhpTypedValues\String\MariaDb\StringMediumText;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 
+covers(StringMediumText::class);
+
 describe('StringMediumText', function () {
     it('accepts empty string and preserves value/toString', function (): void {
         $s = new StringMediumText('');

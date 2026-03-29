@@ -13,6 +13,8 @@ use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 use Stringable;
 
+covers(StringPath::class);
+
 describe('StringPath', function () {
     it('checks valid paths', function (): void {
         expect(StringPath::fromString('/etc/passwd')->value())->toBe('/etc/passwd')

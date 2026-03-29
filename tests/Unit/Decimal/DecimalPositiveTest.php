@@ -16,6 +16,8 @@ use stdClass;
 
 use function sprintf;
 
+covers(DecimalPositive::class);
+
 describe('DecimalPositive', function () {
     it('accepts valid positive decimal strings and preserves value/toString', function (): void {
         $a = new DecimalPositive('0.1');

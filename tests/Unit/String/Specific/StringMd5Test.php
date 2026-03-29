@@ -13,6 +13,8 @@ use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 use Stringable;
 
+covers(StringMd5::class);
+
 describe('StringMd5', function () {
     it('accepts valid MD5 hash and preserves case', function (): void {
         $lowercase = new StringMd5('5d41402abc4b2a76b9719d911017c592');

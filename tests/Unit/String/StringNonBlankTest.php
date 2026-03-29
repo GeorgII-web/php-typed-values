@@ -10,6 +10,8 @@ use PhpTypedValues\String\StringNonBlank;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 
+covers(StringNonBlank ::class);
+
 describe('StringNonBlank', function () {
     it('StringNonBlank accepts non-blank strings and preserves value/toString', function (): void {
         $v = new StringNonBlank(' hi ');

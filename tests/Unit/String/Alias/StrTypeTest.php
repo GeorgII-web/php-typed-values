@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use PhpTypedValues\String\Alias\StringType;
 
+covers(StringType::class);
+
 describe('StrType', function () {
     it('StrType::fromString returns StrType instance (late static binding)', function (): void {
         $v = StringType::fromString('hello');
