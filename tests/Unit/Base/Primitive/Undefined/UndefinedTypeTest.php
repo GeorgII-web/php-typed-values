@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Base\Primitive\Undefined;
+namespace PhpTypedValues\Tests\Unit\Base\Primitive\Undefined;
 
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Base\Primitive\Undefined\UndefinedTypeAbstract;

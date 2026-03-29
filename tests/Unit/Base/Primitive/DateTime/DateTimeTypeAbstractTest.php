@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Base\Primitive\DateTime;
+namespace PhpTypedValues\Tests\Unit\Base\Primitive\DateTime;
+
+use const PHP_EOL;
 
 use DateTimeImmutable;
 use DateTimeZone;
@@ -16,6 +18,7 @@ use PhpTypedValues\Exception\DateTime\ZoneDateTimeTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
 use Throwable;
+
 use function is_string;
 
 covers(DateTimeTypeAbstract::class);
@@ -330,7 +333,7 @@ describe('mutants', function () {
         } catch (DateTimeTypeException $e) {
             $msg = $e->getMessage();
             expect($msg)->toContain('Invalid date time value "2025-13-40T25:61:61+00:00", use format "Y-m-d\TH:i:sP"')
-                ->and($msg)->toContain('Warning at 25: The parsed date was invalid' . \PHP_EOL)
+                ->and($msg)->toContain('Warning at 25: The parsed date was invalid' . PHP_EOL)
                 ->and($msg)->not->toContain('PEST Mutator was here!');
         }
     });
@@ -346,4 +349,3 @@ describe('mutants', function () {
         'min boundary' => ['-62135596800', '-62135596800'],
     ]);
 });
-

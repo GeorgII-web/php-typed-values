@@ -2,22 +2,29 @@
 
 declare(strict_types=1);
 
-namespace Base\Primitive;
+namespace PhpTypedValues\Tests\Unit\Base\Primitive;
 
-use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
-use PhpTypedValues\Exception\DateTime\ZoneDateTimeTypeException;
-use PhpTypedValues\Exception\Decimal\DecimalTypeException;
-use PhpTypedValues\Exception\Float\FloatTypeException;
-use PhpTypedValues\Exception\Integer\IntegerTypeException;
-use PhpTypedValues\Exception\String\StringTypeException;
-use PhpTypedValues\Undefined\Alias\Undefined;
-use function function_exists;
-use function is_string;
 use const INF;
 use const M_PI;
 use const NAN;
 use const PHP_INT_MAX;
 use const PHP_INT_MIN;
+
+use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
+use PhpTypedValues\Decimal\DecimalStandard;
+use PhpTypedValues\Exception\DateTime\ZoneDateTimeTypeException;
+use PhpTypedValues\Exception\Decimal\DecimalTypeException;
+use PhpTypedValues\Exception\Float\FloatTypeException;
+use PhpTypedValues\Exception\Integer\IntegerTypeException;
+use PhpTypedValues\Exception\String\StringTypeException;
+use PhpTypedValues\Exception\TypeException;
+use PhpTypedValues\Float\FloatStandard;
+use PhpTypedValues\Integer\IntegerStandard;
+use PhpTypedValues\Undefined\Alias\Undefined;
+
+use function function_exists;
+use function is_string;
+use function sprintf;
 
 covers(PrimitiveTypeAbstract::class);
 
@@ -469,41 +476,85 @@ describe('Static utility methods coverage', function () {
     });
 
     it('covers stringToFloat with success and error paths', function (): void {
-        expect(PrimitiveTypeAbstractTest::callStringToFloat('1.5'))->toBe(1.5);
-
-        // Exercise the default value for $roundTripConversion
-        expect(PrimitiveTypeAbstractTest::callStringToFloat('1.5', null))->toBe(1.5);
-
-        expect(fn() => PrimitiveTypeAbstractTest::callStringToFloat('0.100000000'))
+        expect(PrimitiveTypeAbstractTest::callStringToFloat('1.5'))->toBe(1.5)
+            ->and(PrimitiveTypeAbstractTest::callStringToFloat('1.5', null))->toBe(1.5)
+            ->and(fn() => PrimitiveTypeAbstractTest::callStringToFloat('0.100000000'))
+            ->toThrow(StringTypeException::class)
+            ->and(PrimitiveTypeAbstractTest::callStringToFloat('0.10000000000000001'))
+            ->toBe(0.1)
+            ->and(fn() => PrimitiveTypeAbstractTest::callStringToFloat('abc'))
             ->toThrow(StringTypeException::class);
 
-        expect(PrimitiveTypeAbstractTest::callStringToFloat('0.10000000000000001'))
-            ->toBe(0.1); // as it stored in memory 0.10000000000000001
-
-        expect(fn() => PrimitiveTypeAbstractTest::callStringToFloat('abc'))
-            ->toThrow(StringTypeException::class);
-
-        // Try to trigger line 275 (precision loss)
         $precisionLoss = '0.1234567890123456789';
         expect(fn() => PrimitiveTypeAbstractTest::callStringToFloat($precisionLoss))
-            ->toThrow(StringTypeException::class);
-
-        // Exercise $roundTripConversion = false
-        expect(PrimitiveTypeAbstractTest::callStringToFloat('0.1', false))->toBe(0.1);
-
-        // Exercise explicit $roundTripConversion = true
-        expect(fn() => PrimitiveTypeAbstractTest::callStringToFloat('0.1', true))
+            ->toThrow(StringTypeException::class)
+            ->and(PrimitiveTypeAbstractTest::callStringToFloat('0.1', false))->toBe(0.1)
+            ->and(fn() => PrimitiveTypeAbstractTest::callStringToFloat('0.1', true))
             ->toThrow(StringTypeException::class);
     });
 
     it('covers floatToString with roundTripConversion false', function (): void {
-        // Exercise $roundTripConversion = false
-        expect(PrimitiveTypeAbstractTest::callFloatToString(0.1, false))->toBe('0.10000000000000001');
-
-        // Exercise the default value for $roundTripConversion
-        expect(PrimitiveTypeAbstractTest::callFloatToString(0.1, null))->toBe('0.10000000000000001');
-
-        // Exercise explicit $roundTripConversion = true
-        expect(PrimitiveTypeAbstractTest::callFloatToString(0.1, true))->toBe('0.10000000000000001');
+        expect(PrimitiveTypeAbstractTest::callFloatToString(0.1, false))->toBe('0.10000000000000001')
+            ->and(PrimitiveTypeAbstractTest::callFloatToString(0.1, null))->toBe('0.10000000000000001')
+            ->and(PrimitiveTypeAbstractTest::callFloatToString(0.1, true))->toBe('0.10000000000000001');
     });
+});
+
+it('cast float > decimal', function (): void {
+    expect(DecimalStandard::fromFloat(1.5)->toString())->toBe('1.5')
+        ->and(DecimalStandard::fromFloat(0.1)->toString())->toBe('0.10000000000000001')
+        ->and(DecimalStandard::fromFloat(1)->toString())->toBe('1.0')
+        ->and(DecimalStandard::fromFloat(-1)->toString())->toBe('-1.0');
+});
+
+it('rejects invalid decimal strings', function (string $label, string $value): void {
+    try {
+        DecimalStandard::fromString($value);
+        $this->fail(sprintf('Case "%s" did not throw for value "%s"', $label, $value));
+    } catch (TypeException) {
+        expect(true)->toBeTrue();
+    }
+})->with([
+    ['integer', '1'],
+    ['minus_integer', '-1'],
+    ['empty_string', ''],
+    ['space', ' '],
+    ['tab', "\t"],
+]);
+
+it('throws when creating from invalid decimal string', function (string $input) {
+    IntegerStandard::fromDecimal($input);
+})->throws(DecimalTypeException::class)->with([
+    'not a decimal' => ['42'], ]
+);
+
+describe('toString and __toString', function () {
+    // ... existing code ...
+    it('throws exception for very small floats', function (float $value) {
+        $f = FloatStandard::fromFloat($value);
+        expect(fn() => $f->toString())->toThrow(FloatTypeException::class);
+    })->with([
+        '1e-308' => [1e-308],
+        '-1e-308' => [-1e-308],
+        '5e-324' => [5e-324],
+        '-5e-324' => [-5e-324],
+    ]);
+});
+
+it('throws on malformed decimal strings', function (): void {
+    expect(fn() => new DecimalStandard(''))
+        ->toThrow(DecimalTypeException::class, 'String "" has no valid decimal value')
+        ->and(fn() => DecimalStandard::fromString(' '))
+        ->toThrow(DecimalTypeException::class, 'String " " has no valid decimal value');
+});
+
+it('tryFromMixed handles valid decimal-like values and invalid mixed inputs', function (): void {
+    $fromInt = DecimalStandard::tryFromMixed(123);
+    expect($fromInt)->toBeInstanceOf(DecimalStandard::class)
+        ->and($fromInt->value())->toBe('123.0');
+});
+
+it('covers conversions for DecimalStandard', function (): void {
+    $vInt = DecimalStandard::fromString('123');
+    expect($vInt->toInt())->toBe(123);
 });

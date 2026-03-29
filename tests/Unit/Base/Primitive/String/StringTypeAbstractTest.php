@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Base\Primitive\String;
+namespace PhpTypedValues\Tests\Unit\Base\Primitive\String;
 
 use Exception;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
@@ -16,6 +16,7 @@ use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 use Stringable;
 use Throwable;
+
 use function is_bool;
 use function is_float;
 use function is_int;

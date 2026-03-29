@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Base\Primitive\Bool;
+namespace PhpTypedValues\Tests\Unit\Bool;
 
 use PhpTypedValues\Bool\TrueStandard;
 use PhpTypedValues\Exception\Bool\BoolTypeException;

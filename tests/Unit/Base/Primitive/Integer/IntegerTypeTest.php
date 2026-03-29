@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Tests\Unit\Base\Integer;
+namespace PhpTypedValues\Tests\Unit\Base\Primitive\Integer;
 
 use const PHP_INT_MAX;
 use const PHP_INT_MIN;
