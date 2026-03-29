@@ -18,6 +18,6 @@ use PhpTypedValues\String\MariaDb\StringTinyText;
  *
  * @psalm-immutable
  */
-final readonly class TinyText extends StringTinyText
+final class TinyText extends StringTinyText
 {
 }

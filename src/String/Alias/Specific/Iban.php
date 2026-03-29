@@ -18,6 +18,6 @@ use PhpTypedValues\String\Specific\StringIban;
  *
  * @psalm-immutable
  */
-final readonly class Iban extends StringIban
+final class Iban extends StringIban
 {
 }
