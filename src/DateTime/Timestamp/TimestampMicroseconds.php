@@ -41,8 +41,9 @@ readonly class TimestampMicroseconds extends DateTimeTypeAbstract
      * Internal formatting pattern for seconds + microseconds.
      *
      * @see https://www.php.net/manual/en/datetime.format.php
+     * @var string
      */
-    public const string FORMAT = 'U.u';
+    public const FORMAT = 'U.u';
 
     protected DateTimeImmutable $value;
 
