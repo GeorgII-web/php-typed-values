@@ -10,13 +10,14 @@
 * Create a new type class in `src/{TypeName}/Alias/` or deeper directory.
 * Create a new exception class in `src/Exception/{TypeName}/` or deeper directory.
 * Create a new test class in `tests/Unit/{TypeName}/{TypeName}Test.php` file. Make 100% code/type/mutation coverage, copy the nearest tests file cases.
+* Add to the test a `covers({TypeName}::class);`
 * Type class should not contain data formatters, validate data as it is.
 * Run `docker-compose exec -ti php cs` to fix code style.
 * Run `docker-compose exec -ti php composer sca` to check Psalm static analysis.
 * Run `docker-compose exec -ti php composer test -- --filter="newTypeClassName"` to run tests.
 * Run `docker-compose exec -ti php composer type -- --filter="newTypeClassName"` to run type coverage.
 * Run `docker-compose exec -ti php composer coverage` to run code coverage.
-* Run `docker-compose exec -ti php ./vendor/bin/pest tests/Unit/"NewClassType" --mutate --covered-only --parallel --min=100` to run mutation tests.
+* Run `docker-compose exec -ti php ./vendor/bin/pest tests/Unit/"newTypeClassName" --mutate --covered-only --parallel --min=100` to run mutation tests.
 
 **"Fix psalm" prompt**
 * Run `docker-compose exec -ti php composer sca` to check Psalm static analysis.
