@@ -37,8 +37,9 @@ readonly class TimestampSeconds extends DateTimeTypeAbstract
      * DateTime::format() pattern for Unix timestamp.
      *
      * @see https://www.php.net/manual/en/datetime.format.php
+     * @var string
      */
-    public const string FORMAT = 'U';
+    public const FORMAT = 'U';
 
     protected DateTimeImmutable $value;
 
