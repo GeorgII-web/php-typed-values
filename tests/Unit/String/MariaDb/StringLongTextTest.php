@@ -8,7 +8,6 @@ use const DEBUG_BACKTRACE_IGNORE_ARGS;
 
 use Exception;
 use PhpTypedValues\Exception\String\StringTypeException;
-use PhpTypedValues\String\Alias\MariaDb\LongText;
 use PhpTypedValues\String\MariaDb\StringLongText;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use ReflectionMethod;
@@ -47,12 +46,12 @@ describe('StringLongText', function () {
     });
 
     it('Alias LongText behaves the same as StringLongText', function (): void {
-        $alias = LongText::fromString('alias');
+        $alias = StringLongText::fromString('alias');
         expect($alias->value())->toBe('alias');
     });
 
     it('jsonSerialize returns string', function (): void {
-        expect(LongText::tryFromString('hello')->jsonSerialize())->toBeString();
+        expect(StringLongText::tryFromString('hello')->jsonSerialize())->toBeString();
     });
 
     it('tryFromMixed handles valid strings, stringable, and invalid mixed inputs', function (): void {
