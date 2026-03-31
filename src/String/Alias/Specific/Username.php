@@ -18,6 +18,6 @@ use PhpTypedValues\String\Specific\StringUsername;
  *
  * @psalm-immutable
  */
-final readonly class Username extends StringUsername
+final class Username extends StringUsername
 {
 }

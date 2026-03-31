@@ -18,6 +18,6 @@ use PhpTypedValues\Undefined\UndefinedStandard;
  *
  * @psalm-immutable
  */
-final readonly class NotSet extends UndefinedStandard
+final class NotSet extends UndefinedStandard
 {
 }

@@ -11,6 +11,6 @@ use PhpTypedValues\String\Specific\StringDomain;
  *
  * @psalm-immutable
  */
-final readonly class Domain extends StringDomain
+final class Domain extends StringDomain
 {
 }

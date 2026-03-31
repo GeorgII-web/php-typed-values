@@ -18,6 +18,6 @@ use PhpTypedValues\String\Specific\StringMacAddress;
  *
  * @psalm-immutable
  */
-final readonly class MacAddress extends StringMacAddress
+final class MacAddress extends StringMacAddress
 {
 }
