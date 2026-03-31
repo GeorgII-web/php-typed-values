@@ -9,7 +9,7 @@ use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
-use PhpTypedValues\Exception\String\StringSlugException;
+use PhpTypedValues\Exception\String\SlugStringException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -42,12 +42,12 @@ readonly class StringSlug extends StringTypeAbstract
     protected string $value;
 
     /**
-     * @throws StringSlugException
+     * @throws SlugStringException
      */
     public function __construct(string $value)
     {
         if (preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $value) !== 1) {
-            throw new StringSlugException(sprintf('Expected valid slug, got "%s"', $value));
+            throw new SlugStringException(sprintf('Expected valid slug, got "%s"', $value));
         }
 
         /** @var non-empty-string $value */
@@ -55,7 +55,7 @@ readonly class StringSlug extends StringTypeAbstract
     }
 
     /**
-     * @throws StringSlugException
+     * @throws SlugStringException
      *
      * @psalm-pure
      */
@@ -65,7 +65,7 @@ readonly class StringSlug extends StringTypeAbstract
     }
 
     /**
-     * @throws StringSlugException
+     * @throws SlugStringException
      *
      * @psalm-pure
      */
@@ -76,7 +76,7 @@ readonly class StringSlug extends StringTypeAbstract
 
     /**
      * @throws FloatTypeException
-     * @throws StringSlugException
+     * @throws SlugStringException
      * @throws StringTypeException
      *
      * @psalm-pure
@@ -87,7 +87,7 @@ readonly class StringSlug extends StringTypeAbstract
     }
 
     /**
-     * @throws StringSlugException
+     * @throws SlugStringException
      *
      * @psalm-pure
      */
@@ -97,7 +97,7 @@ readonly class StringSlug extends StringTypeAbstract
     }
 
     /**
-     * @throws StringSlugException
+     * @throws SlugStringException
      *
      * @psalm-pure
      */

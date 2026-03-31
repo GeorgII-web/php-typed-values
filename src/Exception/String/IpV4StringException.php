@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Exception\String;
 
-class StringTinyTextException extends StringTypeException
+class IpV4StringException extends StringTypeException
 {
 }

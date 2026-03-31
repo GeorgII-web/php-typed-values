@@ -10,7 +10,7 @@ use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
-use PhpTypedValues\Exception\String\StringUsernameException;
+use PhpTypedValues\Exception\String\UsernameStringException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
 
@@ -38,12 +38,12 @@ readonly class StringUsername extends StringTypeAbstract
     protected string $value;
 
     /**
-     * @throws StringUsernameException
+     * @throws UsernameStringException
      */
     public function __construct(string $value)
     {
         if (preg_match('/^[a-zA-Z0-9._-]{3,30}$/', $value) !== 1) {
-            throw new StringUsernameException(sprintf('Expected valid username, got "%s"', $value));
+            throw new UsernameStringException(sprintf('Expected valid username, got "%s"', $value));
         }
 
         /** @var non-empty-string $value */
@@ -51,7 +51,7 @@ readonly class StringUsername extends StringTypeAbstract
     }
 
     /**
-     * @throws StringUsernameException
+     * @throws UsernameStringException
      *
      * @psalm-pure
      */
@@ -61,7 +61,7 @@ readonly class StringUsername extends StringTypeAbstract
     }
 
     /**
-     * @throws StringUsernameException
+     * @throws UsernameStringException
      *
      * @psalm-pure
      */
@@ -72,7 +72,7 @@ readonly class StringUsername extends StringTypeAbstract
 
     /**
      * @throws FloatTypeException
-     * @throws StringUsernameException
+     * @throws UsernameStringException
      * @throws StringTypeException
      *
      * @psalm-pure
@@ -83,7 +83,7 @@ readonly class StringUsername extends StringTypeAbstract
     }
 
     /**
-     * @throws StringUsernameException
+     * @throws UsernameStringException
      *
      * @psalm-pure
      */
@@ -93,7 +93,7 @@ readonly class StringUsername extends StringTypeAbstract
     }
 
     /**
-     * @throws StringUsernameException
+     * @throws UsernameStringException
      *
      * @psalm-pure
      */
