@@ -149,13 +149,7 @@ readonly class IntegerNegative extends IntegerTypeAbstract
      */
     public function toFloat(): float
     {
-        $toFloatValue = (float) $this->value;
-
-        if ($this->value !== (int) $toFloatValue) {
-            throw new IntegerTypeException(sprintf('Integer %s cannot be converted to float without losing precision', $this->value));
-        }
-
-        return $toFloatValue;
+        return static::intToFloat($this->value());
     }
 
     /**

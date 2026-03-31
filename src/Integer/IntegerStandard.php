@@ -127,19 +127,11 @@ readonly class IntegerStandard extends IntegerTypeAbstract
     }
 
     /**
-     * Some big integers converted to a float that can't be converted to the same int back.
-     *
      * @throws IntegerTypeException
      */
     public function toFloat(): float
     {
-        $toFloatValue = (float) $this->value;
-
-        if ($this->value !== (int) $toFloatValue) {
-            throw new IntegerTypeException(sprintf('Integer %s cannot be converted to float without losing precision', $this->value));
-        }
-
-        return $toFloatValue;
+        return static::intToFloat($this->value());
     }
 
     public function toInt(): int
