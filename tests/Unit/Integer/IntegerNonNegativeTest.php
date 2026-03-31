@@ -13,6 +13,7 @@ use Exception;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
+use PhpTypedValues\Exception\Integer\NonNegativeIntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Integer\IntegerNonNegative;
@@ -43,7 +44,7 @@ describe('IntegerNonNegative', function () {
         it('throws when creating from invalid float', function (float $input, string $exception) {
             expect(fn() => IntegerNonNegative::fromFloat($input))->toThrow($exception);
         })->with([
-            'negative' => [-1.0, IntegerTypeException::class],
+            'negative' => [-1.0, NonNegativeIntegerTypeException::class],
             'with precision' => [1.5, FloatTypeException::class],
             'INF' => [INF, FloatTypeException::class],
             'NAN' => [NAN, FloatTypeException::class],
@@ -58,7 +59,7 @@ describe('IntegerNonNegative', function () {
         ]);
 
         it('throws when creating from invalid int', function (int $input) {
-            expect(fn() => IntegerNonNegative::fromInt($input))->toThrow(IntegerTypeException::class);
+            expect(fn() => IntegerNonNegative::fromInt($input))->toThrow(NonNegativeIntegerTypeException::class);
         })->with([
             'negative' => [-1],
             'min' => [PHP_INT_MIN],
@@ -95,7 +96,7 @@ describe('IntegerNonNegative', function () {
         it('throws when creating from invalid string', function (string $input, string $exception) {
             expect(fn() => IntegerNonNegative::fromString($input))->toThrow($exception);
         })->with([
-            'negative' => ['-1', IntegerTypeException::class],
+            'negative' => ['-1', NonNegativeIntegerTypeException::class],
             'float string' => ['42.0', StringTypeException::class],
             'leading zero' => ['042', StringTypeException::class],
             'plus sign' => ['+42', StringTypeException::class],

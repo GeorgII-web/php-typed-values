@@ -19,7 +19,6 @@ use function is_bool;
 use function is_float;
 use function is_int;
 use function is_string;
-use function sprintf;
 
 /**
  * IntegerStandard (Generic integer-typed value).
