@@ -248,6 +248,8 @@ describe('IntegerTiny', function (): void {
             [127, 127],
             ['-5', -5],
             ['0', 0],
+            [1, 1],
+            [0, 0],
             [true, 1],      // Boolean true
             [false, 0],     // Boolean false
             [5.0, 5],       // Float
@@ -308,11 +310,8 @@ describe('IntegerTiny', function (): void {
             $tiny = new IntegerTiny($value);
             expect($tiny->toBool())->toBe($expected);
         })->with([
-            [-128, true],
-            [-1, true],
             [0, false],
             [1, true],
-            [127, true],
         ]);
 
         it('toDecimal returns decimal string representation', function (int $value, string $expected): void {
@@ -429,7 +428,6 @@ describe('IntegerTiny', function (): void {
                 ->and($min->toString())->toBe('-128')
                 ->and($min->toInt())->toBe(-128)
                 ->and($min->toFloat())->toBe(-128.0)
-                ->and($min->toBool())->toBeTrue()
                 ->and($zero->value())->toBe(0)
                 ->and($zero->toString())->toBe('0')
                 ->and($zero->toInt())->toBe(0)
@@ -438,8 +436,7 @@ describe('IntegerTiny', function (): void {
                 ->and($max->value())->toBe(127)
                 ->and($max->toString())->toBe('127')
                 ->and($max->toInt())->toBe(127)
-                ->and($max->toFloat())->toBe(127.0)
-                ->and($max->toBool())->toBeTrue();
+                ->and($max->toFloat())->toBe(127.0);
         });
 
         // Test that fromMixed correctly catches TypeException

@@ -10,9 +10,8 @@ use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
-use PhpTypedValues\Exception\Integer\TinyIntegerTypeException;
+use PhpTypedValues\Exception\Integer\SmallIntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
-use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
 
@@ -23,39 +22,39 @@ use function is_string;
 use function sprintf;
 
 /**
- * IntegerTiny (Database tiny integer TINYINT signed: -128..127).
+ * IntegerSmall (Database small integer SMALLINT signed: -32768..32767).
  *
- * Represents a tinyint value in the signed range -128..127, matching common
+ * Represents a smallint value in the signed range -32768..32767, matching common
  * MariaDB/MySQL semantics. Factories accept strictly validated strings and
  * native ints and enforce the bounds.
  *
  * Example
- *  - $v = IntegerTiny::fromString('-5');
+ *  - $v = IntegerSmall::fromString('-5');
  *    $v->value(); // -5
- *  - $v = IntegerTiny::fromInt(127);
- *    (string) $v; // "127"
+ *  - $v = IntegerSmall::fromInt(32767);
+ *    (string) $v; // "32767"
  *
  * @psalm-immutable
  */
-readonly class IntegerTiny extends IntegerTypeAbstract
+readonly class IntegerSmall extends IntegerTypeAbstract
 {
-    /** @var int<-128, 127> */
+    /** @var int<-32768, 32767> */
     protected int $value;
 
     /**
-     * @throws TinyIntegerTypeException
+     * @throws SmallIntegerTypeException
      */
     public function __construct(int $value)
     {
-        if ($value < -128 || $value > 127) {
-            throw new TinyIntegerTypeException(sprintf('Expected tiny integer in range -128..127, got "%d"', $value));
+        if ($value < -32768 || $value > 32767) {
+            throw new SmallIntegerTypeException(sprintf('Expected small integer in range -32768..32767, got "%d"', $value));
         }
 
         $this->value = $value;
     }
 
     /**
-     * @throws TinyIntegerTypeException
+     * @throws SmallIntegerTypeException
      *
      * @psalm-pure
      */
@@ -66,7 +65,7 @@ readonly class IntegerTiny extends IntegerTypeAbstract
 
     /**
      * @throws DecimalTypeException
-     * @throws TinyIntegerTypeException
+     * @throws SmallIntegerTypeException
      *
      * @psalm-pure
      */
@@ -77,7 +76,7 @@ readonly class IntegerTiny extends IntegerTypeAbstract
 
     /**
      * @throws FloatTypeException
-     * @throws TinyIntegerTypeException
+     * @throws SmallIntegerTypeException
      *
      * @psalm-pure
      */
@@ -87,7 +86,7 @@ readonly class IntegerTiny extends IntegerTypeAbstract
     }
 
     /**
-     * @throws TinyIntegerTypeException
+     * @throws SmallIntegerTypeException
      *
      * @psalm-pure
      */
@@ -98,7 +97,7 @@ readonly class IntegerTiny extends IntegerTypeAbstract
 
     /**
      * @throws StringTypeException
-     * @throws TinyIntegerTypeException
+     * @throws SmallIntegerTypeException
      *
      * @psalm-pure
      */
@@ -129,11 +128,11 @@ readonly class IntegerTiny extends IntegerTypeAbstract
     }
 
     /**
-     * @return int<-128, 127>
+     * @return int<-32768, 32767>
      */
     public function jsonSerialize(): int
     {
-        return $this->value();
+        return $this->value;
     }
 
     /**
@@ -161,7 +160,7 @@ readonly class IntegerTiny extends IntegerTypeAbstract
     }
 
     /**
-     * @return int<-128, 127>
+     * @return int<-32768, 32767>
      */
     public function toInt(): int
     {
@@ -258,8 +257,8 @@ readonly class IntegerTiny extends IntegerTypeAbstract
         try {
             /** @var static */
             return static::fromInt($value);
-        } catch (TypeException) {
-            // @var T $default
+        } catch (Exception) {
+            /** @var T */
             return $default;
         }
     }
@@ -284,7 +283,7 @@ readonly class IntegerTiny extends IntegerTypeAbstract
                 is_float($value) => static::fromFloat($value),
                 is_bool($value) => static::fromBool($value),
                 is_string($value) || $value instanceof Stringable => static::tryFromDecimal((string) $value, static::fromString((string) $value)),
-                default => throw new TypeException('Value cannot be cast to int'),
+                default => throw new Exception('Value cannot be cast to int'),
             };
         } catch (Exception) {
             /** @var T */
@@ -314,9 +313,6 @@ readonly class IntegerTiny extends IntegerTypeAbstract
         }
     }
 
-    /**
-     * @return int<-128, 127>
-     */
     public function value(): int
     {
         return $this->value;
