@@ -56,6 +56,10 @@ describe('StringHtmlColor', function () {
 
     it('tryFromMixed handles valid inputs and invalid mixed inputs', function (): void {
         $ok = StringHtmlColor::tryFromMixed('#abc');
+        $fromInt = StringHtmlColor::tryFromMixed(123456);
+        $fromFloat = StringHtmlColor::tryFromMixed(123456.0); // Might be tricky if it becomes 123456.0
+        $fromBool = StringHtmlColor::tryFromMixed(true); // "1" -> invalid
+
         $badFormat = StringHtmlColor::tryFromMixed('not valid!');
         $fromArray = StringHtmlColor::tryFromMixed(['#abc']);
         $fromNull = StringHtmlColor::tryFromMixed(null);
@@ -73,6 +77,9 @@ describe('StringHtmlColor', function () {
 
         expect($ok)->toBeInstanceOf(StringHtmlColor::class)
             ->and($ok->value())->toBe('#abc')
+            ->and($fromInt)->toBeInstanceOf(StringHtmlColor::class)
+            ->and($fromFloat)->toBeInstanceOf(Undefined::class)
+            ->and($fromBool)->toBeInstanceOf(Undefined::class)
             ->and($badFormat)->toBeInstanceOf(Undefined::class)
             ->and($fromArray)->toBeInstanceOf(Undefined::class)
             ->and($fromNull)->toBeInstanceOf(Undefined::class)
@@ -108,7 +115,9 @@ describe('StringHtmlColor', function () {
     it('isTypeOf works correctly', function (): void {
         $c = new StringHtmlColor('#ffffff');
         expect($c->isTypeOf(StringHtmlColor::class))->toBeTrue()
-            ->and($c->isTypeOf('SomeOtherClass'))->toBeFalse();
+            ->and($c->isTypeOf(StringHtmlColor::class, 'SomeOtherClass'))->toBeTrue()
+            ->and($c->isTypeOf('SomeOtherClass'))->toBeFalse()
+            ->and($c->isTypeOf())->toBeFalse();
     });
 });
 
@@ -124,16 +133,28 @@ describe('StringHtmlColor conversions', function () {
         // So toBool will always throw for valid HTML colors in this strict implementation.
     })->skip('Valid HTML colors are never valid boolean strings');
 
-    it('toInt and toFloat might throw due to strict validation in base class', function () {
+    it('toInt and toDecimal handle numeric hex strings, toFloat throws', function () {
         $c = new StringHtmlColor('123456');
-        expect($c->toInt())->toBe(123456);
-        // expect($c->toFloat())->toBe(123456.0); // This throws because 123456.0 -> "123456.0" != "123456"
-        expect($c->toDecimal())->toBe('123456');
+        expect($c->toInt())->toBe(123456)
+            ->and($c->toDecimal())->toBe('123456')
+            ->and(fn() => $c->toFloat())->toThrow(StringTypeException::class, 'String "123456" has no valid strict float value');
     });
+
+    it('toFloat throws on non-numeric hex color', function (string $color) {
+        $c = new StringHtmlColor($color);
+        expect(fn() => $c->toFloat())->toThrow(StringTypeException::class);
+    })->with([
+        '#ffffff',
+        '#FFF',
+        '#abc',
+        'abcdef',
+    ]);
 
     it('fromBool, fromDecimal, fromFloat, fromInt create instances', function () {
         expect(StringHtmlColor::fromInt(123456)->value())->toBe('123456')
-            ->and(StringHtmlColor::fromDecimal('123456')->value())->toBe('123456');
+            ->and(StringHtmlColor::fromDecimal('123456')->value())->toBe('123456')
+            ->and(fn() => StringHtmlColor::fromBool(true))->toThrow(HtmlColorStringTypeException::class)
+            ->and(fn() => StringHtmlColor::fromFloat(123.0))->toThrow(HtmlColorStringTypeException::class);
     });
 
     it('tryFromBool, tryFromDecimal, tryFromFloat, tryFromInt handle valid/invalid inputs', function () {
