@@ -9,6 +9,7 @@ use Exception;
 use PhpTypedValues\Base\Primitive\DateTime\DateTimeTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\DateTime\DateTimeTypeException;
+use PhpTypedValues\Exception\DateTime\TimestampTypeException;
 use PhpTypedValues\Exception\DateTime\ZoneDateTimeTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -68,7 +69,7 @@ readonly class TimestampMicroseconds extends DateTimeTypeAbstract
     /**
      * @param non-empty-string $timezone
      *
-     * @throws DateTimeTypeException
+     * @throws TimestampTypeException
      *
      * @psalm-pure
      */
@@ -82,31 +83,35 @@ readonly class TimestampMicroseconds extends DateTimeTypeAbstract
      *
      * @param non-empty-string $timezone
      *
-     * @throws DateTimeTypeException
+     * @throws TimestampTypeException
      *
      * @psalm-pure
      */
     public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE): static
     {
-        if (!ctype_digit($value)) {
-            throw new DateTimeTypeException(sprintf('Expected microseconds timestamp as digits, got "%s"', $value));
+        try {
+            if (!ctype_digit($value)) {
+                throw new DateTimeTypeException(sprintf('Expected microseconds timestamp as digits, got "%s"', $value));
+            }
+
+            // "1732445696123456" -> 1732445696 seconds, 123456 microseconds
+            $totalMicroseconds = (int) $value;
+            $seconds = intdiv($totalMicroseconds, 1000000);
+            $microseconds = $totalMicroseconds % 1000000;
+
+            // Build "seconds.microseconds" string for INTERNAL_FORMAT, e.g. "1732445696.123456"
+            $secondsWithMicro = sprintf('%d.%06d', $seconds, $microseconds);
+
+            return new static(
+                static::stringToDateTime(
+                    $secondsWithMicro,
+                    static::FORMAT,
+                    static::stringToDateTimeZone($timezone)
+                )
+            );
+        } catch (DateTimeTypeException $e) {
+            throw new TimestampTypeException($e->getMessage(), $e->getCode(), $e);
         }
-
-        // "1732445696123456" -> 1732445696 seconds, 123456 microseconds
-        $totalMicroseconds = (int) $value;
-        $seconds = intdiv($totalMicroseconds, 1000000);
-        $microseconds = $totalMicroseconds % 1000000;
-
-        // Build "seconds.microseconds" string for INTERNAL_FORMAT, e.g. "1732445696.123456"
-        $secondsWithMicro = sprintf('%d.%06d', $seconds, $microseconds);
-
-        return new static(
-            static::stringToDateTime(
-                $secondsWithMicro,
-                static::FORMAT,
-                static::stringToDateTimeZone($timezone)
-            )
-        );
     }
 
     public static function getFormat(): string
