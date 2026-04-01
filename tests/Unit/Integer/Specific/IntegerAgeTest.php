@@ -11,6 +11,8 @@ use PhpTypedValues\Exception\Integer\AgeIntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Integer\Specific\IntegerAge;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use stdClass;
+use Stringable;
 
 /**
  * @internal
@@ -230,7 +232,7 @@ describe('IntegerAge', function (): void {
             ['25', 25],
             [25.0, 25],
             [true, 1],
-            [new class implements \Stringable {
+            [new class implements Stringable {
                 public function __toString(): string
                 {
                     return '25';
@@ -246,7 +248,7 @@ describe('IntegerAge', function (): void {
 
         it('returns default for invalid Stringable value', function (): void {
             $default = new Undefined();
-            $val = new class implements \Stringable {
+            $val = new class implements Stringable {
                 public function __toString(): string
                 {
                     return 'not-an-age';
@@ -258,7 +260,7 @@ describe('IntegerAge', function (): void {
 
         it('returns default for non-stringable object', function (): void {
             $default = new Undefined();
-            $val = new \stdClass();
+            $val = new stdClass();
             $result = IntegerAge::tryFromMixed($val, $default);
             expect($result)->toBe($default);
         });
