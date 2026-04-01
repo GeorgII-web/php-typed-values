@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace PhpTypedValues\Base;
 
 use JsonSerializable;
-use PhpTypedValues\Base\Shared\IsEmptyInterface;
-use PhpTypedValues\Base\Shared\IsUndefinedInterface;
 
 /**
  * Base contract for a composite Value object
@@ -14,9 +12,19 @@ use PhpTypedValues\Base\Shared\IsUndefinedInterface;
  *
  * @psalm-immutable
  */
-interface ValueObjectInterface extends JsonSerializable, IsUndefinedInterface, IsEmptyInterface
+interface ValueObjectInterface extends JsonSerializable
 {
     public static function fromArray(array $value): static;
+
+    /**
+     * Returns true if the Object value is empty.
+     */
+    public function isEmpty(): bool;
+
+    /**
+     * Returns if the Object value is an Undefined type class.
+     */
+    public function isUndefined(): bool;
 
     public function toArray(): array;
 }

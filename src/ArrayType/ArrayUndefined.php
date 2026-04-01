@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace PhpTypedValues\ArrayType;
 
 use PhpTypedValues\Base\ArrayType\ArrayTypeAbstract;
-use PhpTypedValues\Base\ArrayType\ArrayUndefinedTypeInterface;
 use PhpTypedValues\Exception\ArrayType\UndefinedArrayTypeException;
 
 /**
@@ -15,7 +14,7 @@ use PhpTypedValues\Exception\ArrayType\UndefinedArrayTypeException;
  *
  * @psalm-immutable
  */
-readonly class ArrayUndefined extends ArrayTypeAbstract implements ArrayUndefinedTypeInterface
+readonly class ArrayUndefined extends ArrayTypeAbstract
 {
     /**
      * @throws UndefinedArrayTypeException
