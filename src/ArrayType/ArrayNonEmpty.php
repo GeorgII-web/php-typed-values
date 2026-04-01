@@ -6,7 +6,7 @@ namespace PhpTypedValues\ArrayType;
 
 use JsonSerializable;
 use PhpTypedValues\Base\ArrayType\ArrayTypeAbstract;
-use PhpTypedValues\Exception\ArrayType\ArrayTypeException;
+use PhpTypedValues\Exception\ArrayType\NonEmptyArrayTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
 use Traversable;
@@ -34,12 +34,12 @@ readonly class ArrayNonEmpty extends ArrayTypeAbstract
     /**
      * @param list<TItem> $value
      *
-     * @throws ArrayTypeException
+     * @throws NonEmptyArrayTypeException
      */
     public function __construct(array $value)
     {
         if ($value === []) {
-            throw new ArrayTypeException('Expected non-empty array');
+            throw new NonEmptyArrayTypeException('Expected non-empty array');
         }
 
         $this->value = $value;
@@ -58,7 +58,7 @@ readonly class ArrayNonEmpty extends ArrayTypeAbstract
      *
      * @param list<mixed> $value
      *
-     * @throws ArrayTypeException
+     * @throws NonEmptyArrayTypeException
      */
     public static function fromArray(array $value): static
     {
@@ -138,7 +138,7 @@ readonly class ArrayNonEmpty extends ArrayTypeAbstract
     /**
      * JSON serialization helper.
      *
-     * @throws ArrayTypeException
+     * @throws NonEmptyArrayTypeException
      *
      * @psalm-mutation-free
      */
@@ -150,7 +150,7 @@ readonly class ArrayNonEmpty extends ArrayTypeAbstract
     /**
      * @psalm-mutation-free
      *
-     * @throws ArrayTypeException
+     * @throws NonEmptyArrayTypeException
      */
     public function toArray(): array
     {
@@ -178,7 +178,7 @@ readonly class ArrayNonEmpty extends ArrayTypeAbstract
                 continue;
             }
 
-            throw new ArrayTypeException(sprintf('Item of type "%s" cannot be converted to a scalar or JSON-serializable value.', get_debug_type($item)));
+            throw new NonEmptyArrayTypeException(sprintf('Item of type "%s" cannot be converted to a scalar or JSON-serializable value.', get_debug_type($item)));
         }
 
         return $result;

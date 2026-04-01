@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use PhpTypedValues\ArrayType\ArrayNonEmpty;
 use PhpTypedValues\ArrayType\ArrayUndefined;
-use PhpTypedValues\Exception\ArrayType\ArrayTypeException;
+use PhpTypedValues\Exception\ArrayType\NonEmptyArrayTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 covers(ArrayNonEmpty::class);
@@ -12,9 +12,9 @@ covers(ArrayNonEmpty::class);
 describe('ArrayNonEmpty', function () {
     describe('Creation', function () {
         describe('Constructor', function () {
-            it('throws ArrayTypeException when constructed with an empty array', function () {
+            it('throws NonEmptyArrayTypeException when constructed with an empty array', function () {
                 new ArrayNonEmpty([]);
-            })->throws(ArrayTypeException::class, 'Expected non-empty array');
+            })->throws(NonEmptyArrayTypeException::class, 'Expected non-empty array');
 
             it('accepts a non-empty array of objects', function () {
                 $items = [new stdClass(), new stdClass()];
@@ -36,7 +36,7 @@ describe('ArrayNonEmpty', function () {
 
             it('throws exception on empty array', function () {
                 ArrayNonEmpty::fromArray([]);
-            })->throws(ArrayTypeException::class, 'Expected non-empty array');
+            })->throws(NonEmptyArrayTypeException::class, 'Expected non-empty array');
         });
 
         describe('tryFromArray', function () {
@@ -205,10 +205,10 @@ describe('ArrayNonEmpty', function () {
             expect($vo->toArray())->toBe(['json', 'scalar', 'another']);
         });
 
-        it('toArray throws ArrayTypeException for unsupported types', function () {
+        it('toArray throws NonEmptyArrayTypeException for unsupported types', function () {
             $item = new stdClass();
             $vo = new ArrayNonEmpty([$item]);
-            expect(fn() => $vo->toArray())->toThrow(ArrayTypeException::class, 'Item of type "stdClass" cannot be converted to a scalar or JSON-serializable value.');
+            expect(fn() => $vo->toArray())->toThrow(NonEmptyArrayTypeException::class, 'Item of type "stdClass" cannot be converted to a scalar or JSON-serializable value.');
         });
 
         describe('isTypeOf', function () {
