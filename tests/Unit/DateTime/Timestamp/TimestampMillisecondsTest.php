@@ -7,7 +7,6 @@ namespace PhpTypedValues\Tests\Unit\DateTime\Timestamp;
 use DateTimeImmutable;
 use Exception;
 use PhpTypedValues\DateTime\Timestamp\TimestampMilliseconds;
-use PhpTypedValues\Exception\DateTime\ReasonableRangeDateTimeTypeException;
 use PhpTypedValues\Exception\DateTime\TimestampTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;

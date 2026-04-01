@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace PhpTypedValues\Tests\Unit\Bool;
 
 use PhpTypedValues\Bool\FalseStandard;
-use PhpTypedValues\Exception\Bool\BoolTypeException;
 use PhpTypedValues\Exception\Bool\FalseBoolTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
