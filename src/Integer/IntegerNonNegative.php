@@ -10,6 +10,7 @@ use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
+use PhpTypedValues\Exception\Integer\NonNegativeIntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -41,19 +42,19 @@ readonly class IntegerNonNegative extends IntegerTypeAbstract
     protected int $value;
 
     /**
-     * @throws IntegerTypeException
+     * @throws NonNegativeIntegerTypeException
      */
     public function __construct(int $value)
     {
         if ($value < 0) {
-            throw new IntegerTypeException(sprintf('Expected non-negative integer, got "%d"', $value));
+            throw new NonNegativeIntegerTypeException(sprintf('Expected non-negative integer, got "%d"', $value));
         }
 
         $this->value = $value;
     }
 
     /**
-     * @throws IntegerTypeException
+     * @throws NonNegativeIntegerTypeException
      *
      * @psalm-pure
      */
@@ -64,7 +65,7 @@ readonly class IntegerNonNegative extends IntegerTypeAbstract
 
     /**
      * @throws DecimalTypeException
-     * @throws IntegerTypeException
+     * @throws NonNegativeIntegerTypeException
      *
      * @psalm-pure
      */
@@ -75,7 +76,7 @@ readonly class IntegerNonNegative extends IntegerTypeAbstract
 
     /**
      * @throws FloatTypeException
-     * @throws IntegerTypeException
+     * @throws NonNegativeIntegerTypeException
      *
      * @psalm-pure
      */
@@ -85,7 +86,7 @@ readonly class IntegerNonNegative extends IntegerTypeAbstract
     }
 
     /**
-     * @throws IntegerTypeException
+     * @throws NonNegativeIntegerTypeException
      *
      * @psalm-pure
      */
@@ -96,7 +97,7 @@ readonly class IntegerNonNegative extends IntegerTypeAbstract
 
     /**
      * @throws StringTypeException
-     * @throws IntegerTypeException
+     * @throws NonNegativeIntegerTypeException
      *
      * @psalm-pure
      */
@@ -149,13 +150,7 @@ readonly class IntegerNonNegative extends IntegerTypeAbstract
      */
     public function toFloat(): float
     {
-        $toFloatValue = (float) $this->value;
-
-        if ($this->value !== (int) $toFloatValue) {
-            throw new IntegerTypeException(sprintf('Integer %s cannot be converted to float without losing precision', $this->value));
-        }
-
-        return $toFloatValue;
+        return static::intToFloat($this->value());
     }
 
     /**

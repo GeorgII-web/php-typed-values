@@ -10,6 +10,7 @@ use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
+use PhpTypedValues\Exception\Integer\PositiveIntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -41,12 +42,12 @@ readonly class IntegerPositive extends IntegerTypeAbstract
     protected int $value;
 
     /**
-     * @throws IntegerTypeException
+     * @throws PositiveIntegerTypeException
      */
     public function __construct(int $value)
     {
         if ($value <= 0) {
-            throw new IntegerTypeException(sprintf('Expected positive integer, got "%d"', $value));
+            throw new PositiveIntegerTypeException(sprintf('Expected positive integer, got "%d"', $value));
         }
 
         $this->value = $value;
@@ -55,7 +56,7 @@ readonly class IntegerPositive extends IntegerTypeAbstract
     /**
      * @psalm-pure
      *
-     * @throws IntegerTypeException
+     * @throws PositiveIntegerTypeException
      */
     public static function fromBool(bool $value): static
     {
@@ -64,7 +65,7 @@ readonly class IntegerPositive extends IntegerTypeAbstract
 
     /**
      * @throws DecimalTypeException
-     * @throws IntegerTypeException
+     * @throws PositiveIntegerTypeException
      *
      * @psalm-pure
      */
@@ -75,7 +76,7 @@ readonly class IntegerPositive extends IntegerTypeAbstract
 
     /**
      * @throws FloatTypeException
-     * @throws IntegerTypeException
+     * @throws PositiveIntegerTypeException
      *
      * @psalm-pure
      */
@@ -87,7 +88,7 @@ readonly class IntegerPositive extends IntegerTypeAbstract
     /**
      * @psalm-pure
      *
-     * @throws IntegerTypeException
+     * @throws PositiveIntegerTypeException
      */
     public static function fromInt(int $value): static
     {
@@ -96,7 +97,7 @@ readonly class IntegerPositive extends IntegerTypeAbstract
 
     /**
      * @throws StringTypeException
-     * @throws IntegerTypeException
+     * @throws PositiveIntegerTypeException
      *
      * @psalm-pure
      */
@@ -149,13 +150,7 @@ readonly class IntegerPositive extends IntegerTypeAbstract
      */
     public function toFloat(): float
     {
-        $toFloatValue = (float) $this->value;
-
-        if ($this->value !== (int) $toFloatValue) {
-            throw new IntegerTypeException(sprintf('Integer %s cannot be converted to float without losing precision', $this->value));
-        }
-
-        return $toFloatValue;
+        return static::intToFloat($this->value());
     }
 
     /**

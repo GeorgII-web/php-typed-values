@@ -9,7 +9,7 @@ use const STDOUT;
 use Exception;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
-use PhpTypedValues\Exception\String\StringUsernameException;
+use PhpTypedValues\Exception\String\UsernameStringException;
 use PhpTypedValues\String\Specific\StringUsername;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
@@ -35,7 +35,7 @@ describe('StringUsername', function () {
 
         it('throws StringUsernameException for invalid username', function (string $invalidUsername): void {
             expect(fn() => StringUsername::fromString($invalidUsername))
-                ->toThrow(StringUsernameException::class, "Expected valid username, got \"{$invalidUsername}\"");
+                ->toThrow(UsernameStringException::class, "Expected valid username, got \"{$invalidUsername}\"");
         })->with([
             'ab', // too short
             'this_is_a_very_long_username_that_exceeds_thirty_characters', // too long
@@ -58,19 +58,19 @@ describe('StringUsername', function () {
 
         it('throws StringUsernameException from fromInt with invalid value', function (): void {
             expect(fn() => StringUsername::fromInt(12)) // too short "12"
-                ->toThrow(StringUsernameException::class);
+                ->toThrow(UsernameStringException::class);
         });
 
         it('throws StringUsernameException from fromDecimal', function (string $invalid): void {
             expect(fn() => StringUsername::fromDecimal($invalid))
-                ->toThrow(StringUsernameException::class);
+                ->toThrow(UsernameStringException::class);
         })->with([
             '0.123456789012345678901234567890', // 32 chars
         ]);
 
         it('throws StringUsernameException from fromFloat', function (float $invalid): void {
             expect(fn() => StringUsername::fromFloat($invalid))
-                ->toThrow(StringUsernameException::class);
+                ->toThrow(UsernameStringException::class);
         })->with([
             1.23456789012345678901234567890e30, // very long
         ]);

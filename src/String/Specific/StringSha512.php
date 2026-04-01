@@ -4,54 +4,50 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\String\Specific;
 
-use Exception;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
+use PhpTypedValues\Exception\String\Sha512StringTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
-use PhpTypedValues\Exception\String\UsernameStringException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
 
-use function is_bool;
-use function is_float;
-use function is_int;
-use function is_string;
+use function is_scalar;
 use function preg_match;
 use function sprintf;
 
 /**
- * Validates that the string consists only of alphanumeric characters,
- * dots, underscores, and hyphens, and is between 3 and 30 characters long.
+ * SHA-512 hash string.
  *
- * Example
- *  - $u = StringUsername::fromString('john_doe');
- *    (string) $u; // "john_doe"
- *  - StringUsername::fromString('hi'); // throws StringUsernameException (too short)
+ * Validates that the string is a valid 128-character hexadecimal SHA-512 hash.
  *
  * @psalm-immutable
  */
-readonly class StringUsername extends StringTypeAbstract
+readonly class StringSha512 extends StringTypeAbstract
 {
     /** @var non-empty-string */
     protected string $value;
 
     /**
-     * @throws UsernameStringException
+     * @throws Sha512StringTypeException
      */
     public function __construct(string $value)
     {
-        if (preg_match('/^[a-zA-Z0-9._-]{3,30}$/', $value) !== 1) {
-            throw new UsernameStringException(sprintf('Expected valid username, got "%s"', $value));
+        if ($value === '') {
+            throw new Sha512StringTypeException('Expected non-empty SHA-512 hash');
         }
 
-        /** @var non-empty-string $value */
+        if (!preg_match('/^[a-f0-9]{128}$/i', $value)) {
+            throw new Sha512StringTypeException(sprintf('Expected valid SHA-512 hash, got "%s"', $value));
+        }
+
         $this->value = $value;
     }
 
     /**
-     * @throws UsernameStringException
+     * @throws StringTypeException
+     * @throws Sha512StringTypeException
      *
      * @psalm-pure
      */
@@ -61,7 +57,7 @@ readonly class StringUsername extends StringTypeAbstract
     }
 
     /**
-     * @throws UsernameStringException
+     * @throws Sha512StringTypeException
      *
      * @psalm-pure
      */
@@ -72,7 +68,7 @@ readonly class StringUsername extends StringTypeAbstract
 
     /**
      * @throws FloatTypeException
-     * @throws UsernameStringException
+     * @throws Sha512StringTypeException
      * @throws StringTypeException
      *
      * @psalm-pure
@@ -83,7 +79,7 @@ readonly class StringUsername extends StringTypeAbstract
     }
 
     /**
-     * @throws UsernameStringException
+     * @throws Sha512StringTypeException
      *
      * @psalm-pure
      */
@@ -93,7 +89,7 @@ readonly class StringUsername extends StringTypeAbstract
     }
 
     /**
-     * @throws UsernameStringException
+     * @throws Sha512StringTypeException
      *
      * @psalm-pure
      */
@@ -107,6 +103,9 @@ readonly class StringUsername extends StringTypeAbstract
         return false;
     }
 
+    /**
+     * @psalm-assert-if-true static $this
+     */
     public function isTypeOf(string ...$classNames): bool
     {
         foreach ($classNames as $className) {
@@ -125,7 +124,7 @@ readonly class StringUsername extends StringTypeAbstract
 
     public function jsonSerialize(): string
     {
-        return $this->toString();
+        return $this->value;
     }
 
     /**
@@ -133,7 +132,7 @@ readonly class StringUsername extends StringTypeAbstract
      */
     public function toBool(): bool
     {
-        return static::stringToBool($this->value());
+        return static::stringToBool($this->value);
     }
 
     /**
@@ -141,15 +140,16 @@ readonly class StringUsername extends StringTypeAbstract
      */
     public function toDecimal(): string
     {
-        return static::stringToDecimal($this->value());
+        return static::stringToDecimal($this->value);
     }
 
     /**
+     * @throws StringTypeException
      * @throws FloatTypeException
      */
     public function toFloat(): float
     {
-        return static::stringToFloat($this->value());
+        return static::stringToFloat($this->value);
     }
 
     /**
@@ -157,7 +157,7 @@ readonly class StringUsername extends StringTypeAbstract
      */
     public function toInt(): int
     {
-        return static::stringToInt($this->value());
+        return static::stringToInt($this->value);
     }
 
     public function toString(): string
@@ -172,7 +172,7 @@ readonly class StringUsername extends StringTypeAbstract
     {
         try {
             return static::fromBool($value);
-        } catch (Exception) {
+        } catch (Sha512StringTypeException|StringTypeException) {
             return $default;
         }
     }
@@ -184,7 +184,7 @@ readonly class StringUsername extends StringTypeAbstract
     {
         try {
             return static::fromDecimal($value);
-        } catch (Exception) {
+        } catch (Sha512StringTypeException) {
             return $default;
         }
     }
@@ -196,7 +196,7 @@ readonly class StringUsername extends StringTypeAbstract
     {
         try {
             return static::fromFloat($value);
-        } catch (Exception) {
+        } catch (FloatTypeException|Sha512StringTypeException|StringTypeException) {
             return $default;
         }
     }
@@ -208,7 +208,7 @@ readonly class StringUsername extends StringTypeAbstract
     {
         try {
             return static::fromInt($value);
-        } catch (Exception) {
+        } catch (Sha512StringTypeException) {
             return $default;
         }
     }
@@ -218,18 +218,15 @@ readonly class StringUsername extends StringTypeAbstract
      */
     public static function tryFromMixed(mixed $value, PrimitiveTypeAbstract $default = new Undefined()): PrimitiveTypeAbstract|static
     {
-        if ($value === null) {
-            return static::tryFromString('null', $default);
+        if (is_scalar($value) || $value instanceof Stringable) {
+            try {
+                return static::fromString((string) $value);
+            } catch (Sha512StringTypeException) {
+                return $default;
+            }
         }
 
-        return match (true) {
-            is_string($value) => static::tryFromString($value, $default),
-            is_int($value) => static::tryFromInt($value, $default),
-            is_float($value) => static::tryFromFloat($value, $default),
-            is_bool($value) => static::tryFromBool($value, $default),
-            $value instanceof Stringable => static::tryFromString((string) $value, $default),
-            default => $default,
-        };
+        return $default;
     }
 
     /**
@@ -239,11 +236,14 @@ readonly class StringUsername extends StringTypeAbstract
     {
         try {
             return static::fromString($value);
-        } catch (Exception) {
+        } catch (Sha512StringTypeException) {
             return $default;
         }
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function value(): string
     {
         return $this->value;

@@ -62,24 +62,24 @@
       "./vendor/bin/rector process --config rector/toPhp7.4.php --dry-run"
     ],
     "test": [
-      "./vendor/bin/pest --parallel"
+      "echo \"Test\" && ./vendor/bin/pest --parallel"
     ],
     "type": [
-      "./vendor/bin/pest --type-coverage --min=100 --parallel"
+      "echo \"Type\" && ./vendor/bin/pest --type-coverage --min=100 --parallel"
     ],
     "coverage": [
-      "./vendor/bin/pest --coverage --min=100 --parallel"
+      "echo \"Coverage\" && ./vendor/bin/pest --coverage --min=100 --parallel"
     ],
     "mutate": [
-      "./vendor/bin/pest tests/Unit/String --mutate --covered-only --parallel --min=100",
-      "./vendor/bin/pest tests/Unit/Integer --mutate --covered-only --parallel --min=100",
-      "./vendor/bin/pest tests/Unit/DateTime --mutate --covered-only --parallel --min=100",
-      "./vendor/bin/pest tests/Unit/Decimal --mutate --covered-only --parallel --min=100",
-      "./vendor/bin/pest tests/Unit/Float --mutate --covered-only --parallel --min=100",
-      "./vendor/bin/pest tests/Unit/Base --mutate --covered-only --parallel --min=100",
-      "./vendor/bin/pest tests/Unit/Array --mutate --covered-only --parallel --min=100",
-      "./vendor/bin/pest tests/Unit/Bool --mutate --covered-only --parallel --min=100",
-      "./vendor/bin/pest tests/Unit/Undefined --mutate --covered-only --parallel --min=100"
+      "echo \"String\" && ./vendor/bin/pest tests/Unit/String --mutate --covered-only --parallel --min=100",
+      "echo \"Integer\" && ./vendor/bin/pest tests/Unit/Integer --mutate --covered-only --parallel --min=100",
+      "echo \"DateTime\" && ./vendor/bin/pest tests/Unit/DateTime --mutate --covered-only --parallel --min=100",
+      "echo \"Decimal\" && ./vendor/bin/pest tests/Unit/Decimal --mutate --covered-only --parallel --min=100",
+      "echo \"Float\" && ./vendor/bin/pest tests/Unit/Float --mutate --covered-only --parallel --min=100",
+      "echo \"Base\" && ./vendor/bin/pest tests/Unit/Base --mutate --covered-only --parallel --min=100",
+      "echo \"Array\" && ./vendor/bin/pest tests/Unit/Array --mutate --covered-only --parallel --min=100",
+      "echo \"Bool\" && ./vendor/bin/pest tests/Unit/Bool --mutate --covered-only --parallel --min=100",
+      "echo \"Undefined\" && ./vendor/bin/pest tests/Unit/Undefined --mutate --covered-only --parallel --min=100"
     ]
   },
   "config": {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
-use PhpTypedValues\Exception\Integer\IntegerTypeException;
+use PhpTypedValues\Exception\Integer\WeekDayIntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Integer\Specific\IntegerWeekDay;
@@ -25,7 +25,7 @@ describe('IntegerWeekDay', function (): void {
 
         it('throws for values outside 1-7', function (int $invalidValue): void {
             expect(fn() => new IntegerWeekDay($invalidValue))
-                ->toThrow(IntegerTypeException::class, 'Expected value between 1-7');
+                ->toThrow(WeekDayIntegerTypeException::class, 'Expected value between 1-7');
         })->with([0, 8, -1, 10]);
     });
 
@@ -37,7 +37,7 @@ describe('IntegerWeekDay', function (): void {
 
         it('throws for values outside 1-7', function (int $invalidValue): void {
             expect(fn() => IntegerWeekDay::fromInt($invalidValue))
-                ->toThrow(IntegerTypeException::class, 'Expected value between 1-7');
+                ->toThrow(WeekDayIntegerTypeException::class, 'Expected value between 1-7');
         })->with([0, 8, -1, 10]);
     });
 
@@ -50,9 +50,9 @@ describe('IntegerWeekDay', function (): void {
             ['7', 7],
         ]);
 
-        it('throws IntegerTypeException for values outside 1-7', function (string $invalidValue): void {
+        it('throws WeekDayIntegerTypeException for values outside 1-7', function (string $invalidValue): void {
             expect(fn() => IntegerWeekDay::fromString($invalidValue))
-                ->toThrow(IntegerTypeException::class, 'Expected value between 1-7');
+                ->toThrow(WeekDayIntegerTypeException::class, 'Expected value between 1-7');
         })->with(['0', '8', '-1', '10']);
 
         it('throws for non-integer strings', function (string $invalidValue, string $exceptionClass): void {
@@ -79,7 +79,7 @@ describe('IntegerWeekDay', function (): void {
 
         it('throws from false', function (): void {
             expect(fn() => IntegerWeekDay::fromBool(false))
-                ->toThrow(IntegerTypeException::class, 'Expected value between 1-7, got "0"');
+                ->toThrow(WeekDayIntegerTypeException::class, 'Expected value between 1-7, got "0"');
         });
     });
 
@@ -95,7 +95,7 @@ describe('IntegerWeekDay', function (): void {
 
         it('throws for float values outside 1-7', function (float $invalidValue): void {
             expect(fn() => IntegerWeekDay::fromFloat($invalidValue))
-                ->toThrow(IntegerTypeException::class, 'Expected value between 1-7');
+                ->toThrow(WeekDayIntegerTypeException::class, 'Expected value between 1-7');
         })->with([0.0, 8.0, -1.0]);
 
         it('throws FloatTypeException for non-integer floats', function (): void {
@@ -141,7 +141,7 @@ describe('IntegerWeekDay', function (): void {
 
         it('throws for invalid weekday labels', function (string $invalidLabel): void {
             expect(fn() => IntegerWeekDay::fromLabel($invalidLabel))
-                ->toThrow(IntegerTypeException::class, 'Invalid weekday label');
+                ->toThrow(WeekDayIntegerTypeException::class, 'Expected week day label');
         })->with([
             'monday',       // Lowercase
             'Mon',          // Abbreviation

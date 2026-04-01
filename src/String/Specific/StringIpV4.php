@@ -12,7 +12,7 @@ use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
-use PhpTypedValues\Exception\String\StringIpV4Exception;
+use PhpTypedValues\Exception\String\IpV4StringException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -42,19 +42,19 @@ readonly class StringIpV4 extends StringTypeAbstract
     protected string $value;
 
     /**
-     * @throws StringIpV4Exception
+     * @throws IpV4StringException
      */
     public function __construct(string $value)
     {
         if (filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false) {
-            throw new StringIpV4Exception(sprintf('Invalid IPv4 address: %s', $value));
+            throw new IpV4StringException(sprintf('Invalid IPv4 address: %s', $value));
         }
 
         $this->value = $value;
     }
 
     /**
-     * @throws StringIpV4Exception
+     * @throws IpV4StringException
      *
      * @psalm-pure
      */
@@ -64,7 +64,7 @@ readonly class StringIpV4 extends StringTypeAbstract
     }
 
     /**
-     * @throws StringIpV4Exception
+     * @throws IpV4StringException
      *
      * @psalm-pure
      */
@@ -75,7 +75,7 @@ readonly class StringIpV4 extends StringTypeAbstract
 
     /**
      * @throws FloatTypeException
-     * @throws StringIpV4Exception
+     * @throws IpV4StringException
      * @throws StringTypeException
      *
      * @psalm-pure
@@ -86,7 +86,7 @@ readonly class StringIpV4 extends StringTypeAbstract
     }
 
     /**
-     * @throws StringIpV4Exception
+     * @throws IpV4StringException
      *
      * @psalm-pure
      */
@@ -96,7 +96,7 @@ readonly class StringIpV4 extends StringTypeAbstract
     }
 
     /**
-     * @throws StringIpV4Exception
+     * @throws IpV4StringException
      *
      * @psalm-pure
      */

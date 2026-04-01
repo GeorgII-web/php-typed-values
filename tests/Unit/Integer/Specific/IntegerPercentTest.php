@@ -13,6 +13,7 @@ use Exception;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
+use PhpTypedValues\Exception\Integer\PercentIntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Integer\Specific\IntegerPercent;
@@ -41,8 +42,8 @@ describe('IntegerPercent', function () {
         it('throws when creating from invalid float', function (float $input, string $exception, string $message) {
             expect(fn() => IntegerPercent::fromFloat($input))->toThrow($exception, $message);
         })->with([
-            'negative' => [-1.0, IntegerTypeException::class, 'Expected percent integer, got "-1"'],
-            'too large' => [101.0, IntegerTypeException::class, 'Expected percent integer, got "101"'],
+            'negative' => [-1.0, PercentIntegerTypeException::class, 'Expected percent integer, got "-1"'],
+            'too large' => [101.0, PercentIntegerTypeException::class, 'Expected percent integer, got "101"'],
             'with precision' => [1.5, FloatTypeException::class, 'Float "1.5" has no valid strict int value'],
             'INF' => [INF, FloatTypeException::class, 'Float "INF" has no valid strict int value'],
             'NAN' => [NAN, FloatTypeException::class, 'Float "NAN" has no valid strict int value'],
@@ -58,7 +59,7 @@ describe('IntegerPercent', function () {
         ]);
 
         it('throws when creating from invalid int', function (int $input) {
-            expect(fn() => IntegerPercent::fromInt($input))->toThrow(IntegerTypeException::class, "Expected percent integer, got \"{$input}\"");
+            expect(fn() => IntegerPercent::fromInt($input))->toThrow(PercentIntegerTypeException::class, "Expected percent integer, got \"{$input}\"");
         })->with([
             'negative' => [-1],
             'too large' => [101],
@@ -99,8 +100,8 @@ describe('IntegerPercent', function () {
         it('throws when creating from invalid string', function (string $input, string $exception) {
             expect(fn() => IntegerPercent::fromString($input))->toThrow($exception);
         })->with([
-            'negative' => ['-1', IntegerTypeException::class],
-            'too large' => ['101', IntegerTypeException::class],
+            'negative' => ['-1', PercentIntegerTypeException::class],
+            'too large' => ['101', PercentIntegerTypeException::class],
             'float string' => ['50.0', StringTypeException::class],
             'leading zero' => ['050', StringTypeException::class],
             'plus sign' => ['+50', StringTypeException::class],
@@ -366,7 +367,7 @@ describe('IntegerPercent', function () {
         ]);
 
         it('throws for values just outside boundaries', function (int $value) {
-            expect(fn() => new IntegerPercent($value))->toThrow(IntegerTypeException::class);
+            expect(fn() => new IntegerPercent($value))->toThrow(PercentIntegerTypeException::class);
         })->with([
             'below min' => [-1],
             'above max' => [101],

@@ -8,7 +8,7 @@ use const STDOUT;
 
 use Exception;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
-use PhpTypedValues\Exception\String\StringSlugException;
+use PhpTypedValues\Exception\String\SlugStringException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\String\Specific\StringSlug;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -34,7 +34,7 @@ describe('StringSlug', function () {
 
         it('throws StringSlugException for invalid slug', function (string $invalidSlug): void {
             expect(fn() => StringSlug::fromString($invalidSlug))
-                ->toThrow(StringSlugException::class, "Expected valid slug, got \"{$invalidSlug}\"");
+                ->toThrow(SlugStringException::class, "Expected valid slug, got \"{$invalidSlug}\"");
         })->with([
             '-starts-with-hyphen',
             'ends-with-hyphen-',
@@ -58,17 +58,17 @@ describe('StringSlug', function () {
 
         it('throws StringSlugException from fromInt with invalid value', function (): void {
             expect(fn() => StringSlug::fromInt(-123))
-                ->toThrow(StringSlugException::class);
+                ->toThrow(SlugStringException::class);
         });
 
         it('throws StringSlugException from fromDecimal', function (): void {
             expect(fn() => StringSlug::fromDecimal('1.23'))
-                ->toThrow(StringSlugException::class);
+                ->toThrow(SlugStringException::class);
         });
 
         it('throws StringSlugException from fromFloat', function (): void {
             expect(fn() => StringSlug::fromFloat(1.23))
-                ->toThrow(StringSlugException::class);
+                ->toThrow(SlugStringException::class);
         });
     });
 

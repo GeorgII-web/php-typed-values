@@ -6,7 +6,6 @@ namespace PhpTypedValues\Tests\Unit\String\MariaDb;
 
 use Exception;
 use PhpTypedValues\Exception\String\StringTypeException;
-use PhpTypedValues\String\Alias\MariaDb\MediumText;
 use PhpTypedValues\String\MariaDb\StringMediumText;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
@@ -62,12 +61,12 @@ describe('StringMediumText', function () {
     });
 
     it('Alias MediumText behaves the same as StringMediumText', function (): void {
-        $alias = MediumText::fromString('alias');
+        $alias = StringMediumText::fromString('alias');
         expect($alias->value())->toBe('alias');
     });
 
     it('jsonSerialize returns string', function (): void {
-        expect(MediumText::tryFromString('hello')->jsonSerialize())->toBeString();
+        expect(StringMediumText::tryFromString('hello')->jsonSerialize())->toBeString();
     });
 
     it('tryFromMixed handles valid/too-long strings, stringable, and invalid mixed inputs', function (): void {

@@ -7,7 +7,7 @@ namespace PhpTypedValues\Tests\Unit\String\Specific;
 use const STDOUT;
 
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
-use PhpTypedValues\Exception\String\StringIpV6Exception;
+use PhpTypedValues\Exception\String\IpV6StringException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\String\Specific\StringIpV6;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -33,7 +33,7 @@ describe('StringIpV6', function () {
 
         it('throws StringIpV6Exception for invalid IPv6 address', function (string $invalidIp): void {
             expect(fn() => StringIpV6::fromString($invalidIp))
-                ->toThrow(StringIpV6Exception::class, "Invalid IPv6 address: {$invalidIp}");
+                ->toThrow(IpV6StringException::class, "Invalid IPv6 address: {$invalidIp}");
         })->with([
             '127.0.0.1', // IPv4 is not IPv6
             '2001:db8:g::1',
@@ -46,22 +46,22 @@ describe('StringIpV6', function () {
     describe('Factory methods', function () {
         it('throws StringIpV6Exception from fromBool', function (): void {
             expect(fn() => StringIpV6::fromBool(true))
-                ->toThrow(StringIpV6Exception::class);
+                ->toThrow(IpV6StringException::class);
         });
 
         it('throws StringIpV6Exception from fromInt', function (): void {
             expect(fn() => StringIpV6::fromInt(123))
-                ->toThrow(StringIpV6Exception::class);
+                ->toThrow(IpV6StringException::class);
         });
 
         it('throws StringIpV6Exception from fromDecimal', function (): void {
             expect(fn() => StringIpV6::fromDecimal('1.23'))
-                ->toThrow(StringIpV6Exception::class);
+                ->toThrow(IpV6StringException::class);
         });
 
         it('throws StringIpV6Exception from fromFloat', function (): void {
             expect(fn() => StringIpV6::fromFloat(123.45))
-                ->toThrow(StringIpV6Exception::class);
+                ->toThrow(IpV6StringException::class);
         });
     });
 

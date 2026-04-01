@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace PhpTypedValues\Tests\Unit\String\MariaDb;
 
 use Exception;
-use PhpTypedValues\Exception\String\StringTinyTextException;
+use PhpTypedValues\Exception\String\TinyTextStringException;
 use PhpTypedValues\String\MariaDb\StringTinyText;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -28,7 +28,7 @@ describe('StringTinyText', function () {
     it('throws on 256 ASCII characters (above boundary)', function (): void {
         $str = str_repeat('b', 256);
         expect(fn() => new StringTinyText($str))
-            ->toThrow(StringTinyTextException::class, 'String is too long, max 255 chars allowed');
+            ->toThrow(TinyTextStringException::class, 'String is too long, max 255 chars allowed');
     });
 
     it('accepts 255 multibyte characters (emoji) counted by mb_strlen', function (): void {
@@ -41,7 +41,7 @@ describe('StringTinyText', function () {
     it('throws on 256 multibyte characters (emoji)', function (): void {
         $str = str_repeat('🙂', 256);
         expect(fn() => StringTinyText::fromString($str))
-            ->toThrow(StringTinyTextException::class, 'String is too long, max 255 chars allowed');
+            ->toThrow(TinyTextStringException::class, 'String is too long, max 255 chars allowed');
     });
 
     it('StringTinyText::tryFromString returns value when length <= 255', function (): void {

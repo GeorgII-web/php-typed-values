@@ -9,7 +9,7 @@ use PhpTypedValues\Base\Primitive\Integer\IntegerTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
-use PhpTypedValues\Exception\Integer\IntegerTypeException;
+use PhpTypedValues\Exception\Integer\TinyIntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -42,19 +42,19 @@ readonly class IntegerTiny extends IntegerTypeAbstract
     protected int $value;
 
     /**
-     * @throws IntegerTypeException
+     * @throws TinyIntegerTypeException
      */
     public function __construct(int $value)
     {
         if ($value < -128 || $value > 127) {
-            throw new IntegerTypeException(sprintf('Expected tiny integer in range -128..127, got "%d"', $value));
+            throw new TinyIntegerTypeException(sprintf('Expected tiny integer in range -128..127, got "%d"', $value));
         }
 
         $this->value = $value;
     }
 
     /**
-     * @throws IntegerTypeException
+     * @throws TinyIntegerTypeException
      *
      * @psalm-pure
      */
@@ -65,7 +65,7 @@ readonly class IntegerTiny extends IntegerTypeAbstract
 
     /**
      * @throws DecimalTypeException
-     * @throws IntegerTypeException
+     * @throws TinyIntegerTypeException
      *
      * @psalm-pure
      */
@@ -76,7 +76,7 @@ readonly class IntegerTiny extends IntegerTypeAbstract
 
     /**
      * @throws FloatTypeException
-     * @throws IntegerTypeException
+     * @throws TinyIntegerTypeException
      *
      * @psalm-pure
      */
@@ -86,7 +86,7 @@ readonly class IntegerTiny extends IntegerTypeAbstract
     }
 
     /**
-     * @throws IntegerTypeException
+     * @throws TinyIntegerTypeException
      *
      * @psalm-pure
      */
@@ -97,7 +97,7 @@ readonly class IntegerTiny extends IntegerTypeAbstract
 
     /**
      * @throws StringTypeException
-     * @throws IntegerTypeException
+     * @throws TinyIntegerTypeException
      *
      * @psalm-pure
      */

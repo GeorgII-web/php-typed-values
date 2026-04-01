@@ -8,7 +8,6 @@ use Exception;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\String\CountryCodeStringTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
-use PhpTypedValues\String\Alias\Specific\CountryCode;
 use PhpTypedValues\String\Specific\StringCountryCode;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
@@ -85,7 +84,7 @@ describe('StringCountryCode', function () {
         ];
 
         foreach ($codes as $code) {
-            expect(CountryCode::fromString($code)->value())->toBe($code);
+            expect(StringCountryCode::fromString($code)->value())->toBe($code);
         }
     });
 

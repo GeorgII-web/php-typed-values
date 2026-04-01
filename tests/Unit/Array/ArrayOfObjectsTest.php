@@ -5,8 +5,8 @@ declare(strict_types=1);
 use PhpTypedValues\ArrayType\ArrayOfObjects;
 use PhpTypedValues\ArrayType\ArrayUndefined;
 use PhpTypedValues\Exception\ArrayType\ArrayTypeException;
-use PhpTypedValues\Float\Alias\Positive;
 use PhpTypedValues\Integer\IntegerNonNegative;
+use PhpTypedValues\Integer\IntegerPositive;
 use PhpTypedValues\String\StringNonEmpty;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
@@ -39,7 +39,7 @@ describe('ArrayOfObjects', function () {
                 $obj2 = new class {
                     public string $test = 'value';
                 };
-                $obj3 = Positive::fromFloat(5.0);
+                $obj3 = IntegerPositive::fromFloat(5.0);
 
                 $array = ArrayOfObjects::fromItems($obj1, $obj2, $obj3);
 
@@ -125,7 +125,7 @@ describe('ArrayOfObjects', function () {
                     public string $prop = 'value';
                 },
                 new Undefined(),
-                Positive::fromFloat(1.0),
+                IntegerPositive::fromFloat(1.0),
             ];
 
             $array = new ArrayOfObjects($items);
@@ -163,7 +163,7 @@ describe('ArrayOfObjects', function () {
 
     describe('Instance Methods', function () {
         it('value() returns internal array', function () {
-            $original = [new stdClass(), new Undefined(), Positive::fromFloat(2.0)];
+            $original = [new stdClass(), new Undefined(), IntegerPositive::fromFloat(2.0)];
             $array = new ArrayOfObjects($original);
 
             expect($array->value())->toBe($original)

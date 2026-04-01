@@ -5,6 +5,7 @@ declare(strict_types=1);
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
+use PhpTypedValues\Exception\Integer\NegativeIntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Integer\IntegerNegative;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -14,7 +15,7 @@ covers(IntegerNegative::class);
 describe('IntegerNegative', function () {
     describe('Factories', function () {
         it('creates from bool throws', function (bool $input) {
-            expect(fn() => IntegerNegative::fromBool($input))->toThrow(IntegerTypeException::class);
+            expect(fn() => IntegerNegative::fromBool($input))->toThrow(NegativeIntegerTypeException::class);
         })->with([
             'true' => [true],
             'false' => [false],
@@ -29,8 +30,8 @@ describe('IntegerNegative', function () {
         it('throws when creating from invalid float', function (float $input, string $exception) {
             expect(fn() => IntegerNegative::fromFloat($input))->toThrow($exception);
         })->with([
-            'zero' => [0.0, IntegerTypeException::class],
-            'positive' => [42.0, IntegerTypeException::class],
+            'zero' => [0.0, NegativeIntegerTypeException::class],
+            'positive' => [42.0, NegativeIntegerTypeException::class],
             'with precision' => [-1.5, FloatTypeException::class],
             'INF' => [\INF, FloatTypeException::class],
             'NAN' => [\NAN, FloatTypeException::class],
@@ -44,7 +45,7 @@ describe('IntegerNegative', function () {
         ]);
 
         it('throws when creating from invalid int', function (int $input) {
-            expect(fn() => IntegerNegative::fromInt($input))->toThrow(IntegerTypeException::class);
+            expect(fn() => IntegerNegative::fromInt($input))->toThrow(NegativeIntegerTypeException::class);
         })->with([
             'zero' => [0],
             'positive' => [1],
@@ -67,8 +68,8 @@ describe('IntegerNegative', function () {
         it('throws when creating from invalid decimal string', function (string $input, string $exception) {
             expect(fn() => IntegerNegative::fromDecimal($input))->toThrow($exception);
         })->with([
-            'zero' => ['0.0', IntegerTypeException::class],
-            'positive' => ['42.0', IntegerTypeException::class],
+            'zero' => ['0.0', NegativeIntegerTypeException::class],
+            'positive' => ['42.0', NegativeIntegerTypeException::class],
             'not a decimal' => ['-42', DecimalTypeException::class],
             'leading zero' => ['-042.0', DecimalTypeException::class],
             'empty' => ['', DecimalTypeException::class],
@@ -79,8 +80,8 @@ describe('IntegerNegative', function () {
         it('throws when creating from invalid string', function (string $input, string $exception) {
             expect(fn() => IntegerNegative::fromString($input))->toThrow($exception);
         })->with([
-            'zero' => ['0', IntegerTypeException::class],
-            'positive' => ['1', IntegerTypeException::class],
+            'zero' => ['0', NegativeIntegerTypeException::class],
+            'positive' => ['1', NegativeIntegerTypeException::class],
             'float string' => ['-42.0', StringTypeException::class],
             'leading zero' => ['-042', StringTypeException::class],
             'empty' => ['', StringTypeException::class],

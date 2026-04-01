@@ -7,7 +7,7 @@ namespace PhpTypedValues\Tests\Unit\String\Specific;
 use const STDOUT;
 
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
-use PhpTypedValues\Exception\String\StringIpV4Exception;
+use PhpTypedValues\Exception\String\IpV4StringException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\String\Specific\StringIpV4;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -33,7 +33,7 @@ describe('StringIpV4', function () {
 
         it('throws StringIpV4Exception for invalid IPv4 address', function (string $invalidIp): void {
             expect(fn() => StringIpV4::fromString($invalidIp))
-                ->toThrow(StringIpV4Exception::class, "Invalid IPv4 address: {$invalidIp}");
+                ->toThrow(IpV4StringException::class, "Invalid IPv4 address: {$invalidIp}");
         })->with([
             '127.0.0',
             '256.256.256.256',
@@ -47,22 +47,22 @@ describe('StringIpV4', function () {
     describe('Factory methods', function () {
         it('throws StringIpV4Exception from fromBool', function (): void {
             expect(fn() => StringIpV4::fromBool(true))
-                ->toThrow(StringIpV4Exception::class);
+                ->toThrow(IpV4StringException::class);
         });
 
         it('throws StringIpV4Exception from fromInt', function (): void {
             expect(fn() => StringIpV4::fromInt(127001))
-                ->toThrow(StringIpV4Exception::class);
+                ->toThrow(IpV4StringException::class);
         });
 
         it('throws StringIpV4Exception from fromDecimal', function (): void {
             expect(fn() => StringIpV4::fromDecimal('1.23'))
-                ->toThrow(StringIpV4Exception::class);
+                ->toThrow(IpV4StringException::class);
         });
 
         it('throws StringIpV4Exception from fromFloat', function (): void {
             expect(fn() => StringIpV4::fromFloat(123.45))
-                ->toThrow(StringIpV4Exception::class);
+                ->toThrow(IpV4StringException::class);
         });
     });
 

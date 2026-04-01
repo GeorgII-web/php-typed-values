@@ -10,6 +10,7 @@ use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
+use PhpTypedValues\Exception\Integer\PercentIntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -41,12 +42,12 @@ readonly class IntegerPercent extends IntegerTypeAbstract
     protected int $value;
 
     /**
-     * @throws IntegerTypeException
+     * @throws PercentIntegerTypeException
      */
     public function __construct(int $value)
     {
         if ($value < 0 || $value > 100) {
-            throw new IntegerTypeException(sprintf('Expected percent integer, got "%d"', $value));
+            throw new PercentIntegerTypeException(sprintf('Expected percent integer, got "%d"', $value));
         }
 
         $this->value = $value;
@@ -55,7 +56,7 @@ readonly class IntegerPercent extends IntegerTypeAbstract
     /**
      * @psalm-pure
      *
-     * @throws IntegerTypeException
+     * @throws PercentIntegerTypeException
      */
     public static function fromBool(bool $value): static
     {
@@ -64,7 +65,7 @@ readonly class IntegerPercent extends IntegerTypeAbstract
 
     /**
      * @throws DecimalTypeException
-     * @throws IntegerTypeException
+     * @throws PercentIntegerTypeException
      *
      * @psalm-pure
      */
@@ -75,7 +76,7 @@ readonly class IntegerPercent extends IntegerTypeAbstract
 
     /**
      * @throws FloatTypeException
-     * @throws IntegerTypeException
+     * @throws PercentIntegerTypeException
      *
      * @psalm-pure
      */
@@ -87,7 +88,7 @@ readonly class IntegerPercent extends IntegerTypeAbstract
     /**
      * @psalm-pure
      *
-     * @throws IntegerTypeException
+     * @throws PercentIntegerTypeException
      */
     public static function fromInt(int $value): static
     {
@@ -96,7 +97,7 @@ readonly class IntegerPercent extends IntegerTypeAbstract
 
     /**
      * @throws StringTypeException
-     * @throws IntegerTypeException
+     * @throws PercentIntegerTypeException
      *
      * @psalm-pure
      */
@@ -152,13 +153,7 @@ readonly class IntegerPercent extends IntegerTypeAbstract
      */
     public function toFloat(): float
     {
-        $toFloatValue = (float) $this->value;
-
-        if ($this->value !== (int) $toFloatValue) {
-            throw new IntegerTypeException(sprintf('Integer %s cannot be converted to float without losing precision', $this->value));
-        }
-
-        return $toFloatValue;
+        return static::intToFloat($this->value());
     }
 
     /**

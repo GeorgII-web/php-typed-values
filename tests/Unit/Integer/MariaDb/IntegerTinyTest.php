@@ -7,7 +7,7 @@ namespace PhpTypedValues\Tests\Unit\Integer\MariaDb;
 use Exception;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
-use PhpTypedValues\Exception\Integer\IntegerTypeException;
+use PhpTypedValues\Exception\Integer\TinyIntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Integer\MariaDb\IntegerTiny;
@@ -30,7 +30,7 @@ describe('IntegerTiny', function (): void {
 
         it('throws for values outside -128..127', function (int $invalidValue): void {
             expect(fn() => new IntegerTiny($invalidValue))
-                ->toThrow(IntegerTypeException::class, 'Expected tiny integer in range -128..127');
+                ->toThrow(TinyIntegerTypeException::class, 'Expected tiny integer in range -128..127');
         })->with([-129, 128, -200, 200]);
     });
 
@@ -42,7 +42,7 @@ describe('IntegerTiny', function (): void {
 
         it('throws for values outside -128..127', function (int $invalidValue): void {
             expect(fn() => IntegerTiny::fromInt($invalidValue))
-                ->toThrow(IntegerTypeException::class, 'Expected tiny integer in range -128..127');
+                ->toThrow(TinyIntegerTypeException::class, 'Expected tiny integer in range -128..127');
         })->with([-129, 128, -200, 200]);
     });
 
@@ -57,9 +57,9 @@ describe('IntegerTiny', function (): void {
             ['-5', -5],
         ]);
 
-        it('throws IntegerTypeException for values outside -128..127', function (string $invalidValue): void {
+        it('throws TinyIntegerTypeException for values outside -128..127', function (string $invalidValue): void {
             expect(fn() => IntegerTiny::fromString($invalidValue))
-                ->toThrow(IntegerTypeException::class, 'Expected tiny integer in range -128..127');
+                ->toThrow(TinyIntegerTypeException::class, 'Expected tiny integer in range -128..127');
         })->with(['-129', '128', '-200', '200']);
 
         it('throws for non-integer strings', function (string $invalidValue, string $exceptionClass): void {
@@ -104,7 +104,7 @@ describe('IntegerTiny', function (): void {
 
         it('throws for float values outside -128..127', function (float $invalidValue): void {
             expect(fn() => IntegerTiny::fromFloat($invalidValue))
-                ->toThrow(IntegerTypeException::class, 'Expected tiny integer in range -128..127');
+                ->toThrow(TinyIntegerTypeException::class, 'Expected tiny integer in range -128..127');
         })->with([-129.0, 128.0, -200.0]);
 
         it('throws FloatTypeException for non-integer floats', function (): void {

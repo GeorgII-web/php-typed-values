@@ -9,8 +9,8 @@ use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
-use PhpTypedValues\Exception\String\StringTinyTextException;
 use PhpTypedValues\Exception\String\StringTypeException;
+use PhpTypedValues\Exception\String\TinyTextStringException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
@@ -40,19 +40,19 @@ readonly class StringTinyText extends StringTypeAbstract
     protected string $value;
 
     /**
-     * @throws StringTinyTextException
+     * @throws TinyTextStringException
      */
     public function __construct(string $value)
     {
         if (mb_strlen($value) > 255) {
-            throw new StringTinyTextException('String is too long, max 255 chars allowed');
+            throw new TinyTextStringException('String is too long, max 255 chars allowed');
         }
 
         $this->value = $value;
     }
 
     /**
-     * @throws StringTinyTextException
+     * @throws TinyTextStringException
      *
      * @psalm-pure
      */
@@ -62,7 +62,7 @@ readonly class StringTinyText extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTinyTextException
+     * @throws TinyTextStringException
      *
      * @psalm-pure
      */
@@ -73,7 +73,7 @@ readonly class StringTinyText extends StringTypeAbstract
 
     /**
      * @throws FloatTypeException
-     * @throws StringTinyTextException
+     * @throws TinyTextStringException
      * @throws StringTypeException
      *
      * @psalm-pure
@@ -84,7 +84,7 @@ readonly class StringTinyText extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTinyTextException
+     * @throws TinyTextStringException
      *
      * @psalm-pure
      */
@@ -94,7 +94,7 @@ readonly class StringTinyText extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTinyTextException
+     * @throws TinyTextStringException
      *
      * @psalm-pure
      */

@@ -9,7 +9,7 @@ use PhpTypedValues\Base\Primitive\Integer\IntegerTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
-use PhpTypedValues\Exception\Integer\IntegerTypeException;
+use PhpTypedValues\Exception\Integer\WeekDayIntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -42,23 +42,23 @@ readonly class IntegerWeekDay extends IntegerTypeAbstract
     protected int $value;
 
     /**
-     * @throws IntegerTypeException
+     * @throws WeekDayIntegerTypeException
      */
     public function __construct(int $value)
     {
         if ($value < 1) {
-            throw new IntegerTypeException(sprintf('Expected value between 1-7, got "%d"', $value));
+            throw new WeekDayIntegerTypeException(sprintf('Expected value between 1-7, got "%d"', $value));
         }
 
         if ($value > 7) {
-            throw new IntegerTypeException(sprintf('Expected value between 1-7, got "%d"', $value));
+            throw new WeekDayIntegerTypeException(sprintf('Expected value between 1-7, got "%d"', $value));
         }
 
         $this->value = $value;
     }
 
     /**
-     * @throws IntegerTypeException
+     * @throws WeekDayIntegerTypeException
      *
      * @psalm-pure
      */
@@ -69,7 +69,7 @@ readonly class IntegerWeekDay extends IntegerTypeAbstract
 
     /**
      * @throws DecimalTypeException
-     * @throws IntegerTypeException
+     * @throws WeekDayIntegerTypeException
      *
      * @psalm-pure
      */
@@ -80,7 +80,7 @@ readonly class IntegerWeekDay extends IntegerTypeAbstract
 
     /**
      * @throws FloatTypeException
-     * @throws IntegerTypeException
+     * @throws WeekDayIntegerTypeException
      *
      * @psalm-pure
      */
@@ -90,7 +90,7 @@ readonly class IntegerWeekDay extends IntegerTypeAbstract
     }
 
     /**
-     * @throws IntegerTypeException
+     * @throws WeekDayIntegerTypeException
      *
      * @psalm-pure
      */
@@ -100,7 +100,7 @@ readonly class IntegerWeekDay extends IntegerTypeAbstract
     }
 
     /**
-     * @throws IntegerTypeException
+     * @throws WeekDayIntegerTypeException
      *
      * @psalm-pure
      */
@@ -114,7 +114,7 @@ readonly class IntegerWeekDay extends IntegerTypeAbstract
             'Friday' => 5,
             'Saturday' => 6,
             'Sunday' => 7,
-            default => throw new IntegerTypeException(sprintf('Invalid weekday label "%s"', $label)),
+            default => throw new WeekDayIntegerTypeException(sprintf('Expected week day label, got "%s"', $label)),
         };
 
         return new static($value);
@@ -122,7 +122,7 @@ readonly class IntegerWeekDay extends IntegerTypeAbstract
 
     /**
      * @throws StringTypeException
-     * @throws IntegerTypeException
+     * @throws WeekDayIntegerTypeException
      *
      * @psalm-pure
      */
