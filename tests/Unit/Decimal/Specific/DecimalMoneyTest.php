@@ -7,6 +7,7 @@ namespace PhpTypedValues\Tests\Unit\Decimal\Specific;
 use Exception;
 use PhpTypedValues\Decimal\Specific\DecimalMoney;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
+use PhpTypedValues\Exception\Decimal\MoneyDecimalTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
@@ -28,29 +29,29 @@ describe('DecimalMoney', function () {
             ->and($d->value())->toBe('0.00');
     });
 
-    it('rejects empty string with DecimalTypeException', function (): void {
-        expect(fn() => new DecimalMoney(''))->toThrow(DecimalTypeException::class);
+    it('rejects empty string with MoneyDecimalTypeException', function (): void {
+        expect(fn() => new DecimalMoney(''))->toThrow(MoneyDecimalTypeException::class);
     });
 
     it('throws on negative or malformed decimal strings or invalid decimal places', function (): void {
         expect(fn() => new DecimalMoney(''))
-            ->toThrow(DecimalTypeException::class)
+            ->toThrow(MoneyDecimalTypeException::class)
             ->and(fn() => DecimalMoney::fromString(' '))
-            ->toThrow(DecimalTypeException::class)
+            ->toThrow(MoneyDecimalTypeException::class)
             ->and(fn() => DecimalMoney::fromString('abc'))
-            ->toThrow(DecimalTypeException::class)
+            ->toThrow(MoneyDecimalTypeException::class)
             ->and(fn() => DecimalMoney::fromString('.5'))
-            ->toThrow(DecimalTypeException::class)
+            ->toThrow(MoneyDecimalTypeException::class)
             ->and(fn() => DecimalMoney::fromString('1.'))
-            ->toThrow(DecimalTypeException::class)
+            ->toThrow(MoneyDecimalTypeException::class)
             ->and(fn() => DecimalMoney::fromString('+1'))
-            ->toThrow(DecimalTypeException::class)
+            ->toThrow(MoneyDecimalTypeException::class)
             ->and(fn() => DecimalMoney::fromString('-1.00'))
-            ->toThrow(DecimalTypeException::class)
+            ->toThrow(MoneyDecimalTypeException::class)
             ->and(fn() => DecimalMoney::fromString('1.0'))
-            ->toThrow(DecimalTypeException::class)
+            ->toThrow(MoneyDecimalTypeException::class)
             ->and(fn() => DecimalMoney::fromString('1.000'))
-            ->toThrow(DecimalTypeException::class);
+            ->toThrow(MoneyDecimalTypeException::class);
     });
 
     it('tryFromString returns instance for valid and Undefined for invalid', function (): void {
@@ -73,8 +74,8 @@ describe('DecimalMoney', function () {
             ->and(DecimalMoney::fromString('1.50')->toFloat())->toBe(1.5)
             ->and(DecimalMoney::fromString('0.00')->toFloat())->toBe(0.0)
             ->and(fn() => DecimalMoney::fromString('1.51')->toFloat())->toThrow(StringTypeException::class)
-            ->and(fn() => DecimalMoney::fromString(''))->toThrow(DecimalTypeException::class)
-            ->and(fn() => new DecimalMoney(''))->toThrow(DecimalTypeException::class);
+            ->and(fn() => DecimalMoney::fromString(''))->toThrow(MoneyDecimalTypeException::class)
+            ->and(fn() => new DecimalMoney(''))->toThrow(MoneyDecimalTypeException::class);
     });
 
     it('jsonSerialize returns string', function (): void {

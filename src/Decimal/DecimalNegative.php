@@ -8,6 +8,7 @@ use Exception;
 use PhpTypedValues\Base\Primitive\Decimal\DecimalTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
+use PhpTypedValues\Exception\Decimal\NegativeDecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
@@ -47,21 +48,21 @@ readonly class DecimalNegative extends DecimalTypeAbstract
     protected string $value;
 
     /**
-     * @throws DecimalTypeException
+     * @throws NegativeDecimalTypeException
      */
     public function __construct(string $value)
     {
         $decimal = self::stringToDecimal($value);
 
         if ($decimal[0] !== '-') {
-            throw new DecimalTypeException(sprintf('Decimal "%s" is not a negative value', $value));
+            throw new NegativeDecimalTypeException(sprintf('Decimal "%s" is not a negative value', $value));
         }
 
         $this->value = $decimal;
     }
 
     /**
-     * @throws DecimalTypeException
+     * @throws NegativeDecimalTypeException
      *
      * @psalm-pure
      */
@@ -71,7 +72,7 @@ readonly class DecimalNegative extends DecimalTypeAbstract
     }
 
     /**
-     * @throws DecimalTypeException
+     * @throws NegativeDecimalTypeException
      *
      * @psalm-pure
      */
@@ -83,7 +84,7 @@ readonly class DecimalNegative extends DecimalTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws StringTypeException
-     * @throws DecimalTypeException
+     * @throws NegativeDecimalTypeException
      *
      * @psalm-pure
      */
@@ -93,7 +94,7 @@ readonly class DecimalNegative extends DecimalTypeAbstract
     }
 
     /**
-     * @throws DecimalTypeException
+     * @throws NegativeDecimalTypeException
      *
      * @psalm-pure
      */
@@ -103,7 +104,7 @@ readonly class DecimalNegative extends DecimalTypeAbstract
     }
 
     /**
-     * @throws DecimalTypeException
+     * @throws NegativeDecimalTypeException
      *
      * @psalm-pure
      */

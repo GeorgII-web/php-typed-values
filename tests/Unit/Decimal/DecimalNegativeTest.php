@@ -9,6 +9,7 @@ use const PHP_INT_MIN;
 use Exception;
 use PhpTypedValues\Decimal\DecimalNegative;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
+use PhpTypedValues\Exception\Decimal\NegativeDecimalTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -46,9 +47,9 @@ describe('DecimalNegative', function () {
             ->and(fn() => DecimalNegative::fromString('+1'))
             ->toThrow(DecimalTypeException::class, 'String "+1" has no valid strict decimal value')
             ->and(fn() => DecimalNegative::fromString('1.0'))
-            ->toThrow(DecimalTypeException::class, 'Decimal "1.0" is not a negative value')
+            ->toThrow(NegativeDecimalTypeException::class, 'Decimal "1.0" is not a negative value')
             ->and(fn() => DecimalNegative::fromString('0.0'))
-            ->toThrow(DecimalTypeException::class, 'Decimal "0.0" is not a negative value');
+            ->toThrow(NegativeDecimalTypeException::class, 'Decimal "0.0" is not a negative value');
     });
 
     it('tryFromString returns instance for valid and Undefined for invalid', function (): void {
@@ -184,20 +185,20 @@ describe('DecimalNegative', function () {
             ->and(DecimalNegative::fromFloat(-0.1)->toString())->toBe('-0.10000000000000001')
             ->and(DecimalNegative::fromFloat(-1)->toString())->toBe('-1.0');
 
-        expect(fn() => DecimalNegative::fromFloat(1.0))->toThrow(DecimalTypeException::class);
-        expect(fn() => DecimalNegative::fromFloat(0.0))->toThrow(DecimalTypeException::class);
+        expect(fn() => DecimalNegative::fromFloat(1.0))->toThrow(NegativeDecimalTypeException::class);
+        expect(fn() => DecimalNegative::fromFloat(0.0))->toThrow(NegativeDecimalTypeException::class);
     });
 
     it('cast decimal > decimal', function (): void {
         expect(DecimalNegative::fromDecimal('-1.0')->toString())->toBe('-1.0');
 
-        expect(fn() => DecimalNegative::fromDecimal('1.0'))->toThrow(DecimalTypeException::class);
-        expect(fn() => DecimalNegative::fromDecimal('0.0'))->toThrow(DecimalTypeException::class);
+        expect(fn() => DecimalNegative::fromDecimal('1.0'))->toThrow(NegativeDecimalTypeException::class);
+        expect(fn() => DecimalNegative::fromDecimal('0.0'))->toThrow(NegativeDecimalTypeException::class);
     });
 
     it('cast bool > decimal', function (): void {
-        expect(fn() => DecimalNegative::fromBool(true))->toThrow(DecimalTypeException::class);
-        expect(fn() => DecimalNegative::fromBool(false))->toThrow(DecimalTypeException::class);
+        expect(fn() => DecimalNegative::fromBool(true))->toThrow(NegativeDecimalTypeException::class);
+        expect(fn() => DecimalNegative::fromBool(false))->toThrow(NegativeDecimalTypeException::class);
     });
 
     it('cast int > decimal', function (): void {
@@ -206,8 +207,8 @@ describe('DecimalNegative', function () {
             ->and(DecimalNegative::fromInt(PHP_INT_MIN)->toString())->toBe(PHP_INT_MIN . '.0')
             ->and(DecimalNegative::fromInt(-1)->toString())->toBe('-1.0');
 
-        expect(fn() => DecimalNegative::fromInt(0))->toThrow(DecimalTypeException::class);
-        expect(fn() => DecimalNegative::fromInt(1))->toThrow(DecimalTypeException::class);
+        expect(fn() => DecimalNegative::fromInt(0))->toThrow(NegativeDecimalTypeException::class);
+        expect(fn() => DecimalNegative::fromInt(1))->toThrow(NegativeDecimalTypeException::class);
     });
 
     it('can be used with bcmath functions', function (): void {
