@@ -31,7 +31,7 @@
 * Avoid duplicate test cases or same data in a single test.
 * Run `docker-compose exec -ti php composer test -- --filter="failedTypeClassName"` to run tests.
 * Run `docker-compose exec -ti php composer type -- --filter="failedTypeClassName"` to run type coverage.
-* Run `docker-compose exec -ti php composer coverage` to run code coverage.
+* Run `docker-compose exec -ti php composer coverage` to run code coverage (use no options).
 * For mutation fails: run for each `docker-compose exec -ti php composer mutate -- --id=****` with a mutation error id.
 
 **Tech-Stack & Style**
