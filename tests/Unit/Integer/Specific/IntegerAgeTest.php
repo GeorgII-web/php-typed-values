@@ -230,11 +230,36 @@ describe('IntegerAge', function (): void {
             ['25', 25],
             [25.0, 25],
             [true, 1],
+            [new class implements \Stringable {
+                public function __toString(): string
+                {
+                    return '25';
+                }
+            }, 25],
         ]);
 
         it('returns default for invalid mixed value', function (): void {
             $default = new Undefined();
             $result = IntegerAge::tryFromMixed(['not', 'an', 'age'], $default);
+            expect($result)->toBe($default);
+        });
+
+        it('returns default for invalid Stringable value', function (): void {
+            $default = new Undefined();
+            $val = new class implements \Stringable {
+                public function __toString(): string
+                {
+                    return 'not-an-age';
+                }
+            };
+            $result = IntegerAge::tryFromMixed($val, $default);
+            expect($result)->toBe($default);
+        });
+
+        it('returns default for non-stringable object', function (): void {
+            $default = new Undefined();
+            $val = new \stdClass();
+            $result = IntegerAge::tryFromMixed($val, $default);
             expect($result)->toBe($default);
         });
 
