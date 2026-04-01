@@ -7,7 +7,7 @@ namespace PhpTypedValues\Tests\Unit\DateTime\Timestamp;
 use DateTimeImmutable;
 use Exception;
 use PhpTypedValues\DateTime\Timestamp\TimestampMicroseconds;
-use PhpTypedValues\Exception\DateTime\DateTimeTypeException;
+use PhpTypedValues\Exception\DateTime\TimestampTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 use Stringable;
@@ -66,7 +66,7 @@ describe('TimestampMicroseconds', function () {
                 expect(fn() => TimestampMicroseconds::fromString($input))
                     ->toThrow($exception, $messagePart);
             })->with([
-                'non-numeric' => ['not-a-number', DateTimeTypeException::class, 'Expected microseconds timestamp as digits'],
+                'non-numeric' => ['not-a-number', TimestampTypeException::class, 'Expected microseconds timestamp as digits'],
             ]);
         });
 

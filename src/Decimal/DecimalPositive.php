@@ -8,6 +8,7 @@ use Exception;
 use PhpTypedValues\Base\Primitive\Decimal\DecimalTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
+use PhpTypedValues\Exception\Decimal\PositiveDecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
@@ -47,6 +48,7 @@ readonly class DecimalPositive extends DecimalTypeAbstract
     protected string $value;
 
     /**
+     * @throws PositiveDecimalTypeException
      * @throws DecimalTypeException
      */
     public function __construct(string $value)
@@ -54,13 +56,14 @@ readonly class DecimalPositive extends DecimalTypeAbstract
         $decimal = self::stringToDecimal($value);
 
         if ($decimal[0] === '-' || preg_match('/^-?0+(\.0+)?$/', $decimal) === 1) {
-            throw new DecimalTypeException(sprintf('Decimal "%s" is not a positive value', $value));
+            throw new PositiveDecimalTypeException(sprintf('Decimal "%s" is not a positive value', $value));
         }
 
         $this->value = $decimal;
     }
 
     /**
+     * @throws PositiveDecimalTypeException
      * @throws DecimalTypeException
      *
      * @psalm-pure
@@ -71,6 +74,7 @@ readonly class DecimalPositive extends DecimalTypeAbstract
     }
 
     /**
+     * @throws PositiveDecimalTypeException
      * @throws DecimalTypeException
      *
      * @psalm-pure
@@ -83,6 +87,7 @@ readonly class DecimalPositive extends DecimalTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws StringTypeException
+     * @throws PositiveDecimalTypeException
      * @throws DecimalTypeException
      *
      * @psalm-pure
@@ -93,6 +98,7 @@ readonly class DecimalPositive extends DecimalTypeAbstract
     }
 
     /**
+     * @throws PositiveDecimalTypeException
      * @throws DecimalTypeException
      *
      * @psalm-pure
@@ -103,6 +109,7 @@ readonly class DecimalPositive extends DecimalTypeAbstract
     }
 
     /**
+     * @throws PositiveDecimalTypeException
      * @throws DecimalTypeException
      *
      * @psalm-pure

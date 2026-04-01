@@ -9,6 +9,8 @@ use Exception;
 use PhpTypedValues\Base\Primitive\DateTime\DateTimeTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\DateTime\DateTimeTypeException;
+use PhpTypedValues\Exception\DateTime\ReasonableRangeDateTimeTypeException;
+use PhpTypedValues\Exception\DateTime\TimestampTypeException;
 use PhpTypedValues\Exception\DateTime\ZoneDateTimeTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -64,7 +66,7 @@ readonly class TimestampSeconds extends DateTimeTypeAbstract
     /**
      * @param non-empty-string $timezone
      *
-     * @throws DateTimeTypeException
+     * @throws TimestampTypeException
      *
      * @psalm-pure
      */
@@ -78,19 +80,25 @@ readonly class TimestampSeconds extends DateTimeTypeAbstract
      *
      * @param non-empty-string $timezone
      *
-     * @throws DateTimeTypeException
+     * @throws TimestampTypeException
      *
      * @psalm-pure
      */
     public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE): static
     {
-        return new static(
-            static::stringToDateTime(
-                $value,
-                static::FORMAT,
-                static::stringToDateTimeZone($timezone)
-            )
-        );
+        try {
+            return new static(
+                static::stringToDateTime(
+                    $value,
+                    static::FORMAT,
+                    static::stringToDateTimeZone($timezone)
+                )
+            );
+        } catch (ReasonableRangeDateTimeTypeException $e) {
+            throw $e;
+        } catch (DateTimeTypeException $e) {
+            throw new TimestampTypeException($e->getMessage(), $e->getCode(), $e);
+        }
     }
 
     public static function getFormat(): string

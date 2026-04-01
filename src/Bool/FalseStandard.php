@@ -7,7 +7,7 @@ namespace PhpTypedValues\Bool;
 use Exception;
 use PhpTypedValues\Base\Primitive\Bool\BoolTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
-use PhpTypedValues\Exception\Bool\BoolTypeException;
+use PhpTypedValues\Exception\Bool\FalseBoolTypeException;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
@@ -42,12 +42,12 @@ readonly class FalseStandard extends BoolTypeAbstract
     protected false $value;
 
     /**
-     * @throws BoolTypeException
+     * @throws FalseBoolTypeException
      */
     public function __construct(bool $value)
     {
         if ($value !== false) {
-            throw new BoolTypeException('Expected "false" literal, got "true"');
+            throw new FalseBoolTypeException('Expected "false" literal, got "true"');
         }
 
         $this->value = false;
@@ -56,7 +56,7 @@ readonly class FalseStandard extends BoolTypeAbstract
     /**
      * @psalm-pure
      *
-     * @throws BoolTypeException
+     * @throws FalseBoolTypeException
      */
     public static function fromBool(bool $value): static
     {
@@ -67,7 +67,7 @@ readonly class FalseStandard extends BoolTypeAbstract
      * @psalm-pure
      *
      * @throws DecimalTypeException
-     * @throws BoolTypeException
+     * @throws FalseBoolTypeException
      */
     public static function fromDecimal(string $value): static
     {
@@ -78,7 +78,7 @@ readonly class FalseStandard extends BoolTypeAbstract
      * @psalm-pure
      *
      * @throws FloatTypeException
-     * @throws BoolTypeException
+     * @throws FalseBoolTypeException
      */
     public static function fromFloat(float $value): static
     {
@@ -89,7 +89,7 @@ readonly class FalseStandard extends BoolTypeAbstract
      * @psalm-pure
      *
      * @throws IntegerTypeException
-     * @throws BoolTypeException
+     * @throws FalseBoolTypeException
      */
     public static function fromInt(int $value): static
     {
@@ -99,7 +99,7 @@ readonly class FalseStandard extends BoolTypeAbstract
     /**
      * @psalm-pure
      *
-     * @throws BoolTypeException
+     * @throws FalseBoolTypeException
      * @throws StringTypeException
      */
     public static function fromString(string $value): static

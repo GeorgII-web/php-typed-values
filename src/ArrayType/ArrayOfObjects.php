@@ -6,7 +6,7 @@ namespace PhpTypedValues\ArrayType;
 
 use JsonSerializable;
 use PhpTypedValues\Base\ArrayType\ArrayTypeAbstract;
-use PhpTypedValues\Exception\ArrayType\ArrayTypeException;
+use PhpTypedValues\Exception\ArrayType\ObjectsArrayTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Traversable;
 
@@ -32,13 +32,13 @@ readonly class ArrayOfObjects extends ArrayTypeAbstract
     /**
      * @param list<TItem> $value
      *
-     * @throws ArrayTypeException
+     * @throws ObjectsArrayTypeException
      */
     public function __construct(array $value)
     {
         foreach ($value as $item) {
             if (!is_object($item)) {
-                throw new ArrayTypeException('Expected array of Object instances');
+                throw new ObjectsArrayTypeException('Expected array of Object instances');
             }
         }
 
@@ -58,7 +58,7 @@ readonly class ArrayOfObjects extends ArrayTypeAbstract
      *
      * @param list<mixed> $value
      *
-     * @throws ArrayTypeException
+     * @throws ObjectsArrayTypeException
      */
     public static function fromArray(array $value): static
     {
@@ -69,7 +69,7 @@ readonly class ArrayOfObjects extends ArrayTypeAbstract
     /**
      * @no-named-arguments
      *
-     * @throws ArrayTypeException
+     * @throws ObjectsArrayTypeException
      */
     public static function fromItems(object ...$items): static
     {
@@ -149,7 +149,7 @@ readonly class ArrayOfObjects extends ArrayTypeAbstract
     /**
      * JSON serialization helper.
      *
-     * @throws ArrayTypeException
+     * @throws ObjectsArrayTypeException
      *
      * @psalm-mutation-free
      */
@@ -159,7 +159,7 @@ readonly class ArrayOfObjects extends ArrayTypeAbstract
     }
 
     /**
-     * @throws ArrayTypeException
+     * @throws ObjectsArrayTypeException
      *
      * @psalm-mutation-free
      */
@@ -168,7 +168,7 @@ readonly class ArrayOfObjects extends ArrayTypeAbstract
         $result = [];
         foreach ($this->value as $item) {
             if (!$item instanceof JsonSerializable) {
-                throw new ArrayTypeException('Conversion to array of Scalars failed, should implement JsonSerializable interface');
+                throw new ObjectsArrayTypeException('Conversion to array of Scalars failed, should implement JsonSerializable interface');
             }
 
             /** @psalm-suppress ImpureMethodCall */

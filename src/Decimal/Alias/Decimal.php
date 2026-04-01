@@ -7,7 +7,7 @@ namespace PhpTypedValues\Decimal\Alias;
 use PhpTypedValues\Decimal\DecimalStandard;
 
 /**
- * Alias for MariaDB DECIMAL value represented as a string.
+ * Alias for DECIMAL value represented as a string.
  *
  * Provides the same behavior as StringDecimal while exposing a concise
  * name suitable for APIs that prefer "Decimal" in the MariaDb namespace.

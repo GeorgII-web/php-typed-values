@@ -8,6 +8,7 @@ use Exception;
 use PhpTypedValues\Base\Primitive\Decimal\DecimalTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
+use PhpTypedValues\Exception\Decimal\MoneyDecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
@@ -48,13 +49,13 @@ readonly class DecimalMoney extends DecimalTypeAbstract
     protected string $value;
 
     /**
-     * @throws DecimalTypeException
+     * @throws MoneyDecimalTypeException
      */
     public function __construct(string $value)
     {
         // Validate a money format: non-negative with exactly 2 decimal places
         if (preg_match('/^\d+\.\d{2}$/', $value) !== 1) {
-            throw new DecimalTypeException(sprintf('Money value "%s" must be non-negative with exactly 2 decimal places', $value));
+            throw new MoneyDecimalTypeException(sprintf('Money value "%s" must be non-negative with exactly 2 decimal places', $value));
         }
 
         // Validate as strict decimal (will now pass since trailing zero is removed)
@@ -66,7 +67,7 @@ readonly class DecimalMoney extends DecimalTypeAbstract
     }
 
     /**
-     * @throws DecimalTypeException
+     * @throws MoneyDecimalTypeException
      *
      * @psalm-pure
      */
@@ -79,7 +80,7 @@ readonly class DecimalMoney extends DecimalTypeAbstract
     }
 
     /**
-     * @throws DecimalTypeException
+     * @throws MoneyDecimalTypeException
      *
      * @psalm-pure
      */
@@ -91,7 +92,7 @@ readonly class DecimalMoney extends DecimalTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws StringTypeException
-     * @throws DecimalTypeException
+     * @throws MoneyDecimalTypeException
      *
      * @psalm-pure
      */
@@ -103,7 +104,7 @@ readonly class DecimalMoney extends DecimalTypeAbstract
     }
 
     /**
-     * @throws DecimalTypeException
+     * @throws MoneyDecimalTypeException
      *
      * @psalm-pure
      */
@@ -115,7 +116,7 @@ readonly class DecimalMoney extends DecimalTypeAbstract
     }
 
     /**
-     * @throws DecimalTypeException
+     * @throws MoneyDecimalTypeException
      *
      * @psalm-pure
      */
@@ -174,7 +175,6 @@ readonly class DecimalMoney extends DecimalTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws StringTypeException
-     * @throws DecimalTypeException
      */
     public function toFloat(): float
     {

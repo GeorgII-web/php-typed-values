@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use PhpTypedValues\ArrayType\ArrayOfObjects;
 use PhpTypedValues\ArrayType\ArrayUndefined;
-use PhpTypedValues\Exception\ArrayType\ArrayTypeException;
+use PhpTypedValues\Exception\ArrayType\ObjectsArrayTypeException;
 use PhpTypedValues\Integer\IntegerNonNegative;
 use PhpTypedValues\Integer\IntegerPositive;
 use PhpTypedValues\String\StringNonEmpty;
@@ -29,7 +29,7 @@ describe('ArrayOfObjects', function () {
 
             it('throws when any item is not an object', function () {
                 expect(fn() => ArrayOfObjects::fromArray([1, new stdClass()]))
-                    ->toThrow(ArrayTypeException::class, 'Expected array of Object instances');
+                    ->toThrow(ObjectsArrayTypeException::class, 'Expected array of Object instances');
             });
         });
 
@@ -76,13 +76,13 @@ describe('ArrayOfObjects', function () {
         describe('Constructor', function () {
             it('throws when array contains non-objects', function () {
                 expect(fn() => new ArrayOfObjects(['string', 123, new stdClass()]))
-                    ->toThrow(ArrayTypeException::class, 'Object instances');
+                    ->toThrow(ObjectsArrayTypeException::class, 'Object instances');
             });
 
             it('throws for empty array via ForeachEmptyIterable mutation', function () {
                 // If mutated to foreach ([] as $item), it would not throw
                 expect(fn() => new ArrayOfObjects(['not-an-object']))
-                    ->toThrow(ArrayTypeException::class);
+                    ->toThrow(ObjectsArrayTypeException::class);
             });
         });
     });
@@ -184,7 +184,7 @@ describe('ArrayOfObjects', function () {
             $obj = new stdClass();
             $c = new ArrayOfObjects([$obj]);
             expect(fn() => $c->toArray())
-                ->toThrow(ArrayTypeException::class, 'Conversion to array of Scalars failed, should implement JsonSerializable interface');
+                ->toThrow(ObjectsArrayTypeException::class, 'Conversion to array of Scalars failed, should implement JsonSerializable interface');
         });
 
         it('jsonSerialize() calls toArray() and does not return empty array if not empty', function () {

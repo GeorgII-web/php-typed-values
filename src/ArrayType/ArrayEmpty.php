@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace PhpTypedValues\ArrayType;
 
 use PhpTypedValues\Base\ArrayType\ArrayTypeAbstract;
-use PhpTypedValues\Exception\ArrayType\ArrayTypeException;
+use PhpTypedValues\Exception\ArrayType\EmptyArrayTypeException;
 use Traversable;
 
 /**
@@ -18,12 +18,12 @@ use Traversable;
 readonly class ArrayEmpty extends ArrayTypeAbstract
 {
     /**
-     * @throws ArrayTypeException
+     * @throws EmptyArrayTypeException
      */
     public function __construct(array $value)
     {
         if ($value !== []) {
-            throw new ArrayTypeException('Expected empty array');
+            throw new EmptyArrayTypeException('Expected empty array');
         }
     }
 
@@ -40,7 +40,7 @@ readonly class ArrayEmpty extends ArrayTypeAbstract
      *
      * @param list<mixed> $value
      *
-     * @throws ArrayTypeException
+     * @throws EmptyArrayTypeException
      */
     public static function fromArray(array $value): static
     {

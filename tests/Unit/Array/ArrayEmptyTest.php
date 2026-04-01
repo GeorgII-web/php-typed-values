@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use PhpTypedValues\ArrayType\ArrayEmpty;
 use PhpTypedValues\ArrayType\ArrayUndefined;
-use PhpTypedValues\Exception\ArrayType\ArrayTypeException;
+use PhpTypedValues\Exception\ArrayType\EmptyArrayTypeException;
 
 covers(ArrayEmpty::class);
 
@@ -22,7 +22,7 @@ describe('ArrayEmpty', function () {
 
         it('throws exception if array is not empty', function (): void {
             expect(fn() => new ArrayEmpty([1]))
-                ->toThrow(ArrayTypeException::class, 'Expected empty array');
+                ->toThrow(EmptyArrayTypeException::class, 'Expected empty array');
         });
 
         it('fromArray constructs from an empty array', function (): void {

@@ -9,6 +9,7 @@ use const PHP_INT_MAX;
 use Exception;
 use PhpTypedValues\Decimal\DecimalNonNegative;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
+use PhpTypedValues\Exception\Decimal\NonNegativeDecimalTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -46,7 +47,7 @@ describe('DecimalNonNegative', function () {
             ->and(fn() => DecimalNonNegative::fromString('+1'))
             ->toThrow(DecimalTypeException::class, 'String "+1" has no valid strict decimal value')
             ->and(fn() => DecimalNonNegative::fromString('-1.0'))
-            ->toThrow(DecimalTypeException::class, 'Decimal "-1.0" is not a non-negative value');
+            ->toThrow(NonNegativeDecimalTypeException::class, 'Decimal "-1.0" is not a non-negative value');
     });
 
     it('tryFromString returns instance for valid and Undefined for invalid', function (): void {
@@ -186,14 +187,14 @@ describe('DecimalNonNegative', function () {
             ->and(DecimalNonNegative::fromFloat(1)->toString())->toBe('1.0')
             ->and(DecimalNonNegative::fromFloat(0.0)->toString())->toBe('0.0');
 
-        expect(fn() => DecimalNonNegative::fromFloat(-1.0))->toThrow(DecimalTypeException::class);
+        expect(fn() => DecimalNonNegative::fromFloat(-1.0))->toThrow(NonNegativeDecimalTypeException::class);
     });
 
     it('cast decimal > decimal', function (): void {
         expect(DecimalNonNegative::fromDecimal('1.0')->toString())->toBe('1.0')
             ->and(DecimalNonNegative::fromDecimal('0.0')->toString())->toBe('0.0');
 
-        expect(fn() => DecimalNonNegative::fromDecimal('-1.0'))->toThrow(DecimalTypeException::class);
+        expect(fn() => DecimalNonNegative::fromDecimal('-1.0'))->toThrow(NonNegativeDecimalTypeException::class);
     });
 
     it('cast bool > decimal', function (): void {
@@ -208,7 +209,7 @@ describe('DecimalNonNegative', function () {
             ->and(DecimalNonNegative::fromInt(1)->toString())->toBe('1.0')
             ->and(DecimalNonNegative::fromInt(0)->toString())->toBe('0.0');
 
-        expect(fn() => DecimalNonNegative::fromInt(-1))->toThrow(DecimalTypeException::class);
+        expect(fn() => DecimalNonNegative::fromInt(-1))->toThrow(NonNegativeDecimalTypeException::class);
     });
 
     it('can be used with bcmath functions', function (): void {

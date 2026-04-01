@@ -7,8 +7,7 @@ namespace PhpTypedValues\Tests\Unit\DateTime\Timestamp;
 use DateTimeImmutable;
 use Exception;
 use PhpTypedValues\DateTime\Timestamp\TimestampMilliseconds;
-use PhpTypedValues\Exception\DateTime\DateTimeTypeException;
-use PhpTypedValues\Exception\DateTime\ReasonableRangeDateTimeTypeException;
+use PhpTypedValues\Exception\DateTime\TimestampTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
 use Stringable;
@@ -86,9 +85,9 @@ describe('TimestampMilliseconds', function () {
                 expect(fn() => TimestampMilliseconds::fromString($input))
                     ->toThrow($exception, $messagePart);
             })->with([
-                'non-numeric' => ['not-a-number', DateTimeTypeException::class, 'Expected milliseconds timestamp as digits'],
-                'trailing space' => ['1000000000000 ', DateTimeTypeException::class, 'Expected milliseconds timestamp as digits'],
-                'above max' => ['253402300800000', ReasonableRangeDateTimeTypeException::class, 'out of supported range'],
+                'non-numeric' => ['not-a-number', TimestampTypeException::class, 'Expected milliseconds timestamp as digits'],
+                'trailing space' => ['1000000000000 ', TimestampTypeException::class, 'Expected milliseconds timestamp as digits'],
+                'above max' => ['253402300800000', TimestampTypeException::class, 'out of supported range'],
             ]);
         });
 

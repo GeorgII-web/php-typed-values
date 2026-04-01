@@ -9,6 +9,7 @@ use const PHP_INT_MAX;
 use Exception;
 use PhpTypedValues\Decimal\DecimalPositive;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
+use PhpTypedValues\Exception\Decimal\PositiveDecimalTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -44,9 +45,9 @@ describe('DecimalPositive', function () {
             ->and(fn() => DecimalPositive::fromString('+1'))
             ->toThrow(DecimalTypeException::class, 'String "+1" has no valid strict decimal value')
             ->and(fn() => DecimalPositive::fromString('0.0'))
-            ->toThrow(DecimalTypeException::class, 'Decimal "0.0" is not a positive value')
+            ->toThrow(PositiveDecimalTypeException::class, 'Decimal "0.0" is not a positive value')
             ->and(fn() => DecimalPositive::fromString('-1.0'))
-            ->toThrow(DecimalTypeException::class, 'Decimal "-1.0" is not a positive value');
+            ->toThrow(PositiveDecimalTypeException::class, 'Decimal "-1.0" is not a positive value');
     });
 
     it('tryFromString returns instance for valid and Undefined for invalid', function (): void {

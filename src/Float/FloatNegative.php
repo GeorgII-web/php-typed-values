@@ -9,6 +9,7 @@ use PhpTypedValues\Base\Primitive\Float\FloatTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
+use PhpTypedValues\Exception\Float\NegativeFloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
@@ -40,27 +41,27 @@ readonly class FloatNegative extends FloatTypeAbstract
     protected float $value;
 
     /**
-     * @throws FloatTypeException
+     * @throws NegativeFloatTypeException
      */
     public function __construct(float $value)
     {
         if ($value >= 0.0) {
-            throw new FloatTypeException(sprintf('Expected negative float, got "%s"', $value));
+            throw new NegativeFloatTypeException(sprintf('Expected negative float, got "%s"', $value));
         }
 
         if (is_infinite($value)) {
-            throw new FloatTypeException('Infinite float value');
+            throw new NegativeFloatTypeException('Infinite float value');
         }
 
         if (is_nan($value)) {
-            throw new FloatTypeException('Not a number float value');
+            throw new NegativeFloatTypeException('Not a number float value');
         }
 
         $this->value = $value;
     }
 
     /**
-     * @throws FloatTypeException
+     * @throws NegativeFloatTypeException
      *
      * @psalm-pure
      */
@@ -73,7 +74,7 @@ readonly class FloatNegative extends FloatTypeAbstract
      * @psalm-pure
      *
      * @throws DecimalTypeException
-     * @throws FloatTypeException
+     * @throws NegativeFloatTypeException
      * @throws StringTypeException
      */
     public static function fromDecimal(string $value): static
@@ -82,7 +83,7 @@ readonly class FloatNegative extends FloatTypeAbstract
     }
 
     /**
-     * @throws FloatTypeException
+     * @throws NegativeFloatTypeException
      *
      * @psalm-pure
      */
@@ -92,7 +93,7 @@ readonly class FloatNegative extends FloatTypeAbstract
     }
 
     /**
-     * @throws FloatTypeException
+     * @throws NegativeFloatTypeException
      * @throws IntegerTypeException
      *
      * @psalm-pure
@@ -103,7 +104,7 @@ readonly class FloatNegative extends FloatTypeAbstract
     }
 
     /**
-     * @throws FloatTypeException
+     * @throws NegativeFloatTypeException
      * @throws StringTypeException
      *
      * @psalm-pure

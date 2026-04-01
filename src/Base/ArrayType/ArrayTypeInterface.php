@@ -8,13 +8,11 @@ use Countable;
 use IteratorAggregate;
 use JsonSerializable;
 use PhpTypedValues\ArrayType\ArrayUndefined;
-use PhpTypedValues\Base\Shared\IsEmptyInterface;
-use PhpTypedValues\Base\Shared\IsUndefinedInterface;
 use PhpTypedValues\Base\TypeInterface;
 use PhpTypedValues\Exception\ArrayType\ArrayTypeException;
 
 /**
- * Contract for array typed values.
+ * Contract for array-typed values.
  *
  * Represents a read‑only collection of typed items with factory helpers
  * to construct the collection from raw arrays. Implementations are
@@ -30,7 +28,7 @@ use PhpTypedValues\Exception\ArrayType\ArrayTypeException;
  *
  * @psalm-immutable
  */
-interface ArrayTypeInterface extends TypeInterface, JsonSerializable, IteratorAggregate, Countable, IsEmptyInterface, IsUndefinedInterface
+interface ArrayTypeInterface extends TypeInterface, JsonSerializable, IteratorAggregate, Countable
 {
     /**
      * Creates a new collection from a list of Objects.
@@ -59,6 +57,16 @@ interface ArrayTypeInterface extends TypeInterface, JsonSerializable, IteratorAg
      * Returns true if at least one item in the collection is Undefined.
      */
     public function hasUndefined(): bool;
+
+    /**
+     * Returns true if the Object value is empty.
+     */
+    public function isEmpty(): bool;
+
+    /**
+     * Returns if the Object value is an Undefined type class.
+     */
+    public function isUndefined(): bool;
 
     /**
      * Convert to an array of scalars from an array of Objects.

@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace PhpTypedValues\ArrayType;
 
 use PhpTypedValues\Base\ArrayType\ArrayTypeAbstract;
-use PhpTypedValues\Base\ArrayType\ArrayUndefinedTypeInterface;
-use PhpTypedValues\Exception\ArrayType\ArrayUndefinedTypeException;
+use PhpTypedValues\Exception\ArrayType\UndefinedArrayTypeException;
 
 /**
  * Immutable undefined collection.
@@ -15,14 +14,14 @@ use PhpTypedValues\Exception\ArrayType\ArrayUndefinedTypeException;
  *
  * @psalm-immutable
  */
-readonly class ArrayUndefined extends ArrayTypeAbstract implements ArrayUndefinedTypeInterface
+readonly class ArrayUndefined extends ArrayTypeAbstract
 {
     /**
-     * @throws ArrayUndefinedTypeException
+     * @throws UndefinedArrayTypeException
      */
     public function count(): never
     {
-        throw new ArrayUndefinedTypeException('Undefined array has no items to count');
+        throw new UndefinedArrayTypeException('Undefined array has no items to count');
     }
 
     public static function create(): static
@@ -41,16 +40,16 @@ readonly class ArrayUndefined extends ArrayTypeAbstract implements ArrayUndefine
     /**
      * @psalm-suppress PossiblyUnusedReturnValue
      *
-     * @throws ArrayUndefinedTypeException
+     * @throws UndefinedArrayTypeException
      */
     public function getDefinedItems(): array
     {
-        throw new ArrayUndefinedTypeException('Undefined array has no defined items');
+        throw new UndefinedArrayTypeException('Undefined array has no defined items');
     }
 
     public function getIterator(): never
     {
-        throw new ArrayUndefinedTypeException('Undefined array has no items for iterator');
+        throw new UndefinedArrayTypeException('Undefined array has no items for iterator');
     }
 
     public function hasUndefined(): bool
@@ -80,42 +79,42 @@ readonly class ArrayUndefined extends ArrayTypeAbstract implements ArrayUndefine
     }
 
     /**
-     * @throws ArrayUndefinedTypeException
+     * @throws UndefinedArrayTypeException
      */
     public function jsonSerialize(): never
     {
-        throw new ArrayUndefinedTypeException('Undefined array cannot be converted to Json');
+        throw new UndefinedArrayTypeException('Undefined array cannot be converted to Json');
     }
 
     /**
-     * @throws ArrayUndefinedTypeException
+     * @throws UndefinedArrayTypeException
      */
     public function toArray(): array
     {
-        throw new ArrayUndefinedTypeException('Undefined array cannot be converted to array');
+        throw new UndefinedArrayTypeException('Undefined array cannot be converted to array');
     }
 
     /**
-     * @throws ArrayUndefinedTypeException
+     * @throws UndefinedArrayTypeException
      */
     public function toFloat(): never
     {
-        throw new ArrayUndefinedTypeException('Undefined array cannot be converted to float');
+        throw new UndefinedArrayTypeException('Undefined array cannot be converted to float');
     }
 
     /**
-     * @throws ArrayUndefinedTypeException
+     * @throws UndefinedArrayTypeException
      */
     public function toInt(): never
     {
-        throw new ArrayUndefinedTypeException('Undefined array cannot be converted to integer');
+        throw new UndefinedArrayTypeException('Undefined array cannot be converted to integer');
     }
 
     /**
-     * @throws ArrayUndefinedTypeException
+     * @throws UndefinedArrayTypeException
      */
     public function value(): array
     {
-        throw new ArrayUndefinedTypeException('Undefined array has no value');
+        throw new UndefinedArrayTypeException('Undefined array has no value');
     }
 }
