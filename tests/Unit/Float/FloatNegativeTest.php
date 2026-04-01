@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
+use PhpTypedValues\Exception\Float\NegativeFloatTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Float\FloatNegative;
@@ -85,7 +86,7 @@ describe('FloatNegative', function () {
             it('throws exception on invalid string', function (string $input, string $exception, string $message) {
                 expect(fn() => FloatNegative::fromString($input))->toThrow($exception, $message);
             })->with([
-                'zero' => ['0.0', FloatTypeException::class, 'Expected negative float, got "0"'],
+                'zero' => ['0.0', NegativeFloatTypeException::class, 'Expected negative float, got "0"'],
                 'positive' => ['1.23', StringTypeException::class, 'String "1.23" has no valid strict float value'],
                 'non-numeric' => ['unknown', StringTypeException::class, 'String "unknown" has no valid float value'],
             ]);
@@ -122,7 +123,7 @@ describe('FloatNegative', function () {
             ]);
 
             it('throws exception on invalid float', function (float $input, string $message) {
-                expect(fn() => FloatNegative::fromFloat($input))->toThrow(FloatTypeException::class, $message);
+                expect(fn() => FloatNegative::fromFloat($input))->toThrow(NegativeFloatTypeException::class, $message);
             })->with([
                 'zero' => [0.0, 'Expected negative float, got "0"'],
                 'positive' => [1.0, 'Expected negative float, got "1"'],
@@ -172,7 +173,7 @@ describe('FloatNegative', function () {
 
         describe('fromBool', function () {
             it('throws on fromBool', function (bool $input) {
-                expect(fn() => FloatNegative::fromBool($input))->toThrow(FloatTypeException::class);
+                expect(fn() => FloatNegative::fromBool($input))->toThrow(NegativeFloatTypeException::class);
             })->with([
                 'true' => [true],
                 'false' => [false],
@@ -262,7 +263,7 @@ describe('FloatNegative', function () {
 
             it('throws on non-negative values', function (float $input, string $message) {
                 expect(fn() => new FloatNegative($input))
-                    ->toThrow(FloatTypeException::class, $message);
+                    ->toThrow(NegativeFloatTypeException::class, $message);
             })->with([
                 'zero' => [0.0, 'Expected negative float, got "0"'],
                 'positive' => [0.1, 'Expected negative float, got "0.1"'],

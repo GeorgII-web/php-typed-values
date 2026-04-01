@@ -174,7 +174,6 @@ readonly class DecimalMoney extends DecimalTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws StringTypeException
-     * @throws DecimalTypeException
      */
     public function toFloat(): float
     {

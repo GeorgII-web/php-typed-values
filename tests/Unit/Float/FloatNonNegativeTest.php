@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
+use PhpTypedValues\Exception\Float\NonNegativeFloatTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Float\FloatNonNegative;
@@ -86,8 +87,8 @@ describe('FloatNonNegative', function () {
                 'empty' => ['', StringTypeException::class, 'String "" has no valid float value'],
                 'non-numeric' => ['abc', StringTypeException::class, 'String "abc" has no valid float value'],
                 'comma separator' => ['5,5', StringTypeException::class, 'String "5,5" has no valid float value'],
-                'negative' => ['-1.0', FloatTypeException::class, 'Expected non-negative float, got "-1"'],
-                'negative small' => ['-0.10000000000000001', FloatTypeException::class, 'Expected non-negative float, got "-0.1"'],
+                'negative' => ['-1.0', NonNegativeFloatTypeException::class, 'Expected non-negative float, got "-1"'],
+                'negative small' => ['-0.10000000000000001', NonNegativeFloatTypeException::class, 'Expected non-negative float, got "-0.1"'],
             ]);
         });
 
@@ -117,7 +118,7 @@ describe('FloatNonNegative', function () {
             ]);
 
             it('throws exception on invalid float', function (float $input, string $message) {
-                expect(fn() => FloatNonNegative::fromFloat($input))->toThrow(FloatTypeException::class, $message);
+                expect(fn() => FloatNonNegative::fromFloat($input))->toThrow(NonNegativeFloatTypeException::class, $message);
             })->with([
                 'negative' => [-1.0, 'Expected non-negative float, got "-1"'],
                 'negative small' => [-0.001, 'Expected non-negative float, got "-0.001"'],

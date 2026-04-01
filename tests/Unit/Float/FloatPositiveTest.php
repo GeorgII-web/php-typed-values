@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
+use PhpTypedValues\Exception\Float\PositiveFloatTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Float\FloatPositive;
@@ -82,7 +83,7 @@ describe('FloatPositive', function () {
             it('throws exception on invalid string', function (string $input, string $exception, string $message) {
                 expect(fn() => FloatPositive::fromString($input))->toThrow($exception, $message);
             })->with([
-                'zero' => ['0.0', FloatTypeException::class, 'Expected positive float, got "0"'],
+                'zero' => ['0.0', PositiveFloatTypeException::class, 'Expected positive float, got "0"'],
                 'negative' => ['-1.23', StringTypeException::class, 'String "-1.23" has no valid strict float value'],
                 'non-numeric' => ['unknown', StringTypeException::class, 'String "unknown" has no valid float value'],
             ]);
@@ -111,7 +112,7 @@ describe('FloatPositive', function () {
             ]);
 
             it('throws exception on invalid float', function (float $input, string $message) {
-                expect(fn() => FloatPositive::fromFloat($input))->toThrow(FloatTypeException::class, $message);
+                expect(fn() => FloatPositive::fromFloat($input))->toThrow(PositiveFloatTypeException::class, $message);
             })->with([
                 'zero' => [0.0, 'Expected positive float, got "0"'],
                 'negative' => [-1.0, 'Expected positive float, got "-1"'],
