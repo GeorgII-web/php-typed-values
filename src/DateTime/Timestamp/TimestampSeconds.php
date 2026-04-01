@@ -8,6 +8,8 @@ use DateTimeImmutable;
 use Exception;
 use PhpTypedValues\Base\Primitive\DateTime\DateTimeTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
+use PhpTypedValues\Exception\DateTime\DateTimeTypeException;
+use PhpTypedValues\Exception\DateTime\ReasonableRangeDateTimeTypeException;
 use PhpTypedValues\Exception\DateTime\TimestampTypeException;
 use PhpTypedValues\Exception\DateTime\ZoneDateTimeTypeException;
 use PhpTypedValues\Exception\TypeException;
@@ -92,6 +94,8 @@ readonly class TimestampSeconds extends DateTimeTypeAbstract
                     static::stringToDateTimeZone($timezone)
                 )
             );
+        } catch (ReasonableRangeDateTimeTypeException $e) {
+            throw $e;
         } catch (DateTimeTypeException $e) {
             throw new TimestampTypeException($e->getMessage(), $e->getCode(), $e);
         }
