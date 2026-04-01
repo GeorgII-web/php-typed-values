@@ -8,6 +8,7 @@ use Exception;
 use PhpTypedValues\Base\Primitive\Bool\BoolTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\Bool\BoolTypeException;
+use PhpTypedValues\Exception\Bool\TrueBoolTypeException;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
@@ -42,12 +43,12 @@ readonly class TrueStandard extends BoolTypeAbstract
     protected true $value;
 
     /**
-     * @throws BoolTypeException
+     * @throws TrueBoolTypeException
      */
     public function __construct(bool $value)
     {
         if ($value !== true) {
-            throw new BoolTypeException('Expected "true" literal, got "false"');
+            throw new TrueBoolTypeException('Expected "true" literal, got "false"');
         }
 
         $this->value = true;
@@ -56,7 +57,7 @@ readonly class TrueStandard extends BoolTypeAbstract
     /**
      * @psalm-pure
      *
-     * @throws BoolTypeException
+     * @throws TrueBoolTypeException
      */
     public static function fromBool(bool $value): static
     {
@@ -67,7 +68,7 @@ readonly class TrueStandard extends BoolTypeAbstract
      * @psalm-pure
      *
      * @throws DecimalTypeException
-     * @throws BoolTypeException
+     * @throws TrueBoolTypeException
      */
     public static function fromDecimal(string $value): static
     {
@@ -78,7 +79,7 @@ readonly class TrueStandard extends BoolTypeAbstract
      * @psalm-pure
      *
      * @throws FloatTypeException
-     * @throws BoolTypeException
+     * @throws TrueBoolTypeException
      */
     public static function fromFloat(float $value): static
     {
@@ -89,7 +90,7 @@ readonly class TrueStandard extends BoolTypeAbstract
      * @psalm-pure
      *
      * @throws IntegerTypeException
-     * @throws BoolTypeException
+     * @throws TrueBoolTypeException
      */
     public static function fromInt(int $value): static
     {
@@ -99,7 +100,7 @@ readonly class TrueStandard extends BoolTypeAbstract
     /**
      * @psalm-pure
      *
-     * @throws BoolTypeException
+     * @throws TrueBoolTypeException
      * @throws StringTypeException
      */
     public static function fromString(string $value): static

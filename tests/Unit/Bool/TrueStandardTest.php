@@ -6,6 +6,7 @@ namespace PhpTypedValues\Tests\Unit\Bool;
 
 use PhpTypedValues\Bool\TrueStandard;
 use PhpTypedValues\Exception\Bool\BoolTypeException;
+use PhpTypedValues\Exception\Bool\TrueBoolTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use stdClass;
@@ -34,7 +35,7 @@ describe('TrueStandard', function () {
             ->and((string) $t)->toBe('true');
 
         expect(fn() => new TrueStandard(false))
-            ->toThrow(BoolTypeException::class, 'Expected "true" literal, got "false"');
+            ->toThrow(TrueBoolTypeException::class, 'Expected "true" literal, got "false"');
     });
 
     it('jsonSerialize returns native true', function (): void {
@@ -48,7 +49,7 @@ describe('TrueStandard', function () {
             ->and(TrueStandard::tryFromString('TRUE'))->toBeInstanceOf(Undefined::class);
 
         expect(fn() => TrueStandard::fromString('false'))
-            ->toThrow(BoolTypeException::class, 'Expected "true" literal, got "false"');
+            ->toThrow(TrueBoolTypeException::class, 'Expected "true" literal, got "false"');
         expect(fn() => TrueStandard::fromString(' YES '))
             ->toThrow(StringTypeException::class, 'String " YES " has no valid strict bool value');
     });
@@ -57,14 +58,14 @@ describe('TrueStandard', function () {
         expect(TrueStandard::fromInt(1)->value())->toBeTrue();
 
         expect(fn() => TrueStandard::fromInt(0))
-            ->toThrow(BoolTypeException::class, 'Expected "true" literal, got "false"');
+            ->toThrow(TrueBoolTypeException::class, 'Expected "true" literal, got "false"');
     });
 
     it('fromDecimal accepts only "1.0"', function (): void {
         expect(TrueStandard::fromDecimal('1.0')->value())->toBeTrue();
 
         expect(fn() => TrueStandard::fromDecimal('0.0'))
-            ->toThrow(BoolTypeException::class, 'Expected "true" literal, got "false"');
+            ->toThrow(TrueBoolTypeException::class, 'Expected "true" literal, got "false"');
     });
 
     it('tryFromString/tryFromInt return Undefined for non-true inputs', function (): void {
@@ -94,7 +95,7 @@ describe('TrueStandard', function () {
         expect($t->value())->toBeTrue();
 
         expect(fn() => TrueStandard::fromBool(false))
-            ->toThrow(BoolTypeException::class, 'Expected "true" literal, got "false"');
+            ->toThrow(TrueBoolTypeException::class, 'Expected "true" literal, got "false"');
     });
 
     it('__toString returns "true"', function (): void {

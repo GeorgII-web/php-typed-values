@@ -49,6 +49,7 @@ readonly class DecimalPositive extends DecimalTypeAbstract
 
     /**
      * @throws PositiveDecimalTypeException
+     * @throws DecimalTypeException
      */
     public function __construct(string $value)
     {
@@ -63,6 +64,7 @@ readonly class DecimalPositive extends DecimalTypeAbstract
 
     /**
      * @throws PositiveDecimalTypeException
+     * @throws DecimalTypeException
      *
      * @psalm-pure
      */
@@ -73,6 +75,7 @@ readonly class DecimalPositive extends DecimalTypeAbstract
 
     /**
      * @throws PositiveDecimalTypeException
+     * @throws DecimalTypeException
      *
      * @psalm-pure
      */
@@ -85,6 +88,7 @@ readonly class DecimalPositive extends DecimalTypeAbstract
      * @throws FloatTypeException
      * @throws StringTypeException
      * @throws PositiveDecimalTypeException
+     * @throws DecimalTypeException
      *
      * @psalm-pure
      */
@@ -95,6 +99,7 @@ readonly class DecimalPositive extends DecimalTypeAbstract
 
     /**
      * @throws PositiveDecimalTypeException
+     * @throws DecimalTypeException
      *
      * @psalm-pure
      */
@@ -105,6 +110,7 @@ readonly class DecimalPositive extends DecimalTypeAbstract
 
     /**
      * @throws PositiveDecimalTypeException
+     * @throws DecimalTypeException
      *
      * @psalm-pure
      */
