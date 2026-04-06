@@ -78,6 +78,10 @@ final readonly class Profile
 }
 ```
 
+#### Undefined
+
+Prefer using the `Undefined` type over `null` to maintain consistency and improve type safety within the codebase.
+
 Other usage examples [docs/USAGE.md](docs/USAGE.md)
 
 ### Key features
