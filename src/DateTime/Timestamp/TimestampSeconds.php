@@ -33,15 +33,19 @@ use function is_string;
  *
  * @psalm-immutable
  */
-readonly class TimestampSeconds extends DateTimeTypeAbstract
+class TimestampSeconds extends DateTimeTypeAbstract
 {
     /**
      * DateTime::format() pattern for Unix timestamp.
      *
      * @see https://www.php.net/manual/en/datetime.format.php
+     * @var string
      */
-    public const string FORMAT = 'U';
+    public const FORMAT = 'U';
 
+    /**
+     * @readonly
+     */
     protected DateTimeImmutable $value;
 
     /**
@@ -57,8 +61,9 @@ readonly class TimestampSeconds extends DateTimeTypeAbstract
      * @throws ZoneDateTimeTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromDateTime(DateTimeImmutable $value): static
+    public static function fromDateTime(DateTimeImmutable $value)
     {
         return new static($value);
     }
@@ -69,8 +74,9 @@ readonly class TimestampSeconds extends DateTimeTypeAbstract
      * @throws TimestampTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromInt(int $value, string $timezone = self::DEFAULT_ZONE): static
+    public static function fromInt(int $value, string $timezone = self::DEFAULT_ZONE)
     {
         return static::fromString((string) $value, $timezone);
     }
@@ -83,8 +89,9 @@ readonly class TimestampSeconds extends DateTimeTypeAbstract
      * @throws TimestampTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE): static
+    public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE)
     {
         try {
             return new static(
@@ -151,22 +158,28 @@ readonly class TimestampSeconds extends DateTimeTypeAbstract
      * @return static|T
      *
      * @psalm-pure
+     * @param mixed $value
      */
     public static function tryFromMixed(
-        mixed $value,
+        $value,
         string $timezone = self::DEFAULT_ZONE,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
-            /** @var static $result */
-            return match (true) {
-                is_string($value) => static::fromString($value, $timezone),
-                is_int($value) => static::fromInt($value, $timezone),
-                $value instanceof Stringable => static::fromString((string) $value, $timezone),
-                ($value instanceof DateTimeImmutable) => static::fromDateTime($value),
-                default => throw new TypeException('Value cannot be cast to date time'),
-            };
-        } catch (Exception) {
+            switch (true) {
+                case is_string($value):
+                    return static::fromString($value, $timezone);
+                case is_int($value):
+                    return static::fromInt($value, $timezone);
+                case is_object($value) && method_exists($value, '__toString'):
+                    return static::fromString((string) $value, $timezone);
+                case $value instanceof DateTimeImmutable:
+                    return static::fromDateTime($value);
+                default:
+                    throw new TypeException('Value cannot be cast to date time');
+            }
+        } catch (Exception $exception) {
             // @var PrimitiveTypeAbstract
             return $default;
         }
@@ -185,12 +198,13 @@ readonly class TimestampSeconds extends DateTimeTypeAbstract
     public static function tryFromString(
         string $value,
         string $timezone = self::DEFAULT_ZONE,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static $result */
             return static::fromString($value, $timezone);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             // @var PrimitiveTypeAbstract
             return $default;
         }
@@ -205,8 +219,9 @@ readonly class TimestampSeconds extends DateTimeTypeAbstract
      * @psalm-pure
      *
      * @throws ZoneDateTimeTypeException
+     * @return static
      */
-    public function withTimeZone(string $timezone): static
+    public function withTimeZone(string $timezone)
     {
         /** @psalm-suppress ImpureVariable */
         return new static(
