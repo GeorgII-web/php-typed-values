@@ -159,8 +159,13 @@ Types
 │   ├── Alias
 │   │   ├── DoubleType
 │   │   └── FloatType
+│   ├── Specific
+│   │   ├── FloatPercent
+│   │   └── FloatProbability
 │   ├── FloatNegative
 │   ├── FloatNonNegative
+│   ├── FloatNonPositive
+│   ├── FloatNonZero
 │   ├── FloatPositive
 │   └── FloatStandard
 ├── Integer

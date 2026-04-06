@@ -2,14 +2,15 @@
 
 declare(strict_types=1);
 
-namespace PhpTypedValues\Decimal;
+namespace PhpTypedValues\Float\Specific;
 
 use Exception;
-use PhpTypedValues\Base\Primitive\Decimal\DecimalTypeAbstract;
+use PhpTypedValues\Base\Primitive\Float\FloatTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
-use PhpTypedValues\Exception\Decimal\NonNegativeDecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
+use PhpTypedValues\Exception\Float\ProbabilityFloatTypeException;
+use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -18,105 +19,90 @@ use Stringable;
 use function is_bool;
 use function is_float;
 use function is_int;
-use function is_scalar;
 use function is_string;
 use function sprintf;
 
 /**
- * DECIMAL non-negative value encoded as a string.
- *
- * Accepts canonical decimal strings like "123.0", "5.0", or "3.14". No leading
- * plus sign and no invalid forms like ".5" or "1." are allowed. The original
- * string is preserved as provided.
- *
- * Example
- *  - $d = DecimalNonNegative::fromString('3.14');
- *    $d->toString(); // '3.14'
- *  - DecimalNonNegative::fromString('abc'); // throws DecimalTypeException
- *
- * Note: Use toFloat() only when the decimal can be represented exactly by a
- * PHP float. The method verifies an exact round‑trip cast, must
- * equal the original string, and throws otherwise.
+ * Float probability value (0.0 to 1.0).
  *
  * @psalm-immutable
  */
-readonly class DecimalNonNegative extends DecimalTypeAbstract
+readonly class FloatProbability extends FloatTypeAbstract
 {
-    /**
-     * @var non-empty-string
-     */
-    protected string $value;
+    protected float $value;
 
     /**
-     * @throws NonNegativeDecimalTypeException
-     * @throws DecimalTypeException
+     * @throws ProbabilityFloatTypeException
      */
-    public function __construct(string $value)
+    public function __construct(float $value)
     {
-        $decimal = self::stringToDecimal($value);
-
-        if ($decimal[0] === '-') {
-            throw new NonNegativeDecimalTypeException(sprintf('Decimal "%s" is not a non-negative value', $value));
+        if (is_infinite($value)) {
+            throw new ProbabilityFloatTypeException('Infinite float value');
         }
 
-        $this->value = $decimal;
+        if (is_nan($value)) {
+            throw new ProbabilityFloatTypeException('Not a number float value');
+        }
+
+        if ($value < 0.0 || $value > 1.0) {
+            throw new ProbabilityFloatTypeException(sprintf('Expected float between 0.0 and 1.0, got "%s"', $value));
+        }
+
+        $this->value = $value;
     }
 
     /**
-     * @throws NonNegativeDecimalTypeException
-     * @throws DecimalTypeException
+     * @throws ProbabilityFloatTypeException
      *
      * @psalm-pure
      */
     public static function fromBool(bool $value): static
     {
-        return new static(static::boolToDecimal($value));
+        return new static(parent::boolToFloat($value));
     }
 
     /**
-     * @throws NonNegativeDecimalTypeException
-     * @throws DecimalTypeException
-     *
      * @psalm-pure
+     *
+     * @throws DecimalTypeException
+     * @throws ProbabilityFloatTypeException
+     * @throws StringTypeException
      */
     public static function fromDecimal(string $value): static
     {
-        return new static($value);
+        return new static(static::decimalToFloat($value));
     }
 
     /**
-     * @throws FloatTypeException
-     * @throws StringTypeException
-     * @throws NonNegativeDecimalTypeException
-     * @throws DecimalTypeException
+     * @throws ProbabilityFloatTypeException
      *
      * @psalm-pure
      */
     public static function fromFloat(float $value): static
     {
-        return new static(static::floatToString($value));
+        return new static($value);
     }
 
     /**
-     * @throws NonNegativeDecimalTypeException
-     * @throws DecimalTypeException
+     * @throws ProbabilityFloatTypeException
+     * @throws IntegerTypeException
      *
      * @psalm-pure
      */
     public static function fromInt(int $value): static
     {
-        return new static(static::intToDecimal($value));
+        return new static(parent::intToFloat($value));
     }
 
     /**
-     * @throws NonNegativeDecimalTypeException
-     * @throws DecimalTypeException
+     * @throws ProbabilityFloatTypeException
+     * @throws StringTypeException
      *
      * @psalm-pure
      */
     public static function fromString(string $value): static
     {
-        return new static($value);
+        return new static(parent::stringToFloat($value));
     }
 
     public function isEmpty(): bool
@@ -140,53 +126,51 @@ readonly class DecimalNonNegative extends DecimalTypeAbstract
         return false;
     }
 
-    /**
-     * @return non-empty-string
-     */
-    public function jsonSerialize(): string
+    public function jsonSerialize(): float
     {
-        return $this->toString();
+        return $this->value;
     }
 
     /**
-     * @throws StringTypeException
+     * @throws FloatTypeException
      */
     public function toBool(): bool
     {
-        return static::stringToBool($this->value());
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    public function toDecimal(): string
-    {
-        return $this->value();
+        return static::floatToBool($this->value);
     }
 
     /**
      * @throws FloatTypeException
      * @throws StringTypeException
+     * @throws DecimalTypeException
      */
+    public function toDecimal(): string
+    {
+        return static::floatToDecimal($this->value());
+    }
+
     public function toFloat(): float
     {
-        return static::stringToFloat($this->value());
+        return $this->value;
     }
 
     /**
-     * @throws StringTypeException
+     * @throws FloatTypeException
      */
     public function toInt(): int
     {
-        return static::stringToInt($this->value());
+        return static::floatToInt($this->value);
     }
 
     /**
      * @return non-empty-string
+     *
+     * @throws FloatTypeException
+     * @throws StringTypeException
      */
     public function toString(): string
     {
-        return $this->value();
+        return static::floatToString($this->value);
     }
 
     /**
@@ -226,7 +210,7 @@ readonly class DecimalNonNegative extends DecimalTypeAbstract
     ): PrimitiveTypeAbstract|static {
         try {
             /** @var static */
-            return static::fromString($value);
+            return static::fromDecimal($value);
         } catch (Exception) {
             /** @var T */
             return $default;
@@ -293,13 +277,11 @@ readonly class DecimalNonNegative extends DecimalTypeAbstract
         try {
             /** @var static */
             return match (true) {
-                is_string($value) => static::fromString($value),
                 is_float($value) => static::fromFloat($value),
                 is_int($value) => static::fromInt($value),
-                //                ($value instanceof self) => static::fromString($value->value()),
                 is_bool($value) => static::fromBool($value),
-                $value instanceof Stringable, is_scalar($value) => static::fromString((string) $value),
-                default => throw new TypeException('Value cannot be cast to string'),
+                is_string($value) || $value instanceof Stringable => static::fromString((string) $value),
+                default => throw new TypeException('Value cannot be cast to float'),
             };
         } catch (Exception) {
             /** @var T */
@@ -329,10 +311,7 @@ readonly class DecimalNonNegative extends DecimalTypeAbstract
         }
     }
 
-    /**
-     * @return non-empty-string
-     */
-    public function value(): string
+    public function value(): float
     {
         return $this->value;
     }
