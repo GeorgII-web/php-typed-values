@@ -10,7 +10,7 @@
 * Create a new type class in `src/{TypeName}/` or deeper to `Specific` etc. directory.
 * Create a new type class in `src/{TypeName}/Alias/` or deeper directory.
 * Create a new exception class in `src/Exception/{TypeName}/` or deeper directory, name has reverted order of words, for `IntegerPositive` it's `PositiveIntegerTypeException`.
-* Create a new test class in `tests/Unit/{TypeName}/{TypeName}Test.php` file. Make 100% code/type/mutation coverage, copy the nearest tests file cases.
+* Create a new test class in `tests/Unit/{TypeName}/{TypeName}Test.php` file. Make 100% code/type/mutation coverage, copy the nearest tests file cases, use "Fix test" rules.
 * Add to the test a `covers({TypeName}::class);`
 * Type class should not contain data formatters, validate data as it is.
 * Run `docker-compose exec -ti php cs` to fix code style.
@@ -27,7 +27,7 @@
 * FIX ONLY TEST FILES, DO NOT CREATE NEW TEST FILES, DO NOT CHANGE CLASSES FROM `src`.
 * **Tests style** Use PEST syntax, wrap all tests in describe(), use it() and with() for datasets.
 * Try to find a proper describe() group for a new test.
-* If a class is created in a test – choose a name "ClassName" + Test.
+* If a mock class is created in a test – choose a name "ClassName" + Test to comply with psr-4 autoloading standard.
 * Add a proper namespace and add `use Stringable;` and `use stdClass;` if any used in code.
 * Choose short but meaningful names for test\describe methods, must be unique in a file.
 * Avoid duplicate test cases or same data in a single test.

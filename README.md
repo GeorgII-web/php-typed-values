@@ -122,6 +122,9 @@ Types
 │   │   └── BooleanType
 │   ├── BoolStandard
 │   ├── FalseStandard
+│   ├── Specific
+│   │   ├── BoolSwitch
+│   │   └── BoolToggle
 │   └── TrueStandard
 ├── DateTime
 │   ├── DateTimeAtom
@@ -139,10 +142,14 @@ Types
 │   │   └── Decimal
 │   ├── DecimalNegative
 │   ├── DecimalNonNegative
+│   ├── DecimalNonPositive
+│   ├── DecimalNonZero
 │   ├── DecimalPositive
 │   ├── DecimalStandard
 │   └── Specific
-│       └── DecimalMoney
+│       ├── DecimalMoney
+│       ├── DecimalPercent
+│       └── DecimalProbability
 ├── Float
 │   ├── Alias
 │   │   ├── DoubleType
@@ -191,6 +198,7 @@ Types
 │   │   ├── StringTinyText
 │   │   └── StringVarChar255
 │   ├── Specific
+│   │   ├── StringBase64
 │   │   ├── StringCountryCode
 │   │   ├── StringCurrencyCode
 │   │   ├── StringDomain
