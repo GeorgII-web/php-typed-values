@@ -49,6 +49,7 @@ readonly class DecimalNegative extends DecimalTypeAbstract
 
     /**
      * @throws NegativeDecimalTypeException
+     * @throws DecimalTypeException
      */
     public function __construct(string $value)
     {
@@ -63,6 +64,7 @@ readonly class DecimalNegative extends DecimalTypeAbstract
 
     /**
      * @throws NegativeDecimalTypeException
+     * @throws DecimalTypeException
      *
      * @psalm-pure
      */
@@ -73,6 +75,7 @@ readonly class DecimalNegative extends DecimalTypeAbstract
 
     /**
      * @throws NegativeDecimalTypeException
+     * @throws DecimalTypeException
      *
      * @psalm-pure
      */
@@ -85,6 +88,7 @@ readonly class DecimalNegative extends DecimalTypeAbstract
      * @throws FloatTypeException
      * @throws StringTypeException
      * @throws NegativeDecimalTypeException
+     * @throws DecimalTypeException
      *
      * @psalm-pure
      */
@@ -95,6 +99,7 @@ readonly class DecimalNegative extends DecimalTypeAbstract
 
     /**
      * @throws NegativeDecimalTypeException
+     * @throws DecimalTypeException
      *
      * @psalm-pure
      */
@@ -105,6 +110,7 @@ readonly class DecimalNegative extends DecimalTypeAbstract
 
     /**
      * @throws NegativeDecimalTypeException
+     * @throws DecimalTypeException
      *
      * @psalm-pure
      */

@@ -50,6 +50,7 @@ readonly class DecimalMoney extends DecimalTypeAbstract
 
     /**
      * @throws MoneyDecimalTypeException
+     * @throws DecimalTypeException
      */
     public function __construct(string $value)
     {
@@ -68,6 +69,7 @@ readonly class DecimalMoney extends DecimalTypeAbstract
 
     /**
      * @throws MoneyDecimalTypeException
+     * @throws DecimalTypeException
      *
      * @psalm-pure
      */
@@ -81,6 +83,7 @@ readonly class DecimalMoney extends DecimalTypeAbstract
 
     /**
      * @throws MoneyDecimalTypeException
+     * @throws DecimalTypeException
      *
      * @psalm-pure
      */
@@ -93,6 +96,7 @@ readonly class DecimalMoney extends DecimalTypeAbstract
      * @throws FloatTypeException
      * @throws StringTypeException
      * @throws MoneyDecimalTypeException
+     * @throws DecimalTypeException
      *
      * @psalm-pure
      */
@@ -105,6 +109,7 @@ readonly class DecimalMoney extends DecimalTypeAbstract
 
     /**
      * @throws MoneyDecimalTypeException
+     * @throws DecimalTypeException
      *
      * @psalm-pure
      */
@@ -117,6 +122,7 @@ readonly class DecimalMoney extends DecimalTypeAbstract
 
     /**
      * @throws MoneyDecimalTypeException
+     * @throws DecimalTypeException
      *
      * @psalm-pure
      */
