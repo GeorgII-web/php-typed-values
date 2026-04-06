@@ -120,36 +120,41 @@ Types
 ├── Bool
 │   ├── Alias
 │   │   └── BooleanType
-│   ├── BoolStandard
-│   ├── FalseStandard
 │   ├── Specific
 │   │   ├── BoolSwitch
 │   │   └── BoolToggle
+│   ├── BoolStandard
+│   ├── FalseStandard
 │   └── TrueStandard
 ├── DateTime
+│   ├── MariaDb
+│   │   └── DateTimeSql
+│   ├── Timestamp
+│   │   ├── TimestampMicroseconds
+│   │   ├── TimestampMilliseconds
+│   │   └── TimestampSeconds
+│   ├── DateIso8601
 │   ├── DateTimeAtom
+│   ├── DateTimeCookie
+│   ├── DateTimeRFC1123
+│   ├── DateTimeRFC2822
 │   ├── DateTimeRFC3339
 │   ├── DateTimeRFC3339Extended
 │   ├── DateTimeW3C
-│   ├── MariaDb
-│   │   └── DateTimeSql
-│   └── Timestamp
-│       ├── TimestampMicroseconds
-│       ├── TimestampMilliseconds
-│       └── TimestampSeconds
+│   └── TimeIso8601
 ├── Decimal
 │   ├── Alias
 │   │   └── Decimal
+│   ├── Specific
+│   │   ├──DecimalMoney
+│   │   ├── DecimalPercent
+│   │   └── DecimalProbability
 │   ├── DecimalNegative
 │   ├── DecimalNonNegative
 │   ├── DecimalNonPositive
 │   ├── DecimalNonZero
 │   ├── DecimalPositive
 │   ├── DecimalStandard
-│   └── Specific
-│       ├── DecimalMoney
-│       ├── DecimalPercent
-│       └── DecimalProbability
 ├── Float
 │   ├── Alias
 │   │   ├── DoubleType
@@ -161,10 +166,18 @@ Types
 ├── Integer
 │   ├── Alias
 │   │   └── IntegerType
-│   ├── IntegerNegative
-│   ├── IntegerNonNegative
-│   ├── IntegerPositive
-│   ├── IntegerStandard
+│   ├── Specific
+│   │   ├── IntegerAge
+│   │   ├── IntegerDayOfMonth
+│   │   ├── IntegerHour
+│   │   ├── IntegerHttpStatusCode
+│   │   ├── IntegerMinute
+│   │   ├── IntegerMonth
+│   │   ├── IntegerPercent
+│   │   ├── IntegerPort
+│   │   ├── IntegerSecond
+│   │   ├── IntegerWeekDay
+│   │   └── IntegerYear
 │   ├── MariaDb
 │   │   ├── IntegerBig
 │   │   ├── IntegerBigUnsigned
@@ -176,18 +189,10 @@ Types
 │   │   ├── IntegerSmallUnsigned
 │   │   ├── IntegerTiny
 │   │   └── IntegerTinyUnsigned
-│   └── Specific
-│       ├── IntegerAge
-│       ├── IntegerDayOfMonth
-│       ├── IntegerHour
-│       ├── IntegerHttpStatusCode
-│       ├── IntegerMinute
-│       ├── IntegerMonth
-│       ├── IntegerPercent
-│       ├── IntegerPort
-│       ├── IntegerSecond
-│       ├── IntegerWeekDay
-│       └── IntegerYear
+│   ├── IntegerNegative
+│   ├── IntegerNonNegative
+│   ├── IntegerPositive
+│   └── IntegerStandard
 ├── String
 │   ├── Alias
 │   │   └── StringType
