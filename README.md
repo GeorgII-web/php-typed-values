@@ -196,6 +196,8 @@ Types
 │   │   └── IntegerTinyUnsigned
 │   ├── IntegerNegative
 │   ├── IntegerNonNegative
+│   ├── IntegerNonPositive
+│   ├── IntegerNonZero
 │   ├── IntegerPositive
 │   └── IntegerStandard
 ├── String
