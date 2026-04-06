@@ -55,7 +55,7 @@ if ($id <= 0) {
 }
 ```
 
-#### Create an alias (domain name)
+#### Create an alias (in your domain)
 
 ```php
 use PhpTypedValues\Integer\IntegerPositive;
@@ -63,6 +63,19 @@ use PhpTypedValues\Integer\IntegerPositive;
 readonly class Id extends IntegerPositive {}
 
 Id::fromInt(123);
+```
+
+#### Create composite objects
+
+```php
+final readonly class Profile
+{
+    public function __construct(
+        private IntegerPositive $id,
+        private StringUsername $username,
+        private FloatPositive|Undefined $rating,
+    ) {}
+}
 ```
 
 Other usage examples [docs/USAGE.md](docs/USAGE.md)
