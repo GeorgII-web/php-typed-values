@@ -8,7 +8,7 @@
 **Add a new type workflow**
 * Create a new type class in `src/{TypeName}/` or deeper to `Specific` etc. directory.
 * Create a new type class in `src/{TypeName}/Alias/` or deeper directory.
-* Create a new exception class in `src/Exception/{TypeName}/` or deeper directory.
+* Create a new exception class in `src/Exception/{TypeName}/` or deeper directory, name has reverted order of words, for `IntegerPositive` it's `PositiveIntegerTypeException`.
 * Create a new test class in `tests/Unit/{TypeName}/{TypeName}Test.php` file. Make 100% code/type/mutation coverage, copy the nearest tests file cases.
 * Add to the test a `covers({TypeName}::class);`
 * Type class should not contain data formatters, validate data as it is.
