@@ -101,15 +101,11 @@ Types
 │   ├── ArrayOfObjects
 │   └── ArrayUndefined
 ├── Bool
+│   ├── Alias
+│   │   └── BooleanType
 │   ├── BoolStandard
 │   ├── FalseStandard
-│   ├── TrueStandard
-│   └── Alias
-│       ├── Binary
-│       ├── BooleanType
-│       ├── Flag
-│       ├── Logical
-│       └── Toggle
+│   └── TrueStandard
 ├── DateTime
 │   ├── DateTimeAtom
 │   ├── DateTimeRFC3339
@@ -118,93 +114,102 @@ Types
 │   ├── MariaDb
 │   │   └── DateTimeSql
 │   └── Timestamp
+│       ├── TimestampMicroseconds
 │       ├── TimestampMilliseconds
 │       └── TimestampSeconds
 ├── Decimal
+│   ├── Alias
+│   │   └── Decimal
 │   ├── DecimalNegative
 │   ├── DecimalNonNegative
 │   ├── DecimalPositive
 │   ├── DecimalStandard
-│   ├── Alias
-│   │   └── Decimal
 │   └── Specific
 │       └── DecimalMoney
 ├── Float
+│   ├── Alias
+│   │   ├── DoubleType
+│   │   └── FloatType
 │   ├── FloatNegative
 │   ├── FloatNonNegative
 │   ├── FloatPositive
-│   ├── FloatStandard
-│   └── Alias
-│       ├── DoubleType
-│       ├── FloatType
-│       ├── NonNegative
-│       └── Positive
+│   └── FloatStandard
 ├── Integer
+│   ├── Alias
+│   │   └── IntegerType
 │   ├── IntegerNegative
 │   ├── IntegerNonNegative
 │   ├── IntegerPositive
 │   ├── IntegerStandard
-│   ├── Alias
-│   │   ├── IntegerType
-│   │   ├── NonNegative
-│   │   ├── Positive
-│   │   ├── MariaDb
-│   │   │   └── Tiny
-│   │   └── Specific
-│   │       ├── Id
-│   │       └── WeekDay
 │   ├── MariaDb
-│   │   └── IntegerTiny
+│   │   ├── IntegerBig
+│   │   ├── IntegerBigUnsigned
+│   │   ├── IntegerMedium
+│   │   ├── IntegerMediumUnsigned
+│   │   ├── IntegerNormal
+│   │   ├── IntegerNormalUnsigned
+│   │   ├── IntegerSmall
+│   │   ├── IntegerSmallUnsigned
+│   │   ├── IntegerTiny
+│   │   └── IntegerTinyUnsigned
 │   └── Specific
-│       └── IntegerWeekDay
+│       ├── IntegerAge
+│       ├── IntegerDayOfMonth
+│       ├── IntegerHour
+│       ├── IntegerHttpStatusCode
+│       ├── IntegerMinute
+│       ├── IntegerMonth
+│       ├── IntegerPercent
+│       ├── IntegerPort
+│       ├── IntegerSecond
+│       ├── IntegerWeekDay
+│       └── IntegerYear
 ├── String
+│   ├── Alias
+│   │   └── StringType
+│   ├── MariaDb
+│   │   ├── StringLongText
+│   │   ├── StringMediumText
+│   │   ├── StringText
+│   │   ├── StringTinyText
+│   │   └── StringVarChar255
+│   ├── Specific
+│   │   ├── StringCountryCode
+│   │   ├── StringCurrencyCode
+│   │   ├── StringDomain
+│   │   ├── StringEmail
+│   │   ├── StringFileName
+│   │   ├── StringHex
+│   │   ├── StringIban
+│   │   ├── StringIpV4
+│   │   ├── StringIpV6
+│   │   ├── StringJson
+│   │   ├── StringJwt
+│   │   ├── StringLanguageCode
+│   │   ├── StringLocaleCode
+│   │   ├── StringMacAddress
+│   │   ├── StringMd5
+│   │   ├── StringMimeType
+│   │   ├── StringPath
+│   │   ├── StringPhoneE164
+│   │   ├── StringSemVer
+│   │   ├── StringSha256
+│   │   ├── StringSha512
+│   │   ├── StringSlug
+│   │   ├── StringUrl
+│   │   ├── StringUrlPath
+│   │   ├── StringUsername
+│   │   ├── StringUuidV4
+│   │   └── StringUuidV7
 │   ├── StringEmpty
 │   ├── StringNonBlank
 │   ├── StringNonEmpty
-│   ├── StringStandard
-│   ├── Alias
-│   │   ├── EmptyStr
-│   │   ├── NonBlank
-│   │   ├── NonEmpty
-│   │   ├── Str
-│   │   ├── StringType
-│   │   ├── MariaDb
-│   │   │   ├── Text
-│   │   │   └── VarChar255
-│   │   └── Specific
-│   │       ├── CountryCode
-│   │       ├── Email
-│   │       ├── File
-│   │       ├── Json
-│   │       ├── Path
-│   │       ├── Url
-│   │       ├── UuidV4
-│   │       └── UuidV7
-│   ├── MariaDb
-│   │   ├── StringText
-│   │   └── StringVarChar255
-│   └── Specific
-│       ├── StringCountryCode
-│       ├── StringEmail
-│       ├── StringFileName
-│       ├── StringJson
-│       ├── StringLanguageCode
-│       ├── StringLocaleCode
-│       ├── StringMd5
-│       ├── StringPath
-│       ├── StringUrl
-│       ├── StringUuidV4
-│       └── StringUuidV7
+│   └── StringStandard
 └── Undefined
-    ├── UndefinedStandard
-    └── Alias
-        ├── NotExist
-        ├── NotFound
-        ├── NotSet
-        ├── Undefined
-        └── Unknown
-
-```
+    ├── Alias
+    │   └── Undefined
+    └── UndefinedStandard
+````
 
 ### License
 

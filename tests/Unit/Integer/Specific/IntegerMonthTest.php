@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Tests\Unit\Integer\Specific;
 
-use stdClass;
-use Stringable;
-
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\MonthIntegerTypeException;
@@ -14,6 +11,8 @@ use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Integer\Specific\IntegerMonth;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use stdClass;
+use Stringable;
 
 covers(IntegerMonth::class);
 
