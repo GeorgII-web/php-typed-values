@@ -2,6 +2,11 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\Integer\Specific;
+
+use stdClass;
+use Stringable;
+
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\WeekDayIntegerTypeException;

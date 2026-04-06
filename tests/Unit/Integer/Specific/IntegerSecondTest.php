@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\Integer\Specific;
+
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\SecondIntegerTypeException;
@@ -9,8 +11,29 @@ use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Integer\Specific\IntegerSecond;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use stdClass;
+use Stringable;
+
+use function sprintf;
 
 covers(IntegerSecond::class);
+
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
+readonly class IntegerSecondTest extends IntegerSecond
+{
+    public function __construct(int $value)
+    {
+        if ($value < 1) {
+            throw new SecondIntegerTypeException(sprintf('Expected value between 1-59, got "%d"', $value));
+        }
+
+        parent::__construct($value);
+    }
+}
 
 describe('IntegerSecond', function (): void {
     // ============================================
@@ -185,6 +208,11 @@ describe('IntegerSecond', function (): void {
             $result = IntegerSecond::tryFromBool(false);
             expect($result)->toBeInstanceOf(IntegerSecond::class)
                 ->and($result->value())->toBe(0);
+        });
+
+        it('returns Undefined via subclass when bool produces out-of-range value', function (): void {
+            $result = IntegerSecondTest::tryFromBool(false);
+            expect($result)->toBeInstanceOf(Undefined::class);
         });
     });
 

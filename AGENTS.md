@@ -27,7 +27,8 @@
 * FIX ONLY TEST FILES, DO NOT CREATE NEW TEST FILES, DO NOT CHANGE CLASSES FROM `src`.
 * **Tests style** Use PEST syntax, wrap all tests in describe(), use it() and with() for datasets.
 * Try to find a proper describe() group for a new test.
-* If a class is created in a test – choose a name "ClassName" + Test, bc CSFixer will rename it.
+* If a class is created in a test – choose a name "ClassName" + Test.
+* Add a proper namespace and add `use Stringable;` and `use stdClass;` if any used in code.
 * Choose short but meaningful names for test\describe methods, must be unique in a file.
 * Avoid duplicate test cases or same data in a single test.
 * Run `docker-compose exec -ti php composer test -- --filter="failedTypeClassName"` to run tests.

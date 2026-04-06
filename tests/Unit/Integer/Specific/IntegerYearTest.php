@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\Integer\Specific;
+
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\YearIntegerTypeException;
@@ -9,6 +11,8 @@ use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Integer\Specific\IntegerYear;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use stdClass;
+use Stringable;
 
 covers(IntegerYear::class);
 
@@ -149,6 +153,53 @@ describe('IntegerYear', function (): void {
             $result = IntegerYear::tryFromString('abc');
             expect($result)->toBeInstanceOf(Undefined::class);
         });
+    });
+
+    describe('tryFromBool method', function (): void {
+        it('returns IntegerYear from true', function (): void {
+            $result = IntegerYear::tryFromBool(true);
+            expect($result)->toBeInstanceOf(IntegerYear::class)
+                ->and($result->value())->toBe(1);
+        });
+
+        it('returns Undefined from false', function (): void {
+            $result = IntegerYear::tryFromBool(false);
+            expect($result)->toBeInstanceOf(Undefined::class);
+        });
+    });
+
+    describe('tryFromFloat method', function (): void {
+        it('returns IntegerYear from valid float', function (float $value, int $expected): void {
+            $result = IntegerYear::tryFromFloat($value);
+            expect($result)->toBeInstanceOf(IntegerYear::class)
+                ->and($result->value())->toBe($expected);
+        })->with([
+            [1.0, 1],
+            [2024.0, 2024],
+            [9999.0, 9999],
+        ]);
+
+        it('returns Undefined for invalid floats', function (float $invalidValue): void {
+            $result = IntegerYear::tryFromFloat($invalidValue);
+            expect($result)->toBeInstanceOf(Undefined::class);
+        })->with([0.0, 10000.0, 2024.5, -1.0]);
+    });
+
+    describe('tryFromDecimal method', function (): void {
+        it('returns IntegerYear from valid decimal', function (string $value, int $expected): void {
+            $result = IntegerYear::tryFromDecimal($value);
+            expect($result)->toBeInstanceOf(IntegerYear::class)
+                ->and($result->value())->toBe($expected);
+        })->with([
+            ['1.0', 1],
+            ['2024.0', 2024],
+            ['9999.0', 9999],
+        ]);
+
+        it('returns Undefined for invalid decimals', function (string $invalidValue): void {
+            $result = IntegerYear::tryFromDecimal($invalidValue);
+            expect($result)->toBeInstanceOf(Undefined::class);
+        })->with(['0.0', '10000.0', '2024.1', '-1.0', '2024', 'abc']);
     });
 
     describe('tryFromMixed method', function (): void {

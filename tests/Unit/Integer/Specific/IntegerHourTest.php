@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\Integer\Specific;
+
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\HourIntegerTypeException;
@@ -9,8 +11,29 @@ use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Integer\Specific\IntegerHour;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use stdClass;
+use Stringable;
+
+use function sprintf;
 
 covers(IntegerHour::class);
+
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
+readonly class IntegerHourTest extends IntegerHour
+{
+    public function __construct(int $value)
+    {
+        if ($value < 1) {
+            throw new HourIntegerTypeException(sprintf('Expected value between 1-23, got "%d"', $value));
+        }
+
+        parent::__construct($value);
+    }
+}
 
 describe('IntegerHour', function (): void {
     // ============================================
@@ -185,6 +208,11 @@ describe('IntegerHour', function (): void {
             $result = IntegerHour::tryFromBool(false);
             expect($result)->toBeInstanceOf(IntegerHour::class)
                 ->and($result->value())->toBe(0);
+        });
+
+        it('returns Undefined via subclass when bool produces out-of-range value', function (): void {
+            $result = IntegerHourTest::tryFromBool(false);
+            expect($result)->toBeInstanceOf(Undefined::class);
         });
     });
 

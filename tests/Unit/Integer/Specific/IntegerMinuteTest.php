@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace PhpTypedValues\Tests\Unit\Integer\Specific;
+
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\MinuteIntegerTypeException;
@@ -9,8 +11,29 @@ use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Integer\Specific\IntegerMinute;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use stdClass;
+use Stringable;
+
+use function sprintf;
 
 covers(IntegerMinute::class);
+
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
+readonly class IntegerMinuteTest extends IntegerMinute
+{
+    public function __construct(int $value)
+    {
+        if ($value < 1) {
+            throw new MinuteIntegerTypeException(sprintf('Expected value between 1-59, got "%d"', $value));
+        }
+
+        parent::__construct($value);
+    }
+}
 
 describe('IntegerMinute', function (): void {
     // ============================================
@@ -185,6 +208,11 @@ describe('IntegerMinute', function (): void {
             $result = IntegerMinute::tryFromBool(false);
             expect($result)->toBeInstanceOf(IntegerMinute::class)
                 ->and($result->value())->toBe(0);
+        });
+
+        it('returns Undefined via subclass when bool produces out-of-range value', function (): void {
+            $result = IntegerMinuteTest::tryFromBool(false);
+            expect($result)->toBeInstanceOf(Undefined::class);
         });
     });
 
