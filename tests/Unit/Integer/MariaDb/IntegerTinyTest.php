@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\Tests\Unit\Integer\MariaDb;
 
-use Exception;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\TinyIntegerTypeException;
@@ -464,13 +463,53 @@ describe('IntegerTiny', function (): void {
     {
         public static function fromBool(bool $value): static
         {
-            throw new Exception('test');
+            throw new TinyIntegerTypeException('test');
+        }
+
+        public static function fromDecimal(string $value): static
+        {
+            throw new TinyIntegerTypeException('test');
+        }
+
+        public static function fromFloat(float $value): static
+        {
+            throw new TinyIntegerTypeException('test');
+        }
+
+        public static function fromInt(int $value): static
+        {
+            throw new TinyIntegerTypeException('test');
+        }
+
+        public static function fromString(string $value): static
+        {
+            throw new TinyIntegerTypeException('test');
         }
     }
 
     describe('IntegerTiny catch block coverage', function (): void {
         it('IntegerTiny::tryFromBool catch block coverage', function (): void {
             expect(IntegerTinyTest::tryFromBool(true))->toBeInstanceOf(Undefined::class);
+        });
+
+        it('IntegerTiny::tryFromDecimal catch block coverage', function (): void {
+            expect(IntegerTinyTest::tryFromDecimal('1.0'))->toBeInstanceOf(Undefined::class);
+        });
+
+        it('IntegerTiny::tryFromFloat catch block coverage', function (): void {
+            expect(IntegerTinyTest::tryFromFloat(1.0))->toBeInstanceOf(Undefined::class);
+        });
+
+        it('IntegerTiny::tryFromInt catch block coverage', function (): void {
+            expect(IntegerTinyTest::tryFromInt(1))->toBeInstanceOf(Undefined::class);
+        });
+
+        it('IntegerTiny::tryFromMixed catch block coverage', function (): void {
+            expect(IntegerTinyTest::tryFromMixed(1))->toBeInstanceOf(Undefined::class);
+        });
+
+        it('IntegerTiny::tryFromString catch block coverage', function (): void {
+            expect(IntegerTinyTest::tryFromString('1'))->toBeInstanceOf(Undefined::class);
         });
     });
 });

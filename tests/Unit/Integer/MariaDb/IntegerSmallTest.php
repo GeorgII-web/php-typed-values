@@ -447,11 +447,51 @@ describe('IntegerSmall', function (): void {
         {
             throw new Exception('test');
         }
+
+        public static function fromDecimal(string $value): static
+        {
+            throw new Exception('test');
+        }
+
+        public static function fromFloat(float $value): static
+        {
+            throw new Exception('test');
+        }
+
+        public static function fromInt(int $value): static
+        {
+            throw new Exception('test');
+        }
+
+        public static function fromString(string $value): static
+        {
+            throw new Exception('test');
+        }
     }
 
     describe('IntegerSmall catch block coverage', function (): void {
         it('IntegerSmall::tryFromBool catch block coverage', function (): void {
             expect(IntegerSmallTest::tryFromBool(true))->toBeInstanceOf(Undefined::class);
+        });
+
+        it('IntegerSmall::tryFromDecimal catch block coverage', function (): void {
+            expect(IntegerSmallTest::tryFromDecimal('1.0'))->toBeInstanceOf(Undefined::class);
+        });
+
+        it('IntegerSmall::tryFromFloat catch block coverage', function (): void {
+            expect(IntegerSmallTest::tryFromFloat(1.0))->toBeInstanceOf(Undefined::class);
+        });
+
+        it('IntegerSmall::tryFromInt catch block coverage', function (): void {
+            expect(IntegerSmallTest::tryFromInt(1))->toBeInstanceOf(Undefined::class);
+        });
+
+        it('IntegerSmall::tryFromMixed catch block coverage', function (): void {
+            expect(IntegerSmallTest::tryFromMixed(1))->toBeInstanceOf(Undefined::class);
+        });
+
+        it('IntegerSmall::tryFromString catch block coverage', function (): void {
+            expect(IntegerSmallTest::tryFromString('1'))->toBeInstanceOf(Undefined::class);
         });
     });
 });
