@@ -22,7 +22,6 @@ use function is_scalar;
 use function is_string;
 use function preg_match;
 use function sprintf;
-use function strtolower;
 
 /**
  * UUID version 7 (time‑ordered, Unix time‑based) string.
@@ -48,21 +47,18 @@ readonly class StringUuidV7 extends StringTypeAbstract
      */
     public function __construct(string $value)
     {
-        // Normalize to lowercase for consistent representation
-        $normalized = strtolower($value);
-
-        if ($normalized === '') {
+        if ($value === '') {
             // Distinct message for empty input
             throw new UuidStringTypeException(sprintf('Expected non-empty UUID v7 (xxxxxxxx-xxxx-7xxx-[89ab]xxx-xxxxxxxxxxxx), got "%s"', $value));
         }
 
         // RFC 4122-style UUID v7:
         // xxxxxxxx-xxxx-7xxx-[89ab]xxx-xxxxxxxxxxxx (hex, case-insensitive)
-        if (preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/', $normalized) !== 1) {
+        if (preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/', $value) !== 1) {
             throw new UuidStringTypeException(sprintf('Expected UUID v7 (xxxxxxxx-xxxx-7xxx-[89ab]xxx-xxxxxxxxxxxx), got "%s"', $value));
         }
 
-        $this->value = $normalized;
+        $this->value = $value;
     }
 
     /**

@@ -24,12 +24,10 @@ describe('StringUuidV7', function () {
                 ->and($s->toString())->toBe($uuid);
         });
 
-        it('normalizes uppercase input to lowercase while preserving the UUID semantics', function (): void {
+        it('throws on uppercase UUID input because it is not in the required lowercase form', function (): void {
             $upper = '01890F2A-5BCD-7DEF-9ABC-1234567890AB';
-            $s = StringUuidV7::fromString($upper);
-
-            expect($s->value())->toBe('01890f2a-5bcd-7def-9abc-1234567890ab')
-                ->and($s->toString())->toBe('01890f2a-5bcd-7def-9abc-1234567890ab');
+            expect(fn() => StringUuidV7::fromString($upper))
+                ->toThrow(UuidStringTypeException::class);
         });
 
         it('throws on empty string', function (): void {
@@ -55,14 +53,11 @@ describe('StringUuidV7', function () {
                 ->toThrow(UuidStringTypeException::class, 'Expected UUID v7 (xxxxxxxx-xxxx-7xxx-[89ab]xxx-xxxxxxxxxxxx), got "' . $badChar . '"');
         });
 
-        it('StringUuidV7::tryFromString returns instance for valid UUID v7 (case-insensitive) and normalizes to lowercase', function (): void {
+        it('StringUuidV7::tryFromString returns Undefined for uppercase input', function (): void {
             $input = '01890F2A-5BCD-7DEF-9ABC-1234567890AB';
             $v = StringUuidV7::tryFromString($input);
 
-            expect($v)
-                ->toBeInstanceOf(StringUuidV7::class)
-                ->and($v->value())
-                ->toBe(strtolower($input));
+            expect($v)->toBeInstanceOf(Undefined::class);
         });
 
         it('StringUuidV7::tryFromString returns Undefined for non-v7 or invalid UUID', function (): void {
@@ -78,12 +73,12 @@ describe('StringUuidV7', function () {
             expect($t->jsonSerialize())->toBeString();
         });
 
-        it('__toString returns normalized lowercase UUID v7', function (): void {
-            $input = '01890F2A-5BCD-7DEF-9ABC-1234567890AB';
+        it('__toString returns original lowercase UUID v7', function (): void {
+            $input = '01890f2a-5bcd-7def-8abc-1234567890ab';
             $u = StringUuidV7::fromString($input);
 
-            expect((string) $u)->toBe(strtolower($input))
-                ->and($u->__toString())->toBe(strtolower($input));
+            expect((string) $u)->toBe($input)
+                ->and($u->__toString())->toBe($input);
         });
 
         it('tryFromMixed returns instance for valid UUID v7 strings', function (): void {
@@ -91,7 +86,7 @@ describe('StringUuidV7', function () {
             $fromStringable = StringUuidV7::tryFromMixed(new class {
                 public function __toString(): string
                 {
-                    return '01890F2A-5BCD-7DEF-9ABC-1234567890AB';
+                    return '01890f2a-5bcd-7def-8abc-1234567890ab';
                 }
             });
 
@@ -102,7 +97,7 @@ describe('StringUuidV7', function () {
                 ->and($fromStringable)
                 ->toBeInstanceOf(StringUuidV7::class)
                 ->and($fromStringable->value())
-                ->toBe('01890f2a-5bcd-7def-9abc-1234567890ab');
+                ->toBe('01890f2a-5bcd-7def-8abc-1234567890ab');
         });
 
         it('tryFromMixed returns Undefined for invalid or non-convertible values', function (): void {
