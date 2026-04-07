@@ -36,7 +36,6 @@ readonly class DecimalPercent extends DecimalTypeAbstract
     /**
      * @throws PercentDecimalTypeException
      * @throws DecimalTypeException
-     * @throws StringTypeException
      */
     public function __construct(string $value)
     {
@@ -53,7 +52,6 @@ readonly class DecimalPercent extends DecimalTypeAbstract
     /**
      * @throws PercentDecimalTypeException
      * @throws DecimalTypeException
-     * @throws StringTypeException
      *
      * @psalm-pure
      */
@@ -65,7 +63,6 @@ readonly class DecimalPercent extends DecimalTypeAbstract
     /**
      * @throws PercentDecimalTypeException
      * @throws DecimalTypeException
-     * @throws StringTypeException
      *
      * @psalm-pure
      */
@@ -90,7 +87,6 @@ readonly class DecimalPercent extends DecimalTypeAbstract
     /**
      * @throws PercentDecimalTypeException
      * @throws DecimalTypeException
-     * @throws StringTypeException
      *
      * @psalm-pure
      */
@@ -102,7 +98,6 @@ readonly class DecimalPercent extends DecimalTypeAbstract
     /**
      * @throws PercentDecimalTypeException
      * @throws DecimalTypeException
-     * @throws StringTypeException
      *
      * @psalm-pure
      */

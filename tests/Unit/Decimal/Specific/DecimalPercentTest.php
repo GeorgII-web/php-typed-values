@@ -121,23 +121,18 @@ describe('DecimalPercent', function () {
             ->and(DecimalPercent::tryFromBool(true))->toBeInstanceOf(DecimalPercent::class);
     });
 
-    it('kills bccomp scale mutants with extreme precision', function (): void {
-        // scale 20 checks:
-        // -0.[20 zeros]1 is valid (treated as 0.0)
-        $val20neg = '-0.' . str_repeat('0', 20) . '1';
-        expect(DecimalPercent::fromString($val20neg))->toBeInstanceOf(DecimalPercent::class);
+    it('rejects extreme precision out of bounds values', function (): void {
+        $val20neg = '-0.' . str_repeat('0', 25) . '1';
+        expect(fn() => DecimalPercent::fromString($val20neg))->toThrow(PercentDecimalTypeException::class);
 
-        // -0.[19 zeros]1 is invalid (treated as -0.00...01)
         $val19neg = '-0.' . str_repeat('0', 19) . '1';
-        expect(fn() => DecimalPercent::fromString($val19neg))->toThrow(Exception::class);
+        expect(fn() => DecimalPercent::fromString($val19neg))->toThrow(PercentDecimalTypeException::class);
 
-        // 100.[20 zeros]1 is valid (treated as 100.0)
-        $val20pos = '100.' . str_repeat('0', 20) . '1';
-        expect(DecimalPercent::fromString($val20pos))->toBeInstanceOf(DecimalPercent::class);
+        $val20pos = '100.' . str_repeat('0', 25) . '1';
+        expect(fn() => DecimalPercent::fromString($val20pos))->toThrow(PercentDecimalTypeException::class);
 
-        // 100.[19 zeros]1 is invalid (treated as 100.00...01)
         $val19pos = '100.' . str_repeat('0', 19) . '1';
-        expect(fn() => DecimalPercent::fromString($val19pos))->toThrow(Exception::class);
+        expect(fn() => DecimalPercent::fromString($val19pos))->toThrow(PercentDecimalTypeException::class);
     });
 });
 

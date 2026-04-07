@@ -121,18 +121,18 @@ describe('DecimalProbability', function () {
             ->and(DecimalProbability::tryFromBool(true))->toBeInstanceOf(DecimalProbability::class);
     });
 
-    it('kills scale mutants with extreme precision', function (): void {
+    it('rejects extreme precision out of bounds values', function (): void {
         $val20neg = '-0.' . str_repeat('0', 25) . '1';
-        expect(DecimalProbability::fromString($val20neg))->toBeInstanceOf(DecimalProbability::class);
+        expect(fn() => DecimalProbability::fromString($val20neg))->toThrow(ProbabilityDecimalTypeException::class);
 
         $val19neg = '-0.' . str_repeat('0', 19) . '1';
-        expect(fn() => DecimalProbability::fromString($val19neg))->toThrow(DecimalProbability::class);
+        expect(fn() => DecimalProbability::fromString($val19neg))->toThrow(ProbabilityDecimalTypeException::class);
 
         $val20pos = '1.' . str_repeat('0', 25) . '1';
-        expect(DecimalProbability::fromString($val20pos))->toBeInstanceOf(DecimalProbability::class);
+        expect(fn() => DecimalProbability::fromString($val20pos))->toThrow(ProbabilityDecimalTypeException::class);
 
         $val19pos = '1.' . str_repeat('0', 19) . '1';
-        expect(fn() => DecimalProbability::fromString($val19pos))->toThrow(DecimalProbability::class);
+        expect(fn() => DecimalProbability::fromString($val19pos))->toThrow(ProbabilityDecimalTypeException::class);
     });
 });
 

@@ -234,7 +234,7 @@ abstract readonly class DecimalTypeAbstract extends PrimitiveTypeAbstract implem
             !preg_match('/^([+-]?)(\d*)(?:\.(\d*))?$/', $value, $matches)
             || ($matches[2] === '' && ($matches[3] ?? '') === '')
         ) {
-            throw new DecimalTypeException("Invalid decimal format: '{$value}'");
+            throw new DecimalTypeException('String "' . $value . '" has no valid decimal value');
         }
 
         $sign = $matches[1];          // '' or '-'
