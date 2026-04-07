@@ -337,6 +337,34 @@ describe('DecimalTypeAbstract', function () {
         });
     });
 
+    describe('isValidRange', function () {
+        it('validates ranges correctly', function (string $value, int $from, int $to, bool $expected) {
+            $mock = new DecimalTypeAbstractTest($value);
+            expect($mock->isValidRange($value, $from, $to))->toBe($expected);
+        })->with([
+            'positive within range' => ['50.0', 0, 100, true],
+            'positive below range' => ['-1.0', 0, 100, false],
+            'positive above range' => ['100.1', 0, 100, false],
+            'zero' => ['0.0', 0, 100, true],
+
+            'negative within range (same sign)' => ['-50.5', -100, 0, true],
+            'negative upper boundary' => ['-0.000', -100, 0, true],
+            'negative exceeded lower limit' => ['-100.1', -100, 0, false],
+            'negative exceeded upper limit' => ['1.0', -100, 0, false],
+
+            'positive vs negative limit' => ['5', -10, -1, false],
+            'negative vs positive limit' => ['-5', 1, 10, false],
+
+            'both negative, value < bound' => ['-15', -10, 0, false],
+            'both negative, value > bound' => ['-5', -10, -1, true],
+            'both negative, equal whole, zero fraction' => ['-10.0', -10, -5, true],
+            'both negative, equal whole, non-zero fraction' => ['-10.5', -10, -5, false],
+
+            'both positive, equal whole, non-zero fraction checks upper' => ['10.5', 5, 10, false],
+            'both positive, equal whole, zero fraction checks upper' => ['10.0', 5, 10, true],
+        ]);
+    });
+
     describe('Concrete implementation check (StringStandard)', function () {
         it('__toString proxies to toString', function () {
             $v = new StringStandard('abc');
