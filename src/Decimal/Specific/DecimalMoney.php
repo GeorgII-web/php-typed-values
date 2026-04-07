@@ -77,8 +77,7 @@ readonly class DecimalMoney extends DecimalTypeAbstract
     {
         return new static(static::decimalToMoney(
             static::boolToDecimal($value)
-        )
-        );
+        ));
     }
 
     /**

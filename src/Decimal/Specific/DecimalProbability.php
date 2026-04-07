@@ -36,26 +36,24 @@ readonly class DecimalProbability extends DecimalTypeAbstract
     /**
      * @throws ProbabilityDecimalTypeException
      * @throws DecimalTypeException
+     * @throws StringTypeException
      */
     public function __construct(string $value)
     {
-        /** @var numeric-string $decimal */
-        $decimal = self::stringToDecimal($value);
-
-        if (bccomp($decimal, '0.0', 20) === -1) {
+        if (!$this->isValidRange($value, 0, 1)) {
             throw new ProbabilityDecimalTypeException(sprintf('Decimal "%s" is not a valid probability (0.0-1.0)', $value));
         }
 
-        if (bccomp($decimal, '1.0', 20) === 1) {
-            throw new ProbabilityDecimalTypeException(sprintf('Decimal "%s" is not a valid probability (0.0-1.0)', $value));
-        }
-
-        $this->value = $decimal;
+        /**
+         * @var non-empty-string $value
+         */
+        $this->value = $value;
     }
 
     /**
      * @throws ProbabilityDecimalTypeException
      * @throws DecimalTypeException
+     * @throws StringTypeException
      *
      * @psalm-pure
      */
@@ -67,6 +65,7 @@ readonly class DecimalProbability extends DecimalTypeAbstract
     /**
      * @throws ProbabilityDecimalTypeException
      * @throws DecimalTypeException
+     * @throws StringTypeException
      *
      * @psalm-pure
      */
@@ -91,6 +90,7 @@ readonly class DecimalProbability extends DecimalTypeAbstract
     /**
      * @throws ProbabilityDecimalTypeException
      * @throws DecimalTypeException
+     * @throws StringTypeException
      *
      * @psalm-pure
      */
@@ -102,6 +102,7 @@ readonly class DecimalProbability extends DecimalTypeAbstract
     /**
      * @throws ProbabilityDecimalTypeException
      * @throws DecimalTypeException
+     * @throws StringTypeException
      *
      * @psalm-pure
      */

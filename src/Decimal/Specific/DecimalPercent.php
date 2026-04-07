@@ -36,26 +36,24 @@ readonly class DecimalPercent extends DecimalTypeAbstract
     /**
      * @throws PercentDecimalTypeException
      * @throws DecimalTypeException
+     * @throws StringTypeException
      */
     public function __construct(string $value)
     {
-        /** @var numeric-string $decimal */
-        $decimal = self::stringToDecimal($value);
-
-        if (bccomp($decimal, '0.0', 20) === -1) {
+        if (!$this->isValidRange($value, 0, 100)) {
             throw new PercentDecimalTypeException(sprintf('Decimal "%s" is not a valid percent (0.0-100.0)', $value));
         }
 
-        if (bccomp($decimal, '100.0', 20) === 1) {
-            throw new PercentDecimalTypeException(sprintf('Decimal "%s" is not a valid percent (0.0-100.0)', $value));
-        }
-
-        $this->value = $decimal;
+        /**
+         * @var non-empty-string $value
+         */
+        $this->value = $value;
     }
 
     /**
      * @throws PercentDecimalTypeException
      * @throws DecimalTypeException
+     * @throws StringTypeException
      *
      * @psalm-pure
      */
@@ -67,6 +65,7 @@ readonly class DecimalPercent extends DecimalTypeAbstract
     /**
      * @throws PercentDecimalTypeException
      * @throws DecimalTypeException
+     * @throws StringTypeException
      *
      * @psalm-pure
      */
@@ -91,6 +90,7 @@ readonly class DecimalPercent extends DecimalTypeAbstract
     /**
      * @throws PercentDecimalTypeException
      * @throws DecimalTypeException
+     * @throws StringTypeException
      *
      * @psalm-pure
      */
@@ -102,6 +102,7 @@ readonly class DecimalPercent extends DecimalTypeAbstract
     /**
      * @throws PercentDecimalTypeException
      * @throws DecimalTypeException
+     * @throws StringTypeException
      *
      * @psalm-pure
      */

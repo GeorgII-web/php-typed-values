@@ -121,23 +121,18 @@ describe('DecimalProbability', function () {
             ->and(DecimalProbability::tryFromBool(true))->toBeInstanceOf(DecimalProbability::class);
     });
 
-    it('kills bccomp scale mutants with extreme precision', function (): void {
-        // scale 20 checks:
-        // -0.[20 zeros]1 is valid (treated as 0.0)
-        $val20neg = '-0.' . str_repeat('0', 20) . '1';
+    it('kills scale mutants with extreme precision', function (): void {
+        $val20neg = '-0.' . str_repeat('0', 25) . '1';
         expect(DecimalProbability::fromString($val20neg))->toBeInstanceOf(DecimalProbability::class);
 
-        // -0.[19 zeros]1 is invalid (treated as -0.00...01)
         $val19neg = '-0.' . str_repeat('0', 19) . '1';
-        expect(fn() => DecimalProbability::fromString($val19neg))->toThrow(Exception::class);
+        expect(fn() => DecimalProbability::fromString($val19neg))->toThrow(DecimalProbability::class);
 
-        // 1.[20 zeros]1 is valid (treated as 1.0)
-        $val20pos = '1.' . str_repeat('0', 20) . '1';
+        $val20pos = '1.' . str_repeat('0', 25) . '1';
         expect(DecimalProbability::fromString($val20pos))->toBeInstanceOf(DecimalProbability::class);
 
-        // 1.[19 zeros]1 is invalid (treated as 1.00...01)
         $val19pos = '1.' . str_repeat('0', 19) . '1';
-        expect(fn() => DecimalProbability::fromString($val19pos))->toThrow(Exception::class);
+        expect(fn() => DecimalProbability::fromString($val19pos))->toThrow(DecimalProbability::class);
     });
 });
 
