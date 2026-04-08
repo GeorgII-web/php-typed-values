@@ -9,6 +9,9 @@ Typed value objects for PHP. Build precise, immutable, and validated data for DT
 ![tests](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/georgii-web/75977b7515de20d7382f6855d44a1d97/raw/tests_count.json)
 ![psalm](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/georgii-web/75977b7515de20d7382f6855d44a1d97/raw/psalm.json)
 ![cs-fixer](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/georgii-web/75977b7515de20d7382f6855d44a1d97/raw/cs_fixer.json)
+![types](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/georgii-web/75977b7515de20d7382f6855d44a1d97/raw/types.json)
+![coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/georgii-web/75977b7515de20d7382f6855d44a1d97/raw/coverage.json)
+![mutations](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/georgii-web/75977b7515de20d7382f6855d44a1d97/raw/mutations.json)
 
 ---
 

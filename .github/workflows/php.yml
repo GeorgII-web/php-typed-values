@@ -128,7 +128,12 @@ jobs:
       - name: Install dependencies
         run: composer install --no-progress
       - name: Run type coverage
-        run: composer run-script type
+        run: composer run-script type | tee type-coverage.txt
+      - name: Upload type coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: type-coverage-report
+          path: type-coverage.txt
 
   test-coverage:
     needs: build
@@ -148,7 +153,12 @@ jobs:
       - name: Install dependencies
         run: composer install --no-progress
       - name: Run test coverage
-        run: composer run-script coverage
+        run: composer run-script coverage | tee test-coverage.txt
+      - name: Upload test coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-coverage-report
+          path: test-coverage.txt
 
   mutate:
     needs: tests
@@ -172,10 +182,15 @@ jobs:
       - name: Install dependencies
         run: composer install --no-progress
       - name: Run mutation tests for ${{ matrix.folder }}
-        run: ./vendor/bin/pest tests/Unit/${{ matrix.folder }} --mutate --covered-only --parallel --min=100
+        run: ./vendor/bin/pest tests/Unit/${{ matrix.folder }} --mutate --covered-only --parallel --min=100 | tee mutation-${{ matrix.folder }}.txt
+      - name: Upload mutation report
+        uses: actions/upload-artifact@v4
+        with:
+          name: mutation-${{ matrix.folder }}-report
+          path: mutation-${{ matrix.folder }}.txt
 
   badge:
-    needs: [tests, style, static-analysis]
+    needs: [tests, style, static-analysis, type-coverage, test-coverage, mutate]
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
@@ -213,6 +228,24 @@ jobs:
             echo "color=red" >> $GITHUB_OUTPUT
           fi
 
+      - name: Get type coverage
+        id: type_coverage
+        run: |
+          VAL=$(grep -oP 'Total: \K[0-9.]+' artifacts/type-coverage-report/type-coverage.txt | head -1)
+          echo "value=$VAL" >> $GITHUB_OUTPUT
+
+      - name: Get test coverage
+        id: test_coverage
+        run: |
+          VAL=$(grep -oP 'Total: \K[0-9.]+' artifacts/test-coverage-report/test-coverage.txt | head -1)
+          echo "value=$VAL" >> $GITHUB_OUTPUT
+
+      - name: Get mutation count
+        id: mutation_count
+        run: |
+          VAL=$(grep -h -oP 'Total: \K[0-9]+' artifacts/mutation-*-report/mutation-*.txt | awk '{s+=$1} END {print s}')
+          echo "value=${VAL:-0}" >> $GITHUB_OUTPUT
+
       - name: Create Tests Count badge
         uses: schneegans/dynamic-badges-action@v1.7.0
         with:
@@ -242,3 +275,33 @@ jobs:
           label: "cs-fixer"
           message: ${{ steps.cs_fixer.outputs.status }}
           color: ${{ steps.cs_fixer.outputs.color }}
+
+      - name: Create Type Coverage badge
+        uses: schneegans/dynamic-badges-action@v1.7.0
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: 75977b7515de20d7382f6855d44a1d97
+          filename: types.json
+          label: "types"
+          message: ${{ steps.type_coverage.outputs.value }}%
+          color: green
+
+      - name: Create Test Coverage badge
+        uses: schneegans/dynamic-badges-action@v1.7.0
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: 75977b7515de20d7382f6855d44a1d97
+          filename: coverage.json
+          label: "coverage"
+          message: ${{ steps.test_coverage.outputs.value }}%
+          color: green
+
+      - name: Create Mutation badge
+        uses: schneegans/dynamic-badges-action@v1.7.0
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: 75977b7515de20d7382f6855d44a1d97
+          filename: mutations.json
+          label: "mutations"
+          message: ${{ steps.mutation_count.outputs.value }}
+          color: green
