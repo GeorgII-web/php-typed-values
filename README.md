@@ -6,12 +6,16 @@ Typed value objects for PHP. Build precise, immutable, and validated data for DT
 [![Tests](https://github.com/georgii-web/php-typed-values/actions/workflows/php.yml/badge.svg)](https://github.com/georgii-web/php-typed-values/actions/workflows/php.yml)
 [![Total Downloads](https://img.shields.io/packagist/dt/georgii-web/php-typed-values.svg?style=flat-square)](https://packagist.org/packages/georgii-web/php-typed-values)
 
+Code quality:
+
 ![tests](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/georgii-web/75977b7515de20d7382f6855d44a1d97/raw/tests_count.json)
 ![psalm](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/georgii-web/75977b7515de20d7382f6855d44a1d97/raw/psalm.json)
 ![cs-fixer](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/georgii-web/75977b7515de20d7382f6855d44a1d97/raw/cs_fixer.json)
 ![types](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/georgii-web/75977b7515de20d7382f6855d44a1d97/raw/types.json)
 ![coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/georgii-web/75977b7515de20d7382f6855d44a1d97/raw/coverage.json)
 ![mutations](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/georgii-web/75977b7515de20d7382f6855d44a1d97/raw/mutations.json)
+
+PHP supported version:
 
 ![PHP >=8.4](https://img.shields.io/badge/PHP->=8.4-8892BF?logo=php)
 ![Version 3.x](https://img.shields.io/badge/Version-3.x-777BB4)
