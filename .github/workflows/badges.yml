@@ -27,3 +27,13 @@ jobs:
           label: "PHP Lines"
           message: ${{ steps.lines.outputs.count }}
           color: blue
+
+      - name: Create static badge
+        uses: schneegans/dynamic-badges-action@v1.7.0
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: 75977b7515de20d7382f6855d44a1d97
+          filename: second-badge.json
+          label: "Example"
+          message: "777"
+          color: blue
