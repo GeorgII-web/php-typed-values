@@ -31,7 +31,10 @@ use function is_string;
  */
 readonly class DateIso8601 extends DateTimeTypeAbstract
 {
-    public const string FORMAT = 'Y-m-d';
+    /**
+     * @var string
+     */
+    public const FORMAT = 'Y-m-d';
 
     protected DateTimeImmutable $value;
 
