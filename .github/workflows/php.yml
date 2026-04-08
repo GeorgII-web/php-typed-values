@@ -56,7 +56,12 @@ jobs:
       - name: Install dependencies
         run: composer install --no-progress
       - name: Run style fixer
-        run: composer run-script cs
+        run: composer run-script cs | tee cs.txt
+      - name: Upload cs report
+        uses: actions/upload-artifact@v4
+        with:
+          name: cs-report
+          path: cs.txt
 
   static-analysis:
     needs: build
@@ -75,7 +80,12 @@ jobs:
       - name: Install dependencies
         run: composer install --no-progress
       - name: Run psalm
-        run: composer run-script sca
+        run: composer run-script sca | tee psalm.txt
+      - name: Upload psalm report
+        uses: actions/upload-artifact@v4
+        with:
+          name: psalm-report
+          path: psalm.txt
 
   tests:
     needs: build
@@ -165,21 +175,43 @@ jobs:
         run: ./vendor/bin/pest tests/Unit/${{ matrix.folder }} --mutate --covered-only --parallel --min=100
 
   badge:
-    needs: tests
+    needs: [tests, style, static-analysis]
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
-      - name: Download test report
+      - name: Download reports
         uses: actions/download-artifact@v4
         with:
-          name: test-report
+          path: artifacts
 
       - name: Get test count
         id: test_count
         run: |
           # Extract the 'tests' attribute from the first <testsuite> tag in the JUnit XML
-          COUNT=$(grep -oP 'tests="\K[^"]+' report.xml | head -1)
+          COUNT=$(grep -oP 'tests="\K[^"]+' artifacts/test-report/report.xml | head -1)
           echo "count=$COUNT" >> $GITHUB_OUTPUT
+
+      - name: Check psalm
+        id: psalm
+        run: |
+          if grep -q "No errors found!" artifacts/psalm-report/psalm.txt; then
+            echo "status=passed" >> $GITHUB_OUTPUT
+            echo "color=green" >> $GITHUB_OUTPUT
+          else
+            echo "status=failed" >> $GITHUB_OUTPUT
+            echo "color=red" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check cs-fixer
+        id: cs_fixer
+        run: |
+          if grep -q "Fixed 0 of" artifacts/cs-report/cs.txt; then
+            echo "status=passed" >> $GITHUB_OUTPUT
+            echo "color=green" >> $GITHUB_OUTPUT
+          else
+            echo "status=failed" >> $GITHUB_OUTPUT
+            echo "color=red" >> $GITHUB_OUTPUT
+          fi
 
       - name: Create Tests Count badge
         uses: schneegans/dynamic-badges-action@v1.7.0
@@ -190,3 +222,23 @@ jobs:
           label: "tests"
           message: ${{ steps.test_count.outputs.count }}
           color: green
+
+      - name: Create Psalm badge
+        uses: schneegans/dynamic-badges-action@v1.7.0
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: 75977b7515de20d7382f6855d44a1d97
+          filename: psalm.json
+          label: "psalm"
+          message: ${{ steps.psalm.outputs.status }}
+          color: ${{ steps.psalm.outputs.color }}
+
+      - name: Create CS Fixer badge
+        uses: schneegans/dynamic-badges-action@v1.7.0
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: 75977b7515de20d7382f6855d44a1d97
+          filename: cs_fixer.json
+          label: "cs-fixer"
+          message: ${{ steps.cs_fixer.outputs.status }}
+          color: ${{ steps.cs_fixer.outputs.color }}
