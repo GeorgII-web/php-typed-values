@@ -31,7 +31,9 @@ describe('DecimalProbability', function () {
             ->and(fn() => DecimalProbability::fromString('-0.1'))
             ->toThrow(ProbabilityDecimalTypeException::class, 'Decimal "-0.1" is not a valid probability (0.0-1.0)')
             ->and(fn() => DecimalProbability::fromString('1.1'))
-            ->toThrow(ProbabilityDecimalTypeException::class, 'Decimal "1.1" is not a valid probability (0.0-1.0)');
+            ->toThrow(ProbabilityDecimalTypeException::class, 'Decimal "1.1" is not a valid probability (0.0-1.0)')
+            ->and(fn() => DecimalProbability::fromString(' 0.1 '))
+            ->toThrow(ProbabilityDecimalTypeException::class, 'String " 0.1 " has no valid decimal value');
     });
 
     it('tryFromString returns instance for valid and Undefined for invalid', function (): void {
@@ -107,7 +109,8 @@ describe('DecimalProbability', function () {
         expect(DecimalProbability::fromBool(true)->value())->toBe('1.0')
             ->and(DecimalProbability::fromInt(0)->value())->toBe('0.0')
             ->and(DecimalProbability::fromFloat(0.5)->value())->toBe('0.5')
-            ->and(DecimalProbability::fromDecimal('0.23')->value())->toBe('0.23');
+            ->and(DecimalProbability::fromDecimal('0.23')->value())->toBe('0.23')
+            ->and(DecimalProbability::fromDecimal('0.00000000000000000000000000001')->value())->toBe('0.00000000000000000000000000001');
 
         $vInt = DecimalProbability::fromString('0.0');
         expect(fn() => $vInt->toInt())->toThrow(StringTypeException::class)

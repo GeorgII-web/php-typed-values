@@ -160,36 +160,36 @@ abstract readonly class DecimalTypeAbstract extends PrimitiveTypeAbstract implem
     private function compareDecimalWithInt(string $sign, string $whole, string $fraction, int $bound): int
     {
         $boundStr = (string) $bound;
-        $boundSign = $bound < 0 ? '-' : '';
-        $boundAbs = ltrim($boundStr, '-');  // positive absolute value as string
+        $isBoundNegative = $bound < 0;
+        $boundAbs = ltrim($boundStr, '-');
 
         // Cases with opposite signs
-        if ($sign === '-' && $boundSign !== '-') {
-            return -1;  // negative < positive
+        if ($sign === '-' && !$isBoundNegative) {
+            return -1;
         }
-        if ($sign !== '-' && $boundSign === '-') {
-            return 1;   // positive > negative
+        if ($sign !== '-' && $isBoundNegative) {
+            return 1;
         }
 
-        // Same sign (both non‑negative or both negative)
+        // Same sign (both negative or both non-negative)
+        $cmpWhole = $this->comparePositiveIntStrings($whole, $boundAbs);
         if ($sign === '-') {
             // Both negative: compare absolute values (reverse logic)
-            $cmpWhole = $this->comparePositiveIntStrings($whole, $boundAbs);
-            if ($cmpWhole !== 0) {
-                // Larger absolute value => more negative => smaller
-                return $cmpWhole > 0 ? -1 : 1;
+            if ($cmpWhole > 0) {
+                return -1;
+            }
+            if ($cmpWhole < 0) {
+                return 1;
             }
 
-            // Whole parts equal → fraction decides
             return $this->isFractionZero($fraction) ? 0 : -1;
         }
-        // Both non‑negative (including zero)
-        $cmpWhole = $this->comparePositiveIntStrings($whole, $boundAbs);
+
+        // Both non-negative (including zero)
         if ($cmpWhole !== 0) {
             return $cmpWhole;
         }
 
-        // Whole parts equal → fraction > 0 makes decimal larger
         return $this->isFractionZero($fraction) ? 0 : 1;
     }
 
@@ -204,8 +204,10 @@ abstract readonly class DecimalTypeAbstract extends PrimitiveTypeAbstract implem
         $a = $a === '' ? '0' : $a;
         $b = $b === '' ? '0' : $b;
 
-        if (strlen($a) !== strlen($b)) {
-            return strlen($a) <=> strlen($b);
+        $lenA = strlen($a);
+        $lenB = strlen($b);
+        if ($lenA !== $lenB) {
+            return $lenA <=> $lenB;
         }
 
         return $a <=> $b;
@@ -226,8 +228,6 @@ abstract readonly class DecimalTypeAbstract extends PrimitiveTypeAbstract implem
      */
     private function parseDecimalString(string $value): array
     {
-        $value = trim($value);
-
         // Regex: optional sign, then either digits + optional decimal, or .digits
         // It captures: [1] sign, [2] whole part, [3] fraction part
         if (

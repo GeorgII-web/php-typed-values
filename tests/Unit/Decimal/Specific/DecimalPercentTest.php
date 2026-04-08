@@ -107,7 +107,8 @@ describe('DecimalPercent', function () {
         expect(DecimalPercent::fromBool(true)->value())->toBe('1.0')
             ->and(DecimalPercent::fromInt(100)->value())->toBe('100.0')
             ->and(DecimalPercent::fromFloat(0.5)->value())->toBe('0.5')
-            ->and(DecimalPercent::fromDecimal('1.23')->value())->toBe('1.23');
+            ->and(DecimalPercent::fromDecimal('1.23')->value())->toBe('1.23')
+            ->and(DecimalPercent::fromDecimal('0.00000000000000000000000000001')->value())->toBe('0.00000000000000000000000000001');
 
         $vInt = DecimalPercent::fromString('50');
         expect($vInt->toInt())->toBe(50)
