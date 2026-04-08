@@ -17,14 +17,14 @@ Code quality:
 
 PHP supported version:
 
-![PHP >=8.4](https://img.shields.io/badge/PHP->=8.4-8892BF?logo=php)
 ![Version 3.x](https://img.shields.io/badge/Version-3.x-777BB4)
+![PHP >=8.4](https://img.shields.io/badge/PHP->=8.4-8892BF?logo=php)
 
-![PHP >=8.2 <8.4](https://img.shields.io/badge/PHP->=8.2--<8.4-8892BF?logo=php)
 ![Version 2.x](https://img.shields.io/badge/Version-2.x-777BB4)
+![PHP >=8.2 <8.4](https://img.shields.io/badge/PHP->=8.2--<8.4-8892BF?logo=php)
 
-![PHP >=7.4 <8.2](https://img.shields.io/badge/PHP->=7.4--<8.2-8892BF?logo=php)
 ![Version 1.x](https://img.shields.io/badge/Version-1.x-777BB4)
+![PHP >=7.4 <8.2](https://img.shields.io/badge/PHP->=7.4--<8.2-8892BF?logo=php)
 
 ---
 

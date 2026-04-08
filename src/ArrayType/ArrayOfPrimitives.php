@@ -154,8 +154,6 @@ readonly class ArrayOfPrimitives extends ArrayTypeAbstract
     /**
      * JSON serialization helper.
      *
-     * @throws PrimitivesArrayTypeException
-     *
      * @psalm-mutation-free
      */
     public function jsonSerialize(): array
