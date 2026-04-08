@@ -7,7 +7,7 @@ Typed value objects for PHP. Build precise, immutable, and validated data for DT
 [![Total Downloads](https://img.shields.io/packagist/dt/georgii-web/php-typed-values.svg?style=flat-square)](https://packagist.org/packages/georgii-web/php-typed-values)
 
 ![PHP Lines](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/georgii-web/75977b7515de20d7382f6855d44a1d97/raw/badge.json)
-![Example Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/YOUR_GITHUB_USERNAME/75977b7515de20d7382f6855d44a1d97/raw/second-badge.json)
+![Example Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/georgii-web/75977b7515de20d7382f6855d44a1d97/raw/second-badge.json)
 
 ---
 
