@@ -187,6 +187,6 @@ jobs:
           auth: ${{ secrets.GIST_SECRET }}
           gistID: 75977b7515de20d7382f6855d44a1d97
           filename: tests_count.json
-          label: "Tests Passed"
+          label: "tests"
           message: ${{ steps.test_count.outputs.count }}
           color: green
