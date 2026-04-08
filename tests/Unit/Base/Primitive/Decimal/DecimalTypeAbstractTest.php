@@ -565,6 +565,8 @@ describe('DecimalTypeAbstract', function () {
             'diff len string order differs 10 vs 9' => ['10', '9', 1],
             'diff len string order differs 99 vs 100' => ['99', '100', -1],
             'diff len string order differs 100 vs 99' => ['100', '99', 1],
+            'kill mutant 1' => ['2', '10', -1],
+            'kill mutant 2' => ['10', '2', 1],
         ]);
 
         it('kills parseDecimalString return value mutants', function (string $input, array $expected) {

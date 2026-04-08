@@ -206,11 +206,8 @@ abstract readonly class DecimalTypeAbstract extends PrimitiveTypeAbstract implem
 
         $lenA = strlen($a);
         $lenB = strlen($b);
-        if ($lenA !== $lenB) {
-            return $lenA <=> $lenB;
-        }
 
-        return $a <=> $b;
+        return ($lenA <=> $lenB) ?: ($a <=> $b);
     }
 
     /**
