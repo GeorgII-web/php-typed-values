@@ -10,6 +10,10 @@ use PhpTypedValues\Exception\ArrayType\UndefinedArrayTypeException;
 /**
  * Immutable undefined collection.
  *
+ * Example
+ *  - $v = ArrayUndefined::create();
+ *    $v->isEmpty(); // true
+ *
  * @extends ArrayTypeAbstract<never>
  *
  * @psalm-immutable

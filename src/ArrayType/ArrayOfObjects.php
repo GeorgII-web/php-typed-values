@@ -16,6 +16,10 @@ use function is_object;
 /**
  * Immutable collection of objects.
  *
+ * Example
+ *  - $v = ArrayOfObjects::fromItems(new \stdClass());
+ *    $v->count(); // 1
+ *
  * @template TItem of object
  *
  * @template-extends ArrayTypeAbstract<TItem>

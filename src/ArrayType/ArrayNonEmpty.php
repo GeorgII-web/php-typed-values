@@ -18,6 +18,10 @@ use function sprintf;
 /**
  * Immutable non-empty array.
  *
+ * Example
+ *  - $v = ArrayNonEmpty::fromArray([new \stdClass()]);
+ *    $v->count(); // 1
+ *
  * @template TItem of object
  *
  * @template-extends ArrayTypeAbstract<TItem>

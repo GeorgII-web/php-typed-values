@@ -11,6 +11,10 @@ use Traversable;
 /**
  * Immutable empty collection.
  *
+ * Example
+ *  - $v = new ArrayEmpty([]);
+ *    $v->toArray(); // []
+ *
  * @extends ArrayTypeAbstract<never>
  *
  * @psalm-immutable
