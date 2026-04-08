@@ -94,7 +94,12 @@ jobs:
       - name: Install dependencies
         run: composer install --no-progress
       - name: Run tests
-        run: composer run-script test
+        run: composer run-script test -- --log-junit report.xml
+      - name: Upload test report
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: report.xml
 
   type-coverage:
     needs: build
