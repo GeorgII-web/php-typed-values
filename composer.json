@@ -74,7 +74,7 @@
       "echo \"Decimal\" && ./vendor/bin/pest tests/Unit/Decimal --mutate --covered-only --parallel --min=100",
       "echo \"Float\" && ./vendor/bin/pest tests/Unit/Float --mutate --covered-only --parallel --min=100",
       "echo \"Base\" && ./vendor/bin/pest tests/Unit/Base --mutate --covered-only --parallel --min=100",
-      "echo \"Array\" && ./vendor/bin/pest tests/Unit/Array --mutate --covered-only --parallel --min=100",
+      "echo \"Array\" && ./vendor/bin/pest tests/Unit/ArrayType --mutate --covered-only --parallel --min=100",
       "echo \"Bool\" && ./vendor/bin/pest tests/Unit/Bool --mutate --covered-only --parallel --min=100",
       "echo \"Undefined\" && ./vendor/bin/pest tests/Unit/Undefined --mutate --covered-only --parallel --min=100"
     ]
