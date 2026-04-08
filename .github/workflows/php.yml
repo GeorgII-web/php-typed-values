@@ -191,7 +191,7 @@ jobs:
 
   badge:
     needs: [tests, style, static-analysis, type-coverage, test-coverage, mutate]
-    if: github.ref == 'refs/heads/master'
+    if: always() && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
       - name: Download reports
@@ -243,15 +243,15 @@ jobs:
       - name: Get mutation count
         id: mutation_count
         run: |
-          # Debugging: List files and print content to see what we are dealing with
-          echo "Files in artifacts/mutation-*-report/:"
-          ls -R artifacts/mutation-*-report/ || echo "No files found"
-          echo "Content of files:"
-          grep -h "Mutations:" artifacts/mutation-*-report/mutation-*.txt || echo "No line found with 'Mutations:'"
-          
-          # Extract count
-          VAL=$(grep -h -oP 'Mutations: \K[0-9]+' artifacts/mutation-*-report/mutation-*.txt | awk '{s+=$1} END {print s}')
-          echo "value=${VAL:-0}" >> $GITHUB_OUTPUT
+          if [ "${{ needs.mutate.result }}" != "success" ]; then
+            echo "status=failed" >> $GITHUB_OUTPUT
+            echo "value=failed" >> $GITHUB_OUTPUT
+            echo "color=red" >> $GITHUB_OUTPUT
+          else
+            echo "status=success" >> $GITHUB_OUTPUT
+            echo "value=100%" >> $GITHUB_OUTPUT
+            echo "color=green" >> $GITHUB_OUTPUT
+          fi
 
       - name: Create Tests Count badge
         uses: schneegans/dynamic-badges-action@v1.7.0
@@ -311,4 +311,4 @@ jobs:
           filename: mutations.json
           label: "mutations"
           message: ${{ steps.mutation_count.outputs.value }}
-          color: green
+          color: ${{ steps.mutation_count.outputs.color }}
