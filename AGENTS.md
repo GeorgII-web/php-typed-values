@@ -4,7 +4,7 @@
 * DO NOT CHANGE BASE CLASSES in `src/Base`!!!
 * AVOID TO CHANGE OTHER CLASSES in `src`!!!
 * Try to fix existing test-files in the first place, in exceptional cases, fix src classes.
-* Never normalize or format the input value in type-classes.
+* NEVER normalize or format the input data in type-classes, use the given value as it is (no trim(), strtolower(), etc.).
     
 **Add a new type workflow**
 * Create a new type class in `src/{TypeName}/` or deeper to `Specific` etc. directory.

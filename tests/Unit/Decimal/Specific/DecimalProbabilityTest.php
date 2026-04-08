@@ -33,7 +33,7 @@ describe('DecimalProbability', function () {
             ->and(fn() => DecimalProbability::fromString('1.1'))
             ->toThrow(ProbabilityDecimalTypeException::class, 'Decimal "1.1" is not a valid probability (0.0-1.0)')
             ->and(fn() => DecimalProbability::fromString(' 0.1 '))
-            ->toThrow(ProbabilityDecimalTypeException::class, 'String " 0.1 " has no valid decimal value');
+            ->toThrow(DecimalTypeException::class, 'String " 0.1 " has no valid decimal value');
     });
 
     it('tryFromString returns instance for valid and Undefined for invalid', function (): void {

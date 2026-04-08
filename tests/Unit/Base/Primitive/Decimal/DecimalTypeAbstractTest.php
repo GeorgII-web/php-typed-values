@@ -12,6 +12,7 @@ use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\String\StringStandard;
 use PhpTypedValues\Undefined\Alias\Undefined;
+use ReflectionClass;
 use stdClass;
 use Stringable;
 use Throwable;
@@ -32,6 +33,30 @@ readonly class DecimalTypeAbstractTest extends DecimalTypeAbstract
 {
     public function __construct(private string $val)
     {
+    }
+
+    public function callCompareDecimalWithInt(string $sign, string $whole, string $fraction, int $bound): int
+    {
+        $reflection = new ReflectionClass(DecimalTypeAbstract::class);
+        $method = $reflection->getMethod('compareDecimalWithInt');
+
+        return $method->invoke($this, $sign, $whole, $fraction, $bound);
+    }
+
+    public function callComparePositiveIntStrings(string $a, string $b): int
+    {
+        $reflection = new ReflectionClass(DecimalTypeAbstract::class);
+        $method = $reflection->getMethod('comparePositiveIntStrings');
+
+        return $method->invoke($this, $a, $b);
+    }
+
+    public function callParseDecimalString(string $value): array
+    {
+        $reflection = new ReflectionClass(DecimalTypeAbstract::class);
+        $method = $reflection->getMethod('parseDecimalString');
+
+        return $method->invoke($this, $value);
     }
 
     public static function fromBool(bool $value): static
@@ -232,27 +257,6 @@ readonly class DecimalTypeAbstractTest extends DecimalTypeAbstract
     public function value(): string
     {
         return $this->val;
-    }
-
-    public function callCompareDecimalWithInt(string $sign, string $whole, string $fraction, int $bound): int
-    {
-        $reflection = new \ReflectionClass(DecimalTypeAbstract::class);
-        $method = $reflection->getMethod('compareDecimalWithInt');
-        return $method->invoke($this, $sign, $whole, $fraction, $bound);
-    }
-
-    public function callComparePositiveIntStrings(string $a, string $b): int
-    {
-        $reflection = new \ReflectionClass(DecimalTypeAbstract::class);
-        $method = $reflection->getMethod('comparePositiveIntStrings');
-        return $method->invoke($this, $a, $b);
-    }
-
-    public function callParseDecimalString(string $value): array
-    {
-        $reflection = new \ReflectionClass(DecimalTypeAbstract::class);
-        $method = $reflection->getMethod('parseDecimalString');
-        return $method->invoke($this, $value);
     }
 }
 
@@ -483,7 +487,7 @@ describe('DecimalTypeAbstract', function () {
                 expect($mock->isValidRange($input, -100, 100))->toBeTrue();
             }
         })->with([
-            'trimmed' => ['  1.2  '],
+            'trimmed' => ['  1.2  ', true, 'String "  1.2  " has no valid decimal value'],
             'empty' => ['', true, 'String "" has no valid decimal value'],
             'only dot' => ['.', true, 'String "." has no valid decimal value'],
             'only sign' => ['-', true, 'String "-" has no valid decimal value'],
