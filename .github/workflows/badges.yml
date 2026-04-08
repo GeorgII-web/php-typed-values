@@ -1,0 +1,29 @@
+name: Update Badge
+
+on:
+  push:
+    branches: [ badges ]
+
+jobs:
+  badge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Example: calculate a metric (here, lines of PHP code)
+      - name: Count PHP lines
+        id: lines
+        run: |
+          COUNT=$(find . -name "*.php" -exec cat {} \; | wc -l)
+          echo "count=$COUNT" >> $GITHUB_OUTPUT
+
+      # Create/update the badge in your Gist
+      - name: Create badge
+        uses: schneegans/dynamic-badges-action@v1.7.0
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: 75977b7515de20d7382f6855d44a1d97
+          filename: badge.json           # any name
+          label: "PHP Lines"
+          message: ${{ steps.lines.outputs.count }}
+          color: blue
