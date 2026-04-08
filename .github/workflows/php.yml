@@ -163,3 +163,30 @@ jobs:
         run: composer install --no-progress
       - name: Run mutation tests for ${{ matrix.folder }}
         run: ./vendor/bin/pest tests/Unit/${{ matrix.folder }} --mutate --covered-only --parallel --min=100
+
+  badge:
+    needs: tests
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download test report
+        uses: actions/download-artifact@v4
+        with:
+          name: test-report
+
+      - name: Get test count
+        id: test_count
+        run: |
+          # Extract the 'tests' attribute from the first <testsuite> tag in the JUnit XML
+          COUNT=$(grep -oP 'tests="\K[^"]+' report.xml | head -1)
+          echo "count=$COUNT" >> $GITHUB_OUTPUT
+
+      - name: Create Tests Count badge
+        uses: schneegans/dynamic-badges-action@v1.7.0
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: 75977b7515de20d7382f6855d44a1d97
+          filename: tests_count.json
+          label: "Tests Passed"
+          message: ${{ steps.test_count.outputs.count }}
+          color: green
