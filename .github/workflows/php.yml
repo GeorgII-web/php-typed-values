@@ -243,6 +243,13 @@ jobs:
       - name: Get mutation count
         id: mutation_count
         run: |
+          # Debugging: List files and print content to see what we are dealing with
+          echo "Files in artifacts/mutation-*-report/:"
+          ls -R artifacts/mutation-*-report/ || echo "No files found"
+          echo "Content of files:"
+          grep -h "Mutations:" artifacts/mutation-*-report/mutation-*.txt || echo "No line found with 'Mutations:'"
+          
+          # Extract count
           VAL=$(grep -h -oP 'Mutations: \K[0-9]+' artifacts/mutation-*-report/mutation-*.txt | awk '{s+=$1} END {print s}')
           echo "value=${VAL:-0}" >> $GITHUB_OUTPUT
 
