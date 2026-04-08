@@ -4,31 +4,30 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\ArrayType;
 
-use JsonSerializable;
 use PhpTypedValues\Base\ArrayType\ArrayTypeAbstract;
-use PhpTypedValues\Exception\ArrayType\NonEmptyArrayTypeException;
+use PhpTypedValues\Base\Primitive\PrimitiveTypeInterface;
+use PhpTypedValues\Exception\ArrayType\PrimitivesArrayTypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
-use Stringable;
 use Traversable;
 
 use function count;
-use function is_scalar;
-use function sprintf;
 
 /**
- * Immutable non-empty array.
+ * Immutable collection of primitives.
  *
  * Example
- *  - $v = ArrayNonEmpty::fromArray([new \stdClass()]);
- *    $v->count(); // 1
+ *  - $v = ArrayOfPrimitives::fromArray([]);
+ *    $v->isEmpty(); // true
+ *  - $v = ArrayOfPrimitives::fromArray([IntegerPositive::fromInt(1)]);
+ *    $v->isEmpty(); // false
  *
- * @template TItem of object
+ * @template TItem of PrimitiveTypeInterface
  *
  * @template-extends ArrayTypeAbstract<TItem>
  *
  * @psalm-immutable
  */
-readonly class ArrayNonEmpty extends ArrayTypeAbstract
+readonly class ArrayOfPrimitives extends ArrayTypeAbstract
 {
     /**
      * @var list<TItem>
@@ -38,12 +37,14 @@ readonly class ArrayNonEmpty extends ArrayTypeAbstract
     /**
      * @param list<TItem> $value
      *
-     * @throws NonEmptyArrayTypeException
+     * @throws PrimitivesArrayTypeException
      */
     public function __construct(array $value)
     {
-        if ($value === []) {
-            throw new NonEmptyArrayTypeException('Expected non-empty array');
+        foreach ($value as $item) {
+            if (!$item instanceof PrimitiveTypeInterface) {
+                throw new PrimitivesArrayTypeException('Expected array of PrimitiveTypeInterface instances');
+            }
         }
 
         $this->value = $value;
@@ -62,12 +63,23 @@ readonly class ArrayNonEmpty extends ArrayTypeAbstract
      *
      * @param list<mixed> $value
      *
-     * @throws NonEmptyArrayTypeException
+     * @throws PrimitivesArrayTypeException
      */
     public static function fromArray(array $value): static
     {
         /** @var list<TItem> $value */
         return new static($value);
+    }
+
+    /**
+     * @no-named-arguments
+     *
+     * @throws PrimitivesArrayTypeException
+     */
+    public static function fromItems(PrimitiveTypeInterface ...$items): static
+    {
+        /** @var list<TItem> $items */
+        return new static($items);
     }
 
     /**
@@ -78,7 +90,7 @@ readonly class ArrayNonEmpty extends ArrayTypeAbstract
         $result = [];
 
         foreach ($this->value as $item) {
-            if (!$item instanceof Undefined) {
+            if (!$item->isUndefined()) {
                 $result[] = $item;
             }
         }
@@ -131,7 +143,7 @@ readonly class ArrayNonEmpty extends ArrayTypeAbstract
         }
 
         foreach ($items as $item) {
-            if (!$item instanceof Undefined) {
+            if (!$item->isUndefined()) {
                 return false;
             }
         }
@@ -142,7 +154,7 @@ readonly class ArrayNonEmpty extends ArrayTypeAbstract
     /**
      * JSON serialization helper.
      *
-     * @throws NonEmptyArrayTypeException
+     * @throws PrimitivesArrayTypeException
      *
      * @psalm-mutation-free
      */
@@ -153,36 +165,13 @@ readonly class ArrayNonEmpty extends ArrayTypeAbstract
 
     /**
      * @psalm-mutation-free
-     *
-     * @throws NonEmptyArrayTypeException
      */
     public function toArray(): array
     {
         $result = [];
         foreach ($this->value as $item) {
-            // 1. Handle objects that know how to serialize themselves
-            if ($item instanceof JsonSerializable) {
-                /** @psalm-suppress ImpureMethodCall */
-                $result[] = $item->jsonSerialize();
-
-                continue;
-            }
-
-            // 2. Handle native PHP scalars (string, int, float, bool) or null
-            if (is_scalar($item) || $item === null) {
-                $result[] = $item;
-
-                continue;
-            }
-
-            // 3. Fallback for objects that don't implement JsonSerializable but might be Stringable
-            if ($item instanceof Stringable) {
-                $result[] = $item->__toString();
-
-                continue;
-            }
-
-            throw new NonEmptyArrayTypeException(sprintf('Item of type "%s" cannot be converted to a scalar or JSON-serializable value.', get_debug_type($item)));
+            /** @psalm-suppress ImpureMethodCall */
+            $result[] = $item->jsonSerialize();
         }
 
         return $result;
