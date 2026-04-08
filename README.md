@@ -13,11 +13,20 @@ Typed value objects for PHP. Build precise, immutable, and validated data for DT
 ![coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/georgii-web/75977b7515de20d7382f6855d44a1d97/raw/coverage.json)
 ![mutations](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/georgii-web/75977b7515de20d7382f6855d44a1d97/raw/mutations.json)
 
+![PHP >=8.4](https://img.shields.io/badge/PHP->=8.4-8892BF?logo=php)
+![Version 3.x](https://img.shields.io/badge/Version-3.x-777BB4)
+
+![PHP >=8.2 <8.4](https://img.shields.io/badge/PHP->=8.2--<8.4-8892BF?logo=php)
+![Version 2.x](https://img.shields.io/badge/Version-2.x-777BB4)
+
+![PHP >=7.4 <8.2](https://img.shields.io/badge/PHP->=7.4--<8.2-8892BF?logo=php)
+![Version 1.x](https://img.shields.io/badge/Version-1.x-777BB4)
+
 ---
 
 ### Install
 
-- Use V3 for PHP 8.4:
+- Use V3 for PHP >=8.4:
 
 ```bash
 composer require georgii-web/php-typed-values:^3
@@ -29,7 +38,7 @@ composer require georgii-web/php-typed-values:^3
 composer require georgii-web/php-typed-values:^2
 ```
 
-- Use V1 for PHP 7.4:
+- Use V1 for PHP >=7.4 & <8.2:
 
 ```bash
 composer require georgii-web/php-typed-values:^1

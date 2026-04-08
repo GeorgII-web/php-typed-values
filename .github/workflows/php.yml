@@ -243,7 +243,7 @@ jobs:
       - name: Get mutation count
         id: mutation_count
         run: |
-          VAL=$(grep -h -oP 'Total: \K[0-9]+' artifacts/mutation-*-report/mutation-*.txt | awk '{s+=$1} END {print s}')
+          VAL=$(grep -h -oP 'Mutations: \K[0-9]+' artifacts/mutation-*-report/mutation-*.txt | awk '{s+=$1} END {print s}')
           echo "value=${VAL:-0}" >> $GITHUB_OUTPUT
 
       - name: Create Tests Count badge
