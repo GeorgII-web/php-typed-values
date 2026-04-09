@@ -141,7 +141,7 @@ readonly class UndefinedStandard extends UndefinedTypeAbstract
     /**
      * @throws UndefinedTypeException
      */
-    public function toDecimal(): string
+    public function toDecimal(): never
     {
         throw new UndefinedTypeException('Undefined type cannot be converted to decimal');
     }

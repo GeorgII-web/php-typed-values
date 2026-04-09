@@ -91,7 +91,7 @@ readonly class UndefinedTypeTest extends UndefinedTypeAbstract
         throw new UndefinedTypeException('Mock');
     }
 
-    public function toDecimal(): string
+    public function toDecimal(): never
     {
         throw new UndefinedTypeException('Mock');
     }
@@ -232,7 +232,7 @@ readonly class UndefinedTypeSuccessMock extends UndefinedTypeAbstract
         throw new UndefinedTypeException('Mock');
     }
 
-    public function toDecimal(): string
+    public function toDecimal(): never
     {
         throw new UndefinedTypeException('Mock');
     }

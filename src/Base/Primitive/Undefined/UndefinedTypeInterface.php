@@ -52,7 +52,7 @@ interface UndefinedTypeInterface
     /**
      * @throws UndefinedTypeException
      */
-    public function toDecimal(): string;
+    public function toDecimal(): never;
 
     /**
      * @throws UndefinedTypeException

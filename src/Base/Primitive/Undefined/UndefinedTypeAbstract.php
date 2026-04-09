@@ -49,7 +49,7 @@ abstract readonly class UndefinedTypeAbstract extends PrimitiveTypeAbstract impl
     /**
      * @throws UndefinedTypeException
      */
-    abstract public function toDecimal(): string;
+    abstract public function toDecimal(): never;
 
     /**
      * @throws UndefinedTypeException
