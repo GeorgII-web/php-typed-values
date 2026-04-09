@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use PhpTypedValues\Exception\Undefined\UndefinedTypeException;
+use PhpTypedValues\String\StringStandard;
 use PhpTypedValues\Undefined\UndefinedStandard;
 
 covers(UndefinedStandard::class);
@@ -15,13 +16,18 @@ describe('UndefinedStandard', function () {
         });
 
         it('creates instance via fromString factory', function (): void {
-            $u = UndefinedStandard::fromString('anything');
+            expect(fn() => UndefinedStandard::fromString('anything'))
+                ->toThrow(UndefinedTypeException::class, 'Undefined type cannot be created from string');
+        });
+
+        it('creates instance via fromNull factory', function (): void {
+            $u = UndefinedStandard::fromNull(null);
             expect($u)->toBeInstanceOf(UndefinedStandard::class);
         });
 
-        it('creates instance via fromDecimal factory', function (): void {
-            $u = UndefinedStandard::fromDecimal('1.23');
-            expect($u)->toBeInstanceOf(UndefinedStandard::class);
+        it('throws via fromDecimal factory', function (): void {
+            expect(fn() => UndefinedStandard::fromDecimal('1.23'))
+                ->toThrow(UndefinedTypeException::class, 'Undefined type cannot be created from decimal');
         });
 
         it('tryFromMixed always returns itself', function (): void {
@@ -55,7 +61,6 @@ describe('UndefinedStandard', function () {
             'tryFromString' => ['tryFromString', 'hello'],
             'tryFromInt' => ['tryFromInt', 123],
             'tryFromDecimal' => ['tryFromDecimal', '1.23'],
-            'tryFromArray' => ['tryFromArray', []],
             'tryFromFloat' => ['tryFromFloat', 1.1],
             'tryFromBool' => ['tryFromBool', true],
         ]);
@@ -65,6 +70,38 @@ describe('UndefinedStandard', function () {
 
             expect($v)->toBeInstanceOf(UndefinedStandard::class);
         });
+
+        it('tryFrom"Any" methods return default value on failure', function (string $method, mixed $input): void {
+            $default = StringStandard::fromString('default');
+            $result = UndefinedStandard::$method($input, $default);
+
+            expect($result)->toBe($default);
+        })->with([
+            'tryFromString' => ['tryFromString', 'hello'],
+            'tryFromInt' => ['tryFromInt', 123],
+            'tryFromDecimal' => ['tryFromDecimal', '1.23'],
+            'tryFromFloat' => ['tryFromFloat', 1.1],
+            'tryFromBool' => ['tryFromBool', true],
+        ]);
+
+        it('tryFromMixed returns default value on failure', function (): void {
+            $default = StringStandard::fromString('default');
+            $result = UndefinedStandard::tryFromMixed('hello', $default);
+
+            expect($result)->toBe($default);
+        });
+    });
+
+    describe('Conversions (Success Cases)', function () {
+        it('toNull returns null', function (): void {
+            $u = UndefinedStandard::create();
+            expect($u->toNull())->toBeNull();
+        });
+
+        it('jsonSerialize returns null', function (): void {
+            $u = UndefinedStandard::create();
+            expect($u->jsonSerialize())->toBeNull();
+        });
     });
 
     describe('Conversions (Failure Cases)', function () {
@@ -73,13 +110,13 @@ describe('UndefinedStandard', function () {
             $expect = expect(fn() => $u->{$method}());
 
             $message = match ($method) {
-                'toString', '__toString' => 'UndefinedType cannot be converted to string.',
-                'toDecimal' => 'UndefinedType cannot be converted to string.',
-                'toInt' => 'UndefinedType cannot be converted to integer.',
-                'toFloat' => 'UndefinedType cannot be converted to float.',
-                'toArray' => 'UndefinedType cannot be converted to array.',
-                'value' => 'UndefinedType has no value.',
-                'jsonSerialize' => 'UndefinedType cannot be serialized for Json.',
+                'toString' => 'Undefined type cannot be converted to string',
+                '__toString' => 'Undefined type cannot be converted to string',
+                'toDecimal' => 'Undefined type cannot be converted to decimal',
+                'toInt' => 'Undefined type cannot be converted to integer',
+                'toFloat' => 'Undefined type cannot be converted to float',
+                'toArray' => 'Undefined type cannot be converted to array',
+                'value' => 'Undefined type has no value',
                 default => throw new RuntimeException("Unknown method: {$method}"),
             };
 
@@ -92,14 +129,13 @@ describe('UndefinedStandard', function () {
             'toArray',
             'value',
             '__toString',
-            'jsonSerialize',
         ]);
     });
 
     describe('Information', function () {
         it('isEmpty returns true', function (): void {
             $u1 = UndefinedStandard::create();
-            $u2 = UndefinedStandard::fromString('ignored');
+            $u2 = UndefinedStandard::create();
 
             expect($u1->isEmpty())->toBeTrue()
                 ->and($u2->isEmpty())->toBeTrue();
@@ -107,7 +143,7 @@ describe('UndefinedStandard', function () {
 
         it('isUndefined returns true', function (): void {
             $u1 = UndefinedStandard::create();
-            $u2 = UndefinedStandard::fromString('ignored');
+            $u2 = UndefinedStandard::create();
 
             expect($u1->isUndefined())->toBeTrue()
                 ->and($u2->isUndefined())->toBeTrue();

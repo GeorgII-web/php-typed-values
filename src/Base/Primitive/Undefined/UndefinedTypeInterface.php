@@ -25,8 +25,6 @@ interface UndefinedTypeInterface
 {
     public static function create(): static;
 
-    public static function fromArray(array $value): static;
-
     public static function fromBool(bool $value): static;
 
     public static function fromDecimal(string $value): static;
@@ -34,6 +32,8 @@ interface UndefinedTypeInterface
     public static function fromFloat(float $value): static;
 
     public static function fromInt(int $value): static;
+
+    public static function fromNull(null $value): static;
 
     public static function fromString(string $value): static;
 
@@ -64,45 +64,42 @@ interface UndefinedTypeInterface
      */
     public function toInt(): never;
 
+    public function toNull(): null;
+
     /**
      * @throws UndefinedTypeException
      */
     public function toString(): string;
 
-    public static function tryFromArray(
-        array $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static;
-
     public static function tryFromBool(
         bool $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static;
+    ): PrimitiveTypeAbstract|static;
 
     public static function tryFromDecimal(
         string $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static;
+    ): PrimitiveTypeAbstract|static;
 
     public static function tryFromFloat(
         float $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static;
+    ): PrimitiveTypeAbstract|static;
 
     public static function tryFromInt(
         int $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static;
+    ): PrimitiveTypeAbstract|static;
 
     public static function tryFromMixed(
         mixed $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static;
+    ): PrimitiveTypeAbstract|static;
 
     public static function tryFromString(
         string $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static;
+    ): PrimitiveTypeAbstract|static;
 
     /**
      * @throws UndefinedTypeException

@@ -162,13 +162,13 @@ describe('OptionalFailTest', function () {
         it('jsonSerialize fails when firstName is Undefined (late fail)', function () {
             $vo = OptionalFailTest::fromScalars(id: 1, firstName: '', height: 10.0);
             expect(fn() => $vo->jsonSerialize())
-                ->toThrow(UndefinedTypeException::class, 'UndefinedType cannot be converted to string.');
+                ->toThrow(UndefinedTypeException::class, 'Undefined type cannot be converted to string');
         });
 
         it('jsonSerialize fails when height is Undefined (late fail)', function () {
             $vo = OptionalFailTest::fromScalars(id: 1, firstName: 'Name', height: null);
             expect(fn() => $vo->jsonSerialize())
-                ->toThrow(UndefinedTypeException::class, 'UndefinedType cannot be converted to string.');
+                ->toThrow(UndefinedTypeException::class, 'Undefined type cannot be converted to string');
         });
     });
 });

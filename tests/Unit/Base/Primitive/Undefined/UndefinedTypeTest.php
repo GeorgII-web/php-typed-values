@@ -51,6 +51,11 @@ readonly class UndefinedTypeTest extends UndefinedTypeAbstract
         return new static();
     }
 
+    public static function fromNull(null $value): static
+    {
+        return new static();
+    }
+
     public static function fromString(string $value): static
     {
         return new static();
@@ -99,6 +104,11 @@ readonly class UndefinedTypeTest extends UndefinedTypeAbstract
     public function toInt(): never
     {
         throw new UndefinedTypeException('Mock');
+    }
+
+    public function toNull(): null
+    {
+        return null;
     }
 
     public function toString(): string
@@ -182,6 +192,11 @@ readonly class UndefinedTypeSuccessMock extends UndefinedTypeAbstract
         return new static();
     }
 
+    public static function fromNull(null $value): static
+    {
+        return new static();
+    }
+
     public static function fromString(string $value): static
     {
         return new static();
@@ -230,6 +245,11 @@ readonly class UndefinedTypeSuccessMock extends UndefinedTypeAbstract
     public function toInt(): never
     {
         throw new UndefinedTypeException('Mock');
+    }
+
+    public function toNull(): null
+    {
+        return null;
     }
 
     public function toString(): string

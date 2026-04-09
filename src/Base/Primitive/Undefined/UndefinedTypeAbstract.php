@@ -29,8 +29,6 @@ abstract readonly class UndefinedTypeAbstract extends PrimitiveTypeAbstract impl
 {
     abstract public static function create(): static;
 
-    abstract public static function fromArray(array $value): static;
-
     abstract public static function fromBool(bool $value): static;
 
     abstract public static function fromDecimal(string $value): static;
@@ -39,12 +37,9 @@ abstract readonly class UndefinedTypeAbstract extends PrimitiveTypeAbstract impl
 
     abstract public static function fromInt(int $value): static;
 
-    abstract public static function fromString(string $value): static;
+    abstract public static function fromNull(null $value): static;
 
-    /**
-     * @throws UndefinedTypeException
-     */
-    abstract public function toArray(): never;
+    abstract public static function fromString(string $value): static;
 
     /**
      * @throws UndefinedTypeException
@@ -66,45 +61,42 @@ abstract readonly class UndefinedTypeAbstract extends PrimitiveTypeAbstract impl
      */
     abstract public function toInt(): never;
 
+    abstract public function toNull(): null;
+
     /**
      * @throws UndefinedTypeException
      */
     abstract public function toString(): string;
 
-    abstract public static function tryFromArray(
-        array $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): static;
-
     abstract public static function tryFromBool(
         bool $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static;
+    ): PrimitiveTypeAbstract|static;
 
     abstract public static function tryFromDecimal(
         string $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static;
+    ): PrimitiveTypeAbstract|static;
 
     abstract public static function tryFromFloat(
         float $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static;
+    ): PrimitiveTypeAbstract|static;
 
     abstract public static function tryFromInt(
         int $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static;
+    ): PrimitiveTypeAbstract|static;
 
     abstract public static function tryFromMixed(
         mixed $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static;
+    ): PrimitiveTypeAbstract|static;
 
     abstract public static function tryFromString(
         string $value,
         PrimitiveTypeAbstract $default = new Undefined(),
-    ): static;
+    ): PrimitiveTypeAbstract|static;
 
     /**
      * @throws UndefinedTypeException
