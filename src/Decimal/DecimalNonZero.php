@@ -100,6 +100,14 @@ readonly class DecimalNonZero extends DecimalTypeAbstract
 
     /**
      * @throws NonZeroDecimalTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new NonZeroDecimalTypeException('Value cannot be null');
+    }
+
+    /**
+     * @throws NonZeroDecimalTypeException
      * @throws DecimalTypeException
      *
      * @psalm-pure
@@ -169,6 +177,14 @@ readonly class DecimalNonZero extends DecimalTypeAbstract
     public function toInt(): int
     {
         return static::stringToInt($this->value());
+    }
+
+    /**
+     * @throws NonZeroDecimalTypeException
+     */
+    public function toNull(): never
+    {
+        throw new NonZeroDecimalTypeException('Value cannot be null');
     }
 
     /**

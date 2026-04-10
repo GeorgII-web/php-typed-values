@@ -63,6 +63,14 @@ describe('DecimalNonZero', function () {
         expect(DecimalNonZero::fromString('1.1')->jsonSerialize())->toBeString();
     });
 
+    it('fromNull throws NonZeroDecimalTypeException', function (): void {
+        expect(fn() => DecimalNonZero::fromNull(null))->toThrow(NonZeroDecimalTypeException::class, 'Value cannot be null');
+    });
+
+    it('toNull throws NonZeroDecimalTypeException', function (): void {
+        expect(fn() => (new DecimalNonZero('1.0'))->toNull())->toThrow(NonZeroDecimalTypeException::class, 'Value cannot be null');
+    });
+
     it('__toString returns the original decimal string', function (): void {
         $d = new DecimalNonZero('3.14');
         expect((string) $d)->toBe('3.14')
