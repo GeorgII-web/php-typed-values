@@ -10,7 +10,6 @@ use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\String\HexStringTypeException;
-use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
@@ -77,7 +76,7 @@ readonly class StringHex extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws HexStringTypeException
-     * @throws StringTypeException
+     * @throws HexStringTypeException
      *
      * @psalm-pure
      */
@@ -94,6 +93,14 @@ readonly class StringHex extends StringTypeAbstract
     public static function fromInt(int $value): static
     {
         return new static(static::intToString($value));
+    }
+
+    /**
+     * @throws HexStringTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new HexStringTypeException('StringHex type cannot be created from null');
     }
 
     /**
@@ -135,7 +142,7 @@ readonly class StringHex extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws HexStringTypeException
      */
     public function toBool(): bool
     {
@@ -152,7 +159,7 @@ readonly class StringHex extends StringTypeAbstract
 
     /**
      * @throws FloatTypeException
-     * @throws StringTypeException
+     * @throws HexStringTypeException
      */
     public function toFloat(): float
     {
@@ -160,11 +167,19 @@ readonly class StringHex extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws HexStringTypeException
      */
     public function toInt(): int
     {
         return static::stringToInt($this->value());
+    }
+
+    /**
+     * @throws HexStringTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new HexStringTypeException('StringHex type cannot be converted to null');
     }
 
     /**
