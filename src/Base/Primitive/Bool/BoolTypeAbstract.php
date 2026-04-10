@@ -34,6 +34,8 @@ abstract readonly class BoolTypeAbstract extends PrimitiveTypeAbstract implement
 
     abstract public static function fromInt(int $value): static;
 
+    abstract public static function fromNull(null $value): never;
+
     abstract public static function fromString(string $value): static;
 
     abstract public function isTypeOf(string ...$classNames): bool;
@@ -45,6 +47,8 @@ abstract readonly class BoolTypeAbstract extends PrimitiveTypeAbstract implement
     abstract public function toFloat(): float;
 
     abstract public function toInt(): int;
+
+    abstract public static function toNull(): never;
 
     abstract public function toString(): string;
 

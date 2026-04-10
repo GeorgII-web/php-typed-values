@@ -68,6 +68,7 @@
       "echo \"Coverage\" && ./vendor/bin/pest --coverage --min=100 --parallel"
     ],
     "mutate": [
+      "echo \"Undefined\" && ./vendor/bin/pest tests/Unit/Undefined --mutate --covered-only --parallel --min=100",
       "echo \"String\" && ./vendor/bin/pest tests/Unit/String --mutate --covered-only --parallel --min=100",
       "echo \"Integer\" && ./vendor/bin/pest tests/Unit/Integer --mutate --covered-only --parallel --min=100",
       "echo \"DateTime\" && ./vendor/bin/pest tests/Unit/DateTime --mutate --covered-only --parallel --min=100",
@@ -75,8 +76,7 @@
       "echo \"Float\" && ./vendor/bin/pest tests/Unit/Float --mutate --covered-only --parallel --min=100",
       "echo \"Base\" && ./vendor/bin/pest tests/Unit/Base --mutate --covered-only --parallel --min=100",
       "echo \"Array\" && ./vendor/bin/pest tests/Unit/ArrayType --mutate --covered-only --parallel --min=100",
-      "echo \"Bool\" && ./vendor/bin/pest tests/Unit/Bool --mutate --covered-only --parallel --min=100",
-      "echo \"Undefined\" && ./vendor/bin/pest tests/Unit/Undefined --mutate --covered-only --parallel --min=100"
+      "echo \"Bool\" && ./vendor/bin/pest tests/Unit/Bool --mutate --covered-only --parallel --min=100"
     ]
   },
   "config": {
