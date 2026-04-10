@@ -105,6 +105,14 @@ readonly class FloatNonNegative extends FloatTypeAbstract
 
     /**
      * @throws NonNegativeFloatTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new NonNegativeFloatTypeException('Float type cannot be created from null');
+    }
+
+    /**
+     * @throws NonNegativeFloatTypeException
      * @throws StringTypeException
      *
      * @psalm-pure
@@ -169,6 +177,14 @@ readonly class FloatNonNegative extends FloatTypeAbstract
     public function toInt(): int
     {
         return static::floatToInt($this->value);
+    }
+
+    /**
+     * @throws NonNegativeFloatTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new NonNegativeFloatTypeException('Float type cannot be converted to null');
     }
 
     /**

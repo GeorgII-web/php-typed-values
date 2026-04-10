@@ -92,6 +92,12 @@ describe('FloatNonNegative', function () {
             ]);
         });
 
+        describe('fromNull', function () {
+            it('throws exception on creation from null', function () {
+                expect(fn() => FloatNonNegative::fromNull(null))->toThrow(NonNegativeFloatTypeException::class, 'Float type cannot be created from null');
+            });
+        });
+
         describe('tryFromFloat', function () {
             it('returns instance or default value', function (float $input, mixed $expected) {
                 $result = FloatNonNegative::tryFromFloat($input);
@@ -335,6 +341,10 @@ describe('FloatNonNegative', function () {
 
         it('converts to float', function () {
             expect(FloatNonNegative::fromFloat(1.0)->toFloat())->toBe(1.0);
+        });
+
+        it('throws when converting to null', function () {
+            expect(fn() => FloatNonNegative::toNull())->toThrow(NonNegativeFloatTypeException::class, 'Float type cannot be converted to null');
         });
     });
 });
