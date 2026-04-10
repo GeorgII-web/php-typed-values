@@ -94,6 +94,14 @@ readonly class BoolSwitch extends BoolTypeAbstract
     }
 
     /**
+     * @throws SwitchBoolTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new SwitchBoolTypeException('Value cannot be null');
+    }
+
+    /**
      * @psalm-pure
      *
      * @throws StringTypeException
@@ -158,6 +166,14 @@ readonly class BoolSwitch extends BoolTypeAbstract
     public function toLabel(): string
     {
         return $this->value() ? 'on' : 'off';
+    }
+
+    /**
+     * @throws SwitchBoolTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new SwitchBoolTypeException('Value cannot be null');
     }
 
     /**

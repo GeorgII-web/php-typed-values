@@ -161,6 +161,14 @@ describe('BoolSwitch - from* Factory Methods', function (): void {
         ['TRUE'],
     ]);
 
+    it('fromNull throws SwitchBoolTypeException', function (): void {
+        expect(fn() => BoolSwitch::fromNull(null))->toThrow(SwitchBoolTypeException::class, 'Value cannot be null');
+    });
+
+    it('toNull throws SwitchBoolTypeException', function (): void {
+        expect(fn() => (new BoolSwitch(true))->toNull())->toThrow(SwitchBoolTypeException::class, 'Value cannot be null');
+    });
+
     it('fromLabel creates instance from valid labels', function (string $input, bool $expected): void {
         $bool = BoolSwitch::fromLabel($input);
         expect($bool->value())->toBe($expected);
