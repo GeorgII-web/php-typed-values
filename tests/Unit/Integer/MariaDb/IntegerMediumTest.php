@@ -385,4 +385,16 @@ describe('IntegerMedium', function (): void {
             expect(IntegerMediumTest::tryFromString('1'))->toBeInstanceOf(Undefined::class);
         });
     });
+
+    describe('Null checks', function () {
+        it('throws exception on fromNull', function () {
+            expect(fn() => IntegerMedium::fromNull(null))
+                ->toThrow(MediumIntegerTypeException::class, 'Integer type cannot be created from null');
+        });
+
+        it('throws exception on toNull', function () {
+            expect(fn() => IntegerMedium::toNull())
+                ->toThrow(MediumIntegerTypeException::class, 'Integer type cannot be converted to null');
+        });
+    });
 });
