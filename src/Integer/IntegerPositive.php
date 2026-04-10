@@ -96,6 +96,14 @@ readonly class IntegerPositive extends IntegerTypeAbstract
     }
 
     /**
+     * @throws PositiveIntegerTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new PositiveIntegerTypeException('Integer type cannot be created from null');
+    }
+
+    /**
      * @throws StringTypeException
      * @throws PositiveIntegerTypeException
      *
@@ -159,6 +167,14 @@ readonly class IntegerPositive extends IntegerTypeAbstract
     public function toInt(): int
     {
         return $this->value;
+    }
+
+    /**
+     * @throws PositiveIntegerTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new PositiveIntegerTypeException('Integer type cannot be converted to null');
     }
 
     /**
