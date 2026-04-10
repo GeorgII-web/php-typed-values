@@ -58,6 +58,14 @@ describe('DecimalPercent', function () {
         expect(DecimalPercent::fromString('1.1')->jsonSerialize())->toBeString();
     });
 
+    it('fromNull throws PercentDecimalTypeException', function (): void {
+        expect(fn() => DecimalPercent::fromNull(null))->toThrow(PercentDecimalTypeException::class, 'Value cannot be null');
+    });
+
+    it('toNull throws PercentDecimalTypeException', function (): void {
+        expect(fn() => (new DecimalPercent('1.0'))->toNull())->toThrow(PercentDecimalTypeException::class, 'Value cannot be null');
+    });
+
     it('__toString returns original string', function (): void {
         $d = new DecimalPercent('3.14');
         expect((string) $d)->toBe('3.14');
