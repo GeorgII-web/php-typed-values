@@ -187,3 +187,15 @@ describe('Throwing static', function () {
             ->and(StringFileNameTest::tryFromString('image.jpg'))->toBeInstanceOf(Undefined::class);
     });
 });
+
+describe('Null checks', function () {
+    it('throws exception on fromNull', function () {
+        expect(fn() => StringFileName::fromNull(null))
+            ->toThrow(FileNameStringTypeException::class);
+    });
+
+    it('throws exception on toNull', function () {
+        expect(fn() => StringFileName::toNull())
+            ->toThrow(FileNameStringTypeException::class);
+    });
+});
