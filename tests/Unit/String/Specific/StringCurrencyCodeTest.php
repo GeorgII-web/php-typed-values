@@ -292,3 +292,15 @@ describe('Coverage for mutants', function () {
             ->and(StringCurrencyCodeTest::tryFromString('trigger-exception', $default))->toBe($default);
     });
 });
+
+describe('Null checks', function () {
+    it('throws exception on fromNull', function () {
+        expect(fn() => StringCurrencyCode::fromNull(null))
+            ->toThrow(CurrencyCodeStringTypeException::class);
+    });
+
+    it('throws exception on toNull', function () {
+        expect(fn() => StringCurrencyCode::toNull())
+            ->toThrow(CurrencyCodeStringTypeException::class);
+    });
+});
