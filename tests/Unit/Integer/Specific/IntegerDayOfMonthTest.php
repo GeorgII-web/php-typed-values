@@ -399,4 +399,16 @@ describe('IntegerDayOfMonth', function (): void {
             expect($result)->toBeInstanceOf(Undefined::class);
         });
     });
+
+    describe('Null checks', function () {
+        it('throws exception on fromNull', function () {
+            expect(fn() => IntegerDayOfMonth::fromNull(null))
+                ->toThrow(DayOfMonthIntegerTypeException::class, 'Integer type cannot be created from null');
+        });
+
+        it('throws exception on toNull', function () {
+            expect(fn() => IntegerDayOfMonth::toNull())
+                ->toThrow(DayOfMonthIntegerTypeException::class, 'Integer type cannot be converted to null');
+        });
+    });
 });

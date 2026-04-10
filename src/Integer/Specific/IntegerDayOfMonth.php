@@ -95,6 +95,14 @@ readonly class IntegerDayOfMonth extends IntegerTypeAbstract
     }
 
     /**
+     * @throws DayOfMonthIntegerTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new DayOfMonthIntegerTypeException('Integer type cannot be created from null');
+    }
+
+    /**
      * @throws StringTypeException
      * @throws DayOfMonthIntegerTypeException
      *
@@ -155,6 +163,14 @@ readonly class IntegerDayOfMonth extends IntegerTypeAbstract
     public function toInt(): int
     {
         return $this->value;
+    }
+
+    /**
+     * @throws DayOfMonthIntegerTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new DayOfMonthIntegerTypeException('Integer type cannot be converted to null');
     }
 
     /**
