@@ -373,4 +373,16 @@ describe('IntegerPercent', function () {
             'above max' => [101],
         ]);
     });
+
+    describe('Null checks', function () {
+        it('throws exception on fromNull', function () {
+            expect(fn() => IntegerPercent::fromNull(null))
+                ->toThrow(PercentIntegerTypeException::class, 'Integer type cannot be created from null');
+        });
+
+        it('throws exception on toNull', function () {
+            expect(fn() => IntegerPercent::toNull())
+                ->toThrow(PercentIntegerTypeException::class, 'Integer type cannot be converted to null');
+        });
+    });
 });
