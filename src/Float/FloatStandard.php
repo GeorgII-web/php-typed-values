@@ -99,6 +99,14 @@ readonly class FloatStandard extends FloatTypeAbstract
 
     /**
      * @throws FloatTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new FloatTypeException('Float type cannot be created from null');
+    }
+
+    /**
+     * @throws FloatTypeException
      * @throws StringTypeException
      *
      * @psalm-pure
@@ -163,6 +171,14 @@ readonly class FloatStandard extends FloatTypeAbstract
     public function toInt(): int
     {
         return static::floatToInt($this->value);
+    }
+
+    /**
+     * @throws FloatTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new FloatTypeException('Float type cannot be converted to null');
     }
 
     /**

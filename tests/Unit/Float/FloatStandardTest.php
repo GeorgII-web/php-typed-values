@@ -99,6 +99,12 @@ describe('FloatStandard', function () {
             ]);
         });
 
+        describe('fromNull', function () {
+            it('throws exception on creation from null', function () {
+                expect(fn() => FloatStandard::fromNull(null))->toThrow(FloatTypeException::class, 'Float type cannot be created from null');
+            });
+        });
+
         describe('tryFromFloat', function () {
             it('returns instance or default value', function (float $input, mixed $expected) {
                 $result = FloatStandard::tryFromFloat($input);
@@ -393,6 +399,10 @@ describe('FloatStandard', function () {
 
             it('converts to float', function () {
                 expect(FloatStandard::fromFloat(1.0)->toFloat())->toBe(1.0);
+            });
+
+            it('throws when converting to null', function () {
+                expect(fn() => FloatStandard::toNull())->toThrow(FloatTypeException::class, 'Float type cannot be converted to null');
             });
         });
     });
