@@ -428,4 +428,16 @@ describe('IntegerSecond', function (): void {
             expect($result)->toBeInstanceOf(Undefined::class);
         });
     });
+
+    describe('Null checks', function () {
+        it('throws exception on fromNull', function () {
+            expect(fn() => IntegerSecond::fromNull(null))
+                ->toThrow(SecondIntegerTypeException::class, 'Integer type cannot be created from null');
+        });
+
+        it('throws exception on toNull', function () {
+            expect(fn() => IntegerSecond::toNull())
+                ->toThrow(SecondIntegerTypeException::class, 'Integer type cannot be converted to null');
+        });
+    });
 });
