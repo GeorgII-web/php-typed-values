@@ -350,4 +350,16 @@ describe('IntegerNonNegative', function () {
             expect($v2->toString())->toBe($original);
         })->with(['0', '42', (string) PHP_INT_MAX]);
     });
+
+    describe('Null checks', function () {
+        it('throws exception on fromNull', function () {
+            expect(fn() => IntegerNonNegative::fromNull(null))
+                ->toThrow(NonNegativeIntegerTypeException::class, 'Integer type cannot be created from null');
+        });
+
+        it('throws exception on toNull', function () {
+            expect(fn() => IntegerNonNegative::toNull())
+                ->toThrow(NonNegativeIntegerTypeException::class, 'Integer type cannot be converted to null');
+        });
+    });
 });
