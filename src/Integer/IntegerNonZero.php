@@ -95,6 +95,14 @@ readonly class IntegerNonZero extends IntegerTypeAbstract
     }
 
     /**
+     * @throws NonZeroIntegerTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new NonZeroIntegerTypeException('Integer type cannot be created from null');
+    }
+
+    /**
      * @throws StringTypeException
      * @throws NonZeroIntegerTypeException
      *
@@ -152,6 +160,14 @@ readonly class IntegerNonZero extends IntegerTypeAbstract
     public function toInt(): int
     {
         return $this->value;
+    }
+
+    /**
+     * @throws NonZeroIntegerTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new NonZeroIntegerTypeException('Integer type cannot be converted to null');
     }
 
     /**
