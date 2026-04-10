@@ -96,6 +96,14 @@ readonly class IntegerSmall extends IntegerTypeAbstract
     }
 
     /**
+     * @throws SmallIntegerTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new SmallIntegerTypeException('Integer type cannot be created from null');
+    }
+
+    /**
      * @throws StringTypeException
      * @throws SmallIntegerTypeException
      *
@@ -165,6 +173,14 @@ readonly class IntegerSmall extends IntegerTypeAbstract
     public function toInt(): int
     {
         return $this->value;
+    }
+
+    /**
+     * @throws SmallIntegerTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new SmallIntegerTypeException('Integer type cannot be converted to null');
     }
 
     /**
