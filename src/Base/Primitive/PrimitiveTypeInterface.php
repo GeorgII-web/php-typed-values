@@ -24,7 +24,6 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  */
 interface PrimitiveTypeInterface extends TypeInterface, JsonSerializable
 {
-    // todo add all methods converters
     /**
      * Returns true if the Object value is empty.
      */

@@ -82,6 +82,14 @@ describe('FalseStandard', function () {
             ->and($badI)->toBeInstanceOf(Undefined::class);
     });
 
+    it('fromNull throws FalseBoolTypeException', function (): void {
+        expect(fn() => FalseStandard::fromNull(null))->toThrow(FalseBoolTypeException::class, 'Value cannot be null');
+    });
+
+    it('toNull throws FalseBoolTypeException', function (): void {
+        expect(fn() => (new FalseStandard(false))->toNull())->toThrow(FalseBoolTypeException::class, 'Value cannot be null');
+    });
+
     it('jsonSerialize returns bool', function (): void {
         // Check that tryFromString returns proper type
         $valid = FalseStandard::tryFromString('false');
