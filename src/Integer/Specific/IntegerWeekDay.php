@@ -121,6 +121,14 @@ readonly class IntegerWeekDay extends IntegerTypeAbstract
     }
 
     /**
+     * @throws WeekDayIntegerTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new WeekDayIntegerTypeException('Integer type cannot be created from null');
+    }
+
+    /**
      * @throws StringTypeException
      * @throws WeekDayIntegerTypeException
      *
@@ -197,6 +205,14 @@ readonly class IntegerWeekDay extends IntegerTypeAbstract
             6 => 'Saturday',
             7 => 'Sunday',
         };
+    }
+
+    /**
+     * @throws WeekDayIntegerTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new WeekDayIntegerTypeException('Integer type cannot be converted to null');
     }
 
     /**
