@@ -96,6 +96,14 @@ readonly class FloatPercent extends FloatTypeAbstract
 
     /**
      * @throws PercentFloatTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new PercentFloatTypeException('Float type cannot be created from null');
+    }
+
+    /**
+     * @throws PercentFloatTypeException
      * @throws StringTypeException
      *
      * @psalm-pure
@@ -160,6 +168,14 @@ readonly class FloatPercent extends FloatTypeAbstract
     public function toInt(): int
     {
         return static::floatToInt($this->value);
+    }
+
+    /**
+     * @throws PercentFloatTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new PercentFloatTypeException('Float type cannot be converted to null');
     }
 
     /**
