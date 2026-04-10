@@ -60,6 +60,14 @@ describe('DecimalProbability', function () {
         expect(DecimalProbability::fromString('0.1')->jsonSerialize())->toBeString();
     });
 
+    it('fromNull throws ProbabilityDecimalTypeException', function (): void {
+        expect(fn() => DecimalProbability::fromNull(null))->toThrow(ProbabilityDecimalTypeException::class, 'Value cannot be null');
+    });
+
+    it('toNull throws ProbabilityDecimalTypeException', function (): void {
+        expect(fn() => (new DecimalProbability('0.5'))->toNull())->toThrow(ProbabilityDecimalTypeException::class, 'Value cannot be null');
+    });
+
     it('__toString returns original string', function (): void {
         $d = new DecimalProbability('0.314');
         expect((string) $d)->toBe('0.314');
