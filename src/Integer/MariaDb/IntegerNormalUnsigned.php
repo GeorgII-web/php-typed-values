@@ -96,6 +96,14 @@ readonly class IntegerNormalUnsigned extends IntegerTypeAbstract
     }
 
     /**
+     * @throws UnsignedNormalIntegerTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new UnsignedNormalIntegerTypeException('Integer type cannot be created from null');
+    }
+
+    /**
      * @throws StringTypeException
      * @throws UnsignedNormalIntegerTypeException
      *
@@ -165,6 +173,14 @@ readonly class IntegerNormalUnsigned extends IntegerTypeAbstract
     public function toInt(): int
     {
         return $this->value;
+    }
+
+    /**
+     * @throws UnsignedNormalIntegerTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new UnsignedNormalIntegerTypeException('Integer type cannot be converted to null');
     }
 
     /**
