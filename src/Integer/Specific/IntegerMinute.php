@@ -95,6 +95,14 @@ readonly class IntegerMinute extends IntegerTypeAbstract
     }
 
     /**
+     * @throws MinuteIntegerTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new MinuteIntegerTypeException('Integer type cannot be created from null');
+    }
+
+    /**
      * @throws StringTypeException
      * @throws MinuteIntegerTypeException
      *
@@ -155,6 +163,14 @@ readonly class IntegerMinute extends IntegerTypeAbstract
     public function toInt(): int
     {
         return $this->value;
+    }
+
+    /**
+     * @throws MinuteIntegerTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new MinuteIntegerTypeException('Integer type cannot be converted to null');
     }
 
     /**

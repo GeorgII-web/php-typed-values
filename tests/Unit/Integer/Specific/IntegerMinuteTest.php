@@ -428,4 +428,16 @@ describe('IntegerMinute', function (): void {
             expect($result)->toBeInstanceOf(Undefined::class);
         });
     });
+
+    describe('Null checks', function () {
+        it('throws exception on fromNull', function () {
+            expect(fn() => IntegerMinute::fromNull(null))
+                ->toThrow(MinuteIntegerTypeException::class, 'Integer type cannot be created from null');
+        });
+
+        it('throws exception on toNull', function () {
+            expect(fn() => IntegerMinute::toNull())
+                ->toThrow(MinuteIntegerTypeException::class, 'Integer type cannot be converted to null');
+        });
+    });
 });
