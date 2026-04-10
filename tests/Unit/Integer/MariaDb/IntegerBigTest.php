@@ -10,6 +10,7 @@ use const PHP_INT_MIN;
 use Exception;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
+use PhpTypedValues\Exception\Integer\BigIntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Integer\MariaDb\IntegerBig;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -411,6 +412,18 @@ describe('IntegerBig', function (): void {
 
         it('IntegerBig::tryFromString catch block coverage', function (): void {
             expect(IntegerBigTest::tryFromString('1'))->toBeInstanceOf(Undefined::class);
+        });
+    });
+
+    describe('Null checks', function () {
+        it('throws exception on fromNull', function () {
+            expect(fn() => IntegerBig::fromNull(null))
+                ->toThrow(BigIntegerTypeException::class, 'Integer type cannot be created from null');
+        });
+
+        it('throws exception on toNull', function () {
+            expect(fn() => IntegerBig::toNull())
+                ->toThrow(BigIntegerTypeException::class, 'Integer type cannot be converted to null');
         });
     });
 });
