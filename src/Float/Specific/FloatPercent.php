@@ -67,6 +67,7 @@ readonly class FloatPercent extends FloatTypeAbstract
      * @throws DecimalTypeException
      * @throws PercentFloatTypeException
      * @throws StringTypeException
+     * @throws FloatTypeException
      */
     public static function fromDecimal(string $value): static
     {
@@ -105,6 +106,7 @@ readonly class FloatPercent extends FloatTypeAbstract
     /**
      * @throws PercentFloatTypeException
      * @throws StringTypeException
+     * @throws FloatTypeException
      *
      * @psalm-pure
      */

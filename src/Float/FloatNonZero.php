@@ -67,6 +67,7 @@ readonly class FloatNonZero extends FloatTypeAbstract
      * @throws DecimalTypeException
      * @throws NonZeroFloatTypeException
      * @throws StringTypeException
+     * @throws FloatTypeException
      */
     public static function fromDecimal(string $value): static
     {
@@ -105,6 +106,7 @@ readonly class FloatNonZero extends FloatTypeAbstract
     /**
      * @throws NonZeroFloatTypeException
      * @throws StringTypeException
+     * @throws FloatTypeException
      *
      * @psalm-pure
      */

@@ -67,6 +67,7 @@ readonly class FloatProbability extends FloatTypeAbstract
      * @throws DecimalTypeException
      * @throws ProbabilityFloatTypeException
      * @throws StringTypeException
+     * @throws FloatTypeException
      */
     public static function fromDecimal(string $value): static
     {
@@ -105,6 +106,7 @@ readonly class FloatProbability extends FloatTypeAbstract
     /**
      * @throws ProbabilityFloatTypeException
      * @throws StringTypeException
+     * @throws FloatTypeException
      *
      * @psalm-pure
      */
