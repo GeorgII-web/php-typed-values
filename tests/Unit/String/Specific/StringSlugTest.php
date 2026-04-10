@@ -249,3 +249,15 @@ describe('Coverage for mutants', function () {
             ->and(StringSlugTest::tryFromString('trigger-exception', $default))->toBe($default);
     });
 });
+
+describe('Null checks', function () {
+    it('throws exception on fromNull', function () {
+        expect(fn() => StringSlug::fromNull(null))
+            ->toThrow(SlugStringException::class);
+    });
+
+    it('throws exception on toNull', function () {
+        expect(fn() => StringSlug::toNull())
+            ->toThrow(SlugStringException::class);
+    });
+});

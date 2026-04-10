@@ -13,7 +13,6 @@ use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\String\JsonStringTypeException;
-use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
@@ -100,7 +99,7 @@ readonly class StringJson extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws JsonStringTypeException
-     * @throws StringTypeException
+     * @throws JsonStringTypeException
      *
      * @psalm-pure
      */
@@ -117,6 +116,14 @@ readonly class StringJson extends StringTypeAbstract
     public static function fromInt(int $value): static
     {
         return new static(static::intToString($value));
+    }
+
+    /**
+     * @throws JsonStringTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new JsonStringTypeException('StringJson type cannot be created from null');
     }
 
     /**
@@ -167,7 +174,7 @@ readonly class StringJson extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws JsonStringTypeException
      */
     public function toBool(): bool
     {
@@ -184,7 +191,7 @@ readonly class StringJson extends StringTypeAbstract
 
     /**
      * @throws FloatTypeException
-     * @throws StringTypeException
+     * @throws JsonStringTypeException
      */
     public function toFloat(): float
     {
@@ -192,11 +199,19 @@ readonly class StringJson extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws JsonStringTypeException
      */
     public function toInt(): int
     {
         return static::stringToInt($this->value());
+    }
+
+    /**
+     * @throws JsonStringTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new JsonStringTypeException('StringJson type cannot be converted to null');
     }
 
     /**

@@ -218,3 +218,15 @@ describe('Throwing static', function () {
             ->and(StringTinyTextTest::tryFromString('test'))->toBeInstanceOf(Undefined::class);
     });
 });
+
+describe('Null checks', function () {
+    it('throws exception on fromNull', function () {
+        expect(fn() => StringTinyText::fromNull(null))
+            ->toThrow(TinyTextStringException::class);
+    });
+
+    it('throws exception on toNull', function () {
+        expect(fn() => StringTinyText::toNull())
+            ->toThrow(TinyTextStringException::class);
+    });
+});

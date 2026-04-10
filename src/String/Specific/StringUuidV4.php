@@ -9,7 +9,6 @@ use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
-use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\String\UuidStringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -84,7 +83,7 @@ readonly class StringUuidV4 extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws UuidStringTypeException
-     * @throws StringTypeException
+     * @throws UuidStringTypeException
      *
      * @psalm-pure
      */
@@ -101,6 +100,14 @@ readonly class StringUuidV4 extends StringTypeAbstract
     public static function fromInt(int $value): static
     {
         return new static(static::intToString($value));
+    }
+
+    /**
+     * @throws UuidStringTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new UuidStringTypeException('StringUuidV4 type cannot be created from null');
     }
 
     /**
@@ -140,7 +147,7 @@ readonly class StringUuidV4 extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws UuidStringTypeException
      */
     public function toBool(): bool
     {
@@ -157,7 +164,7 @@ readonly class StringUuidV4 extends StringTypeAbstract
 
     /**
      * @throws FloatTypeException
-     * @throws StringTypeException
+     * @throws UuidStringTypeException
      */
     public function toFloat(): float
     {
@@ -165,11 +172,19 @@ readonly class StringUuidV4 extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws UuidStringTypeException
      */
     public function toInt(): int
     {
         return static::stringToInt($this->value());
+    }
+
+    /**
+     * @throws UuidStringTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new UuidStringTypeException('StringUuidV4 type cannot be converted to null');
     }
 
     /** @return non-empty-string */

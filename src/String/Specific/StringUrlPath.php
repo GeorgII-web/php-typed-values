@@ -9,7 +9,6 @@ use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
-use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\String\UrlPathStringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -90,7 +89,7 @@ readonly class StringUrlPath extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws UrlPathStringTypeException
-     * @throws StringTypeException
+     * @throws UrlPathStringTypeException
      *
      * @psalm-pure
      */
@@ -107,6 +106,14 @@ readonly class StringUrlPath extends StringTypeAbstract
     public static function fromInt(int $value): static
     {
         return new static(static::intToString($value));
+    }
+
+    /**
+     * @throws UrlPathStringTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new UrlPathStringTypeException('StringUrlPath type cannot be created from null');
     }
 
     /**
@@ -146,7 +153,7 @@ readonly class StringUrlPath extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws UrlPathStringTypeException
      */
     public function toBool(): bool
     {
@@ -163,7 +170,7 @@ readonly class StringUrlPath extends StringTypeAbstract
 
     /**
      * @throws FloatTypeException
-     * @throws StringTypeException
+     * @throws UrlPathStringTypeException
      */
     public function toFloat(): float
     {
@@ -171,11 +178,19 @@ readonly class StringUrlPath extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws UrlPathStringTypeException
      */
     public function toInt(): int
     {
         return static::stringToInt($this->value());
+    }
+
+    /**
+     * @throws UrlPathStringTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new UrlPathStringTypeException('StringUrlPath type cannot be converted to null');
     }
 
     /**

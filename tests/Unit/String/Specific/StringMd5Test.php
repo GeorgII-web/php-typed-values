@@ -229,3 +229,15 @@ describe('Throwing static', function () {
             ->and(StringMd5Test::tryFromString('5d41402abc4b2a76b9719d911017c592'))->toBeInstanceOf(Undefined::class);
     });
 });
+
+describe('Null checks', function () {
+    it('throws exception on fromNull', function () {
+        expect(fn() => StringMd5::fromNull(null))
+            ->toThrow(Md5StringTypeException::class);
+    });
+
+    it('throws exception on toNull', function () {
+        expect(fn() => StringMd5::toNull())
+            ->toThrow(Md5StringTypeException::class);
+    });
+});

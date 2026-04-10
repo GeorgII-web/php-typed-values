@@ -46,7 +46,7 @@ readonly class StringSha256 extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws Sha256StringTypeException
      * @throws Sha256StringTypeException
      *
      * @psalm-pure
@@ -69,7 +69,7 @@ readonly class StringSha256 extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws Sha256StringTypeException
-     * @throws StringTypeException
+     * @throws Sha256StringTypeException
      *
      * @psalm-pure
      */
@@ -86,6 +86,14 @@ readonly class StringSha256 extends StringTypeAbstract
     public static function fromInt(int $value): static
     {
         return new static(static::intToString($value));
+    }
+
+    /**
+     * @throws Sha256StringTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new Sha256StringTypeException('StringSha256 type cannot be created from null');
     }
 
     /**
@@ -128,7 +136,7 @@ readonly class StringSha256 extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws Sha256StringTypeException
      */
     public function toBool(): bool
     {
@@ -144,7 +152,7 @@ readonly class StringSha256 extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws Sha256StringTypeException
      * @throws FloatTypeException
      */
     public function toFloat(): float
@@ -153,11 +161,19 @@ readonly class StringSha256 extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws Sha256StringTypeException
      */
     public function toInt(): int
     {
         return static::stringToInt($this->value);
+    }
+
+    /**
+     * @throws Sha256StringTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new Sha256StringTypeException('StringSha256 type cannot be converted to null');
     }
 
     public function toString(): string

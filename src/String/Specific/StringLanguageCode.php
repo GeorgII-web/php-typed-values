@@ -10,7 +10,6 @@ use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\String\LanguageCodeStringTypeException;
-use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
@@ -82,7 +81,7 @@ readonly class StringLanguageCode extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws LanguageCodeStringTypeException
-     * @throws StringTypeException
+     * @throws LanguageCodeStringTypeException
      *
      * @psalm-pure
      */
@@ -99,6 +98,14 @@ readonly class StringLanguageCode extends StringTypeAbstract
     public static function fromInt(int $value): static
     {
         return new static(static::intToString($value));
+    }
+
+    /**
+     * @throws LanguageCodeStringTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new LanguageCodeStringTypeException('StringLanguageCode type cannot be created from null');
     }
 
     /**
@@ -138,7 +145,7 @@ readonly class StringLanguageCode extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws LanguageCodeStringTypeException
      */
     public function toBool(): bool
     {
@@ -155,7 +162,7 @@ readonly class StringLanguageCode extends StringTypeAbstract
 
     /**
      * @throws FloatTypeException
-     * @throws StringTypeException
+     * @throws LanguageCodeStringTypeException
      */
     public function toFloat(): float
     {
@@ -163,11 +170,19 @@ readonly class StringLanguageCode extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws LanguageCodeStringTypeException
      */
     public function toInt(): int
     {
         return static::stringToInt($this->value());
+    }
+
+    /**
+     * @throws LanguageCodeStringTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new LanguageCodeStringTypeException('StringLanguageCode type cannot be converted to null');
     }
 
     /**

@@ -235,3 +235,15 @@ describe('Throwing static', function () {
             ->and(StringSemVerTest::tryFromString('1.2.3'))->toBeInstanceOf(Undefined::class);
     });
 });
+
+describe('Null checks', function () {
+    it('throws exception on fromNull', function () {
+        expect(fn() => StringSemVer::fromNull(null))
+            ->toThrow(SemVerStringTypeException::class);
+    });
+
+    it('throws exception on toNull', function () {
+        expect(fn() => StringSemVer::toNull())
+            ->toThrow(SemVerStringTypeException::class);
+    });
+});

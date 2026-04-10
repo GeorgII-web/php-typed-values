@@ -10,7 +10,6 @@ use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\String\SemVerStringTypeException;
-use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
@@ -79,7 +78,7 @@ readonly class StringSemVer extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws SemVerStringTypeException
-     * @throws StringTypeException
+     * @throws SemVerStringTypeException
      *
      * @psalm-pure
      */
@@ -96,6 +95,14 @@ readonly class StringSemVer extends StringTypeAbstract
     public static function fromInt(int $value): static
     {
         return new static(static::intToString($value));
+    }
+
+    /**
+     * @throws SemVerStringTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new SemVerStringTypeException('StringSemVer type cannot be created from null');
     }
 
     /**
@@ -137,7 +144,7 @@ readonly class StringSemVer extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws SemVerStringTypeException
      */
     public function toBool(): bool
     {
@@ -154,7 +161,7 @@ readonly class StringSemVer extends StringTypeAbstract
 
     /**
      * @throws FloatTypeException
-     * @throws StringTypeException
+     * @throws SemVerStringTypeException
      */
     public function toFloat(): float
     {
@@ -162,11 +169,19 @@ readonly class StringSemVer extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws SemVerStringTypeException
      */
     public function toInt(): int
     {
         return static::stringToInt($this->value());
+    }
+
+    /**
+     * @throws SemVerStringTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new SemVerStringTypeException('StringSemVer type cannot be converted to null');
     }
 
     /**

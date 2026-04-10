@@ -207,3 +207,15 @@ describe('StringUuidV7Test (Throwing static)', function () {
             ->and(StringUuidV7Test::tryFromString('01890f2a-5bcd-7def-8abc-1234567890ab'))->toBeInstanceOf(Undefined::class);
     });
 });
+
+describe('Null checks', function () {
+    it('throws exception on fromNull', function () {
+        expect(fn() => StringUuidV7::fromNull(null))
+            ->toThrow(StringTypeException::class);
+    });
+
+    it('throws exception on toNull', function () {
+        expect(fn() => StringUuidV7::toNull())
+            ->toThrow(StringTypeException::class);
+    });
+});

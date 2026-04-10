@@ -294,3 +294,15 @@ describe('Throwing static', function () {
             ->and(StringJsonTest::tryFromString('{"a":1}'))->toBeInstanceOf(Undefined::class);
     });
 });
+
+describe('Null checks', function () {
+    it('throws exception on fromNull', function () {
+        expect(fn() => StringJson::fromNull(null))
+            ->toThrow(JsonStringTypeException::class);
+    });
+
+    it('throws exception on toNull', function () {
+        expect(fn() => StringJson::toNull())
+            ->toThrow(JsonStringTypeException::class);
+    });
+});

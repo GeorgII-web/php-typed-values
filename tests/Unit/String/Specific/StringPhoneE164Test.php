@@ -180,3 +180,15 @@ describe('Throwing static StringPhoneE164', function () {
             ->and(StringPhoneE164Test::tryFromString($validPhone))->toBeInstanceOf(Undefined::class);
     });
 });
+
+describe('Null checks', function () {
+    it('throws exception on fromNull', function () {
+        expect(fn() => StringPhoneE164::fromNull(null))
+            ->toThrow(PhoneE164StringTypeException::class);
+    });
+
+    it('throws exception on toNull', function () {
+        expect(fn() => StringPhoneE164::toNull())
+            ->toThrow(PhoneE164StringTypeException::class);
+    });
+});

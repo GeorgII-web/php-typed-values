@@ -10,7 +10,6 @@ use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\String\LocaleStringTypeException;
-use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
@@ -77,7 +76,7 @@ readonly class StringLocaleCode extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws LocaleStringTypeException
      * @throws LocaleStringTypeException
      *
      * @psalm-pure
@@ -100,7 +99,7 @@ readonly class StringLocaleCode extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws LocaleStringTypeException
-     * @throws StringTypeException
+     * @throws LocaleStringTypeException
      *
      * @psalm-pure
      */
@@ -117,6 +116,14 @@ readonly class StringLocaleCode extends StringTypeAbstract
     public static function fromInt(int $value): static
     {
         return new static(static::intToString($value));
+    }
+
+    /**
+     * @throws LocaleStringTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new LocaleStringTypeException('StringLocaleCode type cannot be created from null');
     }
 
     /**
@@ -176,7 +183,7 @@ readonly class StringLocaleCode extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws LocaleStringTypeException
      */
     public function toBool(): bool
     {
@@ -193,7 +200,7 @@ readonly class StringLocaleCode extends StringTypeAbstract
 
     /**
      * @throws FloatTypeException
-     * @throws StringTypeException
+     * @throws LocaleStringTypeException
      */
     public function toFloat(): float
     {
@@ -201,11 +208,19 @@ readonly class StringLocaleCode extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws LocaleStringTypeException
      */
     public function toInt(): int
     {
         return static::stringToInt($this->value());
+    }
+
+    /**
+     * @throws LocaleStringTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new LocaleStringTypeException('StringLocaleCode type cannot be converted to null');
     }
 
     /**

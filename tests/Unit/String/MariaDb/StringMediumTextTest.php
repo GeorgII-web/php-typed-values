@@ -214,3 +214,15 @@ describe('Throwing static', function () {
             ->and(StringMediumTextTest::tryFromString('test'))->toBeInstanceOf(Undefined::class);
     });
 });
+
+describe('Null checks', function () {
+    it('throws exception on fromNull', function () {
+        expect(fn() => StringMediumText::fromNull(null))
+            ->toThrow(StringTypeException::class);
+    });
+
+    it('throws exception on toNull', function () {
+        expect(fn() => StringMediumText::toNull())
+            ->toThrow(StringTypeException::class);
+    });
+});

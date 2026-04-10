@@ -404,3 +404,15 @@ describe('Throwing static', function () {
             ->and(StringIbanTest::tryFromString('DE89370400440532013000'))->toBeInstanceOf(Undefined::class);
     });
 });
+
+describe('Null checks', function () {
+    it('throws exception on fromNull', function () {
+        expect(fn() => StringIban::fromNull(null))
+            ->toThrow(IbanStringTypeException::class);
+    });
+
+    it('throws exception on toNull', function () {
+        expect(fn() => StringIban::toNull())
+            ->toThrow(IbanStringTypeException::class);
+    });
+});

@@ -244,3 +244,15 @@ describe('Coverage for mutants', function () {
         expect($reflection->invoke(null))->toBe(4294967295);
     });
 });
+
+describe('Null checks', function () {
+    it('throws exception on fromNull', function () {
+        expect(fn() => StringLongText::fromNull(null))
+            ->toThrow(StringTypeException::class);
+    });
+
+    it('throws exception on toNull', function () {
+        expect(fn() => StringLongText::toNull())
+            ->toThrow(StringTypeException::class);
+    });
+});

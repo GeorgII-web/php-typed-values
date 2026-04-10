@@ -195,3 +195,15 @@ describe('Throwing static', function () {
             ->and(StringUrlPathTest::tryFromString('/test'))->toBeInstanceOf(Undefined::class);
     });
 });
+
+describe('Null checks', function () {
+    it('throws exception on fromNull', function () {
+        expect(fn() => StringUrlPath::fromNull(null))
+            ->toThrow(StringTypeException::class);
+    });
+
+    it('throws exception on toNull', function () {
+        expect(fn() => StringUrlPath::toNull())
+            ->toThrow(StringTypeException::class);
+    });
+});

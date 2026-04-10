@@ -179,3 +179,15 @@ describe('Throwing static StringSha256', function () {
             ->and(StringSha256Test::tryFromString($validHash))->toBeInstanceOf(Undefined::class);
     });
 });
+
+describe('Null checks', function () {
+    it('throws exception on fromNull', function () {
+        expect(fn() => StringSha256::fromNull(null))
+            ->toThrow(Sha256StringTypeException::class);
+    });
+
+    it('throws exception on toNull', function () {
+        expect(fn() => StringSha256::toNull())
+            ->toThrow(Sha256StringTypeException::class);
+    });
+});

@@ -203,3 +203,15 @@ describe('Throwing static StringMimeTypeStandard', function () {
             ->and(StringMimeTypeStandardTest::tryFromString('application/json'))->toBeInstanceOf(Undefined::class);
     });
 });
+
+describe('Null checks', function () {
+    it('throws exception on fromNull', function () {
+        expect(fn() => StringMimeType::fromNull(null))
+            ->toThrow(MimeTypeStringTypeException::class);
+    });
+
+    it('throws exception on toNull', function () {
+        expect(fn() => StringMimeType::toNull())
+            ->toThrow(MimeTypeStringTypeException::class);
+    });
+});

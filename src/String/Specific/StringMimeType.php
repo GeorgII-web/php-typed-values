@@ -48,7 +48,7 @@ readonly class StringMimeType extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws MimeTypeStringTypeException
      * @throws MimeTypeStringTypeException
      *
      * @psalm-pure
@@ -71,7 +71,7 @@ readonly class StringMimeType extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws MimeTypeStringTypeException
-     * @throws StringTypeException
+     * @throws MimeTypeStringTypeException
      *
      * @psalm-pure
      */
@@ -88,6 +88,14 @@ readonly class StringMimeType extends StringTypeAbstract
     public static function fromInt(int $value): static
     {
         return new static(static::intToString($value));
+    }
+
+    /**
+     * @throws MimeTypeStringTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new MimeTypeStringTypeException('StringMimeType type cannot be created from null');
     }
 
     /**
@@ -144,7 +152,7 @@ readonly class StringMimeType extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws MimeTypeStringTypeException
      */
     public function toBool(): bool
     {
@@ -160,7 +168,7 @@ readonly class StringMimeType extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws MimeTypeStringTypeException
      * @throws FloatTypeException
      */
     public function toFloat(): float
@@ -169,11 +177,19 @@ readonly class StringMimeType extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws MimeTypeStringTypeException
      */
     public function toInt(): int
     {
         return static::stringToInt($this->value);
+    }
+
+    /**
+     * @throws MimeTypeStringTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new MimeTypeStringTypeException('StringMimeType type cannot be converted to null');
     }
 
     public function toString(): string

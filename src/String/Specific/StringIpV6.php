@@ -13,7 +13,6 @@ use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\String\IpV6StringException;
-use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
@@ -76,7 +75,7 @@ readonly class StringIpV6 extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws IpV6StringException
-     * @throws StringTypeException
+     * @throws IpV6StringException
      *
      * @psalm-pure
      */
@@ -93,6 +92,14 @@ readonly class StringIpV6 extends StringTypeAbstract
     public static function fromInt(int $value): static
     {
         return new static(static::intToString($value));
+    }
+
+    /**
+     * @throws IpV6StringException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new IpV6StringException('StringIpV6 type cannot be created from null');
     }
 
     /**
@@ -132,7 +139,7 @@ readonly class StringIpV6 extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws IpV6StringException
      */
     public function toBool(): bool
     {
@@ -148,7 +155,7 @@ readonly class StringIpV6 extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws IpV6StringException
      * @throws FloatTypeException
      */
     public function toFloat(): float
@@ -157,11 +164,19 @@ readonly class StringIpV6 extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws IpV6StringException
      */
     public function toInt(): int
     {
         return static::stringToInt($this->value());
+    }
+
+    /**
+     * @throws IpV6StringException
+     */
+    public static function toNull(): never
+    {
+        throw new IpV6StringException('StringIpV6 type cannot be converted to null');
     }
 
     public function toString(): string

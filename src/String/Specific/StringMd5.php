@@ -10,7 +10,6 @@ use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\String\Md5StringTypeException;
-use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
@@ -77,7 +76,7 @@ readonly class StringMd5 extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws Md5StringTypeException
-     * @throws StringTypeException
+     * @throws Md5StringTypeException
      *
      * @psalm-pure
      */
@@ -94,6 +93,14 @@ readonly class StringMd5 extends StringTypeAbstract
     public static function fromInt(int $value): static
     {
         return new static(static::intToString($value));
+    }
+
+    /**
+     * @throws Md5StringTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new Md5StringTypeException('StringMd5 type cannot be created from null');
     }
 
     /**
@@ -135,7 +142,7 @@ readonly class StringMd5 extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws Md5StringTypeException
      */
     public function toBool(): bool
     {
@@ -152,7 +159,7 @@ readonly class StringMd5 extends StringTypeAbstract
 
     /**
      * @throws FloatTypeException
-     * @throws StringTypeException
+     * @throws Md5StringTypeException
      */
     public function toFloat(): float
     {
@@ -160,11 +167,19 @@ readonly class StringMd5 extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws Md5StringTypeException
      */
     public function toInt(): int
     {
         return static::stringToInt($this->value());
+    }
+
+    /**
+     * @throws Md5StringTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new Md5StringTypeException('StringMd5 type cannot be converted to null');
     }
 
     /**

@@ -208,3 +208,15 @@ describe('StringUuidV4StandardTest (Throwing static)', function () {
             ->and(StringUuidV4Test::tryFromString('550e8400-e29b-41d4-a716-446655440000'))->toBeInstanceOf(Undefined::class);
     });
 });
+
+describe('Null checks', function () {
+    it('throws exception on fromNull', function () {
+        expect(fn() => StringUuidV4::fromNull(null))
+            ->toThrow(StringTypeException::class);
+    });
+
+    it('throws exception on toNull', function () {
+        expect(fn() => StringUuidV4::toNull())
+            ->toThrow(StringTypeException::class);
+    });
+});

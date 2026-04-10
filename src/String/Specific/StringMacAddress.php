@@ -11,7 +11,6 @@ use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\String\MacAddressStringException;
-use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
@@ -74,7 +73,7 @@ readonly class StringMacAddress extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws MacAddressStringException
-     * @throws StringTypeException
+     * @throws MacAddressStringException
      *
      * @psalm-pure
      */
@@ -91,6 +90,14 @@ readonly class StringMacAddress extends StringTypeAbstract
     public static function fromInt(int $value): static
     {
         return new static(static::intToString($value));
+    }
+
+    /**
+     * @throws MacAddressStringException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new MacAddressStringException('StringMacAddress type cannot be created from null');
     }
 
     /**
@@ -147,6 +154,14 @@ readonly class StringMacAddress extends StringTypeAbstract
     public function toInt(): int
     {
         return static::stringToInt($this->value());
+    }
+
+    /**
+     * @throws MacAddressStringException
+     */
+    public static function toNull(): never
+    {
+        throw new MacAddressStringException('StringMacAddress type cannot be converted to null');
     }
 
     public function toString(): string

@@ -48,7 +48,7 @@ readonly class StringJwt extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws JwtStringTypeException
      * @throws JwtStringTypeException
      *
      * @psalm-pure
@@ -86,6 +86,14 @@ readonly class StringJwt extends StringTypeAbstract
     public static function fromInt(int $value): static
     {
         return new static(static::intToString($value));
+    }
+
+    /**
+     * @throws JwtStringTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new JwtStringTypeException('StringJwt type cannot be created from null');
     }
 
     /**
@@ -128,7 +136,7 @@ readonly class StringJwt extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws JwtStringTypeException
      */
     public function toBool(): bool
     {
@@ -144,7 +152,7 @@ readonly class StringJwt extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws JwtStringTypeException
      */
     public function toFloat(): float
     {
@@ -152,11 +160,19 @@ readonly class StringJwt extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws JwtStringTypeException
      */
     public function toInt(): int
     {
         return static::stringToInt($this->value);
+    }
+
+    /**
+     * @throws JwtStringTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new JwtStringTypeException('StringJwt type cannot be converted to null');
     }
 
     public function toString(): string

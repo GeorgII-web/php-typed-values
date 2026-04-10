@@ -10,7 +10,6 @@ use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\String\PathStringTypeException;
-use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
@@ -83,7 +82,7 @@ readonly class StringPath extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws PathStringTypeException
-     * @throws StringTypeException
+     * @throws PathStringTypeException
      *
      * @psalm-pure
      */
@@ -100,6 +99,14 @@ readonly class StringPath extends StringTypeAbstract
     public static function fromInt(int $value): static
     {
         return new static(static::intToString($value));
+    }
+
+    /**
+     * @throws PathStringTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new PathStringTypeException('StringPath type cannot be created from null');
     }
 
     /**
@@ -139,7 +146,7 @@ readonly class StringPath extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws PathStringTypeException
      */
     public function toBool(): bool
     {
@@ -156,7 +163,7 @@ readonly class StringPath extends StringTypeAbstract
 
     /**
      * @throws FloatTypeException
-     * @throws StringTypeException
+     * @throws PathStringTypeException
      */
     public function toFloat(): float
     {
@@ -164,11 +171,19 @@ readonly class StringPath extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws PathStringTypeException
      */
     public function toInt(): int
     {
         return static::stringToInt($this->value());
+    }
+
+    /**
+     * @throws PathStringTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new PathStringTypeException('StringPath type cannot be converted to null');
     }
 
     /**

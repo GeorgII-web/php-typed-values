@@ -46,7 +46,7 @@ readonly class StringSha512 extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws Sha512StringTypeException
      * @throws Sha512StringTypeException
      *
      * @psalm-pure
@@ -69,7 +69,7 @@ readonly class StringSha512 extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws Sha512StringTypeException
-     * @throws StringTypeException
+     * @throws Sha512StringTypeException
      *
      * @psalm-pure
      */
@@ -86,6 +86,14 @@ readonly class StringSha512 extends StringTypeAbstract
     public static function fromInt(int $value): static
     {
         return new static(static::intToString($value));
+    }
+
+    /**
+     * @throws Sha512StringTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new Sha512StringTypeException('StringSha512 type cannot be created from null');
     }
 
     /**
@@ -128,7 +136,7 @@ readonly class StringSha512 extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws Sha512StringTypeException
      */
     public function toBool(): bool
     {
@@ -144,7 +152,7 @@ readonly class StringSha512 extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws Sha512StringTypeException
      * @throws FloatTypeException
      */
     public function toFloat(): float
@@ -153,11 +161,19 @@ readonly class StringSha512 extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws Sha512StringTypeException
      */
     public function toInt(): int
     {
         return static::stringToInt($this->value);
+    }
+
+    /**
+     * @throws Sha512StringTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new Sha512StringTypeException('StringSha512 type cannot be converted to null');
     }
 
     public function toString(): string
