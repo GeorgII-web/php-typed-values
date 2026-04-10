@@ -344,3 +344,15 @@ describe('Throwing static', function () {
             ->and(StringBase64Test::tryFromString('SGVsbG8gV29ybGQ='))->toBeInstanceOf(Undefined::class);
     });
 });
+
+describe('Null checks', function () {
+    it('throws exception on fromNull', function () {
+        expect(fn() => StringBase64::fromNull(null))
+            ->toThrow(Base64StringTypeException::class);
+    });
+
+    it('throws exception on toNull', function () {
+        expect(fn() => StringBase64::toNull())
+            ->toThrow(Base64StringTypeException::class);
+    });
+});
