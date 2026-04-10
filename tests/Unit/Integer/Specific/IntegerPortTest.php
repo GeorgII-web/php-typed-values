@@ -344,4 +344,16 @@ describe('IntegerPort', function (): void {
             expect($v2->value())->toBe($original);
         })->with([0, 80, 65535]);
     });
+
+    describe('Null checks', function () {
+        it('throws exception on fromNull', function () {
+            expect(fn() => IntegerPort::fromNull(null))
+                ->toThrow(PortIntegerTypeException::class, 'Integer type cannot be created from null');
+        });
+
+        it('throws exception on toNull', function () {
+            expect(fn() => IntegerPort::toNull())
+                ->toThrow(PortIntegerTypeException::class, 'Integer type cannot be converted to null');
+        });
+    });
 });
