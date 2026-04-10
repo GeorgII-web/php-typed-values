@@ -41,6 +41,11 @@ describe('FloatNonZero', function () {
         'NAN' => [NAN],
     ]);
 
+    it('throws on fromNull and toNull', function () {
+        expect(fn() => FloatNonZero::fromNull(null))->toThrow(NonZeroFloatTypeException::class, 'Float type cannot be created from null')
+            ->and(fn() => FloatNonZero::toNull())->toThrow(NonZeroFloatTypeException::class, 'Float type cannot be converted to null');
+    });
+
     it('creates from mixed types', function () {
         expect(FloatNonZero::fromBool(true)->value())->toBe(1.0)
             ->and(FloatNonZero::fromDecimal('1.5')->value())->toBe(1.5)
