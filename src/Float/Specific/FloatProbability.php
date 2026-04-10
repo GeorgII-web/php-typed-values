@@ -96,6 +96,14 @@ readonly class FloatProbability extends FloatTypeAbstract
 
     /**
      * @throws ProbabilityFloatTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new ProbabilityFloatTypeException('Float type cannot be created from null');
+    }
+
+    /**
+     * @throws ProbabilityFloatTypeException
      * @throws StringTypeException
      *
      * @psalm-pure
@@ -160,6 +168,14 @@ readonly class FloatProbability extends FloatTypeAbstract
     public function toInt(): int
     {
         return static::floatToInt($this->value);
+    }
+
+    /**
+     * @throws ProbabilityFloatTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new ProbabilityFloatTypeException('Float type cannot be converted to null');
     }
 
     /**

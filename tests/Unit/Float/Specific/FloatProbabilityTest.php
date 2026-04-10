@@ -42,6 +42,11 @@ describe('FloatProbability', function () {
         'NAN' => [NAN],
     ]);
 
+    it('throws on fromNull and toNull', function () {
+        expect(fn() => FloatProbability::fromNull(null))->toThrow(ProbabilityFloatTypeException::class, 'Float type cannot be created from null')
+            ->and(fn() => FloatProbability::toNull())->toThrow(ProbabilityFloatTypeException::class, 'Float type cannot be converted to null');
+    });
+
     it('creates from mixed types', function () {
         expect(FloatProbability::fromBool(true)->value())->toBe(1.0)
             ->and(FloatProbability::fromDecimal('0.5')->value())->toBe(0.5)
