@@ -121,6 +121,14 @@ readonly class DecimalMoney extends DecimalTypeAbstract
 
     /**
      * @throws MoneyDecimalTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new MoneyDecimalTypeException('Value cannot be null');
+    }
+
+    /**
+     * @throws MoneyDecimalTypeException
      * @throws DecimalTypeException
      *
      * @psalm-pure
@@ -196,6 +204,14 @@ readonly class DecimalMoney extends DecimalTypeAbstract
         return static::decimalToInt(
             static::moneyToDecimal($this->value())
         );
+    }
+
+    /**
+     * @throws MoneyDecimalTypeException
+     */
+    public function toNull(): never
+    {
+        throw new MoneyDecimalTypeException('Value cannot be null');
     }
 
     /**

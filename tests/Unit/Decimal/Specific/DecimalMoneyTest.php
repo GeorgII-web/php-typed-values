@@ -82,6 +82,14 @@ describe('DecimalMoney', function () {
         expect(DecimalMoney::fromString('1.10')->jsonSerialize())->toBeString();
     });
 
+    it('fromNull throws MoneyDecimalTypeException', function (): void {
+        expect(fn() => DecimalMoney::fromNull(null))->toThrow(MoneyDecimalTypeException::class, 'Value cannot be null');
+    });
+
+    it('toNull throws MoneyDecimalTypeException', function (): void {
+        expect(fn() => (new DecimalMoney('1.00'))->toNull())->toThrow(MoneyDecimalTypeException::class, 'Value cannot be null');
+    });
+
     it('__toString returns the original decimal string', function (): void {
         $d = new DecimalMoney('3.14');
         expect((string) $d)->toBe('3.14')
