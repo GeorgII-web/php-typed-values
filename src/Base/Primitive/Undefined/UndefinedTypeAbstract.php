@@ -29,16 +29,31 @@ abstract readonly class UndefinedTypeAbstract extends PrimitiveTypeAbstract impl
 {
     abstract public static function create(): static;
 
+    /**
+     * @throws UndefinedTypeException
+     */
     abstract public static function fromBool(bool $value): static;
 
+    /**
+     * @throws UndefinedTypeException
+     */
     abstract public static function fromDecimal(string $value): static;
 
+    /**
+     * @throws UndefinedTypeException
+     */
     abstract public static function fromFloat(float $value): static;
 
+    /**
+     * @throws UndefinedTypeException
+     */
     abstract public static function fromInt(int $value): static;
 
     abstract public static function fromNull(null $value): static;
 
+    /**
+     * @throws UndefinedTypeException
+     */
     abstract public static function fromString(string $value): static;
 
     /**
@@ -103,6 +118,9 @@ abstract readonly class UndefinedTypeAbstract extends PrimitiveTypeAbstract impl
      */
     abstract public function value(): string;
 
+    /**
+     * @throws UndefinedTypeException
+     */
     public function __toString(): string
     {
         return $this->toString();

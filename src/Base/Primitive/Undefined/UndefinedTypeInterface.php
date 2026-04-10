@@ -71,31 +71,73 @@ interface UndefinedTypeInterface
      */
     public function toString(): string;
 
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
     public static function tryFromBool(
         bool $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): PrimitiveTypeAbstract|static;
 
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
     public static function tryFromDecimal(
         string $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): PrimitiveTypeAbstract|static;
 
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
     public static function tryFromFloat(
         float $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): PrimitiveTypeAbstract|static;
 
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
     public static function tryFromInt(
         int $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): PrimitiveTypeAbstract|static;
 
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
     public static function tryFromMixed(
         mixed $value,
         PrimitiveTypeAbstract $default = new Undefined(),
     ): PrimitiveTypeAbstract|static;
 
+    /**
+     * @template T of PrimitiveTypeAbstract
+     *
+     * @param T $default
+     *
+     * @return static|T
+     */
     public static function tryFromString(
         string $value,
         PrimitiveTypeAbstract $default = new Undefined(),
