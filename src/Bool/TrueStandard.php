@@ -97,6 +97,14 @@ readonly class TrueStandard extends BoolTypeAbstract
     }
 
     /**
+     * @throws TrueBoolTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new TrueBoolTypeException('Value cannot be null');
+    }
+
+    /**
      * @psalm-pure
      *
      * @throws TrueBoolTypeException
@@ -154,6 +162,14 @@ readonly class TrueStandard extends BoolTypeAbstract
     public function toInt(): int
     {
         return static::boolToInt($this->value());
+    }
+
+    /**
+     * @throws TrueBoolTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new TrueBoolTypeException('Value cannot be null');
     }
 
     /**
