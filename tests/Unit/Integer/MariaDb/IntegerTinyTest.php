@@ -512,4 +512,16 @@ describe('IntegerTiny', function (): void {
             expect(IntegerTinyTest::tryFromString('1'))->toBeInstanceOf(Undefined::class);
         });
     });
+
+    describe('Null checks', function () {
+        it('throws exception on fromNull', function () {
+            expect(fn() => IntegerTiny::fromNull(null))
+                ->toThrow(TinyIntegerTypeException::class, 'Integer type cannot be created from null');
+        });
+
+        it('throws exception on toNull', function () {
+            expect(fn() => IntegerTiny::toNull())
+                ->toThrow(TinyIntegerTypeException::class, 'Integer type cannot be converted to null');
+        });
+    });
 });
