@@ -91,6 +91,19 @@ describe('TimestampMilliseconds', function () {
             ]);
         });
 
+        describe('Null checks', function () {
+            it('fromNull throws exception', function () {
+                expect(fn() => TimestampMilliseconds::fromNull(null))
+                    ->toThrow(TimestampTypeException::class, 'TimestampMilliseconds type cannot be created from null');
+            });
+
+            it('toNull throws exception', function () {
+                $vo = TimestampMilliseconds::fromString('1732445696123');
+                expect(fn() => $vo::toNull())
+                    ->toThrow(TimestampTypeException::class, 'TimestampMilliseconds type cannot be converted to null');
+            });
+        });
+
         describe('tryFromString', function () {
             it('returns instance or default value', function (string $input, bool $isSuccess) {
                 $result = TimestampMilliseconds::tryFromString($input);
