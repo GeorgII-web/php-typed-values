@@ -55,6 +55,14 @@ readonly class TimeIso8601 extends DateTimeTypeAbstract
     }
 
     /**
+     * @throws Iso8601TimeTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new Iso8601TimeTypeException('TimeIso8601 type cannot be created from null');
+    }
+
+    /**
      * @param non-empty-string $timezone
      *
      * @throws Iso8601TimeTypeException
@@ -105,6 +113,14 @@ readonly class TimeIso8601 extends DateTimeTypeAbstract
     public function jsonSerialize(): string
     {
         return $this->toString();
+    }
+
+    /**
+     * @throws Iso8601TimeTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new Iso8601TimeTypeException('TimeIso8601 type cannot be converted to null');
     }
 
     public function toString(): string
