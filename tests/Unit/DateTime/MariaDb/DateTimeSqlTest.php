@@ -122,6 +122,19 @@ describe('DateTimeSql', function () {
             });
         });
 
+        describe('Null checks', function () {
+            it('fromNull throws exception', function () {
+                expect(fn() => DateTimeSql::fromNull(null))
+                    ->toThrow(DateTimeTypeException::class, 'DateTimeSql type cannot be created from null');
+            });
+
+            it('toNull throws exception', function () {
+                $vo = DateTimeSql::fromString('2025-01-02 03:04:05');
+                expect(fn() => $vo::toNull())
+                    ->toThrow(DateTimeTypeException::class, 'DateTimeSql type cannot be converted to null');
+            });
+        });
+
         describe('getFormat', function () {
             it('returns SQL format', function () {
                 expect(DateTimeSql::getFormat())->toBe('Y-m-d H:i:s');
