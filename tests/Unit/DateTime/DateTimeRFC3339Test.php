@@ -78,6 +78,19 @@ describe('DateTimeRFC3339', function () {
             });
         });
 
+        describe('Null checks', function () {
+            it('fromNull throws exception', function () {
+                expect(fn() => DateTimeRFC3339::fromNull(null))
+                    ->toThrow(DateTimeTypeException::class, 'DateTimeRFC3339 type cannot be created from null');
+            });
+
+            it('toNull throws exception', function () {
+                $vo = DateTimeRFC3339::fromString('2025-01-02T03:04:05+00:00');
+                expect(fn() => $vo::toNull())
+                    ->toThrow(DateTimeTypeException::class, 'DateTimeRFC3339 type cannot be converted to null');
+            });
+        });
+
         describe('tryFromString', function () {
             it('returns instance or default value', function (string $input, string $tz, bool $isSuccess) {
                 $result = DateTimeRFC3339::tryFromString($input, $tz);
