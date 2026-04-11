@@ -103,6 +103,19 @@ describe('TimestampSeconds', function () {
             });
         });
 
+        describe('Null checks', function () {
+            it('fromNull throws exception', function () {
+                expect(fn() => TimestampSeconds::fromNull(null))
+                    ->toThrow(TimestampTypeException::class, 'TimestampSeconds type cannot be created from null');
+            });
+
+            it('toNull throws exception', function () {
+                $vo = TimestampSeconds::fromString('1735787045');
+                expect(fn() => $vo::toNull())
+                    ->toThrow(TimestampTypeException::class, 'TimestampSeconds type cannot be converted to null');
+            });
+        });
+
         describe('tryFromMixed', function () {
             it('returns instance for valid mixed inputs', function (mixed $input, string $expected) {
                 $result = TimestampSeconds::tryFromMixed($input);
