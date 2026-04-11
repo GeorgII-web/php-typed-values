@@ -37,6 +37,8 @@ abstract readonly class DateTimeTypeAbstract extends PrimitiveTypeAbstract imple
 {
     abstract public static function fromDateTime(DateTimeImmutable $value): static;
 
+    abstract public static function fromNull(null $value): never;
+
     /**
      * @param non-empty-string $timezone
      */
@@ -48,6 +50,8 @@ abstract readonly class DateTimeTypeAbstract extends PrimitiveTypeAbstract imple
     abstract public static function getFormat(): string;
 
     abstract public function isTypeOf(string ...$classNames): bool;
+
+    abstract public static function toNull(): never;
 
     abstract public function toString(): string;
 
