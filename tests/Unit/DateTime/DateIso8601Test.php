@@ -84,6 +84,18 @@ describe('DateIso8601', function () {
                 expect(DateIso8601::getFormat())->toBe('Y-m-d');
             });
         });
+
+        describe('Null checks', function () {
+            it('throws an exception when created from null', function () {
+                expect(fn() => DateIso8601::fromNull(null))
+                    ->toThrow(Iso8601DateTypeException::class, 'DateIso8601 type cannot be created from null');
+            });
+
+            it('throws an exception when converted to null', function () {
+                expect(fn() => DateIso8601::toNull())
+                    ->toThrow(Iso8601DateTypeException::class, 'DateIso8601 type cannot be converted to null');
+            });
+        });
     });
 
     describe('Instance Methods', function () {
