@@ -34,6 +34,19 @@ describe('DateTimeRFC1123', function () {
             ]);
         });
 
+        describe('Null checks', function () {
+            it('fromNull throws exception', function () {
+                expect(fn() => DateTimeRFC1123::fromNull(null))
+                    ->toThrow(RFC1123DateTimeTypeException::class, 'DateTimeRFC1123 type cannot be created from null');
+            });
+
+            it('toNull throws exception', function () {
+                $vo = DateTimeRFC1123::fromString('Thu, 02 Jan 2025 03:04:05 +0000');
+                expect(fn() => $vo::toNull())
+                    ->toThrow(RFC1123DateTimeTypeException::class, 'DateTimeRFC1123 type cannot be converted to null');
+            });
+        });
+
         describe('tryFromMixed', function () {
             it('returns instance for valid mixed inputs', function (mixed $input, string $expected) {
                 $result = DateTimeRFC1123::tryFromMixed($input);
