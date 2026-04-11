@@ -35,11 +35,15 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class StringSemVer extends StringTypeAbstract
+class StringSemVer extends StringTypeAbstract
 {
-    private const string SEMVER_PATTERN = '/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/';
+    /**
+     * @var string
+     */
+    private const SEMVER_PATTERN = '/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/';
 
-    /** @var non-empty-string */
+    /** @var non-empty-string
+     * @readonly */
     protected string $value;
 
     /**
@@ -59,8 +63,9 @@ readonly class StringSemVer extends StringTypeAbstract
      * @throws SemVerStringTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromBool(bool $value): static
+    public static function fromBool(bool $value)
     {
         return new static(static::boolToString($value));
     }
@@ -69,8 +74,9 @@ readonly class StringSemVer extends StringTypeAbstract
      * @throws SemVerStringTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromDecimal(string $value): static
+    public static function fromDecimal(string $value)
     {
         return new static(static::decimalToString($value));
     }
@@ -81,8 +87,9 @@ readonly class StringSemVer extends StringTypeAbstract
      * @throws SemVerStringTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromFloat(float $value): static
+    public static function fromFloat(float $value)
     {
         return new static(static::floatToString($value));
     }
@@ -91,16 +98,18 @@ readonly class StringSemVer extends StringTypeAbstract
      * @throws SemVerStringTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromInt(int $value): static
+    public static function fromInt(int $value)
     {
         return new static(static::intToString($value));
     }
 
     /**
      * @throws SemVerStringTypeException
+     * @return never
      */
-    public static function fromNull(null $value): never
+    public static function fromNull(null $value)
     {
         throw new SemVerStringTypeException('StringSemVer type cannot be created from null');
     }
@@ -111,8 +120,9 @@ readonly class StringSemVer extends StringTypeAbstract
      * @throws SemVerStringTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         return new static($value);
     }
@@ -178,8 +188,9 @@ readonly class StringSemVer extends StringTypeAbstract
 
     /**
      * @throws SemVerStringTypeException
+     * @return never
      */
-    public static function toNull(): never
+    public static function toNull()
     {
         throw new SemVerStringTypeException('StringSemVer type cannot be converted to null');
     }
@@ -205,12 +216,13 @@ readonly class StringSemVer extends StringTypeAbstract
      */
     public static function tryFromBool(
         bool $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromBool($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -227,12 +239,13 @@ readonly class StringSemVer extends StringTypeAbstract
      */
     public static function tryFromDecimal(
         string $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromDecimal($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -249,12 +262,13 @@ readonly class StringSemVer extends StringTypeAbstract
      */
     public static function tryFromFloat(
         float $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromFloat($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -271,12 +285,13 @@ readonly class StringSemVer extends StringTypeAbstract
      */
     public static function tryFromInt(
         int $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromInt($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -290,22 +305,30 @@ readonly class StringSemVer extends StringTypeAbstract
      * @return static|T
      *
      * @psalm-pure
+     * @param mixed $value
      */
     public static function tryFromMixed(
-        mixed $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        $value,
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
-            /** @var static */
-            return match (true) {
-                is_string($value) => static::fromString($value),
-                is_float($value) => static::fromFloat($value),
-                is_int($value) => static::fromInt($value),
-                is_bool($value) => static::fromBool($value),
-                $value instanceof Stringable, is_scalar($value) => static::fromString((string) $value),
-                default => throw new TypeException('Value cannot be cast to string'),
-            };
-        } catch (Exception) {
+            switch (true) {
+                case is_string($value):
+                    return static::fromString($value);
+                case is_float($value):
+                    return static::fromFloat($value);
+                case is_int($value):
+                    return static::fromInt($value);
+                case is_bool($value):
+                    return static::fromBool($value);
+                case is_object($value) && method_exists($value, '__toString'):
+                case is_scalar($value):
+                    return static::fromString((string) $value);
+                default:
+                    throw new TypeException('Value cannot be cast to string');
+            }
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -322,12 +345,13 @@ readonly class StringSemVer extends StringTypeAbstract
      */
     public static function tryFromString(
         string $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromString($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }

@@ -26,9 +26,10 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class StringJwt extends StringTypeAbstract
+class StringJwt extends StringTypeAbstract
 {
-    /** @var non-empty-string */
+    /** @var non-empty-string
+     * @readonly */
     protected string $value;
 
     /**
@@ -52,8 +53,9 @@ readonly class StringJwt extends StringTypeAbstract
      * @throws JwtStringTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromBool(bool $value): static
+    public static function fromBool(bool $value)
     {
         return new static(static::boolToString($value));
     }
@@ -62,8 +64,9 @@ readonly class StringJwt extends StringTypeAbstract
      * @throws JwtStringTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromDecimal(string $value): static
+    public static function fromDecimal(string $value)
     {
         return new static(static::decimalToString($value));
     }
@@ -72,8 +75,9 @@ readonly class StringJwt extends StringTypeAbstract
      * @throws JwtStringTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromFloat(float $value): static
+    public static function fromFloat(float $value)
     {
         return new static(static::floatToString($value));
     }
@@ -82,16 +86,18 @@ readonly class StringJwt extends StringTypeAbstract
      * @throws JwtStringTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromInt(int $value): static
+    public static function fromInt(int $value)
     {
         return new static(static::intToString($value));
     }
 
     /**
      * @throws JwtStringTypeException
+     * @return never
      */
-    public static function fromNull(null $value): never
+    public static function fromNull(null $value)
     {
         throw new JwtStringTypeException('StringJwt type cannot be created from null');
     }
@@ -100,8 +106,9 @@ readonly class StringJwt extends StringTypeAbstract
      * @throws JwtStringTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         return new static($value);
     }
@@ -169,8 +176,9 @@ readonly class StringJwt extends StringTypeAbstract
 
     /**
      * @throws JwtStringTypeException
+     * @return never
      */
-    public static function toNull(): never
+    public static function toNull()
     {
         throw new JwtStringTypeException('StringJwt type cannot be converted to null');
     }
@@ -182,61 +190,72 @@ readonly class StringJwt extends StringTypeAbstract
 
     /**
      * @psalm-pure
+     * @return \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract|static
      */
-    public static function tryFromBool(bool $value, PrimitiveTypeAbstract $default = new Undefined()): PrimitiveTypeAbstract|static
+    public static function tryFromBool(bool $value, PrimitiveTypeAbstract $default = null)
     {
+        $default ??= new Undefined();
         try {
             return static::fromBool($value);
-        } catch (StringTypeException) {
+        } catch (StringTypeException $exception) {
             return $default;
         }
     }
 
     /**
      * @psalm-pure
+     * @return \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract|static
      */
-    public static function tryFromDecimal(string $value, PrimitiveTypeAbstract $default = new Undefined()): PrimitiveTypeAbstract|static
+    public static function tryFromDecimal(string $value, PrimitiveTypeAbstract $default = null)
     {
+        $default ??= new Undefined();
         try {
             return static::fromDecimal($value);
-        } catch (JwtStringTypeException) {
+        } catch (JwtStringTypeException $exception) {
             return $default;
         }
     }
 
     /**
      * @psalm-pure
+     * @return \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract|static
      */
-    public static function tryFromFloat(float $value, PrimitiveTypeAbstract $default = new Undefined()): PrimitiveTypeAbstract|static
+    public static function tryFromFloat(float $value, PrimitiveTypeAbstract $default = null)
     {
+        $default ??= new Undefined();
         try {
             return static::fromFloat($value);
-        } catch (JwtStringTypeException) {
+        } catch (JwtStringTypeException $exception) {
             return $default;
         }
     }
 
     /**
      * @psalm-pure
+     * @return \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract|static
      */
-    public static function tryFromInt(int $value, PrimitiveTypeAbstract $default = new Undefined()): PrimitiveTypeAbstract|static
+    public static function tryFromInt(int $value, PrimitiveTypeAbstract $default = null)
     {
+        $default ??= new Undefined();
         try {
             return static::fromInt($value);
-        } catch (JwtStringTypeException) {
+        } catch (JwtStringTypeException $exception) {
             return $default;
         }
     }
 
     /**
      * @psalm-pure
+     * @return \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract|static
+     * @param mixed $value
      */
-    public static function tryFromMixed(mixed $value, PrimitiveTypeAbstract $default = new Undefined()): PrimitiveTypeAbstract|static
+    public static function tryFromMixed($value, PrimitiveTypeAbstract $default = null)
     {
-        if (is_scalar($value) || $value instanceof Stringable) {
+        $default ??= new Undefined();
+        if (is_scalar($value) || is_object($value) && method_exists($value, '__toString')) {
             try {
                 return static::fromString((string) $value);
-            } catch (JwtStringTypeException) {
+            } catch (JwtStringTypeException $exception) {
                 return $default;
             }
         }
@@ -246,12 +265,14 @@ readonly class StringJwt extends StringTypeAbstract
 
     /**
      * @psalm-pure
+     * @return \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract|static
      */
-    public static function tryFromString(string $value, PrimitiveTypeAbstract $default = new Undefined()): PrimitiveTypeAbstract|static
+    public static function tryFromString(string $value, PrimitiveTypeAbstract $default = null)
     {
+        $default ??= new Undefined();
         try {
             return static::fromString($value);
-        } catch (JwtStringTypeException) {
+        } catch (JwtStringTypeException $exception) {
             return $default;
         }
     }

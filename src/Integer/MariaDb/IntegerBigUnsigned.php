@@ -39,9 +39,10 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class IntegerBigUnsigned extends IntegerTypeAbstract
+class IntegerBigUnsigned extends IntegerTypeAbstract
 {
-    /** @var non-negative-int */
+    /** @var non-negative-int
+     * @readonly */
     protected int $value;
 
     /**
@@ -60,8 +61,9 @@ readonly class IntegerBigUnsigned extends IntegerTypeAbstract
      * @throws UnsignedBigIntegerTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromBool(bool $value): static
+    public static function fromBool(bool $value)
     {
         return new static(static::boolToInt($value));
     }
@@ -71,8 +73,9 @@ readonly class IntegerBigUnsigned extends IntegerTypeAbstract
      * @throws UnsignedBigIntegerTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromDecimal(string $value): static
+    public static function fromDecimal(string $value)
     {
         return new static(static::decimalToInt($value));
     }
@@ -82,8 +85,9 @@ readonly class IntegerBigUnsigned extends IntegerTypeAbstract
      * @throws UnsignedBigIntegerTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromFloat(float $value): static
+    public static function fromFloat(float $value)
     {
         return new static(static::floatToInt($value));
     }
@@ -92,16 +96,18 @@ readonly class IntegerBigUnsigned extends IntegerTypeAbstract
      * @throws UnsignedBigIntegerTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromInt(int $value): static
+    public static function fromInt(int $value)
     {
         return new static($value);
     }
 
     /**
      * @throws UnsignedBigIntegerTypeException
+     * @return never
      */
-    public static function fromNull(null $value): never
+    public static function fromNull(null $value)
     {
         throw new UnsignedBigIntegerTypeException('Integer type cannot be created from null');
     }
@@ -111,13 +117,17 @@ readonly class IntegerBigUnsigned extends IntegerTypeAbstract
      * @throws UnsignedBigIntegerTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         return new static(static::stringToInt($value));
     }
 
-    public function isEmpty(): false
+    /**
+     * @return false
+     */
+    public function isEmpty(): bool
     {
         return false;
     }
@@ -133,7 +143,10 @@ readonly class IntegerBigUnsigned extends IntegerTypeAbstract
         return false;
     }
 
-    public function isUndefined(): false
+    /**
+     * @return false
+     */
+    public function isUndefined(): bool
     {
         return false;
     }
@@ -180,8 +193,9 @@ readonly class IntegerBigUnsigned extends IntegerTypeAbstract
 
     /**
      * @throws UnsignedBigIntegerTypeException
+     * @return never
      */
-    public static function toNull(): never
+    public static function toNull()
     {
         throw new UnsignedBigIntegerTypeException('Integer type cannot be converted to null');
     }
@@ -205,12 +219,13 @@ readonly class IntegerBigUnsigned extends IntegerTypeAbstract
      */
     public static function tryFromBool(
         bool $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromBool($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -227,12 +242,13 @@ readonly class IntegerBigUnsigned extends IntegerTypeAbstract
      */
     public static function tryFromDecimal(
         string $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromDecimal($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -249,12 +265,13 @@ readonly class IntegerBigUnsigned extends IntegerTypeAbstract
      */
     public static function tryFromFloat(
         float $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromFloat($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -271,12 +288,13 @@ readonly class IntegerBigUnsigned extends IntegerTypeAbstract
      */
     public static function tryFromInt(
         int $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromInt($value);
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             // @var T $default
             return $default;
         }
@@ -290,21 +308,27 @@ readonly class IntegerBigUnsigned extends IntegerTypeAbstract
      * @return static|T
      *
      * @psalm-pure
+     * @param mixed $value
      */
     public static function tryFromMixed(
-        mixed $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        $value,
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
-            /** @var static */
-            return match (true) {
-                is_int($value) => static::fromInt($value),
-                is_float($value) => static::fromFloat($value),
-                is_bool($value) => static::fromBool($value),
-                is_string($value) || $value instanceof Stringable => static::tryFromDecimal((string) $value, static::fromString((string) $value)),
-                default => throw new TypeException('Value cannot be cast to int'),
-            };
-        } catch (Exception) {
+            switch (true) {
+                case is_int($value):
+                    return static::fromInt($value);
+                case is_float($value):
+                    return static::fromFloat($value);
+                case is_bool($value):
+                    return static::fromBool($value);
+                case is_string($value) || is_object($value) && method_exists($value, '__toString'):
+                    return static::tryFromDecimal((string) $value, static::fromString((string) $value));
+                default:
+                    throw new TypeException('Value cannot be cast to int');
+            }
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -321,12 +345,13 @@ readonly class IntegerBigUnsigned extends IntegerTypeAbstract
      */
     public static function tryFromString(
         string $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromString($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }

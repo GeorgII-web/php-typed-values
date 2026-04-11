@@ -19,20 +19,22 @@ use PhpTypedValues\String\StringStandard;
  *
  * @psalm-immutable
  */
-final readonly class StringType extends StringStandard
+final class StringType extends StringStandard
 {
     /**
      * @throws StringTypeException
+     * @return never
      */
-    public static function fromNull(null $value): never
+    public static function fromNull(null $value)
     {
         throw new StringTypeException('StringType type cannot be created from null');
     }
 
     /**
      * @throws StringTypeException
+     * @return never
      */
-    public static function toNull(): never
+    public static function toNull()
     {
         throw new StringTypeException('StringType type cannot be converted to null');
     }
