@@ -25,93 +25,130 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  *
  * @psalm-immutable
  */
-abstract readonly class UndefinedTypeAbstract extends PrimitiveTypeAbstract implements UndefinedTypeInterface
+abstract class UndefinedTypeAbstract extends PrimitiveTypeAbstract implements UndefinedTypeInterface
 {
-    abstract public static function create(): static;
+    /**
+     * @return static
+     */
+    abstract public static function create();
 
     /**
      * @throws UndefinedTypeException
+     * @return static
      */
-    abstract public static function fromBool(bool $value): static;
+    abstract public static function fromBool(bool $value);
 
     /**
      * @throws UndefinedTypeException
+     * @return static
      */
-    abstract public static function fromDecimal(string $value): static;
+    abstract public static function fromDecimal(string $value);
 
     /**
      * @throws UndefinedTypeException
+     * @return static
      */
-    abstract public static function fromFloat(float $value): static;
+    abstract public static function fromFloat(float $value);
 
     /**
      * @throws UndefinedTypeException
+     * @return static
      */
-    abstract public static function fromInt(int $value): static;
+    abstract public static function fromInt(int $value);
 
-    abstract public static function fromNull(null $value): static;
+    /**
+     * @return static
+     */
+    abstract public static function fromNull(null $value);
 
     /**
      * @throws UndefinedTypeException
+     * @return static
      */
-    abstract public static function fromString(string $value): static;
+    abstract public static function fromString(string $value);
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    abstract public function toBool(): never;
+    abstract public function toBool();
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    abstract public function toDecimal(): never;
+    abstract public function toDecimal();
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    abstract public function toFloat(): never;
+    abstract public function toFloat();
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    abstract public function toInt(): never;
+    abstract public function toInt();
 
-    abstract public function toNull(): null;
+    /**
+     * @return null
+     */
+    abstract public function toNull();
 
     /**
      * @throws UndefinedTypeException
      */
     abstract public function toString(): string;
 
+    /**
+     * @return \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract|static
+     */
     abstract public static function tryFromBool(
         bool $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static;
+        PrimitiveTypeAbstract $default = null
+    );
 
+    /**
+     * @return \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract|static
+     */
     abstract public static function tryFromDecimal(
         string $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static;
+        PrimitiveTypeAbstract $default = null
+    );
 
+    /**
+     * @return \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract|static
+     */
     abstract public static function tryFromFloat(
         float $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static;
+        PrimitiveTypeAbstract $default = null
+    );
 
+    /**
+     * @return \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract|static
+     */
     abstract public static function tryFromInt(
         int $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static;
+        PrimitiveTypeAbstract $default = null
+    );
 
+    /**
+     * @return \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract|static
+     * @param mixed $value
+     */
     abstract public static function tryFromMixed(
-        mixed $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static;
+        $value,
+        PrimitiveTypeAbstract $default = null
+    );
 
+    /**
+     * @return \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract|static
+     */
     abstract public static function tryFromString(
         string $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static;
+        PrimitiveTypeAbstract $default = null
+    );
 
     /**
      * @throws UndefinedTypeException
