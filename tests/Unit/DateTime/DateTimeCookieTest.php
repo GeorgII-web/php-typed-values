@@ -35,6 +35,20 @@ describe('DateTimeCookie', function () {
             ]);
         });
 
+        describe('Null checks', function () {
+            it('fromNull throws exception', function () {
+                expect(fn() => DateTimeCookie::fromNull(null))
+                    ->toThrow(CookieDateTimeTypeException::class, 'DateTimeCookie type cannot be created from null');
+            });
+
+            it('toNull throws exception', function () {
+                $dt = new DateTimeImmutable('2025-01-02T03:04:05+00:00');
+                $vo = DateTimeCookie::fromDateTime($dt);
+                expect(fn() => $vo->toNull())
+                    ->toThrow(CookieDateTimeTypeException::class, 'DateTimeCookie type cannot be converted to null');
+            });
+        });
+
         describe('tryFromMixed', function () {
             it('returns instance for valid mixed inputs', function (mixed $input, string $expected) {
                 $result = DateTimeCookie::tryFromMixed($input);

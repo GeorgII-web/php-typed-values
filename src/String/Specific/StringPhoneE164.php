@@ -47,7 +47,7 @@ readonly class StringPhoneE164 extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws PhoneE164StringTypeException
      * @throws PhoneE164StringTypeException
      *
      * @psalm-pure
@@ -70,7 +70,7 @@ readonly class StringPhoneE164 extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws PhoneE164StringTypeException
-     * @throws StringTypeException
+     * @throws PhoneE164StringTypeException
      *
      * @psalm-pure
      */
@@ -87,6 +87,14 @@ readonly class StringPhoneE164 extends StringTypeAbstract
     public static function fromInt(int $value): static
     {
         return new static(static::intToString($value));
+    }
+
+    /**
+     * @throws PhoneE164StringTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new PhoneE164StringTypeException('StringPhoneE164 type cannot be created from null');
     }
 
     /**
@@ -129,7 +137,7 @@ readonly class StringPhoneE164 extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws PhoneE164StringTypeException
      */
     public function toBool(): bool
     {
@@ -145,7 +153,7 @@ readonly class StringPhoneE164 extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws PhoneE164StringTypeException
      * @throws FloatTypeException
      */
     public function toFloat(): float
@@ -154,11 +162,19 @@ readonly class StringPhoneE164 extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws PhoneE164StringTypeException
      */
     public function toInt(): int
     {
         return static::stringToInt($this->value);
+    }
+
+    /**
+     * @throws PhoneE164StringTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new PhoneE164StringTypeException('StringPhoneE164 type cannot be converted to null');
     }
 
     public function toString(): string

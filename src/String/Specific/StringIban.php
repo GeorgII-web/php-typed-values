@@ -10,7 +10,6 @@ use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\String\IbanStringTypeException;
-use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
@@ -82,7 +81,7 @@ readonly class StringIban extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws IbanStringTypeException
-     * @throws StringTypeException
+     * @throws IbanStringTypeException
      *
      * @psalm-pure
      */
@@ -99,6 +98,14 @@ readonly class StringIban extends StringTypeAbstract
     public static function fromInt(int $value): static
     {
         return new static(static::intToString($value));
+    }
+
+    /**
+     * @throws IbanStringTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new IbanStringTypeException('StringIban type cannot be created from null');
     }
 
     /**
@@ -140,7 +147,7 @@ readonly class StringIban extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws IbanStringTypeException
      */
     public function toBool(): bool
     {
@@ -157,7 +164,7 @@ readonly class StringIban extends StringTypeAbstract
 
     /**
      * @throws FloatTypeException
-     * @throws StringTypeException
+     * @throws IbanStringTypeException
      */
     public function toFloat(): float
     {
@@ -165,11 +172,19 @@ readonly class StringIban extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws IbanStringTypeException
      */
     public function toInt(): int
     {
         return static::stringToInt($this->value());
+    }
+
+    /**
+     * @throws IbanStringTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new IbanStringTypeException('StringIban type cannot be converted to null');
     }
 
     /**

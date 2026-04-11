@@ -42,6 +42,11 @@ describe('FloatPercent', function () {
         'NAN' => [NAN],
     ]);
 
+    it('throws on fromNull and toNull', function () {
+        expect(fn() => FloatPercent::fromNull(null))->toThrow(PercentFloatTypeException::class, 'Float type cannot be created from null')
+            ->and(fn() => FloatPercent::toNull())->toThrow(PercentFloatTypeException::class, 'Float type cannot be converted to null');
+    });
+
     it('creates from mixed types', function () {
         expect(FloatPercent::fromBool(true)->value())->toBe(1.0)
             ->and(FloatPercent::fromDecimal('1.5')->value())->toBe(1.5)

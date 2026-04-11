@@ -110,6 +110,14 @@ readonly class DecimalNegative extends DecimalTypeAbstract
 
     /**
      * @throws NegativeDecimalTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new NegativeDecimalTypeException('Value cannot be null');
+    }
+
+    /**
+     * @throws NegativeDecimalTypeException
      * @throws DecimalTypeException
      *
      * @psalm-pure
@@ -179,6 +187,14 @@ readonly class DecimalNegative extends DecimalTypeAbstract
     public function toInt(): int
     {
         return static::stringToInt($this->value());
+    }
+
+    /**
+     * @throws NegativeDecimalTypeException
+     */
+    public function toNull(): never
+    {
+        throw new NegativeDecimalTypeException('Value cannot be null');
     }
 
     /**

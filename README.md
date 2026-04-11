@@ -15,34 +15,26 @@ Code quality:
 ![psalm](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/georgii-web/75977b7515de20d7382f6855d44a1d97/raw/psalm.json)
 ![cs-fixer](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/georgii-web/75977b7515de20d7382f6855d44a1d97/raw/cs_fixer.json)
 
-PHP supported version:
-
-![Version 3.x](https://img.shields.io/badge/Version-3.x-777BB4)
-![PHP >=8.4](https://img.shields.io/badge/PHP->=8.4-8892BF?logo=php)
-
-![Version 2.x](https://img.shields.io/badge/Version-2.x-777BB4)
-![PHP >=8.2 <8.4](https://img.shields.io/badge/PHP->=8.2--<8.4-8892BF?logo=php)
-
-![Version 1.x](https://img.shields.io/badge/Version-1.x-777BB4)
-![PHP >=7.4 <8.2](https://img.shields.io/badge/PHP->=7.4--<8.2-8892BF?logo=php)
-
 ---
 
 ### Install
 
-- Use V3 for PHP >=8.4:
+![Version 3.x](https://img.shields.io/badge/Version-3.x-777BB4)
+![PHP >=8.4](https://img.shields.io/badge/PHP->=8.4-8892BF?logo=php)
 
 ```bash
 composer require georgii-web/php-typed-values:^3
 ```
 
-- Use V2 for PHP >=8.2 & <8.4:
+![Version 2.x](https://img.shields.io/badge/Version-2.x-777BB4)
+![PHP >=8.2 <8.4](https://img.shields.io/badge/PHP->=8.2--<8.4-8892BF?logo=php)
 
 ```bash
 composer require georgii-web/php-typed-values:^2
 ```
 
-- Use V1 for PHP >=7.4 & <8.2:
+![Version 1.x](https://img.shields.io/badge/Version-1.x-777BB4)
+![PHP >=7.4 <8.2](https://img.shields.io/badge/PHP->=7.4--<8.2-8892BF?logo=php)
 
 ```bash
 composer require georgii-web/php-typed-values:^1
@@ -100,9 +92,11 @@ final readonly class Profile
 
 #### Undefined
 
-Prefer using the `Undefined` type over `null` to maintain consistency and improve type safety within the codebase.
+Prefer using the `Undefined` type over `null` to maintain consistency and improve type safety within the codebase [null-is-evil](https://sidburn.github.io/blog/2016/03/20/null-is-evil).
 
-Other usage examples [docs/USAGE.md](docs/USAGE.md)
+#### Other usage examples 
+
+[docs/USAGE.md](docs/USAGE.md)
 
 ### Key features
 

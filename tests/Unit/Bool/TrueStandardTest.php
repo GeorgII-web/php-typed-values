@@ -82,6 +82,14 @@ describe('TrueStandard', function () {
             ->and($badI)->toBeInstanceOf(Undefined::class);
     });
 
+    it('fromNull throws TrueBoolTypeException', function (): void {
+        expect(fn() => TrueStandard::fromNull(null))->toThrow(TrueBoolTypeException::class, 'Value cannot be null');
+    });
+
+    it('toNull throws TrueBoolTypeException', function (): void {
+        expect(fn() => (new TrueStandard(true))->toNull())->toThrow(TrueBoolTypeException::class, 'Value cannot be null');
+    });
+
     it('jsonSerialize returns bool', function (): void {
         // Check that tryFromString returns proper type
         $valid = TrueStandard::tryFromString('true');

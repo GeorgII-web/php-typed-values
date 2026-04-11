@@ -126,6 +126,14 @@ readonly class IntegerMonth extends IntegerTypeAbstract
     }
 
     /**
+     * @throws MonthIntegerTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new MonthIntegerTypeException('Integer type cannot be created from null');
+    }
+
+    /**
      * @throws StringTypeException
      * @throws MonthIntegerTypeException
      *
@@ -207,6 +215,14 @@ readonly class IntegerMonth extends IntegerTypeAbstract
             11 => 'November',
             12 => 'December',
         };
+    }
+
+    /**
+     * @throws MonthIntegerTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new MonthIntegerTypeException('Integer type cannot be converted to null');
     }
 
     /**

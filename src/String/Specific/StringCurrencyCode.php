@@ -10,7 +10,6 @@ use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\String\CurrencyCodeStringTypeException;
-use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
@@ -82,7 +81,7 @@ readonly class StringCurrencyCode extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws CurrencyCodeStringTypeException
-     * @throws StringTypeException
+     * @throws CurrencyCodeStringTypeException
      *
      * @psalm-pure
      */
@@ -99,6 +98,14 @@ readonly class StringCurrencyCode extends StringTypeAbstract
     public static function fromInt(int $value): static
     {
         return new static(static::intToString($value));
+    }
+
+    /**
+     * @throws CurrencyCodeStringTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new CurrencyCodeStringTypeException('StringCurrencyCode type cannot be created from null');
     }
 
     /**
@@ -138,7 +145,7 @@ readonly class StringCurrencyCode extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws CurrencyCodeStringTypeException
      */
     public function toBool(): bool
     {
@@ -154,7 +161,7 @@ readonly class StringCurrencyCode extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws CurrencyCodeStringTypeException
      * @throws FloatTypeException
      */
     public function toFloat(): float
@@ -163,11 +170,19 @@ readonly class StringCurrencyCode extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws CurrencyCodeStringTypeException
      */
     public function toInt(): int
     {
         return static::stringToInt($this->value());
+    }
+
+    /**
+     * @throws CurrencyCodeStringTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new CurrencyCodeStringTypeException('StringCurrencyCode type cannot be converted to null');
     }
 
     public function toString(): string

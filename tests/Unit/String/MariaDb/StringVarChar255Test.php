@@ -218,3 +218,15 @@ describe('Throwing static', function () {
             ->and(StringVarChar255Test::tryFromString('test'))->toBeInstanceOf(Undefined::class);
     });
 });
+
+describe('Null checks', function () {
+    it('throws exception on fromNull', function () {
+        expect(fn() => StringVarChar255::fromNull(null))
+            ->toThrow(StringTypeException::class);
+    });
+
+    it('throws exception on toNull', function () {
+        expect(fn() => StringVarChar255::toNull())
+            ->toThrow(StringTypeException::class);
+    });
+});

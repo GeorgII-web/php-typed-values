@@ -192,3 +192,15 @@ describe('Throwing static', function () {
         expect(StringNonBlankTest::tryFromString('test'))->toBeInstanceOf(Undefined::class);
     });
 });
+
+describe('Null checks', function () {
+    it('throws exception on fromNull', function () {
+        expect(fn() => StringNonBlank::fromNull(null))
+            ->toThrow(StringTypeException::class);
+    });
+
+    it('throws exception on toNull', function () {
+        expect(fn() => StringNonBlank::toNull())
+            ->toThrow(StringTypeException::class);
+    });
+});

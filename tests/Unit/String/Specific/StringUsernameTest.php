@@ -253,3 +253,15 @@ describe('Coverage for mutants', function () {
             ->and(StringUsernameTest::tryFromString('trigger-exception', $default))->toBe($default);
     });
 });
+
+describe('Null checks', function () {
+    it('throws exception on fromNull', function () {
+        expect(fn() => StringUsername::fromNull(null))
+            ->toThrow(StringTypeException::class);
+    });
+
+    it('throws exception on toNull', function () {
+        expect(fn() => StringUsername::toNull())
+            ->toThrow(StringTypeException::class);
+    });
+});

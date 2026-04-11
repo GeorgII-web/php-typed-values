@@ -99,6 +99,14 @@ readonly class IntegerAge extends IntegerTypeAbstract
     }
 
     /**
+     * @throws AgeIntegerTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new AgeIntegerTypeException('Integer type cannot be created from null');
+    }
+
+    /**
      * @throws StringTypeException
      * @throws AgeIntegerTypeException
      *
@@ -159,6 +167,14 @@ readonly class IntegerAge extends IntegerTypeAbstract
     public function toInt(): int
     {
         return $this->value;
+    }
+
+    /**
+     * @throws AgeIntegerTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new AgeIntegerTypeException('Integer type cannot be converted to null');
     }
 
     public function toString(): string

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PhpTypedValues\String\Alias;
 
+use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\String\StringStandard;
 
 /**
@@ -20,4 +21,19 @@ use PhpTypedValues\String\StringStandard;
  */
 final readonly class StringType extends StringStandard
 {
+    /**
+     * @throws StringTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new StringTypeException('StringType type cannot be created from null');
+    }
+
+    /**
+     * @throws StringTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new StringTypeException('StringType type cannot be converted to null');
+    }
 }

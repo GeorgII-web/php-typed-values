@@ -11,7 +11,6 @@ use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
-use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\String\UrlStringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -79,7 +78,7 @@ readonly class StringUrl extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws UrlStringTypeException
-     * @throws StringTypeException
+     * @throws UrlStringTypeException
      *
      * @psalm-pure
      */
@@ -96,6 +95,14 @@ readonly class StringUrl extends StringTypeAbstract
     public static function fromInt(int $value): static
     {
         return new static(static::intToString($value));
+    }
+
+    /**
+     * @throws UrlStringTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new UrlStringTypeException('StringUrl type cannot be created from null');
     }
 
     /**
@@ -135,7 +142,7 @@ readonly class StringUrl extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws UrlStringTypeException
      */
     public function toBool(): bool
     {
@@ -152,7 +159,7 @@ readonly class StringUrl extends StringTypeAbstract
 
     /**
      * @throws FloatTypeException
-     * @throws StringTypeException
+     * @throws UrlStringTypeException
      */
     public function toFloat(): float
     {
@@ -160,11 +167,19 @@ readonly class StringUrl extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws UrlStringTypeException
      */
     public function toInt(): int
     {
         return static::stringToInt($this->value());
+    }
+
+    /**
+     * @throws UrlStringTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new UrlStringTypeException('StringUrl type cannot be converted to null');
     }
 
     /**

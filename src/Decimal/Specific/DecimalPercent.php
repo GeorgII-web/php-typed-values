@@ -97,6 +97,14 @@ readonly class DecimalPercent extends DecimalTypeAbstract
 
     /**
      * @throws PercentDecimalTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new PercentDecimalTypeException('Value cannot be null');
+    }
+
+    /**
+     * @throws PercentDecimalTypeException
      * @throws DecimalTypeException
      *
      * @psalm-pure
@@ -166,6 +174,14 @@ readonly class DecimalPercent extends DecimalTypeAbstract
     public function toInt(): int
     {
         return static::stringToInt($this->value());
+    }
+
+    /**
+     * @throws PercentDecimalTypeException
+     */
+    public function toNull(): never
+    {
+        throw new PercentDecimalTypeException('Value cannot be null');
     }
 
     /**

@@ -428,4 +428,16 @@ describe('IntegerHour', function (): void {
             expect($result)->toBeInstanceOf(Undefined::class);
         });
     });
+
+    describe('Null checks', function () {
+        it('throws exception on fromNull', function () {
+            expect(fn() => IntegerHour::fromNull(null))
+                ->toThrow(HourIntegerTypeException::class, 'Integer type cannot be created from null');
+        });
+
+        it('throws exception on toNull', function () {
+            expect(fn() => IntegerHour::toNull())
+                ->toThrow(HourIntegerTypeException::class, 'Integer type cannot be converted to null');
+        });
+    });
 });

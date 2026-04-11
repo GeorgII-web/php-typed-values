@@ -95,6 +95,14 @@ readonly class IntegerPort extends IntegerTypeAbstract
     }
 
     /**
+     * @throws PortIntegerTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new PortIntegerTypeException('Integer type cannot be created from null');
+    }
+
+    /**
      * @throws StringTypeException
      * @throws PortIntegerTypeException
      *
@@ -155,6 +163,14 @@ readonly class IntegerPort extends IntegerTypeAbstract
     public function toInt(): int
     {
         return $this->value;
+    }
+
+    /**
+     * @throws PortIntegerTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new PortIntegerTypeException('Integer type cannot be converted to null');
     }
 
     /**

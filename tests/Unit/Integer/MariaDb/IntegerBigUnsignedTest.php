@@ -318,4 +318,16 @@ describe('IntegerBigUnsigned', function (): void {
             expect(IntegerBigUnsignedTest::tryFromString('1'))->toBeInstanceOf(Undefined::class);
         });
     });
+
+    describe('Null checks', function () {
+        it('throws exception on fromNull', function () {
+            expect(fn() => IntegerBigUnsigned::fromNull(null))
+                ->toThrow(UnsignedBigIntegerTypeException::class, 'Integer type cannot be created from null');
+        });
+
+        it('throws exception on toNull', function () {
+            expect(fn() => IntegerBigUnsigned::toNull())
+                ->toThrow(UnsignedBigIntegerTypeException::class, 'Integer type cannot be converted to null');
+        });
+    });
 });

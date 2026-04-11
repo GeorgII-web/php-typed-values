@@ -47,7 +47,7 @@ readonly class StringDomain extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws DomainStringTypeException
      * @throws DomainStringTypeException
      *
      * @psalm-pure
@@ -70,7 +70,7 @@ readonly class StringDomain extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws DomainStringTypeException
-     * @throws StringTypeException
+     * @throws DomainStringTypeException
      *
      * @psalm-pure
      */
@@ -87,6 +87,14 @@ readonly class StringDomain extends StringTypeAbstract
     public static function fromInt(int $value): static
     {
         return new static(static::intToString($value));
+    }
+
+    /**
+     * @throws DomainStringTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new DomainStringTypeException('StringDomain type cannot be created from null');
     }
 
     /**
@@ -129,7 +137,7 @@ readonly class StringDomain extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws DomainStringTypeException
      */
     public function toBool(): bool
     {
@@ -145,7 +153,7 @@ readonly class StringDomain extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws DomainStringTypeException
      * @throws FloatTypeException
      */
     public function toFloat(): float
@@ -154,11 +162,19 @@ readonly class StringDomain extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws DomainStringTypeException
      */
     public function toInt(): int
     {
         return static::stringToInt($this->value);
+    }
+
+    /**
+     * @throws DomainStringTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new DomainStringTypeException('StringDomain type cannot be converted to null');
     }
 
     public function toString(): string

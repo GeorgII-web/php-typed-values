@@ -36,7 +36,6 @@ readonly class DecimalProbability extends DecimalTypeAbstract
     /**
      * @throws ProbabilityDecimalTypeException
      * @throws DecimalTypeException
-     * @throws StringTypeException
      */
     public function __construct(string $value)
     {
@@ -53,7 +52,6 @@ readonly class DecimalProbability extends DecimalTypeAbstract
     /**
      * @throws ProbabilityDecimalTypeException
      * @throws DecimalTypeException
-     * @throws StringTypeException
      *
      * @psalm-pure
      */
@@ -65,7 +63,6 @@ readonly class DecimalProbability extends DecimalTypeAbstract
     /**
      * @throws ProbabilityDecimalTypeException
      * @throws DecimalTypeException
-     * @throws StringTypeException
      *
      * @psalm-pure
      */
@@ -90,7 +87,6 @@ readonly class DecimalProbability extends DecimalTypeAbstract
     /**
      * @throws ProbabilityDecimalTypeException
      * @throws DecimalTypeException
-     * @throws StringTypeException
      *
      * @psalm-pure
      */
@@ -101,8 +97,15 @@ readonly class DecimalProbability extends DecimalTypeAbstract
 
     /**
      * @throws ProbabilityDecimalTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new ProbabilityDecimalTypeException('Value cannot be null');
+    }
+
+    /**
+     * @throws ProbabilityDecimalTypeException
      * @throws DecimalTypeException
-     * @throws StringTypeException
      *
      * @psalm-pure
      */
@@ -171,6 +174,14 @@ readonly class DecimalProbability extends DecimalTypeAbstract
     public function toInt(): int
     {
         return static::stringToInt($this->value());
+    }
+
+    /**
+     * @throws ProbabilityDecimalTypeException
+     */
+    public function toNull(): never
+    {
+        throw new ProbabilityDecimalTypeException('Value cannot be null');
     }
 
     /**

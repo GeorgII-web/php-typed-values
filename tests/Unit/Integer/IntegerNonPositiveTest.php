@@ -343,4 +343,16 @@ describe('IntegerNonPositive', function () {
             expect($v2->toString())->toBe($original);
         })->with(['0', '-42', (string) PHP_INT_MIN]);
     });
+
+    describe('Null checks', function () {
+        it('throws exception on fromNull', function () {
+            expect(fn() => IntegerNonPositive::fromNull(null))
+                ->toThrow(NonPositiveIntegerTypeException::class, 'Integer type cannot be created from null');
+        });
+
+        it('throws exception on toNull', function () {
+            expect(fn() => IntegerNonPositive::toNull())
+                ->toThrow(NonPositiveIntegerTypeException::class, 'Integer type cannot be converted to null');
+        });
+    });
 });

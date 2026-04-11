@@ -77,6 +77,14 @@ readonly class StringStandard extends StringTypeAbstract
     }
 
     /**
+     * @throws StringTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new StringTypeException('StringStandard type cannot be created from null');
+    }
+
+    /**
      * @psalm-pure
      */
     public static function fromString(string $value): static
@@ -141,6 +149,14 @@ readonly class StringStandard extends StringTypeAbstract
     public function toInt(): int
     {
         return static::stringToInt($this->value());
+    }
+
+    /**
+     * @throws StringTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new StringTypeException('StringStandard type cannot be converted to null');
     }
 
     public function toString(): string

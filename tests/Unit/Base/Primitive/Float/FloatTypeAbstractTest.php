@@ -55,6 +55,11 @@ readonly class FloatTypeAbstractTest extends FloatTypeAbstract
         return new static(static::intToFloat($value));
     }
 
+    public static function fromNull(null $value): never
+    {
+        throw new FloatTypeException('Float type cannot be created from null');
+    }
+
     public static function fromString(string $value): static
     {
         return new static(static::stringToFloat($value));
@@ -104,6 +109,11 @@ readonly class FloatTypeAbstractTest extends FloatTypeAbstract
     public function toInt(): int
     {
         return static::floatToInt($this->val);
+    }
+
+    public static function toNull(): never
+    {
+        throw new FloatTypeException('Float type cannot be converted to null');
     }
 
     public function toString(): string

@@ -209,3 +209,15 @@ describe('Coverage for mutants', function () {
         expect($result)->toBeInstanceOf(Undefined::class);
     });
 });
+
+describe('Null checks', function () {
+    it('throws exception on fromNull', function () {
+        expect(fn() => StringIpV6::fromNull(null))
+            ->toThrow(IpV6StringException::class);
+    });
+
+    it('throws exception on toNull', function () {
+        expect(fn() => StringIpV6::toNull())
+            ->toThrow(IpV6StringException::class);
+    });
+});

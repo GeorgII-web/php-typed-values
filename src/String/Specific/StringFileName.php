@@ -13,7 +13,6 @@ use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\String\FileNameStringTypeException;
-use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
@@ -63,7 +62,7 @@ readonly class StringFileName extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws FileNameStringTypeException
      * @throws FileNameStringTypeException
      *
      * @psalm-pure
@@ -86,7 +85,7 @@ readonly class StringFileName extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws FileNameStringTypeException
-     * @throws StringTypeException
+     * @throws FileNameStringTypeException
      *
      * @psalm-pure
      */
@@ -103,6 +102,14 @@ readonly class StringFileName extends StringTypeAbstract
     public static function fromInt(int $value): static
     {
         return new static(static::intToString($value));
+    }
+
+    /**
+     * @throws FileNameStringTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new FileNameStringTypeException('StringFileName type cannot be created from null');
     }
 
     /**
@@ -158,7 +165,7 @@ readonly class StringFileName extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws FileNameStringTypeException
      */
     public function toBool(): bool
     {
@@ -175,7 +182,7 @@ readonly class StringFileName extends StringTypeAbstract
 
     /**
      * @throws FloatTypeException
-     * @throws StringTypeException
+     * @throws FileNameStringTypeException
      */
     public function toFloat(): float
     {
@@ -183,11 +190,19 @@ readonly class StringFileName extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws FileNameStringTypeException
      */
     public function toInt(): int
     {
         return static::stringToInt($this->value());
+    }
+
+    /**
+     * @throws FileNameStringTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new FileNameStringTypeException('StringFileName type cannot be converted to null');
     }
 
     /**

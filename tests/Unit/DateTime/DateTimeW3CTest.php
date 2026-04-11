@@ -127,6 +127,19 @@ describe('DateTimeW3C', function () {
             ]);
         });
 
+        describe('Null checks', function () {
+            it('fromNull throws exception', function () {
+                expect(fn() => DateTimeW3C::fromNull(null))
+                    ->toThrow(DateTimeTypeException::class, 'DateTimeW3C type cannot be created from null');
+            });
+
+            it('toNull throws exception', function () {
+                $vo = DateTimeW3C::fromString('2025-01-02T03:04:05+00:00');
+                expect(fn() => $vo::toNull())
+                    ->toThrow(DateTimeTypeException::class, 'DateTimeW3C type cannot be converted to null');
+            });
+        });
+
         describe('getFormat', function () {
             it('returns RFC3339 format', function () {
                 expect(DateTimeW3C::getFormat())->toBe(\DATE_RFC3339);

@@ -80,6 +80,14 @@ describe('DecimalNonNegative', function () {
         expect(DecimalNonNegative::fromString('1.1')->jsonSerialize())->toBeString();
     });
 
+    it('fromNull throws NonNegativeDecimalTypeException', function (): void {
+        expect(fn() => DecimalNonNegative::fromNull(null))->toThrow(NonNegativeDecimalTypeException::class, 'Value cannot be null');
+    });
+
+    it('toNull throws NonNegativeDecimalTypeException', function (): void {
+        expect(fn() => (new DecimalNonNegative('0.0'))->toNull())->toThrow(NonNegativeDecimalTypeException::class, 'Value cannot be null');
+    });
+
     it('__toString returns the original decimal string', function (): void {
         $d = new DecimalNonNegative('3.14');
         expect((string) $d)->toBe('3.14')

@@ -85,6 +85,11 @@ readonly class DecimalTypeAbstractTest extends DecimalTypeAbstract
         return new static(static::intToString($value));
     }
 
+    public static function fromNull(null $value): never
+    {
+        throw new Exception('Value cannot be null');
+    }
+
     public static function fromString(string $value): static
     {
         return new static($value);
@@ -143,6 +148,11 @@ readonly class DecimalTypeAbstractTest extends DecimalTypeAbstract
     public function toInt(): int
     {
         return static::stringToInt($this->value());
+    }
+
+    public function toNull(): never
+    {
+        throw new Exception('Value cannot be null');
     }
 
     public function toString(): string

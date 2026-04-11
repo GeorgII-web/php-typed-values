@@ -81,6 +81,14 @@ describe('DecimalNegative', function () {
         expect(DecimalNegative::fromString('-1.1')->jsonSerialize())->toBeString();
     });
 
+    it('fromNull throws NegativeDecimalTypeException', function (): void {
+        expect(fn() => DecimalNegative::fromNull(null))->toThrow(NegativeDecimalTypeException::class, 'Value cannot be null');
+    });
+
+    it('toNull throws NegativeDecimalTypeException', function (): void {
+        expect(fn() => (new DecimalNegative('-1.0'))->toNull())->toThrow(NegativeDecimalTypeException::class, 'Value cannot be null');
+    });
+
     it('__toString returns the original decimal string', function (): void {
         $d = new DecimalNegative('-3.14');
         expect((string) $d)->toBe('-3.14')

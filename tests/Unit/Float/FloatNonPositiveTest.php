@@ -41,6 +41,11 @@ describe('FloatNonPositive', function () {
         '-INF' => [-INF],
     ]);
 
+    it('throws on fromNull and toNull', function () {
+        expect(fn() => FloatNonPositive::fromNull(null))->toThrow(NonPositiveFloatTypeException::class, 'Float type cannot be created from null')
+            ->and(fn() => FloatNonPositive::toNull())->toThrow(NonPositiveFloatTypeException::class, 'Float type cannot be converted to null');
+    });
+
     it('creates from mixed types', function () {
         expect(FloatNonPositive::fromDecimal('-1.5')->value())->toBe(-1.5)
             ->and(FloatNonPositive::fromFloat(-2.5)->value())->toBe(-2.5)

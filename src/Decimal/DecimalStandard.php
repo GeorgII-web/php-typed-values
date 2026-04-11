@@ -97,6 +97,14 @@ readonly class DecimalStandard extends DecimalTypeAbstract
 
     /**
      * @throws DecimalTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new DecimalTypeException('Value cannot be null');
+    }
+
+    /**
+     * @throws DecimalTypeException
      *
      * @psalm-pure
      */
@@ -165,6 +173,14 @@ readonly class DecimalStandard extends DecimalTypeAbstract
     public function toInt(): int
     {
         return static::stringToInt($this->value());
+    }
+
+    /**
+     * @throws DecimalTypeException
+     */
+    public function toNull(): never
+    {
+        throw new DecimalTypeException('Value cannot be null');
     }
 
     /**

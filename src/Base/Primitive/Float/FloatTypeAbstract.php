@@ -34,6 +34,8 @@ abstract readonly class FloatTypeAbstract extends PrimitiveTypeAbstract implemen
 
     abstract public static function fromInt(int $value): static;
 
+    abstract public static function fromNull(null $value): never;
+
     abstract public static function fromString(string $value): static;
 
     abstract public function toBool(): bool;
@@ -43,6 +45,8 @@ abstract readonly class FloatTypeAbstract extends PrimitiveTypeAbstract implemen
     abstract public function toFloat(): float;
 
     abstract public function toInt(): int;
+
+    abstract public static function toNull(): never;
 
     abstract public function toString(): string;
 

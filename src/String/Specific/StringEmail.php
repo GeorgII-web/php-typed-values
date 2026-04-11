@@ -12,7 +12,6 @@ use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\String\EmailStringTypeException;
-use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
@@ -59,7 +58,7 @@ readonly class StringEmail extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws EmailStringTypeException
      * @throws EmailStringTypeException
      *
      * @psalm-pure
@@ -82,7 +81,7 @@ readonly class StringEmail extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws EmailStringTypeException
-     * @throws StringTypeException
+     * @throws EmailStringTypeException
      *
      * @psalm-pure
      */
@@ -99,6 +98,14 @@ readonly class StringEmail extends StringTypeAbstract
     public static function fromInt(int $value): static
     {
         return new static(static::intToString($value));
+    }
+
+    /**
+     * @throws EmailStringTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new EmailStringTypeException('StringEmail type cannot be created from null');
     }
 
     /**
@@ -138,7 +145,7 @@ readonly class StringEmail extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws EmailStringTypeException
      */
     public function toBool(): bool
     {
@@ -155,7 +162,7 @@ readonly class StringEmail extends StringTypeAbstract
 
     /**
      * @throws FloatTypeException
-     * @throws StringTypeException
+     * @throws EmailStringTypeException
      */
     public function toFloat(): float
     {
@@ -163,11 +170,19 @@ readonly class StringEmail extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws EmailStringTypeException
      */
     public function toInt(): int
     {
         return static::stringToInt($this->value());
+    }
+
+    /**
+     * @throws EmailStringTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new EmailStringTypeException('StringEmail type cannot be converted to null');
     }
 
     /**

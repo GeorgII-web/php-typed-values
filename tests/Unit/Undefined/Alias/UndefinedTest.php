@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use PhpTypedValues\Exception\Undefined\UndefinedTypeException;
+use PhpTypedValues\String\StringStandard;
 use PhpTypedValues\Undefined\Alias\Undefined;
 
 covers(Undefined::class);
@@ -14,22 +15,19 @@ describe('Undefined', function () {
             expect($u)->toBeInstanceOf(Undefined::class);
         });
 
-        it('creates instance via fromString factory', function (): void {
-            $u = Undefined::fromString('anything');
-            expect($u)->toBeInstanceOf(Undefined::class);
+        it('throws via fromString factory', function (): void {
+            expect(fn() => Undefined::fromString('anything'))
+                ->toThrow(UndefinedTypeException::class, 'Undefined type cannot be created from string');
         });
 
         it('tryFromMixed always returns itself', function (): void {
             $fromString = Undefined::tryFromMixed('hello');
             $fromInt = Undefined::tryFromMixed(123);
-            $fromArray = Undefined::tryFromMixed([]);
             $fromNull = Undefined::tryFromMixed(null);
 
             expect($fromString)
                 ->toBeInstanceOf(Undefined::class)
                 ->and($fromInt)
-                ->toBeInstanceOf(Undefined::class)
-                ->and($fromArray)
                 ->toBeInstanceOf(Undefined::class)
                 ->and($fromNull)
                 ->toBeInstanceOf(Undefined::class);
@@ -46,7 +44,6 @@ describe('Undefined', function () {
         })->with([
             'tryFromString' => ['tryFromString', 'hello'],
             'tryFromInt' => ['tryFromInt', 123],
-            'tryFromArray' => ['tryFromArray', []],
             'tryFromFloat' => ['tryFromFloat', 1.1],
             'tryFromBool' => ['tryFromBool', true],
         ]);
@@ -56,6 +53,25 @@ describe('Undefined', function () {
 
             expect($v)->toBeInstanceOf(Undefined::class);
         });
+
+        it('tryFrom"Any" methods return default value on failure', function (string $method, mixed $input): void {
+            $default = StringStandard::fromString('default');
+            $result = Undefined::$method($input, $default);
+
+            expect($result)->toBe($default);
+        })->with([
+            'tryFromString' => ['tryFromString', 'hello'],
+            'tryFromInt' => ['tryFromInt', 123],
+            'tryFromFloat' => ['tryFromFloat', 1.1],
+            'tryFromBool' => ['tryFromBool', true],
+        ]);
+
+        it('tryFromMixed returns default value on failure', function (): void {
+            $default = StringStandard::fromString('default');
+            $result = Undefined::tryFromMixed('hello', $default);
+
+            expect($result)->toBe($default);
+        });
     });
 
     describe('Conversions (Failure Cases)', function () {
@@ -64,12 +80,12 @@ describe('Undefined', function () {
             $expect = expect(fn() => $u->{$method}());
 
             $message = match ($method) {
-                'toString', '__toString' => 'UndefinedType cannot be converted to string.',
-                'toInt' => 'UndefinedType cannot be converted to integer.',
-                'toFloat' => 'UndefinedType cannot be converted to float.',
-                'toArray' => 'UndefinedType cannot be converted to array.',
-                'value' => 'UndefinedType has no value.',
-                'jsonSerialize' => 'UndefinedType cannot be serialized for Json.',
+                'toString' => 'Undefined type cannot be converted to string',
+                '__toString' => 'Undefined type cannot be converted to string',
+                'toInt' => 'Undefined type cannot be converted to integer',
+                'toFloat' => 'Undefined type cannot be converted to float',
+                'toArray' => 'Undefined type cannot be converted to array',
+                'value' => 'Undefined type has no value',
                 default => throw new RuntimeException("Unknown method: {$method}"),
             };
 
@@ -81,14 +97,13 @@ describe('Undefined', function () {
             'toArray',
             'value',
             '__toString',
-            'jsonSerialize',
         ]);
     });
 
     describe('Information', function () {
         it('isEmpty returns true', function (): void {
             $u1 = Undefined::create();
-            $u2 = Undefined::fromString('ignored');
+            $u2 = Undefined::create();
 
             expect($u1->isEmpty())->toBeTrue()
                 ->and($u2->isEmpty())->toBeTrue();
@@ -96,7 +111,7 @@ describe('Undefined', function () {
 
         it('isUndefined returns true', function (): void {
             $u1 = Undefined::create();
-            $u2 = Undefined::fromString('ignored');
+            $u2 = Undefined::create();
 
             expect($u1->isUndefined())->toBeTrue()
                 ->and($u2->isUndefined())->toBeTrue();

@@ -95,6 +95,14 @@ readonly class IntegerSecond extends IntegerTypeAbstract
     }
 
     /**
+     * @throws SecondIntegerTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new SecondIntegerTypeException('Integer type cannot be created from null');
+    }
+
+    /**
      * @throws StringTypeException
      * @throws SecondIntegerTypeException
      *
@@ -155,6 +163,14 @@ readonly class IntegerSecond extends IntegerTypeAbstract
     public function toInt(): int
     {
         return $this->value;
+    }
+
+    /**
+     * @throws SecondIntegerTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new SecondIntegerTypeException('Integer type cannot be converted to null');
     }
 
     /**

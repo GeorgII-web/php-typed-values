@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PhpTypedValues\Tests\Unit\Bool;
 
 use PhpTypedValues\Bool\BoolStandard;
+use PhpTypedValues\Exception\Bool\BoolTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
 use PhpTypedValues\Exception\String\StringTypeException;
@@ -88,6 +89,13 @@ describe('BoolStandard - Instantiation and Core Methods', function (): void {
         [true, '1.0'],
         [false, '0.0'],
     ]);
+    it('fromNull throws BoolTypeException', function (): void {
+        expect(fn() => BoolStandard::fromNull(null))->toThrow(BoolTypeException::class, 'Boolean type cannot be created from null');
+    });
+
+    it('toNull throws BoolTypeException', function (): void {
+        expect(fn() => (new BoolStandard(true))->toNull())->toThrow(BoolTypeException::class, 'Boolean type cannot be converted to null');
+    });
 });
 
 describe('BoolStandard - from* Factory Methods', function (): void {

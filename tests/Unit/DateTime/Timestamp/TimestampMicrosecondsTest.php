@@ -70,6 +70,20 @@ describe('TimestampMicroseconds', function () {
             ]);
         });
 
+        describe('Null checks', function () {
+            it('fromNull throws exception', function () {
+                expect(fn() => TimestampMicroseconds::fromNull(null))
+                    ->toThrow(TimestampTypeException::class, 'TimestampMicroseconds type cannot be created from null');
+            });
+
+            it('toNull throws exception', function () {
+                $dt = new DateTimeImmutable('2025-01-02 03:04:05');
+                $vo = TimestampMicroseconds::fromDateTime($dt);
+                expect(fn() => $vo->toNull())
+                    ->toThrow(TimestampTypeException::class, 'TimestampMicroseconds type cannot be converted to null');
+            });
+        });
+
         describe('tryFromString', function () {
             it('returns instance or default value', function (string $input, bool $isSuccess) {
                 $result = TimestampMicroseconds::tryFromString($input);

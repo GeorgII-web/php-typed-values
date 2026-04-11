@@ -179,3 +179,15 @@ describe('Throwing static StringSha512', function () {
             ->and(StringSha512Test::tryFromString($validHash))->toBeInstanceOf(Undefined::class);
     });
 });
+
+describe('Null checks', function () {
+    it('throws exception on fromNull', function () {
+        expect(fn() => StringSha512::fromNull(null))
+            ->toThrow(Sha512StringTypeException::class);
+    });
+
+    it('throws exception on toNull', function () {
+        expect(fn() => StringSha512::toNull())
+            ->toThrow(Sha512StringTypeException::class);
+    });
+});

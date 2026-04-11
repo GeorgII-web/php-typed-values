@@ -294,4 +294,16 @@ describe('IntegerPositive', function () {
                 ->and($v->isTypeOf('NotClass'))->toBeFalse();
         });
     });
+
+    describe('Null checks', function () {
+        it('throws exception on fromNull', function () {
+            expect(fn() => IntegerPositive::fromNull(null))
+                ->toThrow(IntegerTypeException::class, 'Integer type cannot be created from null');
+        });
+
+        it('throws exception on toNull', function () {
+            expect(fn() => IntegerPositive::toNull())
+                ->toThrow(IntegerTypeException::class, 'Integer type cannot be converted to null');
+        });
+    });
 });

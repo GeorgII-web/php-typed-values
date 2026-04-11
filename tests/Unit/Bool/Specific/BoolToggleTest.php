@@ -161,6 +161,14 @@ describe('BoolToggle - from* Factory Methods', function (): void {
         ['TRUE'],
     ]);
 
+    it('fromNull throws ToggleBoolTypeException', function (): void {
+        expect(fn() => BoolToggle::fromNull(null))->toThrow(ToggleBoolTypeException::class, 'Value cannot be null');
+    });
+
+    it('toNull throws ToggleBoolTypeException', function (): void {
+        expect(fn() => (new BoolToggle(true))->toNull())->toThrow(ToggleBoolTypeException::class, 'Value cannot be null');
+    });
+
     it('fromLabel creates instance from valid labels', function (string $input, bool $expected): void {
         $bool = BoolToggle::fromLabel($input);
         expect($bool->value())->toBe($expected);

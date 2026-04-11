@@ -10,7 +10,6 @@ use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\String\SlugStringException;
-use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
@@ -77,7 +76,7 @@ readonly class StringSlug extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws SlugStringException
-     * @throws StringTypeException
+     * @throws SlugStringException
      *
      * @psalm-pure
      */
@@ -94,6 +93,14 @@ readonly class StringSlug extends StringTypeAbstract
     public static function fromInt(int $value): static
     {
         return new static(static::intToString($value));
+    }
+
+    /**
+     * @throws SlugStringException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new SlugStringException('StringSlug type cannot be created from null');
     }
 
     /**
@@ -133,7 +140,7 @@ readonly class StringSlug extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws SlugStringException
      */
     public function toBool(): bool
     {
@@ -149,7 +156,7 @@ readonly class StringSlug extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws SlugStringException
      * @throws FloatTypeException
      */
     public function toFloat(): float
@@ -158,11 +165,19 @@ readonly class StringSlug extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws SlugStringException
      */
     public function toInt(): int
     {
         return static::stringToInt($this->value());
+    }
+
+    /**
+     * @throws SlugStringException
+     */
+    public static function toNull(): never
+    {
+        throw new SlugStringException('StringSlug type cannot be converted to null');
     }
 
     public function toString(): string

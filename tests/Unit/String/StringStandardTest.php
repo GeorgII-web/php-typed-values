@@ -325,3 +325,15 @@ describe('ThrowingStringStandardTest', function () {
         expect(ThrowingStringStandardTest::tryFromMixed('any'))->toBeInstanceOf(Undefined::class);
     });
 });
+
+describe('Null checks', function () {
+    it('throws exception on fromNull', function () {
+        expect(fn() => StringStandard::fromNull(null))
+            ->toThrow(StringTypeException::class);
+    });
+
+    it('throws exception on toNull', function () {
+        expect(fn() => StringStandard::toNull())
+            ->toThrow(StringTypeException::class);
+    });
+});

@@ -65,6 +65,19 @@ describe('TimeIso8601', function () {
             ]);
         });
 
+        describe('Null checks', function () {
+            it('fromNull throws exception', function () {
+                expect(fn() => TimeIso8601::fromNull(null))
+                    ->toThrow(Iso8601TimeTypeException::class, 'TimeIso8601 type cannot be created from null');
+            });
+
+            it('toNull throws exception', function () {
+                $vo = TimeIso8601::fromString('15:52:01');
+                expect(fn() => $vo::toNull())
+                    ->toThrow(Iso8601TimeTypeException::class, 'TimeIso8601 type cannot be converted to null');
+            });
+        });
+
         describe('tryFromString', function () {
             it('returns instance or default value', function (string $input, bool $isSuccess) {
                 $result = TimeIso8601::tryFromString($input);

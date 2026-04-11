@@ -29,6 +29,8 @@ interface DecimalTypeInterface
 
     public static function fromInt(int $value): static;
 
+    public static function fromNull(null $value): never;
+
     public static function fromString(string $value): static;
 
     public function isTypeOf(string ...$classNames): bool;
@@ -40,6 +42,8 @@ interface DecimalTypeInterface
     public function toFloat(): float;
 
     public function toInt(): int;
+
+    public function toNull(): never;
 
     public function toString(): string;
 

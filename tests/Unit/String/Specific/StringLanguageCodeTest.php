@@ -274,3 +274,15 @@ describe('Throwing static', function () {
             ->and(StringLanguageCodeTest::tryFromString('en'))->toBeInstanceOf(Undefined::class);
     });
 });
+
+describe('Null checks', function () {
+    it('throws exception on fromNull', function () {
+        expect(fn() => StringLanguageCode::fromNull(null))
+            ->toThrow(LanguageCodeStringTypeException::class);
+    });
+
+    it('throws exception on toNull', function () {
+        expect(fn() => StringLanguageCode::toNull())
+            ->toThrow(LanguageCodeStringTypeException::class);
+    });
+});

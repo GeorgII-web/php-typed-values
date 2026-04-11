@@ -88,6 +88,14 @@ readonly class StringEmpty extends StringTypeAbstract
 
     /**
      * @throws StringTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new StringTypeException('StringEmpty type cannot be created from null');
+    }
+
+    /**
+     * @throws StringTypeException
      *
      * @psalm-pure
      */
@@ -153,6 +161,14 @@ readonly class StringEmpty extends StringTypeAbstract
     public function toInt(): int
     {
         return static::stringToInt($this->value());
+    }
+
+    /**
+     * @throws StringTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new StringTypeException('StringEmpty type cannot be converted to null');
     }
 
     public function toString(): string

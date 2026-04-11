@@ -198,3 +198,15 @@ describe('Throwing static StringDomain', function () {
             ->and(StringDomainTest::tryFromString($validDomain))->toBeInstanceOf(Undefined::class);
     });
 });
+
+describe('Null checks', function () {
+    it('throws exception on fromNull', function () {
+        expect(fn() => StringDomain::fromNull(null))
+            ->toThrow(DomainStringTypeException::class);
+    });
+
+    it('throws exception on toNull', function () {
+        expect(fn() => StringDomain::toNull())
+            ->toThrow(DomainStringTypeException::class);
+    });
+});

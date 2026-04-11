@@ -9,7 +9,6 @@ use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
-use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\String\UsernameStringException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
@@ -73,7 +72,7 @@ readonly class StringUsername extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws UsernameStringException
-     * @throws StringTypeException
+     * @throws UsernameStringException
      *
      * @psalm-pure
      */
@@ -90,6 +89,14 @@ readonly class StringUsername extends StringTypeAbstract
     public static function fromInt(int $value): static
     {
         return new static(static::intToString($value));
+    }
+
+    /**
+     * @throws UsernameStringException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new UsernameStringException('StringUsername type cannot be created from null');
     }
 
     /**
@@ -129,7 +136,7 @@ readonly class StringUsername extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws UsernameStringException
      */
     public function toBool(): bool
     {
@@ -153,11 +160,19 @@ readonly class StringUsername extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws UsernameStringException
      */
     public function toInt(): int
     {
         return static::stringToInt($this->value());
+    }
+
+    /**
+     * @throws UsernameStringException
+     */
+    public static function toNull(): never
+    {
+        throw new UsernameStringException('StringUsername type cannot be converted to null');
     }
 
     public function toString(): string

@@ -59,6 +59,14 @@ readonly class DateTimeAtom extends DateTimeTypeAbstract
     }
 
     /**
+     * @throws DateTimeTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new DateTimeTypeException('DateTimeAtom type cannot be created from null');
+    }
+
+    /**
      * @param non-empty-string $timezone
      *
      * @throws DateTimeTypeException
@@ -105,6 +113,14 @@ readonly class DateTimeAtom extends DateTimeTypeAbstract
     public function jsonSerialize(): string
     {
         return $this->toString();
+    }
+
+    /**
+     * @throws DateTimeTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new DateTimeTypeException('DateTimeAtom type cannot be converted to null');
     }
 
     public function toString(): string

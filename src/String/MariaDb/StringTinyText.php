@@ -9,7 +9,6 @@ use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
 use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
-use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\String\TinyTextStringException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
@@ -74,7 +73,7 @@ readonly class StringTinyText extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws TinyTextStringException
-     * @throws StringTypeException
+     * @throws TinyTextStringException
      *
      * @psalm-pure
      */
@@ -91,6 +90,14 @@ readonly class StringTinyText extends StringTypeAbstract
     public static function fromInt(int $value): static
     {
         return new static(static::intToString($value));
+    }
+
+    /**
+     * @throws TinyTextStringException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new TinyTextStringException('StringTinyText type cannot be created from null');
     }
 
     /**
@@ -130,7 +137,7 @@ readonly class StringTinyText extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws TinyTextStringException
      */
     public function toBool(): bool
     {
@@ -147,7 +154,7 @@ readonly class StringTinyText extends StringTypeAbstract
 
     /**
      * @throws FloatTypeException
-     * @throws StringTypeException
+     * @throws TinyTextStringException
      */
     public function toFloat(): float
     {
@@ -155,11 +162,19 @@ readonly class StringTinyText extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws TinyTextStringException
      */
     public function toInt(): int
     {
         return static::stringToInt($this->value());
+    }
+
+    /**
+     * @throws TinyTextStringException
+     */
+    public static function toNull(): never
+    {
+        throw new TinyTextStringException('StringTinyText type cannot be converted to null');
     }
 
     public function toString(): string

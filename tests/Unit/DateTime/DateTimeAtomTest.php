@@ -78,6 +78,20 @@ describe('DateTimeAtom', function () {
             });
         });
 
+        describe('Null checks', function () {
+            it('fromNull throws exception', function () {
+                expect(fn() => DateTimeAtom::fromNull(null))
+                    ->toThrow(DateTimeTypeException::class, 'DateTimeAtom type cannot be created from null');
+            });
+
+            it('toNull throws exception', function () {
+                $dt = new DateTimeImmutable('2025-01-02T03:04:05+00:00');
+                $vo = DateTimeAtom::fromDateTime($dt);
+                expect(fn() => $vo->toNull())
+                    ->toThrow(DateTimeTypeException::class, 'DateTimeAtom type cannot be converted to null');
+            });
+        });
+
         describe('tryFromString', function () {
             it('returns instance or default value', function (string $input, string $tz, bool $isSuccess) {
                 $result = DateTimeAtom::tryFromString($input, $tz);

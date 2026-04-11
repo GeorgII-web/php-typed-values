@@ -44,6 +44,11 @@ readonly class DateTimeTypeAbstractTest extends DateTimeTypeAbstract
         return new self($value);
     }
 
+    public static function fromNull(null $value): never
+    {
+        throw new DateTimeTypeException('DateTimeType type cannot be created from null');
+    }
+
     public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE): static
     {
         return new self(
@@ -101,6 +106,11 @@ readonly class DateTimeTypeAbstractTest extends DateTimeTypeAbstract
     public static function testStringToDateTimeZone(string $timezone): DateTimeZone
     {
         return static::stringToDateTimeZone($timezone);
+    }
+
+    public static function toNull(): never
+    {
+        throw new DateTimeTypeException('DateTimeType type cannot be converted to null');
     }
 
     public function toString(): string

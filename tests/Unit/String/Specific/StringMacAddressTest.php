@@ -212,3 +212,15 @@ describe('Coverage for mutants', function () {
         expect($result)->toBeInstanceOf(Undefined::class);
     });
 });
+
+describe('Null checks', function () {
+    it('throws exception on fromNull', function () {
+        expect(fn() => StringMacAddress::fromNull(null))
+            ->toThrow(MacAddressStringException::class);
+    });
+
+    it('throws exception on toNull', function () {
+        expect(fn() => StringMacAddress::toNull())
+            ->toThrow(MacAddressStringException::class);
+    });
+});

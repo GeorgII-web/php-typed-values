@@ -179,3 +179,15 @@ describe('Throwing static', function () {
             ->and(StringLocaleCodeTest::tryFromString('en_US'))->toBeInstanceOf(Undefined::class);
     });
 });
+
+describe('Null checks', function () {
+    it('throws exception on fromNull', function () {
+        expect(fn() => StringLocaleCode::fromNull(null))
+            ->toThrow(LocaleStringTypeException::class);
+    });
+
+    it('throws exception on toNull', function () {
+        expect(fn() => StringLocaleCode::toNull())
+            ->toThrow(LocaleStringTypeException::class);
+    });
+});

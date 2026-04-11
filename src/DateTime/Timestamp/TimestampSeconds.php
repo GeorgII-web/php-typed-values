@@ -76,6 +76,14 @@ readonly class TimestampSeconds extends DateTimeTypeAbstract
     }
 
     /**
+     * @throws TimestampTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new TimestampTypeException('TimestampSeconds type cannot be created from null');
+    }
+
+    /**
      * Parse from a numeric Unix timestamp string (seconds).
      *
      * @param non-empty-string $timezone
@@ -135,6 +143,14 @@ readonly class TimestampSeconds extends DateTimeTypeAbstract
     public function toInt(): int
     {
         return (int) $this->toString();
+    }
+
+    /**
+     * @throws TimestampTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new TimestampTypeException('TimestampSeconds type cannot be converted to null');
     }
 
     public function toString(): string

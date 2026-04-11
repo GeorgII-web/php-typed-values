@@ -58,6 +58,14 @@ readonly class DateTimeRFC1123 extends DateTimeTypeAbstract
     }
 
     /**
+     * @throws RFC1123DateTimeTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new RFC1123DateTimeTypeException('DateTimeRFC1123 type cannot be created from null');
+    }
+
+    /**
      * @param non-empty-string $timezone
      *
      * @throws RFC1123DateTimeTypeException
@@ -108,6 +116,14 @@ readonly class DateTimeRFC1123 extends DateTimeTypeAbstract
     public function jsonSerialize(): string
     {
         return $this->toString();
+    }
+
+    /**
+     * @throws RFC1123DateTimeTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new RFC1123DateTimeTypeException('DateTimeRFC1123 type cannot be converted to null');
     }
 
     public function toString(): string

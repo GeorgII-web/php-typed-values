@@ -303,4 +303,16 @@ describe('IntegerYear', function (): void {
             expect($year->value())->toBe(2024);
         });
     });
+
+    describe('Null checks', function () {
+        it('throws exception on fromNull', function () {
+            expect(fn() => IntegerYear::fromNull(null))
+                ->toThrow(YearIntegerTypeException::class, 'Integer type cannot be created from null');
+        });
+
+        it('throws exception on toNull', function () {
+            expect(fn() => IntegerYear::toNull())
+                ->toThrow(YearIntegerTypeException::class, 'Integer type cannot be converted to null');
+        });
+    });
 });

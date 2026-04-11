@@ -230,3 +230,15 @@ describe('Throwing static', function () {
             ->and(StringHexTest::tryFromString('4a6f686e'))->toBeInstanceOf(Undefined::class);
     });
 });
+
+describe('Null checks', function () {
+    it('throws exception on fromNull', function () {
+        expect(fn() => StringHex::fromNull(null))
+            ->toThrow(HexStringTypeException::class);
+    });
+
+    it('throws exception on toNull', function () {
+        expect(fn() => StringHex::toNull())
+            ->toThrow(HexStringTypeException::class);
+    });
+});

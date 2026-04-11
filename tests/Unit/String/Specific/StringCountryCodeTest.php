@@ -232,3 +232,15 @@ describe('Throwing static', function () {
             ->and(StringCountryCodeTest::tryFromString('US'))->toBeInstanceOf(Undefined::class);
     });
 });
+
+describe('Null checks', function () {
+    it('throws exception on fromNull', function () {
+        expect(fn() => StringCountryCode::fromNull(null))
+            ->toThrow(CountryCodeStringTypeException::class);
+    });
+
+    it('throws exception on toNull', function () {
+        expect(fn() => StringCountryCode::toNull())
+            ->toThrow(CountryCodeStringTypeException::class);
+    });
+});

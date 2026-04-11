@@ -10,7 +10,6 @@ use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\String\CountryCodeStringTypeException;
-use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
@@ -60,7 +59,7 @@ readonly class StringCountryCode extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws CountryCodeStringTypeException
      * @throws CountryCodeStringTypeException
      *
      * @psalm-pure
@@ -83,7 +82,7 @@ readonly class StringCountryCode extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws CountryCodeStringTypeException
-     * @throws StringTypeException
+     * @throws CountryCodeStringTypeException
      *
      * @psalm-pure
      */
@@ -100,6 +99,14 @@ readonly class StringCountryCode extends StringTypeAbstract
     public static function fromInt(int $value): static
     {
         return new static(static::intToString($value));
+    }
+
+    /**
+     * @throws CountryCodeStringTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new CountryCodeStringTypeException('StringCountryCode type cannot be created from null');
     }
 
     /**
@@ -139,7 +146,7 @@ readonly class StringCountryCode extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws CountryCodeStringTypeException
      */
     public function toBool(): bool
     {
@@ -156,7 +163,7 @@ readonly class StringCountryCode extends StringTypeAbstract
 
     /**
      * @throws FloatTypeException
-     * @throws StringTypeException
+     * @throws CountryCodeStringTypeException
      */
     public function toFloat(): float
     {
@@ -164,11 +171,19 @@ readonly class StringCountryCode extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws CountryCodeStringTypeException
      */
     public function toInt(): int
     {
         return static::stringToInt($this->value());
+    }
+
+    /**
+     * @throws CountryCodeStringTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new CountryCodeStringTypeException('StringCountryCode type cannot be converted to null');
     }
 
     /**

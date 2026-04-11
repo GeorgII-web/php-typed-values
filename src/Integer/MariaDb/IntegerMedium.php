@@ -96,6 +96,14 @@ readonly class IntegerMedium extends IntegerTypeAbstract
     }
 
     /**
+     * @throws MediumIntegerTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new MediumIntegerTypeException('Integer type cannot be created from null');
+    }
+
+    /**
      * @throws StringTypeException
      * @throws MediumIntegerTypeException
      *
@@ -165,6 +173,14 @@ readonly class IntegerMedium extends IntegerTypeAbstract
     public function toInt(): int
     {
         return $this->value;
+    }
+
+    /**
+     * @throws MediumIntegerTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new MediumIntegerTypeException('Integer type cannot be converted to null');
     }
 
     /**

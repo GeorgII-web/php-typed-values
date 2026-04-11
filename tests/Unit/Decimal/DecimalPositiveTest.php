@@ -79,6 +79,14 @@ describe('DecimalPositive', function () {
         expect(DecimalPositive::fromString('1.1')->jsonSerialize())->toBeString();
     });
 
+    it('fromNull throws PositiveDecimalTypeException', function (): void {
+        expect(fn() => DecimalPositive::fromNull(null))->toThrow(PositiveDecimalTypeException::class, 'Value cannot be null');
+    });
+
+    it('toNull throws PositiveDecimalTypeException', function (): void {
+        expect(fn() => (new DecimalPositive('1.0'))->toNull())->toThrow(PositiveDecimalTypeException::class, 'Value cannot be null');
+    });
+
     it('__toString returns the original decimal string', function (): void {
         $d = new DecimalPositive('3.14');
         expect((string) $d)->toBe('3.14')

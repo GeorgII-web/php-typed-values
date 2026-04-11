@@ -302,4 +302,16 @@ describe('IntegerAge', function (): void {
                 ->and($age->isTypeOf('NonExistentClass', IntegerAge::class))->toBeTrue();
         });
     });
+
+    describe('Null checks', function () {
+        it('throws exception on fromNull', function () {
+            expect(fn() => IntegerAge::fromNull(null))
+                ->toThrow(AgeIntegerTypeException::class, 'Integer type cannot be created from null');
+        });
+
+        it('throws exception on toNull', function () {
+            expect(fn() => IntegerAge::toNull())
+                ->toThrow(AgeIntegerTypeException::class, 'Integer type cannot be converted to null');
+        });
+    });
 });

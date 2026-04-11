@@ -179,3 +179,15 @@ describe('Throwing static StringJwt', function () {
             ->and(StringJwtTest::tryFromString($validJwt))->toBeInstanceOf(Undefined::class);
     });
 });
+
+describe('Null checks', function () {
+    it('throws exception on fromNull', function () {
+        expect(fn() => StringJwt::fromNull(null))
+            ->toThrow(JwtStringTypeException::class);
+    });
+
+    it('throws exception on toNull', function () {
+        expect(fn() => StringJwt::toNull())
+            ->toThrow(JwtStringTypeException::class);
+    });
+});

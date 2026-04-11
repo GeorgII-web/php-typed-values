@@ -92,6 +92,14 @@ readonly class IntegerBig extends IntegerTypeAbstract
     }
 
     /**
+     * @throws BigIntegerTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new BigIntegerTypeException('Integer type cannot be created from null');
+    }
+
+    /**
      * @throws StringTypeException
      * @throws BigIntegerTypeException
      *
@@ -155,6 +163,14 @@ readonly class IntegerBig extends IntegerTypeAbstract
     public function toInt(): int
     {
         return $this->value;
+    }
+
+    /**
+     * @throws BigIntegerTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new BigIntegerTypeException('Integer type cannot be converted to null');
     }
 
     /**

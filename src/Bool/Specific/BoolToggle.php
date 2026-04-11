@@ -94,6 +94,14 @@ readonly class BoolToggle extends BoolTypeAbstract
     }
 
     /**
+     * @throws ToggleBoolTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new ToggleBoolTypeException('Value cannot be null');
+    }
+
+    /**
      * @psalm-pure
      *
      * @throws StringTypeException
@@ -158,6 +166,14 @@ readonly class BoolToggle extends BoolTypeAbstract
     public function toLabel(): string
     {
         return $this->value() ? 'yes' : 'no';
+    }
+
+    /**
+     * @throws ToggleBoolTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new ToggleBoolTypeException('Value cannot be null');
     }
 
     /**

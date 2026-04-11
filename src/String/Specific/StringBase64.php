@@ -10,7 +10,6 @@ use PhpTypedValues\Base\Primitive\String\StringTypeAbstract;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\String\Base64StringTypeException;
-use PhpTypedValues\Exception\String\StringTypeException;
 use PhpTypedValues\Exception\TypeException;
 use PhpTypedValues\Undefined\Alias\Undefined;
 use Stringable;
@@ -88,7 +87,7 @@ readonly class StringBase64 extends StringTypeAbstract
     /**
      * @throws FloatTypeException
      * @throws Base64StringTypeException
-     * @throws StringTypeException
+     * @throws Base64StringTypeException
      *
      * @psalm-pure
      */
@@ -105,6 +104,14 @@ readonly class StringBase64 extends StringTypeAbstract
     public static function fromInt(int $value): static
     {
         return new static(static::intToString($value));
+    }
+
+    /**
+     * @throws Base64StringTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new Base64StringTypeException('StringBase64 type cannot be created from null');
     }
 
     /**
@@ -146,7 +153,7 @@ readonly class StringBase64 extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws Base64StringTypeException
      */
     public function toBool(): bool
     {
@@ -163,7 +170,7 @@ readonly class StringBase64 extends StringTypeAbstract
 
     /**
      * @throws FloatTypeException
-     * @throws StringTypeException
+     * @throws Base64StringTypeException
      */
     public function toFloat(): float
     {
@@ -171,11 +178,19 @@ readonly class StringBase64 extends StringTypeAbstract
     }
 
     /**
-     * @throws StringTypeException
+     * @throws Base64StringTypeException
      */
     public function toInt(): int
     {
         return static::stringToInt($this->value());
+    }
+
+    /**
+     * @throws Base64StringTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new Base64StringTypeException('StringBase64 type cannot be converted to null');
     }
 
     /**

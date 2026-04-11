@@ -321,4 +321,16 @@ describe('IntegerHttpStatusCode', function (): void {
             expect($v2->value())->toBe($original);
         })->with([100, 200, 599]);
     });
+
+    describe('Null checks', function () {
+        it('throws exception on fromNull', function () {
+            expect(fn() => IntegerHttpStatusCode::fromNull(null))
+                ->toThrow(HttpStatusCodeIntegerTypeException::class, 'Integer type cannot be created from null');
+        });
+
+        it('throws exception on toNull', function () {
+            expect(fn() => IntegerHttpStatusCode::toNull())
+                ->toThrow(HttpStatusCodeIntegerTypeException::class, 'Integer type cannot be converted to null');
+        });
+    });
 });

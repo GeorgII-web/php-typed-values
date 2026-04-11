@@ -364,4 +364,16 @@ describe('IntegerNormalUnsigned', function (): void {
             expect(IntegerNormalUnsignedTest::tryFromString('1'))->toBeInstanceOf(Undefined::class);
         });
     });
+
+    describe('Null checks', function () {
+        it('throws exception on fromNull', function () {
+            expect(fn() => IntegerNormalUnsigned::fromNull(null))
+                ->toThrow(UnsignedNormalIntegerTypeException::class, 'Integer type cannot be created from null');
+        });
+
+        it('throws exception on toNull', function () {
+            expect(fn() => IntegerNormalUnsigned::toNull())
+                ->toThrow(UnsignedNormalIntegerTypeException::class, 'Integer type cannot be converted to null');
+        });
+    });
 });

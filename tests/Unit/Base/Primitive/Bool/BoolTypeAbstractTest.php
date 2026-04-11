@@ -56,6 +56,11 @@ readonly class BoolTypeAbstractTest extends BoolTypeAbstract
         return new static(static::intToBool($value));
     }
 
+    public static function fromNull(null $value): never
+    {
+        throw new Exception('Value cannot be null');
+    }
+
     public static function fromString(string $value): static
     {
         return new static(static::stringToBool($value));
@@ -105,6 +110,11 @@ readonly class BoolTypeAbstractTest extends BoolTypeAbstract
     public function toInt(): int
     {
         return static::boolToInt($this->val);
+    }
+
+    public static function toNull(): never
+    {
+        throw new Exception('Value cannot be null');
     }
 
     public function toString(): string

@@ -266,11 +266,33 @@ describe('IntegerStandard', function () {
             expect((new IntegerStandard(0))->isUndefined())->toBeFalse();
         });
 
+        it('throws exception on fromNull', function () {
+            expect(fn() => IntegerStandard::fromNull(null))
+                ->toThrow(IntegerTypeException::class, 'Integer type cannot be created from null');
+        });
+
+        it('throws exception on toNull', function () {
+            expect(fn() => IntegerStandard::toNull())
+                ->toThrow(IntegerTypeException::class, 'Integer type cannot be converted to null');
+        });
+
         it('checks type correctly', function () {
             $v = new IntegerStandard(42);
             expect($v->isTypeOf(IntegerStandard::class))->toBeTrue()
                 ->and($v->isTypeOf('NotClass', IntegerStandard::class))->toBeTrue()
                 ->and($v->isTypeOf('NotClass'))->toBeFalse();
+        });
+    });
+
+    describe('Null checks', function () {
+        it('throws exception on fromNull', function () {
+            expect(fn() => IntegerStandard::fromNull(null))
+                ->toThrow(IntegerTypeException::class, 'Integer type cannot be created from null');
+        });
+
+        it('throws exception on toNull', function () {
+            expect(fn() => IntegerStandard::toNull())
+                ->toThrow(IntegerTypeException::class, 'Integer type cannot be converted to null');
         });
     });
 });

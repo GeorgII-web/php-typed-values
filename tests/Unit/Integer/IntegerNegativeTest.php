@@ -276,4 +276,16 @@ describe('IntegerNegative', function () {
             expect($v2->toString())->toBe($original);
         })->with(['-1', '-42', (string) \PHP_INT_MIN]);
     });
+
+    describe('Null checks', function () {
+        it('throws exception on fromNull', function () {
+            expect(fn() => IntegerNegative::fromNull(null))
+                ->toThrow(NegativeIntegerTypeException::class, 'Integer type cannot be created from null');
+        });
+
+        it('throws exception on toNull', function () {
+            expect(fn() => IntegerNegative::toNull())
+                ->toThrow(NegativeIntegerTypeException::class, 'Integer type cannot be converted to null');
+        });
+    });
 });

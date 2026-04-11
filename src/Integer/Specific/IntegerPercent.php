@@ -96,6 +96,14 @@ readonly class IntegerPercent extends IntegerTypeAbstract
     }
 
     /**
+     * @throws PercentIntegerTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new PercentIntegerTypeException('Integer type cannot be created from null');
+    }
+
+    /**
      * @throws StringTypeException
      * @throws PercentIntegerTypeException
      *
@@ -162,6 +170,14 @@ readonly class IntegerPercent extends IntegerTypeAbstract
     public function toInt(): int
     {
         return $this->value;
+    }
+
+    /**
+     * @throws PercentIntegerTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new PercentIntegerTypeException('Integer type cannot be converted to null');
     }
 
     /**

@@ -373,4 +373,16 @@ describe('IntegerTinyUnsigned', function (): void {
             expect(IntegerTinyUnsignedTest::tryFromString('1'))->toBeInstanceOf(Undefined::class);
         });
     });
+
+    describe('Null checks', function () {
+        it('throws exception on fromNull', function () {
+            expect(fn() => IntegerTinyUnsigned::fromNull(null))
+                ->toThrow(UnsignedTinyIntegerTypeException::class, 'Integer type cannot be created from null');
+        });
+
+        it('throws exception on toNull', function () {
+            expect(fn() => IntegerTinyUnsigned::toNull())
+                ->toThrow(UnsignedTinyIntegerTypeException::class, 'Integer type cannot be converted to null');
+        });
+    });
 });

@@ -188,6 +188,14 @@ describe('DecimalStandard', function () {
             ->and(DecimalStandard::fromBool(false)->toString())->toBe('0.0');
     });
 
+    it('fromNull throws DecimalTypeException', function (): void {
+        expect(fn() => DecimalStandard::fromNull(null))->toThrow(DecimalTypeException::class, 'Value cannot be null');
+    });
+
+    it('toNull throws DecimalTypeException', function (): void {
+        expect(fn() => (new DecimalStandard('1.0'))->toNull())->toThrow(DecimalTypeException::class, 'Value cannot be null');
+    });
+
     it('cast int > decimal', function (): void {
         expect(DecimalStandard::fromInt(0)->toString())->toBe('0.0')
             ->and(DecimalStandard::fromInt(99999999999999999)->toString())->toBe('99999999999999999.0')

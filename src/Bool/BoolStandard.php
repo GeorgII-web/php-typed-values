@@ -7,6 +7,7 @@ namespace PhpTypedValues\Bool;
 use Exception;
 use PhpTypedValues\Base\Primitive\Bool\BoolTypeAbstract;
 use PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract;
+use PhpTypedValues\Exception\Bool\BoolTypeException;
 use PhpTypedValues\Exception\Decimal\DecimalTypeException;
 use PhpTypedValues\Exception\Float\FloatTypeException;
 use PhpTypedValues\Exception\Integer\IntegerTypeException;
@@ -82,6 +83,14 @@ readonly class BoolStandard extends BoolTypeAbstract
     }
 
     /**
+     * @throws BoolTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new BoolTypeException('Boolean type cannot be created from null');
+    }
+
+    /**
      * @psalm-pure
      *
      * @throws StringTypeException
@@ -138,6 +147,14 @@ readonly class BoolStandard extends BoolTypeAbstract
     public function toInt(): int
     {
         return static::boolToInt($this->value());
+    }
+
+    /**
+     * @throws BoolTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new BoolTypeException('Boolean type cannot be converted to null');
     }
 
     /**

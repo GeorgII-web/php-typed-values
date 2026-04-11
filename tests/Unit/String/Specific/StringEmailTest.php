@@ -182,3 +182,15 @@ describe('Throwing static', function () {
             ->and(StringEmailTest::tryFromString('test@example.com'))->toBeInstanceOf(Undefined::class);
     });
 });
+
+describe('Null checks', function () {
+    it('throws exception on fromNull', function () {
+        expect(fn() => StringEmail::fromNull(null))
+            ->toThrow(EmailStringTypeException::class);
+    });
+
+    it('throws exception on toNull', function () {
+        expect(fn() => StringEmail::toNull())
+            ->toThrow(EmailStringTypeException::class);
+    });
+});
