@@ -58,6 +58,14 @@ readonly class DateTimeCookie extends DateTimeTypeAbstract
     }
 
     /**
+     * @throws CookieDateTimeTypeException
+     */
+    public static function fromNull(null $value): never
+    {
+        throw new CookieDateTimeTypeException('DateTimeCookie type cannot be created from null');
+    }
+
+    /**
      * @param non-empty-string $timezone
      *
      * @throws CookieDateTimeTypeException
@@ -108,6 +116,14 @@ readonly class DateTimeCookie extends DateTimeTypeAbstract
     public function jsonSerialize(): string
     {
         return $this->toString();
+    }
+
+    /**
+     * @throws CookieDateTimeTypeException
+     */
+    public static function toNull(): never
+    {
+        throw new CookieDateTimeTypeException('DateTimeCookie type cannot be converted to null');
     }
 
     public function toString(): string
