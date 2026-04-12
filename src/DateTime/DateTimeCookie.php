@@ -32,10 +32,16 @@ use function is_string;
  *
  * @psalm-immutable
  */
-readonly class DateTimeCookie extends DateTimeTypeAbstract
+class DateTimeCookie extends DateTimeTypeAbstract
 {
-    public const string FORMAT = DATE_COOKIE;
+    /**
+     * @var string
+     */
+    public const FORMAT = DATE_COOKIE;
 
+    /**
+     * @readonly
+     */
     protected DateTimeImmutable $value;
 
     /**
@@ -51,16 +57,18 @@ readonly class DateTimeCookie extends DateTimeTypeAbstract
      * @throws ZoneDateTimeTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromDateTime(DateTimeImmutable $value): static
+    public static function fromDateTime(DateTimeImmutable $value): self
     {
         return new static($value);
     }
 
     /**
      * @throws CookieDateTimeTypeException
+     * @return never
      */
-    public static function fromNull(null $value): never
+    public static function fromNull(null $value)
     {
         throw new CookieDateTimeTypeException('DateTimeCookie type cannot be created from null');
     }
@@ -71,8 +79,9 @@ readonly class DateTimeCookie extends DateTimeTypeAbstract
      * @throws CookieDateTimeTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE): static
+    public static function fromString(string $value, string $timezone = self::DEFAULT_ZONE): self
     {
         try {
             return new static(
@@ -120,8 +129,9 @@ readonly class DateTimeCookie extends DateTimeTypeAbstract
 
     /**
      * @throws CookieDateTimeTypeException
+     * @return never
      */
-    public static function toNull(): never
+    public static function toNull()
     {
         throw new CookieDateTimeTypeException('DateTimeCookie type cannot be converted to null');
     }
@@ -140,21 +150,26 @@ readonly class DateTimeCookie extends DateTimeTypeAbstract
      * @return static|T
      *
      * @psalm-pure
+     * @param mixed $value
      */
     public static function tryFromMixed(
-        mixed $value,
+        $value,
         string $timezone = self::DEFAULT_ZONE,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        PrimitiveTypeAbstract $default = null
+    ): \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract {
+        $default ??= new Undefined();
         try {
-            /** @var static $result */
-            return match (true) {
-                is_string($value) => static::fromString($value, $timezone),
-                ($value instanceof DateTimeImmutable) => static::fromDateTime($value),
-                $value instanceof Stringable => static::fromString((string) $value, $timezone),
-                default => throw new TypeException('Value cannot be cast to date time'),
-            };
-        } catch (Exception) {
+            switch (true) {
+                case is_string($value):
+                    return static::fromString($value, $timezone);
+                case $value instanceof DateTimeImmutable:
+                    return static::fromDateTime($value);
+                case is_object($value) && method_exists($value, '__toString'):
+                    return static::fromString((string) $value, $timezone);
+                default:
+                    throw new TypeException('Value cannot be cast to date time');
+            }
+        } catch (Exception $exception) {
             // @var PrimitiveTypeAbstract
             return $default;
         }
@@ -173,12 +188,13 @@ readonly class DateTimeCookie extends DateTimeTypeAbstract
     public static function tryFromString(
         string $value,
         string $timezone = self::DEFAULT_ZONE,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        PrimitiveTypeAbstract $default = null
+    ): \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract {
+        $default ??= new Undefined();
         try {
             /** @var static $result */
             return static::fromString($value, $timezone);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             // @var PrimitiveTypeAbstract
             return $default;
         }
@@ -193,8 +209,9 @@ readonly class DateTimeCookie extends DateTimeTypeAbstract
      * @psalm-pure
      *
      * @throws ZoneDateTimeTypeException
+     * @return static
      */
-    public function withTimeZone(string $timezone): static
+    public function withTimeZone(string $timezone): self
     {
         /** @psalm-suppress ImpureVariable */
         return new static(

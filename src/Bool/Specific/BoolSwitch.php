@@ -30,8 +30,11 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class BoolSwitch extends BoolTypeAbstract
+class BoolSwitch extends BoolTypeAbstract
 {
+    /**
+     * @readonly
+     */
     protected bool $value;
 
     public function __construct(bool $value)
@@ -41,8 +44,9 @@ readonly class BoolSwitch extends BoolTypeAbstract
 
     /**
      * @psalm-pure
+     * @return static
      */
-    public static function fromBool(bool $value): static
+    public static function fromBool(bool $value): self
     {
         return new static($value);
     }
@@ -51,8 +55,9 @@ readonly class BoolSwitch extends BoolTypeAbstract
      * @psalm-pure
      *
      * @throws DecimalTypeException
+     * @return static
      */
-    public static function fromDecimal(string $value): static
+    public static function fromDecimal(string $value): self
     {
         return new static(static::decimalToBool($value));
     }
@@ -61,8 +66,9 @@ readonly class BoolSwitch extends BoolTypeAbstract
      * @psalm-pure
      *
      * @throws FloatTypeException
+     * @return static
      */
-    public static function fromFloat(float $value): static
+    public static function fromFloat(float $value): self
     {
         return new static(static::floatToBool($value));
     }
@@ -71,8 +77,9 @@ readonly class BoolSwitch extends BoolTypeAbstract
      * @psalm-pure
      *
      * @throws IntegerTypeException
+     * @return static
      */
-    public static function fromInt(int $value): static
+    public static function fromInt(int $value): self
     {
         return new static(static::intToBool($value));
     }
@@ -81,22 +88,29 @@ readonly class BoolSwitch extends BoolTypeAbstract
      * @psalm-pure
      *
      * @throws SwitchBoolTypeException
+     * @return static
      */
-    public static function fromLabel(string $label): static
+    public static function fromLabel(string $label): self
     {
-        $value = match ($label) {
-            'on' => true,
-            'off' => false,
-            default => throw new SwitchBoolTypeException(sprintf('Expected boolean switch label "on" or "off", got "%s"', $label)),
-        };
+        switch ($label) {
+            case 'on':
+                $value = true;
+                break;
+            case 'off':
+                $value = false;
+                break;
+            default:
+                throw new SwitchBoolTypeException(sprintf('Expected boolean switch label "on" or "off", got "%s"', $label));
+        }
 
         return new static($value);
     }
 
     /**
      * @throws SwitchBoolTypeException
+     * @return never
      */
-    public static function fromNull(null $value): never
+    public static function fromNull(null $value)
     {
         throw new SwitchBoolTypeException('Value cannot be null');
     }
@@ -105,8 +119,9 @@ readonly class BoolSwitch extends BoolTypeAbstract
      * @psalm-pure
      *
      * @throws StringTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value): self
     {
         return new static(static::stringToBool($value));
     }
@@ -170,8 +185,9 @@ readonly class BoolSwitch extends BoolTypeAbstract
 
     /**
      * @throws SwitchBoolTypeException
+     * @return never
      */
-    public static function toNull(): never
+    public static function toNull()
     {
         throw new SwitchBoolTypeException('Value cannot be null');
     }
@@ -195,8 +211,9 @@ readonly class BoolSwitch extends BoolTypeAbstract
      */
     public static function tryFromBool(
         bool $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        PrimitiveTypeAbstract $default = null
+    ): \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract {
+        $default ??= new Undefined();
         /** @var static */
         return static::fromBool($value);
     }
@@ -212,12 +229,13 @@ readonly class BoolSwitch extends BoolTypeAbstract
      */
     public static function tryFromFloat(
         float $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        PrimitiveTypeAbstract $default = null
+    ): \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromFloat($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -234,12 +252,13 @@ readonly class BoolSwitch extends BoolTypeAbstract
      */
     public static function tryFromInt(
         int $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        PrimitiveTypeAbstract $default = null
+    ): \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromInt($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -256,12 +275,13 @@ readonly class BoolSwitch extends BoolTypeAbstract
      */
     public static function tryFromLabel(
         string $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromLabel($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -275,22 +295,29 @@ readonly class BoolSwitch extends BoolTypeAbstract
      * @param T $default
      *
      * @return static|T
+     * @param mixed $value
      */
     public static function tryFromMixed(
-        mixed $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        $value,
+        PrimitiveTypeAbstract $default = null
+    ): \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract {
+        $default ??= new Undefined();
         try {
-            /** @var static */
-            return match (true) {
-                is_bool($value) => static::fromBool($value),
-                is_int($value) => static::fromInt($value),
-                is_float($value) => static::fromFloat($value),
-                ($value instanceof self) => static::fromBool($value->value()),
-                is_string($value) || $value instanceof Stringable => static::tryFromLabel((string) $value, static::tryFromString((string) $value)),
-                default => throw new TypeException('Value cannot be cast to boolean'),
-            };
-        } catch (Exception) {
+            switch (true) {
+                case is_bool($value):
+                    return static::fromBool($value);
+                case is_int($value):
+                    return static::fromInt($value);
+                case is_float($value):
+                    return static::fromFloat($value);
+                case $value instanceof self:
+                    return static::fromBool($value->value());
+                case is_string($value) || is_object($value) && method_exists($value, '__toString'):
+                    return static::tryFromLabel((string) $value, static::tryFromString((string) $value));
+                default:
+                    throw new TypeException('Value cannot be cast to boolean');
+            }
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -307,12 +334,13 @@ readonly class BoolSwitch extends BoolTypeAbstract
      */
     public static function tryFromString(
         string $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        PrimitiveTypeAbstract $default = null
+    ): \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromString($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }

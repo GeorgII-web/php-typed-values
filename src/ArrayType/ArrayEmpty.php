@@ -19,7 +19,7 @@ use Traversable;
  *
  * @psalm-immutable
  */
-readonly class ArrayEmpty extends ArrayTypeAbstract
+class ArrayEmpty extends ArrayTypeAbstract
 {
     /**
      * @throws EmptyArrayTypeException
@@ -45,8 +45,9 @@ readonly class ArrayEmpty extends ArrayTypeAbstract
      * @param list<mixed> $value
      *
      * @throws EmptyArrayTypeException
+     * @return static
      */
-    public static function fromArray(array $value): static
+    public static function fromArray(array $value): self
     {
         /** @var array $value */
         return new static($value);

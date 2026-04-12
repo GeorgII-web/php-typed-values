@@ -22,17 +22,35 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  */
 interface BoolTypeInterface
 {
-    public static function fromBool(bool $value): static;
+    /**
+     * @return static
+     */
+    public static function fromBool(bool $value);
 
-    public static function fromDecimal(string $value): static;
+    /**
+     * @return static
+     */
+    public static function fromDecimal(string $value);
 
-    public static function fromFloat(float $value): static;
+    /**
+     * @return static
+     */
+    public static function fromFloat(float $value);
 
-    public static function fromInt(int $value): static;
+    /**
+     * @return static
+     */
+    public static function fromInt(int $value);
 
-    public static function fromNull(null $value): never;
+    /**
+     * @return never
+     */
+    public static function fromNull(null $value);
 
-    public static function fromString(string $value): static;
+    /**
+     * @return static
+     */
+    public static function fromString(string $value);
 
     public function isTypeOf(string ...$classNames): bool;
 
@@ -44,7 +62,10 @@ interface BoolTypeInterface
 
     public function toInt(): int;
 
-    public static function toNull(): never;
+    /**
+     * @return never
+     */
+    public static function toNull();
 
     public function toString(): string;
 
@@ -57,8 +78,8 @@ interface BoolTypeInterface
      */
     public static function tryFromBool(
         bool $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static;
+        PrimitiveTypeAbstract $default = null
+    );
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -69,8 +90,8 @@ interface BoolTypeInterface
      */
     public static function tryFromFloat(
         float $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static;
+        PrimitiveTypeAbstract $default = null
+    );
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -81,8 +102,8 @@ interface BoolTypeInterface
      */
     public static function tryFromInt(
         int $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static;
+        PrimitiveTypeAbstract $default = null
+    );
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -90,11 +111,12 @@ interface BoolTypeInterface
      * @param T $default
      *
      * @return static|T
+     * @param mixed $value
      */
     public static function tryFromMixed(
-        mixed $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static;
+        $value,
+        PrimitiveTypeAbstract $default = null
+    );
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -105,8 +127,8 @@ interface BoolTypeInterface
      */
     public static function tryFromString(
         string $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static;
+        PrimitiveTypeAbstract $default = null
+    );
 
     public function value(): bool;
 }

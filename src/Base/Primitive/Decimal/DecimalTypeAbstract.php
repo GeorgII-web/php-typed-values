@@ -27,19 +27,37 @@ use function strlen;
  *
  * @psalm-immutable
  */
-abstract readonly class DecimalTypeAbstract extends PrimitiveTypeAbstract implements DecimalTypeInterface
+abstract class DecimalTypeAbstract extends PrimitiveTypeAbstract implements DecimalTypeInterface
 {
-    abstract public static function fromBool(bool $value): static;
+    /**
+     * @return static
+     */
+    abstract public static function fromBool(bool $value): self;
 
-    abstract public static function fromDecimal(string $value): static;
+    /**
+     * @return static
+     */
+    abstract public static function fromDecimal(string $value): self;
 
-    abstract public static function fromFloat(float $value): static;
+    /**
+     * @return static
+     */
+    abstract public static function fromFloat(float $value): self;
 
-    abstract public static function fromInt(int $value): static;
+    /**
+     * @return static
+     */
+    abstract public static function fromInt(int $value): self;
 
-    abstract public static function fromNull(null $value): never;
+    /**
+     * @return never
+     */
+    abstract public static function fromNull(null $value);
 
-    abstract public static function fromString(string $value): static;
+    /**
+     * @return static
+     */
+    abstract public static function fromString(string $value): self;
 
     abstract public function isTypeOf(string ...$classNames): bool;
 
@@ -78,7 +96,10 @@ abstract readonly class DecimalTypeAbstract extends PrimitiveTypeAbstract implem
 
     abstract public function toInt(): int;
 
-    abstract public function toNull(): never;
+    /**
+     * @return never
+     */
+    abstract public function toNull();
 
     abstract public function toString(): string;
 
@@ -91,8 +112,8 @@ abstract readonly class DecimalTypeAbstract extends PrimitiveTypeAbstract implem
      */
     abstract public static function tryFromBool(
         bool $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static;
+        PrimitiveTypeAbstract $default = null
+    );
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -103,8 +124,8 @@ abstract readonly class DecimalTypeAbstract extends PrimitiveTypeAbstract implem
      */
     abstract public static function tryFromDecimal(
         string $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static;
+        PrimitiveTypeAbstract $default = null
+    );
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -115,8 +136,8 @@ abstract readonly class DecimalTypeAbstract extends PrimitiveTypeAbstract implem
      */
     abstract public static function tryFromFloat(
         float $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static;
+        PrimitiveTypeAbstract $default = null
+    );
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -127,8 +148,8 @@ abstract readonly class DecimalTypeAbstract extends PrimitiveTypeAbstract implem
      */
     abstract public static function tryFromInt(
         int $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static;
+        PrimitiveTypeAbstract $default = null
+    );
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -136,11 +157,12 @@ abstract readonly class DecimalTypeAbstract extends PrimitiveTypeAbstract implem
      * @param T $default
      *
      * @return static|T
+     * @param mixed $value
      */
     abstract public static function tryFromMixed(
-        mixed $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static;
+        $value,
+        PrimitiveTypeAbstract $default = null
+    );
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -151,8 +173,8 @@ abstract readonly class DecimalTypeAbstract extends PrimitiveTypeAbstract implem
      */
     abstract public static function tryFromString(
         string $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static;
+        PrimitiveTypeAbstract $default = null
+    );
 
     abstract public function value(): string;
 

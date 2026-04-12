@@ -36,9 +36,10 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class IntegerMonth extends IntegerTypeAbstract
+class IntegerMonth extends IntegerTypeAbstract
 {
-    /** @var int<1, 12> */
+    /** @var int<1, 12>
+     * @readonly */
     protected int $value;
 
     /**
@@ -61,8 +62,9 @@ readonly class IntegerMonth extends IntegerTypeAbstract
      * @throws MonthIntegerTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromBool(bool $value): static
+    public static function fromBool(bool $value): self
     {
         return new static(static::boolToInt($value));
     }
@@ -72,8 +74,9 @@ readonly class IntegerMonth extends IntegerTypeAbstract
      * @throws MonthIntegerTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromDecimal(string $value): static
+    public static function fromDecimal(string $value): self
     {
         return new static(static::decimalToInt($value));
     }
@@ -83,8 +86,9 @@ readonly class IntegerMonth extends IntegerTypeAbstract
      * @throws MonthIntegerTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromFloat(float $value): static
+    public static function fromFloat(float $value): self
     {
         return new static(static::floatToInt($value));
     }
@@ -93,8 +97,9 @@ readonly class IntegerMonth extends IntegerTypeAbstract
      * @throws MonthIntegerTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromInt(int $value): static
+    public static function fromInt(int $value): self
     {
         return new static($value);
     }
@@ -103,32 +108,59 @@ readonly class IntegerMonth extends IntegerTypeAbstract
      * @throws MonthIntegerTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromLabel(string $label): static
+    public static function fromLabel(string $label): self
     {
-        $value = match ($label) {
-            'January' => 1,
-            'February' => 2,
-            'March' => 3,
-            'April' => 4,
-            'May' => 5,
-            'June' => 6,
-            'July' => 7,
-            'August' => 8,
-            'September' => 9,
-            'October' => 10,
-            'November' => 11,
-            'December' => 12,
-            default => throw new MonthIntegerTypeException(sprintf('Expected month label, got "%s"', $label)),
-        };
+        switch ($label) {
+            case 'January':
+                $value = 1;
+                break;
+            case 'February':
+                $value = 2;
+                break;
+            case 'March':
+                $value = 3;
+                break;
+            case 'April':
+                $value = 4;
+                break;
+            case 'May':
+                $value = 5;
+                break;
+            case 'June':
+                $value = 6;
+                break;
+            case 'July':
+                $value = 7;
+                break;
+            case 'August':
+                $value = 8;
+                break;
+            case 'September':
+                $value = 9;
+                break;
+            case 'October':
+                $value = 10;
+                break;
+            case 'November':
+                $value = 11;
+                break;
+            case 'December':
+                $value = 12;
+                break;
+            default:
+                throw new MonthIntegerTypeException(sprintf('Expected month label, got "%s"', $label));
+        }
 
         return new static($value);
     }
 
     /**
      * @throws MonthIntegerTypeException
+     * @return never
      */
-    public static function fromNull(null $value): never
+    public static function fromNull(null $value)
     {
         throw new MonthIntegerTypeException('Integer type cannot be created from null');
     }
@@ -138,13 +170,17 @@ readonly class IntegerMonth extends IntegerTypeAbstract
      * @throws MonthIntegerTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value): self
     {
         return new static(static::stringToInt($value));
     }
 
-    public function isEmpty(): false
+    /**
+     * @return false
+     */
+    public function isEmpty(): bool
     {
         return false;
     }
@@ -160,7 +196,10 @@ readonly class IntegerMonth extends IntegerTypeAbstract
         return false;
     }
 
-    public function isUndefined(): false
+    /**
+     * @return false
+     */
+    public function isUndefined(): bool
     {
         return false;
     }
@@ -201,26 +240,39 @@ readonly class IntegerMonth extends IntegerTypeAbstract
      */
     public function toLabel(): string
     {
-        return match ($this->value) {
-            1 => 'January',
-            2 => 'February',
-            3 => 'March',
-            4 => 'April',
-            5 => 'May',
-            6 => 'June',
-            7 => 'July',
-            8 => 'August',
-            9 => 'September',
-            10 => 'October',
-            11 => 'November',
-            12 => 'December',
-        };
+        switch ($this->value) {
+            case 1:
+                return 'January';
+            case 2:
+                return 'February';
+            case 3:
+                return 'March';
+            case 4:
+                return 'April';
+            case 5:
+                return 'May';
+            case 6:
+                return 'June';
+            case 7:
+                return 'July';
+            case 8:
+                return 'August';
+            case 9:
+                return 'September';
+            case 10:
+                return 'October';
+            case 11:
+                return 'November';
+            case 12:
+                return 'December';
+        }
     }
 
     /**
      * @throws MonthIntegerTypeException
+     * @return never
      */
-    public static function toNull(): never
+    public static function toNull()
     {
         throw new MonthIntegerTypeException('Integer type cannot be converted to null');
     }
@@ -244,12 +296,13 @@ readonly class IntegerMonth extends IntegerTypeAbstract
      */
     public static function tryFromBool(
         bool $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromBool($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -266,12 +319,13 @@ readonly class IntegerMonth extends IntegerTypeAbstract
      */
     public static function tryFromDecimal(
         string $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromDecimal($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -288,12 +342,13 @@ readonly class IntegerMonth extends IntegerTypeAbstract
      */
     public static function tryFromFloat(
         float $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromFloat($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -310,12 +365,13 @@ readonly class IntegerMonth extends IntegerTypeAbstract
      */
     public static function tryFromInt(
         int $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromInt($value);
-        } catch (TypeException) {
+        } catch (TypeException $exception) {
             // @var T
             return $default;
         }
@@ -329,21 +385,27 @@ readonly class IntegerMonth extends IntegerTypeAbstract
      * @return static|T
      *
      * @psalm-pure
+     * @param mixed $value
      */
     public static function tryFromMixed(
-        mixed $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        $value,
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
-            /** @var static */
-            return match (true) {
-                is_int($value) => static::fromInt($value),
-                is_float($value) => static::fromFloat($value),
-                is_bool($value) => static::fromBool($value),
-                is_string($value) || $value instanceof Stringable => static::tryFromDecimal((string) $value, static::fromString((string) $value)),
-                default => throw new TypeException('Value cannot be cast to int'),
-            };
-        } catch (Exception) {
+            switch (true) {
+                case is_int($value):
+                    return static::fromInt($value);
+                case is_float($value):
+                    return static::fromFloat($value);
+                case is_bool($value):
+                    return static::fromBool($value);
+                case is_string($value) || is_object($value) && method_exists($value, '__toString'):
+                    return static::tryFromDecimal((string) $value, static::fromString((string) $value));
+                default:
+                    throw new TypeException('Value cannot be cast to int');
+            }
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -360,12 +422,13 @@ readonly class IntegerMonth extends IntegerTypeAbstract
      */
     public static function tryFromString(
         string $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromString($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }

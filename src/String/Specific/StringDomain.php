@@ -24,9 +24,10 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class StringDomain extends StringTypeAbstract
+class StringDomain extends StringTypeAbstract
 {
-    /** @var non-empty-string */
+    /** @var non-empty-string
+     * @readonly */
     protected string $value;
 
     /**
@@ -51,8 +52,9 @@ readonly class StringDomain extends StringTypeAbstract
      * @throws DomainStringTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromBool(bool $value): static
+    public static function fromBool(bool $value): \PhpTypedValues\Base\Primitive\String\StringTypeAbstract
     {
         return new static(static::boolToString($value));
     }
@@ -61,8 +63,9 @@ readonly class StringDomain extends StringTypeAbstract
      * @throws DomainStringTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromDecimal(string $value): static
+    public static function fromDecimal(string $value): \PhpTypedValues\Base\Primitive\String\StringTypeAbstract
     {
         return new static(static::decimalToString($value));
     }
@@ -73,8 +76,9 @@ readonly class StringDomain extends StringTypeAbstract
      * @throws DomainStringTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromFloat(float $value): static
+    public static function fromFloat(float $value): \PhpTypedValues\Base\Primitive\String\StringTypeAbstract
     {
         return new static(static::floatToString($value));
     }
@@ -83,16 +87,18 @@ readonly class StringDomain extends StringTypeAbstract
      * @throws DomainStringTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromInt(int $value): static
+    public static function fromInt(int $value): \PhpTypedValues\Base\Primitive\String\StringTypeAbstract
     {
         return new static(static::intToString($value));
     }
 
     /**
      * @throws DomainStringTypeException
+     * @return never
      */
-    public static function fromNull(null $value): never
+    public static function fromNull(null $value)
     {
         throw new DomainStringTypeException('StringDomain type cannot be created from null');
     }
@@ -101,8 +107,9 @@ readonly class StringDomain extends StringTypeAbstract
      * @throws DomainStringTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value): \PhpTypedValues\Base\Primitive\String\StringTypeAbstract
     {
         return new static($value);
     }
@@ -171,8 +178,9 @@ readonly class StringDomain extends StringTypeAbstract
 
     /**
      * @throws DomainStringTypeException
+     * @return never
      */
-    public static function toNull(): never
+    public static function toNull()
     {
         throw new DomainStringTypeException('StringDomain type cannot be converted to null');
     }
@@ -184,61 +192,72 @@ readonly class StringDomain extends StringTypeAbstract
 
     /**
      * @psalm-pure
+     * @return \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract|static
      */
-    public static function tryFromBool(bool $value, PrimitiveTypeAbstract $default = new Undefined()): PrimitiveTypeAbstract|static
+    public static function tryFromBool(bool $value, PrimitiveTypeAbstract $default = null)
     {
+        $default ??= new Undefined();
         try {
             return static::fromBool($value);
-        } catch (DomainStringTypeException|StringTypeException) {
+        } catch (DomainStringTypeException|StringTypeException $exception) {
             return $default;
         }
     }
 
     /**
      * @psalm-pure
+     * @return \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract|static
      */
-    public static function tryFromDecimal(string $value, PrimitiveTypeAbstract $default = new Undefined()): PrimitiveTypeAbstract|static
+    public static function tryFromDecimal(string $value, PrimitiveTypeAbstract $default = null)
     {
+        $default ??= new Undefined();
         try {
             return static::fromDecimal($value);
-        } catch (DomainStringTypeException) {
+        } catch (DomainStringTypeException $exception) {
             return $default;
         }
     }
 
     /**
      * @psalm-pure
+     * @return \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract|static
      */
-    public static function tryFromFloat(float $value, PrimitiveTypeAbstract $default = new Undefined()): PrimitiveTypeAbstract|static
+    public static function tryFromFloat(float $value, PrimitiveTypeAbstract $default = null)
     {
+        $default ??= new Undefined();
         try {
             return static::fromFloat($value);
-        } catch (FloatTypeException|DomainStringTypeException|StringTypeException) {
+        } catch (FloatTypeException|DomainStringTypeException|StringTypeException $exception) {
             return $default;
         }
     }
 
     /**
      * @psalm-pure
+     * @return \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract|static
      */
-    public static function tryFromInt(int $value, PrimitiveTypeAbstract $default = new Undefined()): PrimitiveTypeAbstract|static
+    public static function tryFromInt(int $value, PrimitiveTypeAbstract $default = null)
     {
+        $default ??= new Undefined();
         try {
             return static::fromInt($value);
-        } catch (DomainStringTypeException) {
+        } catch (DomainStringTypeException $exception) {
             return $default;
         }
     }
 
     /**
      * @psalm-pure
+     * @return \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract|static
+     * @param mixed $value
      */
-    public static function tryFromMixed(mixed $value, PrimitiveTypeAbstract $default = new Undefined()): PrimitiveTypeAbstract|static
+    public static function tryFromMixed($value, PrimitiveTypeAbstract $default = null)
     {
-        if (is_scalar($value) || $value instanceof Stringable) {
+        $default ??= new Undefined();
+        if (is_scalar($value) || is_object($value) && method_exists($value, '__toString')) {
             try {
                 return static::fromString((string) $value);
-            } catch (DomainStringTypeException) {
+            } catch (DomainStringTypeException $exception) {
                 return $default;
             }
         }
@@ -248,12 +267,14 @@ readonly class StringDomain extends StringTypeAbstract
 
     /**
      * @psalm-pure
+     * @return \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract|static
      */
-    public static function tryFromString(string $value, PrimitiveTypeAbstract $default = new Undefined()): PrimitiveTypeAbstract|static
+    public static function tryFromString(string $value, PrimitiveTypeAbstract $default = null)
     {
+        $default ??= new Undefined();
         try {
             return static::fromString($value);
-        } catch (DomainStringTypeException) {
+        } catch (DomainStringTypeException $exception) {
             return $default;
         }
     }

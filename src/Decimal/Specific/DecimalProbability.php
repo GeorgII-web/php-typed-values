@@ -26,10 +26,11 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class DecimalProbability extends DecimalTypeAbstract
+class DecimalProbability extends DecimalTypeAbstract
 {
     /**
      * @var non-empty-string
+     * @readonly
      */
     protected string $value;
 
@@ -54,8 +55,9 @@ readonly class DecimalProbability extends DecimalTypeAbstract
      * @throws DecimalTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromBool(bool $value): static
+    public static function fromBool(bool $value): self
     {
         return new static(static::boolToDecimal($value));
     }
@@ -65,8 +67,9 @@ readonly class DecimalProbability extends DecimalTypeAbstract
      * @throws DecimalTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromDecimal(string $value): static
+    public static function fromDecimal(string $value): self
     {
         return new static($value);
     }
@@ -78,8 +81,9 @@ readonly class DecimalProbability extends DecimalTypeAbstract
      * @throws DecimalTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromFloat(float $value): static
+    public static function fromFloat(float $value): self
     {
         return new static(static::floatToString($value));
     }
@@ -89,16 +93,18 @@ readonly class DecimalProbability extends DecimalTypeAbstract
      * @throws DecimalTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromInt(int $value): static
+    public static function fromInt(int $value): self
     {
         return new static(static::intToDecimal($value));
     }
 
     /**
      * @throws ProbabilityDecimalTypeException
+     * @return never
      */
-    public static function fromNull(null $value): never
+    public static function fromNull(null $value)
     {
         throw new ProbabilityDecimalTypeException('Value cannot be null');
     }
@@ -108,8 +114,9 @@ readonly class DecimalProbability extends DecimalTypeAbstract
      * @throws DecimalTypeException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value): self
     {
         return new static($value);
     }
@@ -178,8 +185,9 @@ readonly class DecimalProbability extends DecimalTypeAbstract
 
     /**
      * @throws ProbabilityDecimalTypeException
+     * @return never
      */
-    public function toNull(): never
+    public function toNull()
     {
         throw new ProbabilityDecimalTypeException('Value cannot be null');
     }
@@ -203,12 +211,13 @@ readonly class DecimalProbability extends DecimalTypeAbstract
      */
     public static function tryFromBool(
         bool $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        PrimitiveTypeAbstract $default = null
+    ): \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromBool($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -225,12 +234,13 @@ readonly class DecimalProbability extends DecimalTypeAbstract
      */
     public static function tryFromDecimal(
         string $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        PrimitiveTypeAbstract $default = null
+    ): \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromString($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -247,12 +257,13 @@ readonly class DecimalProbability extends DecimalTypeAbstract
      */
     public static function tryFromFloat(
         float $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        PrimitiveTypeAbstract $default = null
+    ): \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromFloat($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -269,12 +280,13 @@ readonly class DecimalProbability extends DecimalTypeAbstract
      */
     public static function tryFromInt(
         int $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        PrimitiveTypeAbstract $default = null
+    ): \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromInt($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -288,21 +300,27 @@ readonly class DecimalProbability extends DecimalTypeAbstract
      * @return static|T
      *
      * @psalm-pure
+     * @param mixed $value
      */
     public static function tryFromMixed(
-        mixed $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        $value,
+        PrimitiveTypeAbstract $default = null
+    ): \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract {
+        $default ??= new Undefined();
         try {
-            /** @var static */
-            return match (true) {
-                is_string($value) || $value instanceof Stringable => static::fromString((string) $value),
-                is_float($value) => static::fromFloat($value),
-                is_int($value) => static::fromInt($value),
-                is_bool($value) => static::fromBool($value),
-                default => throw new TypeException('Value cannot be cast to string'),
-            };
-        } catch (Exception) {
+            switch (true) {
+                case is_string($value) || is_object($value) && method_exists($value, '__toString'):
+                    return static::fromString((string) $value);
+                case is_float($value):
+                    return static::fromFloat($value);
+                case is_int($value):
+                    return static::fromInt($value);
+                case is_bool($value):
+                    return static::fromBool($value);
+                default:
+                    throw new TypeException('Value cannot be cast to string');
+            }
+        } catch (Exception $exception) {
             return $default;
         }
     }
@@ -318,12 +336,13 @@ readonly class DecimalProbability extends DecimalTypeAbstract
      */
     public static function tryFromString(
         string $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        PrimitiveTypeAbstract $default = null
+    ): \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromString($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
