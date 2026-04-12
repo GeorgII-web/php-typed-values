@@ -21,7 +21,8 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "PhpTypedValues\\Tests\\": "tests/"
+      "PhpTypedValues\\Tests\\": "tests/",
+      "App\\Rector\\Rules\\": "rector/Rules/"
     }
   },
   "scripts": {
