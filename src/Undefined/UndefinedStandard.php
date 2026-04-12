@@ -25,12 +25,13 @@ use function is_null;
  *
  * @psalm-immutable
  */
-readonly class UndefinedStandard extends UndefinedTypeAbstract
+class UndefinedStandard extends UndefinedTypeAbstract
 {
     /**
      * @psalm-pure
+     * @return static
      */
-    public static function create(): static
+    public static function create()
     {
         return new static();
     }
@@ -39,8 +40,9 @@ readonly class UndefinedStandard extends UndefinedTypeAbstract
      * @psalm-pure
      *
      * @throws UndefinedTypeException
+     * @return static
      */
-    public static function fromBool(bool $value): static
+    public static function fromBool(bool $value)
     {
         throw new UndefinedTypeException('Undefined type cannot be created from boolean');
     }
@@ -49,8 +51,9 @@ readonly class UndefinedStandard extends UndefinedTypeAbstract
      * @psalm-pure
      *
      * @throws UndefinedTypeException
+     * @return static
      */
-    public static function fromDecimal(string $value): static
+    public static function fromDecimal(string $value)
     {
         throw new UndefinedTypeException('Undefined type cannot be created from decimal');
     }
@@ -59,8 +62,9 @@ readonly class UndefinedStandard extends UndefinedTypeAbstract
      * @psalm-pure
      *
      * @throws UndefinedTypeException
+     * @return static
      */
-    public static function fromFloat(float $value): static
+    public static function fromFloat(float $value)
     {
         throw new UndefinedTypeException('Undefined type cannot be created from float');
     }
@@ -69,16 +73,19 @@ readonly class UndefinedStandard extends UndefinedTypeAbstract
      * @psalm-pure
      *
      * @throws UndefinedTypeException
+     * @return static
      */
-    public static function fromInt(int $value): static
+    public static function fromInt(int $value)
     {
         throw new UndefinedTypeException('Undefined type cannot be created from integer');
     }
 
     /**
      * @psalm-pure
+     * @return static
+     * @param null $value
      */
-    public static function fromNull(null $value): static
+    public static function fromNull($value)
     {
         return new static();
     }
@@ -87,8 +94,9 @@ readonly class UndefinedStandard extends UndefinedTypeAbstract
      * @psalm-pure
      *
      * @throws UndefinedTypeException
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         throw new UndefinedTypeException('Undefined type cannot be created from string');
     }
@@ -117,52 +125,63 @@ readonly class UndefinedStandard extends UndefinedTypeAbstract
         return true;
     }
 
-    public function jsonSerialize(): null
+    /**
+     * @return null
+     */
+    public function jsonSerialize()
     {
         return $this->toNull();
     }
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    public function toArray(): never
+    public function toArray()
     {
         throw new UndefinedTypeException('Undefined type cannot be converted to array');
     }
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    public function toBool(): never
+    public function toBool()
     {
         throw new UndefinedTypeException('Undefined type cannot be converted to boolean');
     }
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    public function toDecimal(): never
+    public function toDecimal()
     {
         throw new UndefinedTypeException('Undefined type cannot be converted to decimal');
     }
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    public function toFloat(): never
+    public function toFloat()
     {
         throw new UndefinedTypeException('Undefined type cannot be converted to float');
     }
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    public function toInt(): never
+    public function toInt()
     {
         throw new UndefinedTypeException('Undefined type cannot be converted to integer');
     }
 
-    public function toNull(): null
+    /**
+     * @return null
+     */
+    public function toNull()
     {
         return null;
     }
@@ -186,12 +205,13 @@ readonly class UndefinedStandard extends UndefinedTypeAbstract
      */
     public static function tryFromBool(
         bool $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromBool($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -208,12 +228,13 @@ readonly class UndefinedStandard extends UndefinedTypeAbstract
      */
     public static function tryFromDecimal(
         string $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromDecimal($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -230,12 +251,13 @@ readonly class UndefinedStandard extends UndefinedTypeAbstract
      */
     public static function tryFromFloat(
         float $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromFloat($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -252,12 +274,13 @@ readonly class UndefinedStandard extends UndefinedTypeAbstract
      */
     public static function tryFromInt(
         int $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromInt($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -271,18 +294,21 @@ readonly class UndefinedStandard extends UndefinedTypeAbstract
      * @return static|T
      *
      * @psalm-pure
+     * @param mixed $value
      */
     public static function tryFromMixed(
-        mixed $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        $value,
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
-            /** @var static */
-            return match (true) {
-                is_null($value) => static::fromNull($value),
-                default => throw new TypeException('Value cannot be casted to undefined type'),
-            };
-        } catch (Exception) {
+            switch (true) {
+                case is_null($value):
+                    return static::fromNull($value);
+                default:
+                    throw new TypeException('Value cannot be casted to undefined type');
+            }
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }
@@ -299,12 +325,13 @@ readonly class UndefinedStandard extends UndefinedTypeAbstract
      */
     public static function tryFromString(
         string $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static {
+        PrimitiveTypeAbstract $default = null
+    ) {
+        $default ??= new Undefined();
         try {
             /** @var static */
             return static::fromString($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             /** @var T */
             return $default;
         }

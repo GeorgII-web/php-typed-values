@@ -23,48 +23,78 @@ use PhpTypedValues\Undefined\Alias\Undefined;
  */
 interface UndefinedTypeInterface
 {
-    public static function create(): static;
+    /**
+     * @return static
+     */
+    public static function create();
 
-    public static function fromBool(bool $value): static;
+    /**
+     * @return static
+     */
+    public static function fromBool(bool $value);
 
-    public static function fromDecimal(string $value): static;
+    /**
+     * @return static
+     */
+    public static function fromDecimal(string $value);
 
-    public static function fromFloat(float $value): static;
+    /**
+     * @return static
+     */
+    public static function fromFloat(float $value);
 
-    public static function fromInt(int $value): static;
+    /**
+     * @return static
+     */
+    public static function fromInt(int $value);
 
-    public static function fromNull(null $value): static;
+    /**
+     * @return static
+     * @param null $value
+     */
+    public static function fromNull($value);
 
-    public static function fromString(string $value): static;
+    /**
+     * @return static
+     */
+    public static function fromString(string $value);
 
     public function isTypeOf(string ...$classNames): bool;
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    public function toArray(): never;
+    public function toArray();
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    public function toBool(): never;
+    public function toBool();
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    public function toDecimal(): never;
+    public function toDecimal();
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    public function toFloat(): never;
+    public function toFloat();
 
     /**
      * @throws UndefinedTypeException
+     * @return never
      */
-    public function toInt(): never;
+    public function toInt();
 
-    public function toNull(): null;
+    /**
+     * @return null
+     */
+    public function toNull();
 
     /**
      * @throws UndefinedTypeException
@@ -80,8 +110,8 @@ interface UndefinedTypeInterface
      */
     public static function tryFromBool(
         bool $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static;
+        PrimitiveTypeAbstract $default = null
+    );
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -92,8 +122,8 @@ interface UndefinedTypeInterface
      */
     public static function tryFromDecimal(
         string $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static;
+        PrimitiveTypeAbstract $default = null
+    );
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -104,8 +134,8 @@ interface UndefinedTypeInterface
      */
     public static function tryFromFloat(
         float $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static;
+        PrimitiveTypeAbstract $default = null
+    );
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -116,8 +146,8 @@ interface UndefinedTypeInterface
      */
     public static function tryFromInt(
         int $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static;
+        PrimitiveTypeAbstract $default = null
+    );
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -125,11 +155,12 @@ interface UndefinedTypeInterface
      * @param T $default
      *
      * @return static|T
+     * @param mixed $value
      */
     public static function tryFromMixed(
-        mixed $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static;
+        $value,
+        PrimitiveTypeAbstract $default = null
+    );
 
     /**
      * @template T of PrimitiveTypeAbstract
@@ -140,8 +171,8 @@ interface UndefinedTypeInterface
      */
     public static function tryFromString(
         string $value,
-        PrimitiveTypeAbstract $default = new Undefined(),
-    ): PrimitiveTypeAbstract|static;
+        PrimitiveTypeAbstract $default = null
+    );
 
     /**
      * @throws UndefinedTypeException
