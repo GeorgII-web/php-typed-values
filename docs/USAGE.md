@@ -168,3 +168,24 @@ Use `tryFrom*` with a default value to provide a graceful fallback.
 ```php
 $email = StringEmail::tryFromString($input, StringEmpty::fromString('')); // Email string OR Empty string
 ```
+
+#### Round-trip with `null` via `Undefined`
+
+You can use `Undefined` to handle optional values where `null` represents a missing value. 
+
+`Undefined` can be created from `null` and will serialize back to `null`.
+
+```php
+// 1. null -> Undefined
+$input = null;
+$name = StringNonBlank::tryFromMixed($input, Undefined::create());
+
+if ($name->isUndefined()) {
+    // 2. usage is restricted: throws UndefinedTypeException
+    // $name->toString(); 
+    // $name->value();
+}
+
+// 3. Undefined -> null (JsonSerialize)
+echo json_encode($name); // null
+```
