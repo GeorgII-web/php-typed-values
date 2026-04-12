@@ -3,13 +3,13 @@
 declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
-use Rector\DowngradePhp82\Rector\FunctionLike\DowngradeStandaloneNullTrueFalseReturnTypeRector;
+use Rector\Set\ValueObject\SetList;
 
 return RectorConfig::configure()
     ->withPaths([
         __DIR__ . '/../src',
     ])
-    ->withRules([
-        DowngradeStandaloneNullTrueFalseReturnTypeRector::class,
+    ->withSets([
+        SetList::TYPE_DECLARATION,
     ])
     ->withDowngradeSets(php74: true);
