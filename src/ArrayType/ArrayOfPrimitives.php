@@ -27,10 +27,11 @@ use function count;
  *
  * @psalm-immutable
  */
-readonly class ArrayOfPrimitives extends ArrayTypeAbstract
+class ArrayOfPrimitives extends ArrayTypeAbstract
 {
     /**
      * @var list<TItem>
+     * @readonly
      */
     private array $value;
 
@@ -64,8 +65,9 @@ readonly class ArrayOfPrimitives extends ArrayTypeAbstract
      * @param list<mixed> $value
      *
      * @throws PrimitivesArrayTypeException
+     * @return static
      */
-    public static function fromArray(array $value): static
+    public static function fromArray(array $value)
     {
         /** @var list<TItem> $value */
         return new static($value);
@@ -75,8 +77,9 @@ readonly class ArrayOfPrimitives extends ArrayTypeAbstract
      * @no-named-arguments
      *
      * @throws PrimitivesArrayTypeException
+     * @return static
      */
-    public static function fromItems(PrimitiveTypeInterface ...$items): static
+    public static function fromItems(PrimitiveTypeInterface ...$items)
     {
         /** @var list<TItem> $items */
         return new static($items);
