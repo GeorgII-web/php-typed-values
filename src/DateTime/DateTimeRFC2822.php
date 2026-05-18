@@ -34,7 +34,10 @@ use function is_string;
  */
 readonly class DateTimeRFC2822 extends DateTimeTypeAbstract
 {
-    public const string FORMAT = DATE_RFC2822;
+    /**
+     * @var string
+     */
+    public const FORMAT = DATE_RFC2822;
 
     protected DateTimeImmutable $value;
 
