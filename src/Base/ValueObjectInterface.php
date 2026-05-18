@@ -14,7 +14,10 @@ use JsonSerializable;
  */
 interface ValueObjectInterface extends JsonSerializable
 {
-    public static function fromArray(array $value): static;
+    /**
+     * @return static
+     */
+    public static function fromArray(array $value);
 
     /**
      * Returns true if the Object value is empty.
