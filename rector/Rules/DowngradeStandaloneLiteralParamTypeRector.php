@@ -12,6 +12,7 @@ use PhpParser\Node\Identifier;
 use PhpParser\Node\Param;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Function_;
+use PhpParser\Node\Stmt\Property;
 use Rector\Rector\AbstractRector;
 
 use function is_string;
@@ -29,35 +30,17 @@ final class DowngradeStandaloneLiteralParamTypeRector extends AbstractRector
             Function_::class,
             Closure::class,
             ArrowFunction::class,
+            Property::class,
         ];
     }
 
     public function refactor(Node $node): ?Node
     {
-        $addedParamDocs = [];
-
-        foreach ($node->getParams() as $param) {
-            $literalType = $this->matchStandaloneLiteralType($param);
-            if ($literalType === null) {
-                continue;
-            }
-
-            $paramName = $this->getName($param->var);
-            if (!is_string($paramName)) {
-                continue;
-            }
-
-            $param->type = null;
-            $addedParamDocs[] = sprintf('@param %s $%s', $literalType, $paramName);
+        if ($node instanceof Property) {
+            return $this->refactorProperty($node);
         }
 
-        if ($addedParamDocs === []) {
-            return null;
-        }
-
-        $this->appendParamDocs($node, $addedParamDocs);
-
-        return $node;
+        return $this->refactorFunctionLike($node);
     }
 
     /**
@@ -95,13 +78,13 @@ final class DowngradeStandaloneLiteralParamTypeRector extends AbstractRector
         $node->setDocComment(new Doc($existingDoc));
     }
 
-    private function matchStandaloneLiteralType(Param $param): ?string
+    private function matchStandaloneLiteralType(?Node $type): ?string
     {
-        if (!$param->type instanceof Identifier) {
+        if (!$type instanceof Identifier) {
             return null;
         }
 
-        $typeName = $this->getName($param->type);
+        $typeName = $this->getName($type);
         if (!is_string($typeName)) {
             return null;
         }
@@ -110,5 +93,68 @@ final class DowngradeStandaloneLiteralParamTypeRector extends AbstractRector
             'null', 'true', 'false' => $typeName,
             default => null,
         };
+    }
+
+    private function refactorFunctionLike(Node $node): ?Node
+    {
+        $hasChanged = false;
+        $addedParamDocs = [];
+
+        // Refactor Parameters
+        foreach ($node->getParams() as $param) {
+            $literalType = $this->matchStandaloneLiteralType($param->type);
+            if ($literalType === null) {
+                continue;
+            }
+
+            $paramName = $this->getName($param->var);
+            if (!is_string($paramName)) {
+                continue;
+            }
+
+            $param->type = null;
+            $addedParamDocs[] = sprintf('@param %s $%s', $literalType, $paramName);
+            $hasChanged = true;
+        }
+
+        if ($addedParamDocs !== []) {
+            $this->appendParamDocs($node, $addedParamDocs);
+        }
+
+        // Refactor Return Type
+        $returnLiteralType = $this->matchStandaloneLiteralType($node->returnType);
+        if ($returnLiteralType !== null) {
+            $node->returnType = new Identifier('bool');
+
+            $doc = $node->getDocComment()?->getText() ?? '/** */';
+            if (!str_contains($doc, '@return')) {
+                $newDoc = preg_replace('/(\/\*\*)/', "$1\n     * @return {$returnLiteralType}", $doc);
+                $node->setDocComment(new Doc($newDoc));
+            }
+
+            $hasChanged = true;
+        }
+
+        return $hasChanged ? $node : null;
+    }
+
+    private function refactorProperty(Property $node): ?Property
+    {
+        $literalType = $this->matchStandaloneLiteralType($node->type);
+        if ($literalType === null) {
+            return null;
+        }
+
+        // Downgrade native type to bool
+        $node->type = new Identifier('bool');
+
+        // Add PHPDoc @var
+        $doc = $node->getDocComment()?->getText() ?? '/** */';
+        if (!str_contains($doc, '@var')) {
+            $newDoc = preg_replace('/(\/\*\*)/', "$1\n     * @var {$literalType}", $doc);
+            $node->setDocComment(new Doc($newDoc));
+        }
+
+        return $node;
     }
 }
