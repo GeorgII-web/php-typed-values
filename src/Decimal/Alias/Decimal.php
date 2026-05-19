@@ -18,6 +18,6 @@ use PhpTypedValues\Decimal\DecimalStandard;
  *
  * @psalm-immutable
  */
-final readonly class Decimal extends DecimalStandard
+final class Decimal extends DecimalStandard
 {
 }
