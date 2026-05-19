@@ -79,13 +79,13 @@ jobs:
       - name: Run Rector downgrade to PHP 8.2
         run: ./vendor/bin/rector process --config rector/toPhp8.2.php
 
-      - name: Update composer.json PHP constraint to ">=8.2,<8.4"
+      - name: Update composer.json PHP constraint to ">=8.2"
         run: |
           php -r '
             $f = "composer.json";
             $j = json_decode(file_get_contents($f), true, 512, JSON_THROW_ON_ERROR);
             if (!isset($j["require"])) { $j["require"] = []; }
-            $j["require"]["php"] = ">=8.2,<8.4";
+            $j["require"]["php"] = ">=8.2";
             $j["description"] = $j["description"] . " (PHP 8.2 version)";
             file_put_contents($f, json_encode($j, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES) . "\n");
           '
