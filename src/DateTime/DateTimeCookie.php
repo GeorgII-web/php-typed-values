@@ -34,7 +34,10 @@ use function is_string;
  */
 readonly class DateTimeCookie extends DateTimeTypeAbstract
 {
-    public const string FORMAT = DATE_COOKIE;
+    /**
+     * @var string
+     */
+    public const FORMAT = DATE_COOKIE;
 
     protected DateTimeImmutable $value;
 

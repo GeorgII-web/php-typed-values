@@ -33,7 +33,10 @@ use function is_string;
  */
 readonly class DateTimeSql extends DateTimeTypeAbstract
 {
-    public const string FORMAT = 'Y-m-d H:i:s';
+    /**
+     * @var string
+     */
+    public const FORMAT = 'Y-m-d H:i:s';
 
     protected DateTimeImmutable $value;
 
