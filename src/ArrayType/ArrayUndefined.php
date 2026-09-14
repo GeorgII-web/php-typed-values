@@ -18,25 +18,31 @@ use PhpTypedValues\Exception\ArrayType\UndefinedArrayTypeException;
  *
  * @psalm-immutable
  */
-readonly class ArrayUndefined extends ArrayTypeAbstract
+class ArrayUndefined extends ArrayTypeAbstract
 {
     /**
      * @throws UndefinedArrayTypeException
+     * @return never
      */
-    public function count(): never
+    #[\ReturnTypeWillChange]
+    public function count()
     {
         throw new UndefinedArrayTypeException('Undefined array has no items to count');
     }
 
-    public static function create(): static
+    /**
+     * @return static
+     */
+    public static function create()
     {
         return new static();
     }
 
     /**
      * @psalm-pure
+     * @return static
      */
-    public static function fromArray(array $value): static
+    public static function fromArray(array $value)
     {
         return new static();
     }
@@ -51,7 +57,11 @@ readonly class ArrayUndefined extends ArrayTypeAbstract
         throw new UndefinedArrayTypeException('Undefined array has no defined items');
     }
 
-    public function getIterator(): never
+    /**
+     * @return never
+     */
+    #[\ReturnTypeWillChange]
+    public function getIterator()
     {
         throw new UndefinedArrayTypeException('Undefined array has no items for iterator');
     }
@@ -84,8 +94,10 @@ readonly class ArrayUndefined extends ArrayTypeAbstract
 
     /**
      * @throws UndefinedArrayTypeException
+     * @return never
      */
-    public function jsonSerialize(): never
+    #[\ReturnTypeWillChange]
+    public function jsonSerialize()
     {
         throw new UndefinedArrayTypeException('Undefined array cannot be converted to Json');
     }
@@ -100,16 +112,18 @@ readonly class ArrayUndefined extends ArrayTypeAbstract
 
     /**
      * @throws UndefinedArrayTypeException
+     * @return never
      */
-    public function toFloat(): never
+    public function toFloat()
     {
         throw new UndefinedArrayTypeException('Undefined array cannot be converted to float');
     }
 
     /**
      * @throws UndefinedArrayTypeException
+     * @return never
      */
-    public function toInt(): never
+    public function toInt()
     {
         throw new UndefinedArrayTypeException('Undefined array cannot be converted to integer');
     }

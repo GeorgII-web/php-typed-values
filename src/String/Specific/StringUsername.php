@@ -31,9 +31,10 @@ use function sprintf;
  *
  * @psalm-immutable
  */
-readonly class StringUsername extends StringTypeAbstract
+class StringUsername extends StringTypeAbstract
 {
-    /** @var non-empty-string */
+    /** @var non-empty-string
+     * @readonly */
     protected string $value;
 
     /**
@@ -53,8 +54,9 @@ readonly class StringUsername extends StringTypeAbstract
      * @throws UsernameStringException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromBool(bool $value): static
+    public static function fromBool(bool $value)
     {
         return new static(static::boolToString($value));
     }
@@ -63,8 +65,9 @@ readonly class StringUsername extends StringTypeAbstract
      * @throws UsernameStringException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromDecimal(string $value): static
+    public static function fromDecimal(string $value)
     {
         return new static(static::decimalToString($value));
     }
@@ -75,8 +78,9 @@ readonly class StringUsername extends StringTypeAbstract
      * @throws UsernameStringException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromFloat(float $value): static
+    public static function fromFloat(float $value)
     {
         return new static(static::floatToString($value));
     }
@@ -85,16 +89,19 @@ readonly class StringUsername extends StringTypeAbstract
      * @throws UsernameStringException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromInt(int $value): static
+    public static function fromInt(int $value)
     {
         return new static(static::intToString($value));
     }
 
     /**
      * @throws UsernameStringException
+     * @return never
+     * @param null $value
      */
-    public static function fromNull(null $value): never
+    public static function fromNull($value)
     {
         throw new UsernameStringException('StringUsername type cannot be created from null');
     }
@@ -103,8 +110,9 @@ readonly class StringUsername extends StringTypeAbstract
      * @throws UsernameStringException
      *
      * @psalm-pure
+     * @return static
      */
-    public static function fromString(string $value): static
+    public static function fromString(string $value)
     {
         return new static($value);
     }
@@ -169,8 +177,9 @@ readonly class StringUsername extends StringTypeAbstract
 
     /**
      * @throws UsernameStringException
+     * @return never
      */
-    public static function toNull(): never
+    public static function toNull()
     {
         throw new UsernameStringException('StringUsername type cannot be converted to null');
     }
@@ -182,79 +191,98 @@ readonly class StringUsername extends StringTypeAbstract
 
     /**
      * @psalm-pure
+     * @return \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract|static
      */
-    public static function tryFromBool(bool $value, PrimitiveTypeAbstract $default = new Undefined()): PrimitiveTypeAbstract|static
+    public static function tryFromBool(bool $value, PrimitiveTypeAbstract $default = null)
     {
+        $default ??= new Undefined();
         try {
             return static::fromBool($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             return $default;
         }
     }
 
     /**
      * @psalm-pure
+     * @return \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract|static
      */
-    public static function tryFromDecimal(string $value, PrimitiveTypeAbstract $default = new Undefined()): PrimitiveTypeAbstract|static
+    public static function tryFromDecimal(string $value, PrimitiveTypeAbstract $default = null)
     {
+        $default ??= new Undefined();
         try {
             return static::fromDecimal($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             return $default;
         }
     }
 
     /**
      * @psalm-pure
+     * @return \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract|static
      */
-    public static function tryFromFloat(float $value, PrimitiveTypeAbstract $default = new Undefined()): PrimitiveTypeAbstract|static
+    public static function tryFromFloat(float $value, PrimitiveTypeAbstract $default = null)
     {
+        $default ??= new Undefined();
         try {
             return static::fromFloat($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             return $default;
         }
     }
 
     /**
      * @psalm-pure
+     * @return \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract|static
      */
-    public static function tryFromInt(int $value, PrimitiveTypeAbstract $default = new Undefined()): PrimitiveTypeAbstract|static
+    public static function tryFromInt(int $value, PrimitiveTypeAbstract $default = null)
     {
+        $default ??= new Undefined();
         try {
             return static::fromInt($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             return $default;
         }
     }
 
     /**
      * @psalm-pure
+     * @return \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract|static
+     * @param mixed $value
      */
-    public static function tryFromMixed(mixed $value, PrimitiveTypeAbstract $default = new Undefined()): PrimitiveTypeAbstract|static
+    public static function tryFromMixed($value, PrimitiveTypeAbstract $default = null)
     {
+        $default ??= new Undefined();
         if ($value === null) {
             return static::tryFromString('null', $default);
         }
 
-        return match (true) {
-            is_string($value) => static::tryFromString($value, $default),
-            is_int($value) => static::tryFromInt($value, $default),
-            is_float($value) => static::tryFromFloat($value, $default),
-            is_bool($value) => static::tryFromBool($value, $default),
-            $value instanceof Stringable => static::tryFromString((string) $value, $default),
-            default => $default,
-        };
+        switch (true) {
+            case is_string($value):
+                return static::tryFromString($value, $default);
+            case is_int($value):
+                return static::tryFromInt($value, $default);
+            case is_float($value):
+                return static::tryFromFloat($value, $default);
+            case is_bool($value):
+                return static::tryFromBool($value, $default);
+            case is_object($value) && method_exists($value, '__toString'):
+                return static::tryFromString((string) $value, $default);
+            default:
+                return $default;
+        }
     }
 
     /**
      * @psalm-pure
+     * @return \PhpTypedValues\Base\Primitive\PrimitiveTypeAbstract|static
      */
-    public static function tryFromString(string $value, PrimitiveTypeAbstract $default = new Undefined()): PrimitiveTypeAbstract|static
+    public static function tryFromString(string $value, PrimitiveTypeAbstract $default = null)
     {
+        $default ??= new Undefined();
         try {
             return static::fromString($value);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             return $default;
         }
     }
